@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Enforce conventional commits on all commits in the PR.
   commitlint:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-24.04
@@ -31,14 +32,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flutter (stable) and verify (Option A)
+      - name: Install Flutter (stable) outside workspace
         shell: bash
         run: |
-          git clone https://github.com/flutter/flutter.git -b stable --depth 1
+          FLUTTER_HOME="$RUNNER_TEMP/flutter"
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$FLUTTER_HOME"
           # Make flutter available in THIS step:
-          export PATH="$PATH:$PWD/flutter/bin"
+          export PATH="$PATH:$FLUTTER_HOME/bin"
           # And for subsequent steps:
-          echo "$PWD/flutter/bin" >> "$GITHUB_PATH"
+          echo "$FLUTTER_HOME/bin" >> "$GITHUB_PATH"
           flutter --version
           flutter precache --universal
 
