@@ -5,7 +5,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter_method_channel.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelSplunkOtelFlutter platform = MethodChannelSplunkOtelFlutter();
+  final MethodChannelSplunkOtelFlutter platform = MethodChannelSplunkOtelFlutter();
   const MethodChannel channel = MethodChannel('splunk_otel_flutter');
 
   setUp(() {

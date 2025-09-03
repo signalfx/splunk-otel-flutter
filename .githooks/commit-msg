@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+
+# Read entire message into an array of lines.
+mapfile -t LINES < "$msg_file"
+header="${LINES[0]:-}"
+
+# Conventional header: type(scope)?: subject (lower-case start), optional "!" before colon.
+# Disallow Jira-like prefixes in the header (e.g., "DEMRUM-1234: ...").
+if [[ "$header" =~ ^[A-Z]+-[0-9]+:\  ]]; then
+  echo "Jira keys are not allowed in commit headers. Put the key in the PR title or footer." >&2
+  echo "Got: $header" >&2
+  exit 1
+fi
+
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-z0-9].+'
+if [[ ! "$header" =~ $pattern ]]; then
+  echo "Conventional commit header required: <type>(<scope>)?: <subject starting lower-case>" >&2
+  echo "Types: build, chore, ci, docs, feat, fix, perf, refactor, style, test, revert." >&2
+  echo "Got: $header" >&2
+  exit 1
+fi
+
+# Header length limit.
+max_header=100
+if (( ${#header} > max_header )); then
+  echo "Header too long (${#header} > $max_header): $header" >&2
+  exit 1
+fi
+
+# If there are more lines, require a blank line on line 2.
+if (( ${#LINES[@]} > 1 )); then
+  second_line="${LINES[1]}"
+  if [[ -n "$second_line" ]]; then
+    echo "Add a blank line between the header and body." >&2
+    exit 1
+  fi
+fi
+
+# Enforce body/footer line length (100).
+max_body=100
+is_footer_line() {
+  [[ "$1" =~ ^(BREAKING[[:space:]]CHANGE:|Refs:|Fixes:|Closes:|Co-authored-by:|Signed-off-by:|Reviewed-by:|Relates-to:|See:) ]]
+}
+
+for (( i=2; i<${#LINES[@]}; i++ )); do
+  line="${LINES[$i]}"
+  # Skip empty lines.
+  [[ -z "$line" ]] && continue
+  # Enforce length on both body and common footer lines.
+  if (( ${#line} > max_body )); then
+    echo "Line $((i+1)) exceeds $max_body characters:" >&2
+    echo "  $line" >&2
+    exit 1
+  fi
+done
+
+exit 0
