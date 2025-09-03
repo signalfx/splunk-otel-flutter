@@ -3,18 +3,18 @@ set -euo pipefail
 
 msg_file="$1"
 
-# Read entire message into an array of lines.
-mapfile -t LINES < "$msg_file"
-header="${LINES[0]:-}"
+# Read the first line as the header.
+header=""
+IFS= read -r header < "$msg_file" || true
 
-# Conventional header: type(scope)?: subject (lower-case start), optional "!" before colon.
-# Disallow Jira-like prefixes in the header (e.g., "DEMRUM-1234: ...").
+# Disallow Jira-like prefixes in the header.
 if [[ "$header" =~ ^[A-Z]+-[0-9]+:\  ]]; then
   echo "Jira keys are not allowed in commit headers. Put the key in the PR title or footer." >&2
   echo "Got: $header" >&2
   exit 1
 fi
 
+# Conventional header: type(scope)?: subject (lower-case start), optional "!" before colon.
 pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-z0-9].+'
 if [[ ! "$header" =~ $pattern ]]; then
   echo "Conventional commit header required: <type>(<scope>)?: <subject starting lower-case>" >&2
@@ -23,38 +23,40 @@ if [[ ! "$header" =~ $pattern ]]; then
   exit 1
 fi
 
-# Header length limit.
-max_header=100
+# Header length limit (match CI commitlint: 72).
+max_header=72
 if (( ${#header} > max_header )); then
   echo "Header too long (${#header} > $max_header): $header" >&2
   exit 1
 fi
 
-# If there are more lines, require a blank line on line 2.
-if (( ${#LINES[@]} > 1 )); then
-  second_line="${LINES[1]}"
-  if [[ -n "$second_line" ]]; then
-    echo "Add a blank line between the header and body." >&2
-    exit 1
-  fi
-fi
-
-# Enforce body/footer line length (100).
+# Enforce: if there is a body, line 2 must be blank; body/footer lines <= 100 chars.
 max_body=100
-is_footer_line() {
-  [[ "$1" =~ ^(BREAKING[[:space:]]CHANGE:|Refs:|Fixes:|Closes:|Co-authored-by:|Signed-off-by:|Reviewed-by:|Relates-to:|See:) ]]
-}
+lineno=0
 
-for (( i=2; i<${#LINES[@]}; i++ )); do
-  line="${LINES[$i]}"
-  # Skip empty lines.
-  [[ -z "$line" ]] && continue
-  # Enforce length on both body and common footer lines.
-  if (( ${#line} > max_body )); then
-    echo "Line $((i+1)) exceeds $max_body characters:" >&2
+while IFS= read -r line || [ -n "${line-}" ]; do
+  lineno=$((lineno + 1))
+
+  # Skip header (line 1) — already validated.
+  if (( lineno == 1 )); then
+    continue
+  fi
+
+  # Require a blank line between header and body.
+  if (( lineno == 2 )); then
+    if [[ -n "$line" ]]; then
+      echo "Add a blank line between the header and body." >&2
+      exit 1
+    fi
+    continue
+  fi
+
+  # Enforce max length for body/footer (ignore empty lines).
+  if [[ -n "$line" ]] && (( ${#line} > max_body )); then
+    echo "Line $lineno exceeds $max_body characters:" >&2
     echo "  $line" >&2
     exit 1
   fi
-done
+done < "$msg_file"
 
 exit 0

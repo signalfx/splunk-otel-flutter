@@ -1,4 +1,4 @@
-name: "Pull Request Checks"
+name: Pull Request Checks
 
 on:
   pull_request:
@@ -14,14 +14,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Enforce conventional commits on all commits in the PR.
   commitlint:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # commitlint can read the full history/range.
+          fetch-depth: 0
       - name: Commitlint
         uses: wagoid/commitlint-github-action@v6
         with:
@@ -32,12 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flutter (stable)
+      - name: Install Flutter (stable) and verify (Option A)
+        shell: bash
         run: |
           git clone https://github.com/flutter/flutter.git -b stable --depth 1
+          # Make flutter available in THIS step:
+          export PATH="$PATH:$PWD/flutter/bin"
+          # And for subsequent steps:
           echo "$PWD/flutter/bin" >> "$GITHUB_PATH"
           flutter --version
-          # Optional: speed up first run.
           flutter precache --universal
 
       - name: Cache pub dependencies
@@ -48,8 +50,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      - name: Install dependencies
+      - name: Install dependencies (root)
+        shell: bash
         run: flutter pub get
 
-      - name: Analyze Dart/Flutter code
+      - name: Analyze (root)
+        shell: bash
         run: flutter analyze --no-fatal-infos --fatal-warnings
+
+      - name: Install deps and analyze example (if present)
+        shell: bash
+        run: |
+          if [ -f example/pubspec.yaml ]; then
+            (cd example && flutter pub get)
+            (cd example && flutter analyze --no-fatal-infos --fatal-warnings)
+          fi
