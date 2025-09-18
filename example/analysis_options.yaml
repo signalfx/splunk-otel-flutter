@@ -4,7 +4,6 @@ analyzer:
   language:
     strict-inference: true
     strict-raw-types: true
-  # Legacy but still widely used and supported:
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
@@ -16,24 +15,18 @@ analyzer:
     - "**/generated_plugin_registrant.dart"
 
   errors:
-    # Promote selected rules so CI fails fast.
     missing_required_param: error
     missing_return: error
     dead_code: warning
     todo: warning
-
-    # Make const-related rules strict (optional but matches your expectations).
     prefer_const_constructors: error
     prefer_const_literals_to_create_immutables: error
 
 linter:
   rules:
-    # Opt-in rules not enabled by flutter_lints v6.
     - prefer_const_constructors
     - prefer_const_literals_to_create_immutables
     - use_key_in_widget_constructors
-
-    # A few pragmatic style picks (many others are already covered by flutter_lints).
     - avoid_print
     - prefer_final_locals
     - prefer_final_fields

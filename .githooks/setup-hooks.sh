@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Point this repo to use the versioned hooks directory.
-git config core.hooksPath .githooks
+git config --local core.hooksPath .githooks
 
 # Ensure hooks are executable (safe even if already set).
 if [[ -f ".githooks/pre-commit" ]]; then

@@ -7,13 +7,6 @@ msg_file="$1"
 header=""
 IFS= read -r header < "$msg_file" || true
 
-# Disallow Jira-like prefixes in the header.
-if [[ "$header" =~ ^[A-Z]+-[0-9]+:\  ]]; then
-  echo "Jira keys are not allowed in commit headers. Put the key in the PR title or footer." >&2
-  echo "Got: $header" >&2
-  exit 1
-fi
-
 # Conventional header: type(scope)?: subject (lower-case start), optional "!" before colon.
 pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-z0-9].+'
 if [[ ! "$header" =~ $pattern ]]; then
@@ -27,6 +20,14 @@ fi
 max_header=72
 if (( ${#header} > max_header )); then
   echo "Header too long (${#header} > $max_header): $header" >&2
+  exit 1
+fi
+
+# Enforce full lower-case subject (no capital letters anywhere).
+subject="${header#*: }"
+if [[ "$subject" =~ [A-Z] ]]; then
+  echo "Subject must be fully lower-case (no capital letters):" >&2
+  echo "  $subject" >&2
   exit 1
 fi
 
