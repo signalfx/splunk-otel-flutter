@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-commit hook: check BOTH formatting and code issues (no auto-fix).
+
+# Prefer FVM if present; fall back to flutter on PATH.
+if command -v fvm >/dev/null 2>&1; then
+  FLUTTER=(fvm flutter)
+else
+  FLUTTER=(flutter)
+fi
+
+# Ensure tools exist.
+command -v dart >/dev/null 2>&1 || { echo "Dart not found on PATH."; exit 1; }
+"${FLUTTER[@]}" --version >/dev/null 2>&1 || { echo "Flutter not found on PATH."; exit 1; }
+
+# Collect staged Dart files (Added, Copied, Modified, Renamed, Type-changed), null-delimited.
+staged_dart_z=$(git diff --cached -z --name-only --diff-filter=ACMRT | grep -z -E '\.dart$' || true)
+if [[ -z "$staged_dart_z" ]]; then
+  # No staged Dart changes; skip to keep commits fast.
+  exit 0
+fi
+
+echo "Checking Dart format (no auto-fix, using staged content)..."
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+
+bad=()
+
+# Recreate the staged snapshot and check formatting on those files.
+while IFS= read -r -d '' path; do
+  mkdir -p "$tmpdir/$(dirname "$path")"
+  git show ":$path" > "$tmpdir/$path" || true
+
+  # Check-only: fail if formatting would change the file.
+  if ! dart format --output=none --set-exit-if-changed "$tmpdir/$path" >/dev/null 2>&1; then
+    bad+=("$path")
+  fi
+done <<< "$staged_dart_z"
+
+if (( ${#bad[@]} > 0 )); then
+  {
+    echo "These staged files are not properly formatted:"
+    for f in "${bad[@]}"; do echo "  - $f"; done
+    echo
+    echo "Please run: dart format ."
+    echo "Then restage and commit again."
+  } >&2
+  exit 1
+fi
+
+echo "Running Flutter analyze (warnings fail)..."
+# Analyze all packages with a pubspec.yaml (root, example/, etc.).
+pubspecs=$(git ls-files | grep -E 'pubspec\.ya?ml$' || true)
+if [[ -z "$pubspecs" ]]; then
+  echo "No pubspec.yaml found; skipping analysis." >&2
+  exit 0
+fi
+
+while IFS= read -r pubspec; do
+  dir="$(dirname "$pubspec")"
+  echo "Analyzing $dir ..."
+  if [[ ! -f "$dir/.dart_tool/package_config.json" ]]; then
+    echo "Dependencies not installed in $dir. Run 'flutter pub get' first." >&2
+    exit 1
+  fi
+  (cd "$dir" && "${FLUTTER[@]}" analyze --no-fatal-infos --fatal-warnings)
+done <<< "$pubspecs"

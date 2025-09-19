@@ -20,8 +20,8 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    SplunkOtelFlutter splunkOtelFlutterPlugin = SplunkOtelFlutter();
-    MockSplunkOtelFlutterPlatform fakePlatform = MockSplunkOtelFlutterPlatform();
+    final SplunkOtelFlutter splunkOtelFlutterPlugin = SplunkOtelFlutter();
+    final MockSplunkOtelFlutterPlatform fakePlatform = MockSplunkOtelFlutterPlatform();
     SplunkOtelFlutterPlatform.instance = fakePlatform;
 
     expect(await splunkOtelFlutterPlugin.getPlatformVersion(), '42');
