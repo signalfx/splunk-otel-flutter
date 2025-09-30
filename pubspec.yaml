@@ -24,7 +24,7 @@ dev_dependencies:
 melos:
   scripts:
     analyze:
-      run: dart analyze .
+      run: dart analyze --fatal-warnings .
       description: Run Dart analyzer across all packages.
     test:
       run: flutter test
