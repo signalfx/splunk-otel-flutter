@@ -50,19 +50,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
+      - name: Install Monorepo Dependencies
+        run: flutter pub get
+
       - name: Activate Melos
         run: dart pub global activate melos
 
-        # Add Dart's global executable path to GITHUB_PATH
       - name: Add Dart global executables to PATH
         run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
 
-      - name: Run Melos Bootstrap
-        # This command will run `flutter pub get` for all packages in your workspace,
-        # correctly linking local dependencies via `pub workspaces`.
-        run: melos bootstrap
-
       - name: Run Melos Analyze
-        # This command will run `dart analyze` across all packages in your workspace.
-        # The flags are passed directly to the underlying `dart analyze` command.
+        # This command will run `dart analyze` across all packages in your workspace,
+        # leveraging the dependencies resolved by the root `flutter pub get`.
         run: melos analyze --no-fatal-infos --fatal-warnings
