@@ -63,5 +63,5 @@ jobs:
         shell: bash
 
       - name: Run Melos Analyze
-        run: melos analyze --no-fatal-infos --fatal-warnings
+        run: melos run analyze -- --no-fatal-infos --fatal-warnings
         shell: bash
