@@ -4,6 +4,8 @@ description: "Demonstrates how to use the splunk_otel_flutter plugin."
 environment:
   sdk: ^3.9.0
 
+resolution: workspace
+
 dependencies:
   flutter:
     sdk: flutter

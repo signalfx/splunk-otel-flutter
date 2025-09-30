@@ -7,10 +7,12 @@ workspace:
   # Main Plugin
   - packages/splunk_otel_flutter/splunk_otel_flutter
   - packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
+  - packages/splunk_otel_flutter/splunk_otel_flutter/example
 
   # Session Replay Plugin
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface
+  - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay/example
 
   # Example Application
   #- example
