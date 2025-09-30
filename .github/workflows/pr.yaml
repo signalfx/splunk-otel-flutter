@@ -32,14 +32,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flutter (stable) outside workspace
+      - name: Install Flutter (stable)
         shell: bash
         run: |
           FLUTTER_HOME="$RUNNER_TEMP/flutter"
           git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$FLUTTER_HOME"
-          # Make flutter available in THIS step:
           export PATH="$PATH:$FLUTTER_HOME/bin"
-          # And for subsequent steps:
           echo "$FLUTTER_HOME/bin" >> "$GITHUB_PATH"
           flutter --version
           flutter precache --universal
@@ -52,18 +50,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      - name: Install dependencies (root)
-        shell: bash
-        run: flutter pub get
+      - name: Activate Melos
+        run: dart pub global activate melos
 
-      - name: Analyze (root)
-        shell: bash
-        run: dart analyze --no-fatal-infos --fatal-warnings
+      - name: Run Melos Bootstrap
+        # This command will run `flutter pub get` for all packages in your workspace,
+        # correctly linking local dependencies via `pub workspaces`.
+        run: melos bootstrap
 
-      - name: Install deps and analyze example (if present)
-        shell: bash
-        run: |
-          if [ -f example/pubspec.yaml ]; then
-            (cd example && flutter pub get)
-            (cd example && dart analyze --no-fatal-infos --fatal-warnings)
-          fi
+      - name: Run Melos Analyze
+        # This command will run `dart analyze` across all packages in your workspace.
+        # The flags are passed directly to the underlying `dart analyze` command.
+        run: melos analyze --no-fatal-infos --fatal-warnings
