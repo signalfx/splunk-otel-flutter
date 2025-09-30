@@ -1,0 +1,30 @@
+name: splunk_otel_flutter_session_replay
+description: "Splunk Flutter Session Replay module"
+version: 0.0.1
+publish_to: none # remove when session replay is ready
+#TODO add repository and homepage before release
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  splunk_otel_flutter_session_replay_platform_interface: ^0.0.1
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
+        pluginClass: SplunkOtelFlutterSessionReplayPlugin
+      ios:
+        pluginClass: SplunkOtelFlutterSessionReplayPlugin

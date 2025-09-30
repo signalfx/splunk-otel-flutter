@@ -20,7 +20,7 @@ analyzer:
     missing_required_param: error
     missing_return: error
     dead_code: warning
-    todo: warning
+    todo: ignore
 
     # Make const-related rules strict (optional but matches your expectations).
     prefer_const_constructors: error

@@ -58,12 +58,12 @@ jobs:
 
       - name: Analyze (root)
         shell: bash
-        run: flutter analyze --no-fatal-infos --fatal-warnings
+        run: dart analyze --no-fatal-infos --fatal-warnings
 
       - name: Install deps and analyze example (if present)
         shell: bash
         run: |
           if [ -f example/pubspec.yaml ]; then
             (cd example && flutter pub get)
-            (cd example && flutter analyze --no-fatal-infos --fatal-warnings)
+            (cd example && dart analyze --no-fatal-infos --fatal-warnings)
           fi
