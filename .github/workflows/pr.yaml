@@ -32,14 +32,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flutter (stable) outside workspace
+      - name: Install Flutter (stable)
         shell: bash
         run: |
           FLUTTER_HOME="$RUNNER_TEMP/flutter"
           git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$FLUTTER_HOME"
-          # Make flutter available in THIS step:
           export PATH="$PATH:$FLUTTER_HOME/bin"
-          # And for subsequent steps:
           echo "$FLUTTER_HOME/bin" >> "$GITHUB_PATH"
           flutter --version
           flutter precache --universal
@@ -52,18 +50,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      - name: Install dependencies (root)
-        shell: bash
+      - name: Install Monorepo Dependencies
         run: flutter pub get
-
-      - name: Analyze (root)
         shell: bash
-        run: flutter analyze --no-fatal-infos --fatal-warnings
 
-      - name: Install deps and analyze example (if present)
+      - name: Activate Melos
+        run: dart pub global activate melos
         shell: bash
-        run: |
-          if [ -f example/pubspec.yaml ]; then
-            (cd example && flutter pub get)
-            (cd example && flutter analyze --no-fatal-infos --fatal-warnings)
-          fi
+
+      - name: Add Dart global executables to PATH
+        run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+        shell: bash
+
+      - name: Run Melos Analyze
+        run: melos analyze
+        shell: bash

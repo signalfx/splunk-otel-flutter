@@ -1,0 +1,21 @@
+name: splunk_otel_flutter_platform_interface
+description: "Splunk Flutter Agent interface"
+version: 0.0.1
+#TODO add repository and homepage before release
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^26.0.1
