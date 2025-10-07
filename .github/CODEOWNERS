@@ -1,0 +1,7 @@
+# Global Owners:
+# All files in the repository require review by the MRUM Android maintainers.
+* @signalfx/mrum-flutter-maintainers
+
+# CODEOWNERS File:
+# Changes to this CODEOWNERS file specifically require approval from MRUM Android admins.
+.github/CODEOWNERS @signalfx/mrum-flutter-admins

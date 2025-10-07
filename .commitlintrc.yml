@@ -7,9 +7,8 @@ rules:
     - always
     - [build, chore, ci, docs, feat, fix, perf, refactor, style, test, revert]
   subject-case:
-    - 2
+    - 0
     - always
-    - lower-case
   header-max-length:
     - 2
     - always
