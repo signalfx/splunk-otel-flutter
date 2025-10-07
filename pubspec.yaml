@@ -15,7 +15,7 @@ workspace:
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay/example
 
   # Example Application
-  #- example
+  - splunk_otel_flutter_root_example_app
 
 dev_dependencies:
   intl: ^0.20.2

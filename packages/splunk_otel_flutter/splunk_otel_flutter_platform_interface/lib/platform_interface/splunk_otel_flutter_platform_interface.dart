@@ -1,5 +1,8 @@
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/implementation/splunk_otel_flutter_platform_implementation.dart';
+import 'package:splunk_otel_flutter_platform_interface/model/agent_configuration.dart';
+import 'package:splunk_otel_flutter_platform_interface/model/module_configuration.dart';
 
 abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
@@ -17,4 +20,6 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
     PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
+
+  Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
 }
