@@ -1,4 +1,4 @@
-group = "com.splunk.rum.flutter.example"
+group = "com.splunk.rum.flutter"
 version = "1.0-SNAPSHOT"
 
 buildscript {

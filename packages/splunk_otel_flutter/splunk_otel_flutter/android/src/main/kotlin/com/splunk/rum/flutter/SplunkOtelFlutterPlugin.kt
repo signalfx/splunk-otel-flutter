@@ -160,9 +160,6 @@ class SplunkIntegration {
         scheduler.schedule({
             agent.navigation.track("test track")
             agent.globalAttributes.set("platform", "flutter")
-            // It's good practice to shut down the scheduler when it's no longer needed,
-            // especially if it's the only task. For a long-running application,
-            // you might shut it down on application exit.
             scheduler.shutdown()
         }, 10, TimeUnit.SECONDS)
     }
