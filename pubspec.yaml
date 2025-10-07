@@ -36,24 +36,13 @@ melos:
       run: flutter clean
       description: Clean Flutter builds across all packages.
     
-    # Script to generate Pigeon code for all implementation packages.
-    # Assumes Pigeon definitions (e.g., pigeons/*.dart) are located within the implementation packages.
+      # Script to generate Pigeon code for all interface packages.
+      # Assumes Pigeon definitions (e.g., pigeons/*.dart) are located within the interface packages.
     generate_pigeon:
       run: |
-        # Generate for the main plugin (splunk_otel_flutter)
-        melos exec --scope="splunk_otel_flutter" -- flutter pub run pigeon:generate \
-          --input pigeons/core_messages.dart \
-          --dart_out lib/src/generated/core_api.g.dart \
-          --kotlin_out android/src/main/kotlin/com/splunk/rum/flutter/SplunkOtelFlutterApi.kt \
-          --swift_out ios/Classes/SplunkOtelFlutterApi.swift
-
-        # Generate for the session replay plugin (splunk_otel_flutter_session_replay)
-        melos exec --scope="splunk_otel_flutter_session_replay" -- flutter pub run pigeon:generate \
-          --input pigeons/session_replay_messages.dart \
-          --dart_out lib/src/generated/session_replay_api.g.dart \
-          --kotlin_out android/src/main/kotlin/com/splunk/rum/flutter/sessionreplay/SplunkOtelFlutterSessionReplayApi.kt \
-          --swift_out ios/Classes/SplunkOtelFlutterSessionReplayApi.swift
-      description: Generates Pigeon code for all implementation packages.
+        melos exec --scope="splunk_otel_flutter_platform_interface" -- flutter pub run pigeon --input pigeons/messages.dart
+        melos exec --scope="splunk_otel_flutter_session_replay_platform_interface" -- flutter pub run pigeon --input pigeons/messages.dart
+      description: Generates Pigeon code for all packages.
     
     run_example:
       run: flutter run

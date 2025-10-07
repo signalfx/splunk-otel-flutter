@@ -17,8 +17,9 @@ class AgentConfiguration {
   // iOS: MutableAttributes; Android: Attributes. Represented here as a map.
   final Map<String, Object?> globalAttributes;
 
+  // TBD in future
   // Callback to filter or modify outgoing spans.
-  final SpanInterceptor? spanInterceptor;
+  // final SpanInterceptor? spanInterceptor;
 
   // User and session configuration (common to iOS and Android).
   final UserConfiguration user;
@@ -35,7 +36,7 @@ class AgentConfiguration {
     this.appVersion,
     this.enableDebugLogging = false,
     Map<String, Object?>? globalAttributes,
-    this.spanInterceptor,
+    //this.spanInterceptor,
     UserConfiguration? user,
     SessionConfiguration? session,
     this.instrumentedProcessName, // Android-only.
@@ -64,7 +65,7 @@ class AgentConfiguration {
       appVersion: appVersion ?? this.appVersion,
       enableDebugLogging: enableDebugLogging ?? this.enableDebugLogging,
       globalAttributes: globalAttributes ?? this.globalAttributes,
-      spanInterceptor: spanInterceptor ?? this.spanInterceptor,
+      //spanInterceptor: spanInterceptor ?? this.spanInterceptor,
       user: user ?? this.user,
       session: session ?? this.session,
       instrumentedProcessName:
