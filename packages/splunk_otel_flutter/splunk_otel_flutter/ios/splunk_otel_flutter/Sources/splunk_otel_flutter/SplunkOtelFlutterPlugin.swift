@@ -6,7 +6,7 @@ import SplunkSlowFrameDetector
 
 public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
- let channel = FlutterMethodChannel(name: "splunkotelflutter", binaryMessenger: registrar.messenger())
+ let channel = FlutterMethodChannel(name: "splunk_otel_flutter", binaryMessenger: registrar.messenger())
     let instance = SplunkOtelFlutterPlugin()
 
       let endpointConfig = EndpointConfiguration(
