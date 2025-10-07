@@ -61,7 +61,6 @@ class SplunkOtelFlutterPlugin :
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity
 
-        // This is the right place to run your initialization code
         initPlugin(activity)
     }
 
