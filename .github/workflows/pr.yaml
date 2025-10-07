@@ -3,7 +3,7 @@ name: Pull Request Checks
 on:
   pull_request:
     branches: [main, develop]
-    types: [opened, synchronize, reopened, ready_for_review, edited]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
