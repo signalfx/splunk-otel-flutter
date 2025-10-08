@@ -1,6 +1,6 @@
-import 'package:splunk_otel_flutter_platform_interface/model/agent_configuration.dart';
-import 'package:splunk_otel_flutter_platform_interface/model/module_configuration.dart';
-import 'package:splunk_otel_flutter_platform_interface/platform_interface/splunk_otel_flutter_platform_interface.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 class SplunkOtelFlutterPlatformImplementation
     extends SplunkOtelFlutterPlatformInterface {
