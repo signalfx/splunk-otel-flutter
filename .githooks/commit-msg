@@ -7,10 +7,11 @@ msg_file="$1"
 header=""
 IFS= read -r header < "$msg_file" || true
 
-# Conventional header: type(scope)?: subject (lower-case start), optional "!" before colon.
-pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-z0-9].+'
+# Conventional header: type(scope)?: subject (can start with upper or lower-case), optional "!" before colon.
+# Changed: [a-z0-9] to [a-zA-Z0-9] to allow uppercase letters at the start of the subject.
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-zA-Z0-9].+'
 if [[ ! "$header" =~ $pattern ]]; then
-  echo "Conventional commit header required: <type>(<scope>)?: <subject starting lower-case>" >&2
+  echo "Conventional commit header required: <type>(<scope>)?: <subject starting with a letter or number>" >&2
   echo "Types: build, chore, ci, docs, feat, fix, perf, refactor, style, test, revert." >&2
   echo "Got: $header" >&2
   exit 1
@@ -20,14 +21,6 @@ fi
 max_header=72
 if (( ${#header} > max_header )); then
   echo "Header too long (${#header} > $max_header): $header" >&2
-  exit 1
-fi
-
-# Enforce full lower-case subject (no capital letters anywhere).
-subject="${header#*: }"
-if [[ "$subject" =~ [A-Z] ]]; then
-  echo "Subject must be fully lower-case (no capital letters):" >&2
-  echo "  $subject" >&2
   exit 1
 fi
 
