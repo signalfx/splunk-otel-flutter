@@ -27,3 +27,5 @@ flutter:
         pluginClass: SplunkOtelFlutterPlugin
       ios:
         pluginClass: SplunkOtelFlutterPlugin
+        supportsSwift: true
+        deploymentTarget: "15.0"
