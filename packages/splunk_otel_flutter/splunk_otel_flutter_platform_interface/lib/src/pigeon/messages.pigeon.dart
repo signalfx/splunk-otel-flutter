@@ -39,6 +39,11 @@ bool _deepEquals(Object? a, Object? b) {
 }
 
 
+enum GeneratedUserTrackingMode {
+  noTracking,
+  anonymousTracking,
+}
+
 class GeneratedSlowRenderingModuleConfiguration {
   GeneratedSlowRenderingModuleConfiguration({
     required this.isEnabled,
@@ -155,7 +160,7 @@ class GeneratedAgentConfiguration {
 
   bool enableDebugLogging;
 
-  Map<String?, Object?> globalAttributes;
+  Map<String, Object?> globalAttributes;
 
   GeneratedUserConfiguration user;
 
@@ -191,7 +196,7 @@ class GeneratedAgentConfiguration {
       deploymentEnvironment: result[2]! as String,
       appVersion: result[3] as String?,
       enableDebugLogging: result[4]! as bool,
-      globalAttributes: (result[5] as Map<Object?, Object?>?)!.cast<String?, Object?>(),
+      globalAttributes: (result[5] as Map<Object?, Object?>?)!.cast<String, Object?>(),
       user: result[6]! as GeneratedUserConfiguration,
       session: result[7]! as GeneratedSessionConfiguration,
       instrumentedProcessName: result[8] as String?,
@@ -219,14 +224,18 @@ class GeneratedAgentConfiguration {
 
 class GeneratedEndpointConfiguration {
   GeneratedEndpointConfiguration({
-    required this.tmp,
+    required this.realm,
+    required this.rumAccessToken,
   });
 
-  String tmp;
+  String realm;
+
+  String rumAccessToken;
 
   List<Object?> _toList() {
     return <Object?>[
-      tmp,
+      realm,
+      rumAccessToken,
     ];
   }
 
@@ -236,7 +245,8 @@ class GeneratedEndpointConfiguration {
   static GeneratedEndpointConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedEndpointConfiguration(
-      tmp: result[0]! as String,
+      realm: result[0]! as String,
+      rumAccessToken: result[1]! as String,
     );
   }
 
@@ -260,14 +270,14 @@ class GeneratedEndpointConfiguration {
 
 class GeneratedUserConfiguration {
   GeneratedUserConfiguration({
-    required this.tmp,
+    required this.trackingMode,
   });
 
-  String tmp;
+  GeneratedUserTrackingMode trackingMode;
 
   List<Object?> _toList() {
     return <Object?>[
-      tmp,
+      trackingMode,
     ];
   }
 
@@ -277,7 +287,7 @@ class GeneratedUserConfiguration {
   static GeneratedUserConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedUserConfiguration(
-      tmp: result[0]! as String,
+      trackingMode: result[0]! as GeneratedUserTrackingMode,
     );
   }
 
@@ -301,14 +311,14 @@ class GeneratedUserConfiguration {
 
 class GeneratedSessionConfiguration {
   GeneratedSessionConfiguration({
-    required this.tmp,
+    required this.samplingRate,
   });
 
-  String tmp;
+  double samplingRate;
 
   List<Object?> _toList() {
     return <Object?>[
-      tmp,
+      samplingRate,
     ];
   }
 
@@ -318,7 +328,7 @@ class GeneratedSessionConfiguration {
   static GeneratedSessionConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedSessionConfiguration(
-      tmp: result[0]! as String,
+      samplingRate: result[0]! as double,
     );
   }
 
@@ -326,47 +336,6 @@ class GeneratedSessionConfiguration {
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
     if (other is! GeneratedSessionConfiguration || other.runtimeType != runtimeType) {
-      return false;
-    }
-    if (identical(this, other)) {
-      return true;
-    }
-    return _deepEquals(encode(), other.encode());
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
-}
-
-class GeneratedSpanData {
-  GeneratedSpanData({
-    required this.tmp,
-  });
-
-  String tmp;
-
-  List<Object?> _toList() {
-    return <Object?>[
-      tmp,
-    ];
-  }
-
-  Object encode() {
-    return _toList();  }
-
-  static GeneratedSpanData decode(Object result) {
-    result as List<Object?>;
-    return GeneratedSpanData(
-      tmp: result[0]! as String,
-    );
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) {
-    if (other is! GeneratedSpanData || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -389,25 +358,25 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
+    }    else if (value is GeneratedUserTrackingMode) {
       buffer.putUint8(129);
-      writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNavigationModuleConfiguration) {
+      writeValue(buffer, value.index);
+    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    }    else if (value is GeneratedNavigationModuleConfiguration) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    }    else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    }    else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    }    else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSpanData) {
+    }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else {
@@ -419,19 +388,20 @@ class _PigeonCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 129: 
-        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : GeneratedUserTrackingMode.values[value];
       case 130: 
-        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
       case 131: 
-        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
+        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
       case 132: 
-        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
+        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
       case 133: 
-        return GeneratedUserConfiguration.decode(readValue(buffer)!);
+        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
       case 134: 
-        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
+        return GeneratedUserConfiguration.decode(readValue(buffer)!);
       case 135: 
-        return GeneratedSpanData.decode(readValue(buffer)!);
+        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -451,7 +421,7 @@ class SplunkOtelFlutterHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> install(GeneratedAgentConfiguration agentConfiguration, GeneratedNavigationModuleConfiguration navigationModuleConfiguration, GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration) async {
+  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration, }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -471,6 +441,57 @@ class SplunkOtelFlutterHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<void> sessionReplayStart() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStart$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<String> getSessionId() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.getSessionId$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as String?)!;
     }
   }
 }

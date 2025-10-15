@@ -22,4 +22,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   }
 
   Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
-}
+
+  Future<void> sessionReplayStart();
+
+  Future<String> getSessionId();
+ }

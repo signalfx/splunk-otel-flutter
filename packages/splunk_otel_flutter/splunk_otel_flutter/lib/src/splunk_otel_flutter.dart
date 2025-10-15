@@ -16,8 +16,16 @@ class SplunkOtelFlutter {
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,
   }) async {
-    _delegate.install(
+    await _delegate.install(
         agentConfiguration: agentConfiguration,
         moduleConfigurations: moduleConfigurations);
+  }
+
+  Future<void> startSessionReplay() async {
+    await _delegate.sessionReplayStart();
+  }
+
+  Future<String> getSessionId() async{
+    return await _delegate.getSessionId();
   }
 }

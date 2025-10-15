@@ -18,25 +18,25 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
+    }    else if (value is GeneratedUserTrackingMode) {
       buffer.putUint8(129);
-      writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNavigationModuleConfiguration) {
+      writeValue(buffer, value.index);
+    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    }    else if (value is GeneratedNavigationModuleConfiguration) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    }    else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    }    else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    }    else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSpanData) {
+    }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else {
@@ -48,19 +48,20 @@ class _PigeonCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 129: 
-        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : GeneratedUserTrackingMode.values[value];
       case 130: 
-        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
       case 131: 
-        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
+        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
       case 132: 
-        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
+        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
       case 133: 
-        return GeneratedUserConfiguration.decode(readValue(buffer)!);
+        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
       case 134: 
-        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
+        return GeneratedUserConfiguration.decode(readValue(buffer)!);
       case 135: 
-        return GeneratedSpanData.decode(readValue(buffer)!);
+        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -71,7 +72,11 @@ abstract class TestSplunkOtelFlutterHostApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<void> install(GeneratedAgentConfiguration agentConfiguration, GeneratedNavigationModuleConfiguration navigationModuleConfiguration, GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration);
+  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration, });
+
+  Future<void> sessionReplayStart();
+
+  Future<String> getSessionId();
 
   static void setUp(TestSplunkOtelFlutterHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -96,8 +101,46 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_slowRenderingModuleConfiguration != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install was null, expected non-null GeneratedSlowRenderingModuleConfiguration.');
           try {
-            await api.install(arg_agentConfiguration!, arg_navigationModuleConfiguration!, arg_slowRenderingModuleConfiguration!);
+            await api.install(agentConfiguration: arg_agentConfiguration!, navigationModuleConfiguration: arg_navigationModuleConfiguration!, slowRenderingModuleConfiguration: arg_slowRenderingModuleConfiguration!);
             return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStart$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          try {
+            await api.sessionReplayStart();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.getSessionId$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          try {
+            final String output = await api.getSessionId();
+            return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           }          catch (e) {

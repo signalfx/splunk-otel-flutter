@@ -21,3 +21,54 @@ class NavigationModuleConfiguration extends ModuleConfiguration {
   });
 }
 
+/* TODO to be decided
+class AppStartModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class CrashReportsModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class CustomTrackingModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class InteractionsModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class NetworkMonitorModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class SessionReplayModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class WebViewModuleConfiguration extends ModuleConfiguration{
+
+}
+
+// only Android
+
+class AnrModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class ApplicationLifecycleModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class HttpUrlModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class OkHttp3AutoModuleConfiguration extends ModuleConfiguration{
+
+}
+
+class OkHttp3ManualModuleConfiguration extends ModuleConfiguration{
+
+}*/
+
