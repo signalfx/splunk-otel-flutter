@@ -25,6 +25,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
         )
         
+        let mutableAttribues = mutableAttributes(from: agentConfiguration.globalAttributes)
+        
         let agentConfig = AgentConfiguration(
             endpoint: endpointConfig,
             appName: agentConfiguration.appName,
@@ -32,6 +34,9 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         )
             .appVersion(agentConfiguration.appVersion ?? "")
             .enableDebugLogging(agentConfiguration.enableDebugLogging)
+            .globalAttributes(mutableAttribues)
+            .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session.samplingRate))
+            .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
             _ = try SplunkRum.install(with: agentConfig,
                                               moduleConfigurations: [

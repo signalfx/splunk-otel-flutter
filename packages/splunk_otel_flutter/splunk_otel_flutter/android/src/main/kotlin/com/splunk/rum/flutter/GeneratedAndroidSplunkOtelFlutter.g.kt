@@ -78,6 +78,17 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
+enum class GeneratedUserTrackingMode(val raw: Int) {
+  NO_TRACKING(0),
+  ANONYMOUS_TRACKING(1);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedUserTrackingMode? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedSlowRenderingModuleConfiguration (
   val isEnabled: Boolean,
@@ -147,7 +158,7 @@ data class GeneratedAgentConfiguration (
   val deploymentEnvironment: String,
   val appVersion: String? = null,
   val enableDebugLogging: Boolean,
-  val globalAttributes: Map<String?, Any?>,
+  val globalAttributes: Map<String, Any?>,
   val user: GeneratedUserConfiguration,
   val session: GeneratedSessionConfiguration,
   val instrumentedProcessName: String? = null,
@@ -161,7 +172,7 @@ data class GeneratedAgentConfiguration (
       val deploymentEnvironment = pigeonVar_list[2] as String
       val appVersion = pigeonVar_list[3] as String?
       val enableDebugLogging = pigeonVar_list[4] as Boolean
-      val globalAttributes = pigeonVar_list[5] as Map<String?, Any?>
+      val globalAttributes = pigeonVar_list[5] as Map<String, Any?>
       val user = pigeonVar_list[6] as GeneratedUserConfiguration
       val session = pigeonVar_list[7] as GeneratedSessionConfiguration
       val instrumentedProcessName = pigeonVar_list[8] as String?
@@ -197,18 +208,21 @@ data class GeneratedAgentConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedEndpointConfiguration (
-  val tmp: String
+  val realm: String,
+  val rumAccessToken: String
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedEndpointConfiguration {
-      val tmp = pigeonVar_list[0] as String
-      return GeneratedEndpointConfiguration(tmp)
+      val realm = pigeonVar_list[0] as String
+      val rumAccessToken = pigeonVar_list[1] as String
+      return GeneratedEndpointConfiguration(realm, rumAccessToken)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      tmp,
+      realm,
+      rumAccessToken,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -225,18 +239,18 @@ data class GeneratedEndpointConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedUserConfiguration (
-  val tmp: String
+  val trackingMode: GeneratedUserTrackingMode
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedUserConfiguration {
-      val tmp = pigeonVar_list[0] as String
-      return GeneratedUserConfiguration(tmp)
+      val trackingMode = pigeonVar_list[0] as GeneratedUserTrackingMode
+      return GeneratedUserConfiguration(trackingMode)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      tmp,
+      trackingMode,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -253,18 +267,18 @@ data class GeneratedUserConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedSessionConfiguration (
-  val tmp: String
+  val samplingRate: Double
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedSessionConfiguration {
-      val tmp = pigeonVar_list[0] as String
-      return GeneratedSessionConfiguration(tmp)
+      val samplingRate = pigeonVar_list[0] as Double
+      return GeneratedSessionConfiguration(samplingRate)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      tmp,
+      samplingRate,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -278,70 +292,42 @@ data class GeneratedSessionConfiguration (
 
   override fun hashCode(): Int = toList().hashCode()
 }
-
-/** Generated class from Pigeon that represents data sent in messages. */
-data class GeneratedSpanData (
-  val tmp: String
-)
- {
-  companion object {
-    fun fromList(pigeonVar_list: List<Any?>): GeneratedSpanData {
-      val tmp = pigeonVar_list[0] as String
-      return GeneratedSpanData(tmp)
-    }
-  }
-  fun toList(): List<Any?> {
-    return listOf(
-      tmp,
-    )
-  }
-  override fun equals(other: Any?): Boolean {
-    if (other !is GeneratedSpanData) {
-      return false
-    }
-    if (this === other) {
-      return true
-    }
-    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
-
-  override fun hashCode(): Int = toList().hashCode()
-}
 private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSlowRenderingModuleConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedUserTrackingMode.ofRaw(it.toInt())
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedNavigationModuleConfiguration.fromList(it)
+          GeneratedSlowRenderingModuleConfiguration.fromList(it)
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAgentConfiguration.fromList(it)
+          GeneratedNavigationModuleConfiguration.fromList(it)
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedEndpointConfiguration.fromList(it)
+          GeneratedAgentConfiguration.fromList(it)
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedUserConfiguration.fromList(it)
+          GeneratedEndpointConfiguration.fromList(it)
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSessionConfiguration.fromList(it)
+          GeneratedUserConfiguration.fromList(it)
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSpanData.fromList(it)
+          GeneratedSessionConfiguration.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -349,31 +335,31 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is GeneratedSlowRenderingModuleConfiguration -> {
+      is GeneratedUserTrackingMode -> {
         stream.write(129)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedNavigationModuleConfiguration -> {
+      is GeneratedSlowRenderingModuleConfiguration -> {
         stream.write(130)
         writeValue(stream, value.toList())
       }
-      is GeneratedAgentConfiguration -> {
+      is GeneratedNavigationModuleConfiguration -> {
         stream.write(131)
         writeValue(stream, value.toList())
       }
-      is GeneratedEndpointConfiguration -> {
+      is GeneratedAgentConfiguration -> {
         stream.write(132)
         writeValue(stream, value.toList())
       }
-      is GeneratedUserConfiguration -> {
+      is GeneratedEndpointConfiguration -> {
         stream.write(133)
         writeValue(stream, value.toList())
       }
-      is GeneratedSessionConfiguration -> {
+      is GeneratedUserConfiguration -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is GeneratedSpanData -> {
+      is GeneratedSessionConfiguration -> {
         stream.write(135)
         writeValue(stream, value.toList())
       }
@@ -386,6 +372,8 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterHostApi {
   fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration, callback: (Result<Unit>) -> Unit)
+  fun sessionReplayStart(callback: (Result<Unit>) -> Unit)
+  fun getSessionId(callback: (Result<String>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterHostApi. */
@@ -410,6 +398,41 @@ interface SplunkOtelFlutterHostApi {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
               } else {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStart$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStart{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.getSessionId$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getSessionId{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
               }
             }
           }

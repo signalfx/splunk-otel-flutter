@@ -2,66 +2,37 @@ package com.splunk.rum.flutter
 
 
 import android.app.Activity
-import android.app.Application
 import com.splunk.rum.integration.agent.api.AgentConfiguration
 import com.splunk.rum.integration.agent.api.EndpointConfiguration
 import com.splunk.rum.integration.agent.api.SplunkRum
 import com.splunk.rum.integration.agent.common.attributes.MutableAttributes
-import com.splunk.rum.integration.anr.AnrModuleConfiguration
-import com.splunk.rum.integration.crash.CrashModuleConfiguration
-import com.splunk.rum.integration.httpurlconnection.auto.HttpURLModuleConfiguration
-import com.splunk.rum.integration.interactions.InteractionsModuleConfiguration
 import com.splunk.rum.integration.navigation.NavigationModuleConfiguration
-import com.splunk.rum.integration.navigation.extension.navigation
-import com.splunk.rum.integration.networkmonitor.NetworkMonitorModuleConfiguration
-import com.splunk.rum.integration.okhttp3.auto.OkHttp3AutoModuleConfiguration
-import com.splunk.rum.integration.okhttp3.manual.OkHttp3ManualModuleConfiguration
-import com.splunk.rum.integration.sessionreplay.api.RenderingMode
 import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import com.splunk.rum.integration.slowrendering.SlowRenderingModuleConfiguration
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 
 /** SplunkOtelFlutterPlugin */
 class SplunkOtelFlutterPlugin :
     FlutterPlugin,
-    MethodCallHandler,
-    ActivityAware {
+    ActivityAware,
+    SplunkOtelFlutterHostApi {
 
-    private lateinit var channel: MethodChannel
     private var activity: Activity? = null
 
     // FlutterPlugin
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(binding.binaryMessenger, "splunk_otel_flutter")
-        channel.setMethodCallHandler(this)
+        SplunkOtelFlutterHostApi.setUp(binding.binaryMessenger, this)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-    }
-
-    // MethodChannel
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "getPlatformVersion" ->
-                result.success("Android ${android.os.Build.VERSION.RELEASE}")
-            else -> result.notImplemented()
-        }
     }
 
     // ActivityAware
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity
-
-        initPlugin(activity)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -70,96 +41,69 @@ class SplunkOtelFlutterPlugin :
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         activity = binding.activity
-        initPlugin(activity)
     }
 
     override fun onDetachedFromActivity() {
         activity = null
     }
 
-    private fun initPlugin(activity: Activity?) {
-        if (activity == null) return
-        SplunkIntegration().install(activity.application)
+    override fun install(
+        agentConfiguration: GeneratedAgentConfiguration,
+        navigationModuleConfiguration: GeneratedNavigationModuleConfiguration,
+        slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration,
+        callback: (Result<Unit>) -> Unit
+    ) {
 
-    }
-}
+        val globalAttributes = MutableAttributes() //TODO after specification
 
-
-class SplunkIntegration {
-
-    fun install(app: Application) {
-        val globalAttributes = MutableAttributes()
-        // Uncomment the following to test global attributes
-        // globalAttributes["session.id"] = "wrong"
-        // globalAttributes["name"] = "John Doe"
-        // globalAttributes["age"] = 32
-        // globalAttributes["email"] = "john.doe@example.com"
-        // globalAttributes["isValid"] = true
-
-        val agent = SplunkRum.install(
-            application = app,
-            agentConfiguration = AgentConfiguration(
-                endpoint = EndpointConfiguration(
-                    realm = "",
-                    rumAccessToken = ""
-                ),
-                appName = "Flutter agent app",
-                enableDebugLogging = true,
-                globalAttributes = globalAttributes,
-                deploymentEnvironment = "test-android",
-                deferredUntilForeground = true,
-                //spanInterceptor = { spanData ->
-                //  spanData.toMutableSpanData()
-                // }
+        val agentConfiguration = AgentConfiguration(
+            endpoint = EndpointConfiguration(
+                realm = agentConfiguration.endpoint.realm,
+                rumAccessToken = agentConfiguration.endpoint.rumAccessToken
             ),
-            moduleConfigurations = arrayOf(
-                InteractionsModuleConfiguration(
-                    isEnabled = true
-                ),
-                NavigationModuleConfiguration(
-                    isEnabled = true,
-                    isAutomatedTrackingEnabled = true
-                ),
-                CrashModuleConfiguration(
-                    isEnabled = true
-                ),
-                AnrModuleConfiguration(
-                    isEnabled = true
-                ),
-                HttpURLModuleConfiguration(
-                    isEnabled = true,
-                    capturedRequestHeaders = listOf("Host", "Accept"),
-                    capturedResponseHeaders = listOf("Date", "Content-Type", "Content-Length")
-                ),
-                OkHttp3AutoModuleConfiguration(
-                    isEnabled = true,
-                    capturedRequestHeaders = listOf("User-Agent", "Accept"),
-                    capturedResponseHeaders = listOf("Date", "Content-Type", "Content-Length")
-                ),
-                OkHttp3ManualModuleConfiguration(
-                    capturedRequestHeaders = listOf("Content-Type", "Accept"),
-                    capturedResponseHeaders = listOf("Server", "Content-Type", "Content-Length")
-                ),
-                NetworkMonitorModuleConfiguration(
-                    isEnabled = true
-                ),
-                SlowRenderingModuleConfiguration(
-                    isEnabled = true,
-                    //  interval = Duration.ofMillis(500)
-                )
+            appName = agentConfiguration.appName,
+            enableDebugLogging = agentConfiguration.enableDebugLogging,
+            deploymentEnvironment = agentConfiguration.deploymentEnvironment,
+            //TODO user =  agentConfiguration.user,
+            //TODO session = agentConfiguration.session,
+            globalAttributes = globalAttributes,
+            instrumentedProcessName = agentConfiguration.instrumentedProcessName,
+            deferredUntilForeground = agentConfiguration.deferredUntilForeground,
+        )
+
+        val moduleConfigurations = arrayOf(
+            NavigationModuleConfiguration(
+                isEnabled = navigationModuleConfiguration.isEnabled,
+                isAutomatedTrackingEnabled = navigationModuleConfiguration.isAutomatedTrackingEnabled,
+            ),
+            SlowRenderingModuleConfiguration(
+                isEnabled = slowRenderingModuleConfiguration.isEnabled,
+                interval = Duration.ofMillis((slowRenderingModuleConfiguration.intervalMillis))
             )
         )
 
-        agent.sessionReplay.preferences.renderingMode = RenderingMode.NATIVE
-        agent.sessionReplay.start()
+        try {
+            SplunkRum.install(
+                application = activity!!.application, //TODO mechanism to check and postpone install
+                agentConfiguration = agentConfiguration,
+                moduleConfigurations = moduleConfigurations
+            )
+        } catch (e: Exception) {
+            callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))
 
-        val scheduler = Executors.newSingleThreadScheduledExecutor()
+            return
+        }
 
-        // Schedule the task to run after 10 seconds
-        scheduler.schedule({
-            agent.navigation.track("test track")
-            agent.globalAttributes.set("platform", "flutter")
-            scheduler.shutdown()
-        }, 10, TimeUnit.SECONDS)
+        callback(Result.success(Unit))
+    }
+
+    override fun sessionReplayStart(callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.sessionReplay.start();
+
+        callback(Result.success(Unit))
+    }
+
+    override fun getSessionId(callback: (Result<String>) -> Unit) {
+        callback(Result.success(SplunkRum.instance.session.state.id))
     }
 }
