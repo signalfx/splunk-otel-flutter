@@ -21,9 +21,7 @@ class SplunkOtelFlutter {
 
   SplunkOtelFlutter._internal();
 
-  static SplunkOtelFlutter get instance {
-    return _instance;
-  }
+  static SplunkOtelFlutter get instance => _instance;
 
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 

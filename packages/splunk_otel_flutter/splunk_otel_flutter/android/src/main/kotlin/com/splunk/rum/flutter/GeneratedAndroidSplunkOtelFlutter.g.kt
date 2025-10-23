@@ -157,12 +157,12 @@ data class GeneratedAgentConfiguration (
   val appName: String,
   val deploymentEnvironment: String,
   val appVersion: String? = null,
-  val enableDebugLogging: Boolean,
-  val globalAttributes: Map<String, Any?>,
-  val user: GeneratedUserConfiguration,
-  val session: GeneratedSessionConfiguration,
+  val enableDebugLogging: Boolean? = null,
+  val globalAttributes: Map<String, Any?>? = null,
+  val user: GeneratedUserConfiguration? = null,
+  val session: GeneratedSessionConfiguration? = null,
   val instrumentedProcessName: String? = null,
-  val deferredUntilForeground: Boolean
+  val deferredUntilForeground: Boolean? = null
 )
  {
   companion object {
@@ -171,12 +171,12 @@ data class GeneratedAgentConfiguration (
       val appName = pigeonVar_list[1] as String
       val deploymentEnvironment = pigeonVar_list[2] as String
       val appVersion = pigeonVar_list[3] as String?
-      val enableDebugLogging = pigeonVar_list[4] as Boolean
-      val globalAttributes = pigeonVar_list[5] as Map<String, Any?>
-      val user = pigeonVar_list[6] as GeneratedUserConfiguration
-      val session = pigeonVar_list[7] as GeneratedSessionConfiguration
+      val enableDebugLogging = pigeonVar_list[4] as Boolean?
+      val globalAttributes = pigeonVar_list[5] as Map<String, Any?>?
+      val user = pigeonVar_list[6] as GeneratedUserConfiguration?
+      val session = pigeonVar_list[7] as GeneratedSessionConfiguration?
       val instrumentedProcessName = pigeonVar_list[8] as String?
-      val deferredUntilForeground = pigeonVar_list[9] as Boolean
+      val deferredUntilForeground = pigeonVar_list[9] as Boolean?
       return GeneratedAgentConfiguration(endpoint, appName, deploymentEnvironment, appVersion, enableDebugLogging, globalAttributes, user, session, instrumentedProcessName, deferredUntilForeground)
     }
   }

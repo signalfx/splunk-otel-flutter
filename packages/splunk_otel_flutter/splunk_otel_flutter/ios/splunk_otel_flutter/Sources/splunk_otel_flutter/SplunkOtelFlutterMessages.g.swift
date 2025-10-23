@@ -197,12 +197,12 @@ struct GeneratedAgentConfiguration: Hashable {
   var appName: String
   var deploymentEnvironment: String
   var appVersion: String? = nil
-  var enableDebugLogging: Bool
-  var globalAttributes: [String: Any?]
-  var user: GeneratedUserConfiguration
-  var session: GeneratedSessionConfiguration
+  var enableDebugLogging: Bool? = nil
+  var globalAttributes: [String: Any?]? = nil
+  var user: GeneratedUserConfiguration? = nil
+  var session: GeneratedSessionConfiguration? = nil
   var instrumentedProcessName: String? = nil
-  var deferredUntilForeground: Bool
+  var deferredUntilForeground: Bool? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -211,12 +211,12 @@ struct GeneratedAgentConfiguration: Hashable {
     let appName = pigeonVar_list[1] as! String
     let deploymentEnvironment = pigeonVar_list[2] as! String
     let appVersion: String? = nilOrValue(pigeonVar_list[3])
-    let enableDebugLogging = pigeonVar_list[4] as! Bool
-    let globalAttributes = pigeonVar_list[5] as! [String: Any?]
-    let user = pigeonVar_list[6] as! GeneratedUserConfiguration
-    let session = pigeonVar_list[7] as! GeneratedSessionConfiguration
+    let enableDebugLogging: Bool? = nilOrValue(pigeonVar_list[4])
+    let globalAttributes: [String: Any?]? = nilOrValue(pigeonVar_list[5])
+    let user: GeneratedUserConfiguration? = nilOrValue(pigeonVar_list[6])
+    let session: GeneratedSessionConfiguration? = nilOrValue(pigeonVar_list[7])
     let instrumentedProcessName: String? = nilOrValue(pigeonVar_list[8])
-    let deferredUntilForeground = pigeonVar_list[9] as! Bool
+    let deferredUntilForeground: Bool? = nilOrValue(pigeonVar_list[9])
 
     return GeneratedAgentConfiguration(
       endpoint: endpoint,

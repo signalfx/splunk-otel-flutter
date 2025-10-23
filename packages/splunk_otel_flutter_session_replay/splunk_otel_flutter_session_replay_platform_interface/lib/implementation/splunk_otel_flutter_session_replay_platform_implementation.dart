@@ -18,9 +18,10 @@ import 'package:splunk_otel_flutter_session_replay_platform_interface/platform_i
 
 class SplunkOtelFlutterSessionReplayPlatformImplementation extends SplunkOtelFlutterSessionReplayPlatformInterface{
 
-  SplunkOtelFlutterSessionReplayPlatformImplementation._();
+  SplunkOtelFlutterSessionReplayPlatformImplementation._internal();
 
-  static SplunkOtelFlutterSessionReplayPlatformImplementation get instance {
-    return SplunkOtelFlutterSessionReplayPlatformImplementation._();
-  }
+  static final SplunkOtelFlutterSessionReplayPlatformImplementation _instance =
+  SplunkOtelFlutterSessionReplayPlatformImplementation._internal();
+
+  static SplunkOtelFlutterSessionReplayPlatformImplementation get instance => _instance;
 }

@@ -142,12 +142,12 @@ class GeneratedAgentConfiguration {
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,
-    required this.enableDebugLogging,
-    required this.globalAttributes,
-    required this.user,
-    required this.session,
+    this.enableDebugLogging,
+    this.globalAttributes,
+    this.user,
+    this.session,
     this.instrumentedProcessName,
-    required this.deferredUntilForeground,
+    this.deferredUntilForeground,
   });
 
   GeneratedEndpointConfiguration endpoint;
@@ -158,17 +158,17 @@ class GeneratedAgentConfiguration {
 
   String? appVersion;
 
-  bool enableDebugLogging;
+  bool? enableDebugLogging;
 
-  Map<String, Object?> globalAttributes;
+  Map<String, Object?>? globalAttributes;
 
-  GeneratedUserConfiguration user;
+  GeneratedUserConfiguration? user;
 
-  GeneratedSessionConfiguration session;
+  GeneratedSessionConfiguration? session;
 
   String? instrumentedProcessName;
 
-  bool deferredUntilForeground;
+  bool? deferredUntilForeground;
 
   List<Object?> _toList() {
     return <Object?>[
@@ -195,12 +195,12 @@ class GeneratedAgentConfiguration {
       appName: result[1]! as String,
       deploymentEnvironment: result[2]! as String,
       appVersion: result[3] as String?,
-      enableDebugLogging: result[4]! as bool,
-      globalAttributes: (result[5] as Map<Object?, Object?>?)!.cast<String, Object?>(),
-      user: result[6]! as GeneratedUserConfiguration,
-      session: result[7]! as GeneratedSessionConfiguration,
+      enableDebugLogging: result[4] as bool?,
+      globalAttributes: (result[5] as Map<Object?, Object?>?)?.cast<String, Object?>(),
+      user: result[6] as GeneratedUserConfiguration?,
+      session: result[7] as GeneratedSessionConfiguration?,
       instrumentedProcessName: result[8] as String?,
-      deferredUntilForeground: result[9]! as bool,
+      deferredUntilForeground: result[9] as bool?,
     );
   }
 

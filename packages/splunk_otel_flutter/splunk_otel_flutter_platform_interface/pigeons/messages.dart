@@ -63,32 +63,32 @@ class GeneratedAgentConfiguration {
   final String? appVersion;
 
   // Enables or disables debug logging. Defaults to false.
-  final bool enableDebugLogging;
+  final bool? enableDebugLogging;
 
   // Global attributes sent with all signals.
   // iOS: MutableAttributes; Android: Attributes. Represented here as a map.
-  final Map<String, Object?> globalAttributes;
+  final Map<String, Object?>? globalAttributes;
 
   // User and session configuration (common to iOS and Android).
-  final GeneratedUserConfiguration user;
-  final GeneratedSessionConfiguration session;
+  final GeneratedUserConfiguration? user;
+  final GeneratedSessionConfiguration? session;
 
   // Android-only extras.
   final String? instrumentedProcessName; // Android-only.
-  final bool deferredUntilForeground; // Android-only.
+  final bool? deferredUntilForeground; // Android-only.
 
   GeneratedAgentConfiguration({
     required this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
-    required this.appVersion,
-    required this.enableDebugLogging,
-    required this.globalAttributes,
+    this.appVersion,
+    this.enableDebugLogging,
+    this.globalAttributes,
     // this.spanInterceptor, // Removed for first release
-    required this.user,
-    required this.session,
-    required this.instrumentedProcessName, // Android-only.
-    required this.deferredUntilForeground, // Android-only.
+    this.user,
+    this.session,
+    this.instrumentedProcessName, // Android-only.
+    this.deferredUntilForeground, // Android-only.
   });
 }
 

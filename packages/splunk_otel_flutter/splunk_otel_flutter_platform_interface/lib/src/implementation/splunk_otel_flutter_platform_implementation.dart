@@ -21,11 +21,12 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 
 class SplunkOtelFlutterPlatformImplementation
     extends SplunkOtelFlutterPlatformInterface {
-  SplunkOtelFlutterPlatformImplementation._();
+  SplunkOtelFlutterPlatformImplementation._internal();
 
-  static SplunkOtelFlutterPlatformImplementation get instance {
-    return SplunkOtelFlutterPlatformImplementation._();
-  }
+  static final SplunkOtelFlutterPlatformImplementation _instance =
+  SplunkOtelFlutterPlatformImplementation._internal();
+
+  static SplunkOtelFlutterPlatformImplementation get instance => _instance;
 
   final _api = SplunkOtelFlutterHostApi();
 
