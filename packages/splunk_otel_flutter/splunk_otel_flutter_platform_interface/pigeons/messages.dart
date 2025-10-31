@@ -14,15 +14,22 @@ import 'package:pigeon/pigeon.dart';
         '../splunk_otel_flutter/ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkOtelFlutterMessages.g.swift',
   ),
 )
-
 @HostApi(dartHostTestHandler: 'TestSplunkOtelFlutterHostApi')
 abstract class SplunkOtelFlutterHostApi {
   @async
-  void install(
-      GeneratedAgentConfiguration agentConfiguration,
-      GeneratedNavigationModuleConfiguration navigationModuleConfiguration,
-      GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration,
-      );
+  void install({
+    required GeneratedAgentConfiguration agentConfiguration,
+    required GeneratedNavigationModuleConfiguration
+        navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration
+        slowRenderingModuleConfiguration,
+  });
+
+  @async
+  void sessionReplayStart();
+
+  @async
+  String getSessionId();
 }
 
 class GeneratedSlowRenderingModuleConfiguration {
@@ -56,58 +63,58 @@ class GeneratedAgentConfiguration {
   final String? appVersion;
 
   // Enables or disables debug logging. Defaults to false.
-  final bool enableDebugLogging;
+  final bool? enableDebugLogging;
 
   // Global attributes sent with all signals.
   // iOS: MutableAttributes; Android: Attributes. Represented here as a map.
-  final Map<String?, Object?> globalAttributes;
-
-  //TODO This type (SpanInterceptor) cannot be directly passed simply via Pigeon.
+  final Map<String, Object?>? globalAttributes;
 
   // User and session configuration (common to iOS and Android).
-  final GeneratedUserConfiguration user;
-  final GeneratedSessionConfiguration session;
+  final GeneratedUserConfiguration? user;
+  final GeneratedSessionConfiguration? session;
 
   // Android-only extras.
   final String? instrumentedProcessName; // Android-only.
-  final bool deferredUntilForeground; // Android-only.
+  final bool? deferredUntilForeground; // Android-only.
 
   GeneratedAgentConfiguration({
     required this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,
-    required this.enableDebugLogging,
-    required this.globalAttributes,
-    // this.spanInterceptor, // Removed
-    required this.user,
-    required this.session,
+    this.enableDebugLogging,
+    this.globalAttributes,
+    // this.spanInterceptor, // Removed for first release
+    this.user,
+    this.session,
     this.instrumentedProcessName, // Android-only.
-    required this.deferredUntilForeground, // Android-only.
+    this.deferredUntilForeground, // Android-only.
   });
 }
 
-// tmp needs to be here or pigeon files fails
 class GeneratedEndpointConfiguration {
-  final String tmp;
+  final String realm;
+  final String rumAccessToken;
 
-  GeneratedEndpointConfiguration(this.tmp);
+  GeneratedEndpointConfiguration({
+    required this.realm,
+    required this.rumAccessToken,
+  });
 }
 
 class GeneratedUserConfiguration {
-  final String tmp;
+  final GeneratedUserTrackingMode trackingMode;
 
-  GeneratedUserConfiguration(this.tmp);
+  GeneratedUserConfiguration({required this.trackingMode});
+}
+
+enum GeneratedUserTrackingMode {
+  noTracking,
+  anonymousTracking,
 }
 
 class GeneratedSessionConfiguration {
-  final String tmp;
+  final double samplingRate;
 
-  GeneratedSessionConfiguration(this.tmp);
-}
-
-class GeneratedSpanData {
-  final String tmp;
-
-  GeneratedSpanData(this.tmp);
+  GeneratedSessionConfiguration({required this.samplingRate});
 }

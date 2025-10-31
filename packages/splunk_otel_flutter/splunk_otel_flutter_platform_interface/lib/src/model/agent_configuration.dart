@@ -1,4 +1,20 @@
-typedef SpanInterceptor = SpanData? Function(SpanData span);
+/*
+ * Copyright 2025 Splunk Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class AgentConfiguration {
   // Required properties (common to iOS and Android).
@@ -18,7 +34,6 @@ class AgentConfiguration {
   final Map<String, Object?> globalAttributes;
 
   // TBD in future
-  // Callback to filter or modify outgoing spans.
   // final SpanInterceptor? spanInterceptor;
 
   // User and session configuration (common to iOS and Android).
@@ -43,50 +58,50 @@ class AgentConfiguration {
     this.deferredUntilForeground = false, // Android-only.
   })  : globalAttributes = globalAttributes ?? const {},
         user = user ?? const UserConfiguration(),
-        session = session ?? const SessionConfiguration();
-
-  AgentConfiguration copyWith({
-    EndpointConfiguration? endpoint,
-    String? appName,
-    String? deploymentEnvironment,
-    String? appVersion,
-    bool? enableDebugLogging,
-    Map<String, Object?>? globalAttributes,
-    SpanInterceptor? spanInterceptor,
-    UserConfiguration? user,
-    SessionConfiguration? session,
-    String? instrumentedProcessName, // Android-only.
-    bool? deferredUntilForeground, // Android-only.
-  }) {
-    return AgentConfiguration(
-      endpoint: endpoint ?? this.endpoint,
-      appName: appName ?? this.appName,
-      deploymentEnvironment: deploymentEnvironment ?? this.deploymentEnvironment,
-      appVersion: appVersion ?? this.appVersion,
-      enableDebugLogging: enableDebugLogging ?? this.enableDebugLogging,
-      globalAttributes: globalAttributes ?? this.globalAttributes,
-      //spanInterceptor: spanInterceptor ?? this.spanInterceptor,
-      user: user ?? this.user,
-      session: session ?? this.session,
-      instrumentedProcessName:
-      instrumentedProcessName ?? this.instrumentedProcessName, // Android-only.
-      deferredUntilForeground:
-      deferredUntilForeground ?? this.deferredUntilForeground, // Android-only.
-    );
-  }
+        session = session ?? SessionConfiguration();
 }
 
-// Placeholder types to illustrate structure.
 class EndpointConfiguration {
-  const EndpointConfiguration();
+  final String realm;
+  final String rumAccessToken;
+
+  const EndpointConfiguration({
+    required this.realm,
+    required this.rumAccessToken,
+  });
 }
 
 class UserConfiguration {
-  const UserConfiguration();
+  final UserTrackingMode trackingMode;
+
+  const UserConfiguration({
+    this.trackingMode = UserTrackingMode.noTracking,
+  });
+}
+
+extension UserConfigurationExtension on UserConfiguration {
+  GeneratedUserConfiguration toGeneratedUserConfiguration() {
+    switch (trackingMode) {
+      case UserTrackingMode.noTracking:
+        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.noTracking);
+      case UserTrackingMode.anonymousTracking:
+        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.anonymousTracking);
+      }
+  }
+}
+
+enum UserTrackingMode {
+  noTracking,
+  anonymousTracking,
 }
 
 class SessionConfiguration {
-  const SessionConfiguration();
-}
+  final double samplingRate;
 
-class SpanData {}
+  SessionConfiguration({this.samplingRate = 1.0}) {
+    if (samplingRate < 0.0 || samplingRate > 1.0) {
+      throw ArgumentError(
+          "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate");
+    }
+  }
+}

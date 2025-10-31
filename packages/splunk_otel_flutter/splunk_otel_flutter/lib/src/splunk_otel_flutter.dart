@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 Splunk Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 class SplunkOtelFlutter {
@@ -5,9 +21,7 @@ class SplunkOtelFlutter {
 
   SplunkOtelFlutter._internal();
 
-  static SplunkOtelFlutter get instance {
-    return _instance;
-  }
+  static SplunkOtelFlutter get instance => _instance;
 
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
@@ -16,8 +30,16 @@ class SplunkOtelFlutter {
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,
   }) async {
-    _delegate.install(
+    await _delegate.install(
         agentConfiguration: agentConfiguration,
         moduleConfigurations: moduleConfigurations);
+  }
+
+  Future<void> startSessionReplay() async {
+    await _delegate.sessionReplayStart();
+  }
+
+  Future<String> getSessionId() async{
+    return await _delegate.getSessionId();
   }
 }

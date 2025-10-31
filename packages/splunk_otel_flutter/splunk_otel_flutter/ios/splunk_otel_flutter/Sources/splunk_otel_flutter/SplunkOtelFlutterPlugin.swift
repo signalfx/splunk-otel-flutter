@@ -1,64 +1,96 @@
+//
+/*
+Copyright 2025 Splunk Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 import Flutter
 import UIKit
 import SplunkAgent
 import OpenTelemetryApi
 import SplunkSlowFrameDetector
+import SplunkNavigation
 
-public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
- let channel = FlutterMethodChannel(name: "splunk_otel_flutter", binaryMessenger: registrar.messenger())
-    let instance = SplunkOtelFlutterPlugin()
+extension FlutterError: Error {}
 
-      let endpointConfig = EndpointConfiguration(
-          realm: "",
-          rumAccessToken: ""
-      )
+public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutterHostApi {
+  
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let instance = SplunkOtelFlutterPlugin()
 
-      let agentConfig = AgentConfiguration(
-          endpoint: endpointConfig,
-          appName: "Flutter agent app",
-          deploymentEnvironment: "test-ios"
-      )
-          .enableDebugLogging(true)
-          .globalAttributes(MutableAttributes(dictionary: [
-              "teststring": .string("value"),
-              "testint": .int(100)]))
-          .spanInterceptor { spanData in
-              var attributes = spanData.attributes
-              attributes["test_attribute"] = AttributeValue("test_value")
-
-              var modifiedSpan = spanData
-              modifiedSpan.settingAttributes(attributes)
-
-              return modifiedSpan
-          }
-      do {
-          _ = try SplunkRum.install(with: agentConfig,
-                                    moduleConfigurations: [SlowFrameDetectorConfiguration(isEnabled: true)])
-      } catch {
-          print("Unable to start the Splunk agent, error: \(error)")
-      }
-
-      // Navigation Instrumentation
-      SplunkRum.shared.navigation.preferences.enableAutomatedTracking = true
-      SplunkRum.shared.slowFrameDetector
-
-      // Start session replay
-      SplunkRum.shared.sessionReplay.start()
-
-      // API to update Global Attributes
-      SplunkRum.shared.globalAttributes.setBool(true, for: "isWorkingHard")
-      SplunkRum.shared.globalAttributes[string: "secret"] = "Monster"
-
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    default:
-      result(FlutterMethodNotImplemented)
+        SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
     }
-  }
+    
+    func install(agentConfiguration: GeneratedAgentConfiguration,
+                 navigationModuleConfiguration: GeneratedNavigationModuleConfiguration,
+                 slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration,
+                 completion: @escaping (Result<Void, any Error>) -> Void) {
+        
+        let endpointConfig = EndpointConfiguration(
+            realm: agentConfiguration.endpoint.realm,
+            rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
+        )
+        
+        let mutableAttribues = mutableAttributes(from: agentConfiguration.globalAttributes)
+        
+        let agentConfig = AgentConfiguration(
+            endpoint: endpointConfig,
+            appName: agentConfiguration.appName,
+            deploymentEnvironment: agentConfiguration.deploymentEnvironment,
+        )
+            .appVersion(agentConfiguration.appVersion ?? "")
+            .enableDebugLogging(agentConfiguration.enableDebugLogging)
+            .globalAttributes(mutableAttribues)
+            .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session.samplingRate))
+            .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
+        do {
+            _ = try SplunkRum.install(with: agentConfig,
+                                              moduleConfigurations: [
+                                                SlowFrameDetectorConfiguration(isEnabled: slowRenderingModuleConfiguration.isEnabled),
+                                                NavigationConfiguration(isEnabled: navigationModuleConfiguration.isEnabled,enableAutomatedTracking: navigationModuleConfiguration.isAutomatedTrackingEnabled)
+                                                // TODO rest configurations
+                                              ]
+            )
+            
+            completion(.success(()))
+        } catch {
+            completion(
+                .failure(
+                    FlutterError(
+                        code: "INSTALL_FAILED",
+                        message: error.localizedDescription,
+                        details: nil,
+                    )
+                )
+            )
+        }
+         
+        
+        completion(.success(()))
+    }
+    
+    
+    func sessionReplayStart(completion: @escaping (Result<Void, any Error>) -> Void) {
+        SplunkRum.shared.sessionReplay.start()
+        
+        completion(.success(()))
+    }
+    
+    func getSessionId(completion: @escaping (Result<String, any Error>) -> Void) {
+        completion(.success(SplunkRum.shared.session.state.id))
+    }
+    
+    
 }
+
