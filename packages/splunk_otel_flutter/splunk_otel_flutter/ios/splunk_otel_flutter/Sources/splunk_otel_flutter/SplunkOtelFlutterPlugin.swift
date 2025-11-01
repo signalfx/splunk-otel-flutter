@@ -42,7 +42,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
         )
         
-        let mutableAttribues = mutableAttributes(from: agentConfiguration.globalAttributes)
+        //let mutableAttribues = mutableAttributes(from: agentConfiguration.globalAttributes)
         
         let agentConfig = AgentConfiguration(
             endpoint: endpointConfig,
@@ -50,12 +50,12 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         )
             .appVersion(agentConfiguration.appVersion ?? "")
-            .enableDebugLogging(agentConfiguration.enableDebugLogging)
-            .globalAttributes(mutableAttribues)
-            .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session.samplingRate))
-            .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
+            .enableDebugLogging(agentConfiguration.enableDebugLogging ?? false)
+            //.globalAttributes(mutableAttribues)
+            .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
+            .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
-            _ = try SplunkRum.install(with: agentConfig,
+           let agent = try SplunkRum.install(with: agentConfig,
                                               moduleConfigurations: [
                                                 SlowFrameDetectorConfiguration(isEnabled: slowRenderingModuleConfiguration.isEnabled),
                                                 NavigationConfiguration(isEnabled: navigationModuleConfiguration.isEnabled,enableAutomatedTracking: navigationModuleConfiguration.isAutomatedTrackingEnabled)
@@ -90,7 +90,5 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     func getSessionId(completion: @escaping (Result<String, any Error>) -> Void) {
         completion(.success(SplunkRum.shared.session.state.id))
     }
-    
-    
 }
 

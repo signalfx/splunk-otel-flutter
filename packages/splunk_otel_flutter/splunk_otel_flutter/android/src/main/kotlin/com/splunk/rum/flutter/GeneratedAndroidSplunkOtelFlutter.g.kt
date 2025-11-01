@@ -89,6 +89,57 @@ enum class GeneratedUserTrackingMode(val raw: Int) {
   }
 }
 
+enum class GeneratedSessionReplayStatus(val raw: Int) {
+  IS_RECORDING(0),
+  NOT_STARTED(1),
+  STOPPED(2),
+  BELOW_MIN_SDK_VERSION(3),
+  STORAGE_LIMIT_REACHED(4),
+  INTERNAL_ERROR(5);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedSessionReplayStatus? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class GeneratedRenderingMode(val raw: Int) {
+  NATIVE(0),
+  WIREFRAME_ONLY(1);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedRenderingMode? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class GeneratedRecordingMaskType(val raw: Int) {
+  ERASING(0),
+  COVERING(1);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedRecordingMaskType? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class GeneratedStatus(val raw: Int) {
+  RUNNING(0),
+  NOT_INSTALLED(1),
+  SUB_PROCESS(2),
+  SAMPLED_OUT(3),
+  UNSUPPORTED_OS_VERSION(4);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedStatus? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedSlowRenderingModuleConfiguration (
   val isEnabled: Boolean,
@@ -158,7 +209,7 @@ data class GeneratedAgentConfiguration (
   val deploymentEnvironment: String,
   val appVersion: String? = null,
   val enableDebugLogging: Boolean? = null,
-  val globalAttributes: Map<String, Any?>? = null,
+  val globalAttributes: GeneratedMutableAttributes? = null,
   val user: GeneratedUserConfiguration? = null,
   val session: GeneratedSessionConfiguration? = null,
   val instrumentedProcessName: String? = null,
@@ -172,7 +223,7 @@ data class GeneratedAgentConfiguration (
       val deploymentEnvironment = pigeonVar_list[2] as String
       val appVersion = pigeonVar_list[3] as String?
       val enableDebugLogging = pigeonVar_list[4] as Boolean?
-      val globalAttributes = pigeonVar_list[5] as Map<String, Any?>?
+      val globalAttributes = pigeonVar_list[5] as GeneratedMutableAttributes?
       val user = pigeonVar_list[6] as GeneratedUserConfiguration?
       val session = pigeonVar_list[7] as GeneratedSessionConfiguration?
       val instrumentedProcessName = pigeonVar_list[8] as String?
@@ -292,6 +343,326 @@ data class GeneratedSessionConfiguration (
 
   override fun hashCode(): Int = toList().hashCode()
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRecordingMask (
+  val rect: GeneratedRect,
+  val type: GeneratedRecordingMaskType
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMask {
+      val rect = pigeonVar_list[0] as GeneratedRect
+      val type = pigeonVar_list[1] as GeneratedRecordingMaskType
+      return GeneratedRecordingMask(rect, type)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      rect,
+      type,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRecordingMask) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRect (
+  val left: Double,
+  val top: Double,
+  val width: Double,
+  val height: Double
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRect {
+      val left = pigeonVar_list[0] as Double
+      val top = pigeonVar_list[1] as Double
+      val width = pigeonVar_list[2] as Double
+      val height = pigeonVar_list[3] as Double
+      return GeneratedRect(left, top, width, height)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      left,
+      top,
+      width,
+      height,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRect) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributes (
+  val attributes: Map<String, Any?>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributes {
+      val attributes = pigeonVar_list[0] as Map<String, Any?>
+      return GeneratedMutableAttributes(attributes)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      attributes,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributes) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeInt (
+  val value: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeInt {
+      val value = pigeonVar_list[0] as Long
+      return GeneratedMutableAttributeInt(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeInt) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeDouble (
+  val value: Double
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeDouble {
+      val value = pigeonVar_list[0] as Double
+      return GeneratedMutableAttributeDouble(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeDouble) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeString (
+  val value: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeString {
+      val value = pigeonVar_list[0] as String
+      return GeneratedMutableAttributeString(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeString) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeBool (
+  val value: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeBool {
+      val value = pigeonVar_list[0] as Boolean
+      return GeneratedMutableAttributeBool(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeBool) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeListInt (
+  val value: List<Long>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeListInt {
+      val value = pigeonVar_list[0] as List<Long>
+      return GeneratedMutableAttributeListInt(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeListInt) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeListDouble (
+  val value: List<Double>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeListDouble {
+      val value = pigeonVar_list[0] as List<Double>
+      return GeneratedMutableAttributeListDouble(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeListDouble) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeListString (
+  val value: List<String>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeListString {
+      val value = pigeonVar_list[0] as List<String>
+      return GeneratedMutableAttributeListString(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeListString) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedMutableAttributeListBool (
+  val value: List<Boolean>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedMutableAttributeListBool {
+      val value = pigeonVar_list[0] as List<Boolean>
+      return GeneratedMutableAttributeListBool(value)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      value,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedMutableAttributeListBool) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
 private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -301,33 +672,108 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSlowRenderingModuleConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedSessionReplayStatus.ofRaw(it.toInt())
         }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedNavigationModuleConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedRenderingMode.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAgentConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedRecordingMaskType.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedEndpointConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedStatus.ofRaw(it.toInt())
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedUserConfiguration.fromList(it)
+          GeneratedSlowRenderingModuleConfiguration.fromList(it)
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedNavigationModuleConfiguration.fromList(it)
+        }
+      }
+      136.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedAgentConfiguration.fromList(it)
+        }
+      }
+      137.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedEndpointConfiguration.fromList(it)
+        }
+      }
+      138.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedUserConfiguration.fromList(it)
+        }
+      }
+      139.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedSessionConfiguration.fromList(it)
+        }
+      }
+      140.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedRecordingMask.fromList(it)
+        }
+      }
+      141.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedRect.fromList(it)
+        }
+      }
+      142.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributes.fromList(it)
+        }
+      }
+      143.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeInt.fromList(it)
+        }
+      }
+      144.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeDouble.fromList(it)
+        }
+      }
+      145.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeString.fromList(it)
+        }
+      }
+      146.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeBool.fromList(it)
+        }
+      }
+      147.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListInt.fromList(it)
+        }
+      }
+      148.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListDouble.fromList(it)
+        }
+      }
+      149.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListString.fromList(it)
+        }
+      }
+      150.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListBool.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -339,28 +785,88 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         stream.write(129)
         writeValue(stream, value.raw)
       }
-      is GeneratedSlowRenderingModuleConfiguration -> {
+      is GeneratedSessionReplayStatus -> {
         stream.write(130)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedNavigationModuleConfiguration -> {
+      is GeneratedRenderingMode -> {
         stream.write(131)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedAgentConfiguration -> {
+      is GeneratedRecordingMaskType -> {
         stream.write(132)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedEndpointConfiguration -> {
+      is GeneratedStatus -> {
         stream.write(133)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedUserConfiguration -> {
+      is GeneratedSlowRenderingModuleConfiguration -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is GeneratedSessionConfiguration -> {
+      is GeneratedNavigationModuleConfiguration -> {
         stream.write(135)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedAgentConfiguration -> {
+        stream.write(136)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedEndpointConfiguration -> {
+        stream.write(137)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedUserConfiguration -> {
+        stream.write(138)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedSessionConfiguration -> {
+        stream.write(139)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedRecordingMask -> {
+        stream.write(140)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedRect -> {
+        stream.write(141)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributes -> {
+        stream.write(142)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeInt -> {
+        stream.write(143)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeDouble -> {
+        stream.write(144)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeString -> {
+        stream.write(145)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeBool -> {
+        stream.write(146)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListInt -> {
+        stream.write(147)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListDouble -> {
+        stream.write(148)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListString -> {
+        stream.write(149)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListBool -> {
+        stream.write(150)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -373,7 +879,40 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
 interface SplunkOtelFlutterHostApi {
   fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration, callback: (Result<Unit>) -> Unit)
   fun sessionReplayStart(callback: (Result<Unit>) -> Unit)
-  fun getSessionId(callback: (Result<String>) -> Unit)
+  fun sessionReplayStop(callback: (Result<Unit>) -> Unit)
+  fun sessionReplayStateGetStatus(callback: (Result<GeneratedSessionReplayStatus>) -> Unit)
+  fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit)
+  fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit)
+  fun sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, callback: (Result<Unit>) -> Unit)
+  fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMask?>) -> Unit)
+  fun sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMask?, callback: (Result<Unit>) -> Unit)
+  fun stateGetAppName(callback: (Result<String>) -> Unit)
+  fun stateGetAppVersion(callback: (Result<String>) -> Unit)
+  fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit)
+  fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit)
+  fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit)
+  fun stateGetIsDebugLoggingEnabled(callback: (Result<Boolean>) -> Unit)
+  fun stateGetInstrumentedProcessName(callback: (Result<String?>) -> Unit)
+  fun stateGetDeferredUntilForeground(callback: (Result<Boolean>) -> Unit)
+  fun sessionStateGetId(callback: (Result<String>) -> Unit)
+  fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit)
+  fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit)
+  fun userPreferencesGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode?>) -> Unit)
+  fun userPreferencesSetUserTrackingMode(trackingMode: GeneratedUserTrackingMode?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesGet(key: String, callback: (Result<Any?>) -> Unit)
+  fun globalAttributesGetAll(callback: (Result<GeneratedMutableAttributes?>) -> Unit)
+  fun globalAttributesRemove(key: String, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesRemoveAll(callback: (Result<Unit>) -> Unit)
+  fun globalAttributesContains(key: String, callback: (Result<Boolean>) -> Unit)
+  fun globalAttributesSetString(key: String, value: String?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetInt(key: String, value: Long?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetDouble(key: String, value: Double?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetBool(key: String, value: Boolean?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetStringList(key: String, value: List<String>?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetIntList(key: String, value: List<Long>?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetDoubleList(key: String, value: List<Double>?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetBoolList(key: String, value: List<Boolean>?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetAll(key: String, value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterHostApi. */
@@ -423,16 +962,634 @@ interface SplunkOtelFlutterHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.getSessionId$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStop$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.getSessionId{ result: Result<String> ->
+            api.sessionReplayStop{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetStatus$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStateGetStatus{ result: Result<GeneratedSessionReplayStatus> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
               } else {
                 val data = result.getOrNull()
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStateGetRenderingMode{ result: Result<GeneratedRenderingMode> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesGetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayPreferencesGetRenderingMode{ result: Result<GeneratedRenderingMode?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesSetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val renderingModeArg = args[0] as GeneratedRenderingMode?
+            api.sessionReplayPreferencesSetRenderingMode(renderingModeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayGetRecordingMask$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayGetRecordingMask{ result: Result<GeneratedRecordingMask?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplaySetRecordingMask$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val recordingMaskArg = args[0] as GeneratedRecordingMask?
+            api.sessionReplaySetRecordingMask(recordingMaskArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetAppName{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppVersion$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetAppVersion{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetStatus$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetStatus{ result: Result<GeneratedStatus> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetEndpointConfiguration{ result: Result<GeneratedEndpointConfiguration> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeploymentEnvironment$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetDeploymentEnvironment{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetIsDebugLoggingEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetIsDebugLoggingEnabled{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetInstrumentedProcessName$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetInstrumentedProcessName{ result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeferredUntilForeground$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.stateGetDeferredUntilForeground{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionStateGetId{ result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetSamplingRate$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionStateGetSamplingRate{ result: Result<Double> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userStateGetUserTrackingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.userStateGetUserTrackingMode{ result: Result<GeneratedUserTrackingMode> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesGetUserTrackingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.userPreferencesGetUserTrackingMode{ result: Result<GeneratedUserTrackingMode?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val trackingModeArg = args[0] as GeneratedUserTrackingMode?
+            api.userPreferencesSetUserTrackingMode(trackingModeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            api.globalAttributesGet(keyArg) { result: Result<Any?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGetAll$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.globalAttributesGetAll{ result: Result<GeneratedMutableAttributes?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            api.globalAttributesRemove(keyArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemoveAll$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.globalAttributesRemoveAll{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            api.globalAttributesContains(keyArg) { result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as String?
+            api.globalAttributesSetString(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as Long?
+            api.globalAttributesSetInt(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as Double?
+            api.globalAttributesSetDouble(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as Boolean?
+            api.globalAttributesSetBool(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as List<String>?
+            api.globalAttributesSetStringList(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as List<Long>?
+            api.globalAttributesSetIntList(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as List<Double>?
+            api.globalAttributesSetDoubleList(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as List<Boolean>?
+            api.globalAttributesSetBoolList(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val keyArg = args[0] as String
+            val valueArg = args[1] as GeneratedMutableAttributes
+            api.globalAttributesSetAll(keyArg, valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
               }
             }
           }

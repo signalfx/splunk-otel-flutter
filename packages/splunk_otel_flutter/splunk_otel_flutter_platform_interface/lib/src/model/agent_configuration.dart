@@ -69,6 +69,24 @@ class EndpointConfiguration {
     required this.realm,
     required this.rumAccessToken,
   });
+
+  factory EndpointConfiguration.fromGeneratedEndpointConfiguration({
+    required GeneratedEndpointConfiguration generatedConfiguration,
+  }) {
+    return EndpointConfiguration(
+      realm: generatedConfiguration.realm,
+      rumAccessToken: generatedConfiguration.rumAccessToken,
+    );
+  }
+}
+
+extension EndpointConfigurationExtension on EndpointConfiguration {
+  GeneratedEndpointConfiguration toGeneratedEndpointConfiguration() {
+    return GeneratedEndpointConfiguration(
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    );
+  }
 }
 
 class UserConfiguration {
@@ -83,16 +101,29 @@ extension UserConfigurationExtension on UserConfiguration {
   GeneratedUserConfiguration toGeneratedUserConfiguration() {
     switch (trackingMode) {
       case UserTrackingMode.noTracking:
-        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.noTracking);
+        return GeneratedUserConfiguration(
+            trackingMode: GeneratedUserTrackingMode.noTracking);
       case UserTrackingMode.anonymousTracking:
-        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.anonymousTracking);
-      }
+        return GeneratedUserConfiguration(
+            trackingMode: GeneratedUserTrackingMode.anonymousTracking);
+    }
   }
 }
 
 enum UserTrackingMode {
   noTracking,
   anonymousTracking,
+}
+
+extension UserTrackingModeExtension on UserTrackingMode {
+  GeneratedUserTrackingMode toGeneratedUserTrackingMode() {
+    switch (this) {
+      case UserTrackingMode.noTracking:
+        return GeneratedUserTrackingMode.noTracking;
+      case UserTrackingMode.anonymousTracking:
+        return GeneratedUserTrackingMode.anonymousTracking;
+    }
+  }
 }
 
 class SessionConfiguration {

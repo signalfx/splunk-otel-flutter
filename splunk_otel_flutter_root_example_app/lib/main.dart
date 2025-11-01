@@ -50,9 +50,9 @@ void main() async {
     ],
   );
 
-  await SplunkOtelFlutter.instance.startSessionReplay();
+  await SplunkOtelFlutter.instance.sessionReplay.start();
 
-  final sessionId = await SplunkOtelFlutter.instance.getSessionId();
+  final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
 
   debugPrint('-------------');
   debugPrint('Session id: $sessionId');

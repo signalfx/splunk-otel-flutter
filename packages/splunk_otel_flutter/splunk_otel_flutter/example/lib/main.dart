@@ -23,8 +23,7 @@ void main() async {
         "keyString": "value",
         "keyInt": 5,
         "keyDouble": 5.0,
-        "keyBool": true,
-        "keyArray": [1,2,"test","2"]
+        "keyBool": Object(),
       },
     ),
     moduleConfigurations: [
@@ -33,9 +32,9 @@ void main() async {
     ],
   );
 
-  await SplunkOtelFlutter.instance.startSessionReplay();
+  await SplunkOtelFlutter.instance.sessionReplay.start();
 
-  final sessionId = await SplunkOtelFlutter.instance.getSessionId();
+  final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
 
   debugPrint('-------------');
   debugPrint('Session id: $sessionId');
@@ -54,19 +53,108 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-  }
 
+    // session replay - sensitivity ignored
+    SplunkOtelFlutter.instance.sessionReplay.start();
+    SplunkOtelFlutter.instance.sessionReplay.stop();
+    SplunkOtelFlutter.instance.sessionReplay.state.getStatus();
+    SplunkOtelFlutter.instance.sessionReplay.state.getRenderingMode();
+    SplunkOtelFlutter.instance.sessionReplay.preferences.getRenderingMode();
+    SplunkOtelFlutter.instance.sessionReplay.preferences.setRenderingMode(
+      renderingMode: RenderingMode.native,
+    );
+    SplunkOtelFlutter.instance.sessionReplay.recordingMask.getRecordingMask();
+    SplunkOtelFlutter.instance.sessionReplay.recordingMask.setRecordingMask(
+      recordingMask: RecordingMask(
+        rect: Rect.zero,
+        type: RecordingMaskType.covering,
+      ),
+    );
+
+    // state
+    SplunkOtelFlutter.instance.state.getAppName();
+    SplunkOtelFlutter.instance.state.getAppVersion();
+    SplunkOtelFlutter.instance.state.getStatus();
+    SplunkOtelFlutter.instance.state.getEndpointConfiguration();
+    SplunkOtelFlutter.instance.state.getDeploymentEnvironment();
+    SplunkOtelFlutter.instance.state.getIsDebugLoggingEnabled();
+    SplunkOtelFlutter.instance.state.getInstrumentedProcessName();
+    SplunkOtelFlutter.instance.state.getDeferredUntilForeground();
+
+    // session
+    SplunkOtelFlutter.instance.session.state.getId();
+    SplunkOtelFlutter.instance.session.state.getSamplingRate();
+
+    // user
+    SplunkOtelFlutter.instance.user.state.getTrackingMode();
+    SplunkOtelFlutter.instance.user.preferences.getTrackingMode();
+    SplunkOtelFlutter.instance.user.preferences.setTrackingMode(
+      userTrackingMode: UserTrackingMode.noTracking,
+    );
+
+    // global attributes
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesGet(
+      key: "my_key",
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesGetAll();
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesRemove(
+      key: "old_key",
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesRemoveAll();
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesContains(
+      key: "existing_key",
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetString(
+      key: "user_name",
+      value: "Alice",
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetInt(
+      key: "user_id",
+      value: 123,
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetDouble(
+      key: "app_version",
+      value: 1.5,
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetBool(
+      key: "is_logged_in",
+      value: true,
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetStringList(
+      key: "tags",
+      value: ["mobile", "flutter"],
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetIntList(
+      key: "permissions",
+      value: [1, 2, 3],
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetDoubleList(
+      key: "scores",
+      value: [9.5, 8.0],
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetBoolList(
+      key: "features",
+      value: [true, false],
+    );
+    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetAll(
+      key: "bulk_data",
+      attributes: MutableAttributes(
+        attributes: {
+          "attr1": MutableAttributeString(value: "val1"),
+          "attr2": MutableAttributeInt(value: 100),
+        },
+      ),
+    );
+
+    // open telemetry ignored
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: const Center(
-          child: Text('Running on:'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: const Center(child: Text('Running on:')),
       ),
     );
   }

@@ -248,7 +248,7 @@ void main() {
           agentConfiguration: agentConfig,
           moduleConfigurations: [],
         );
-        final sessionId = await implementation.getSessionId();
+        final sessionId = await implementation.sessionStateGetId();
 
         // Assert
         expect(installCalled, true);
@@ -289,7 +289,7 @@ void main() {
           moduleConfigurations: [],
         );
         await implementation.sessionReplayStart();
-        final retrievedSessionId = await implementation.getSessionId();
+        final retrievedSessionId = await implementation.sessionStateGetId();
 
         // Assert
         expect(callOrder, ['install', 'sessionReplay', 'getSessionId']);
@@ -600,7 +600,7 @@ void main() {
 
         // Act & Assert
         expect(
-              () => implementation.getSessionId(),
+              () => implementation.sessionStateGetId(),
           throwsException,
         );
       });
