@@ -100,8 +100,7 @@ class SplunkOtelFlutterPlatformImplementation
   Future<EndpointConfiguration> stateGetEndpointConfiguration() async {
     final generatedConfiguration = await _api.stateGetEndpointConfiguration();
 
-    return EndpointConfiguration.fromGeneratedEndpointConfiguration(
-        generatedConfiguration: generatedConfiguration);
+    return generatedConfiguration.toEndpointConfiguration();
   }
 
   @override
@@ -132,17 +131,17 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
   @override
-  Future<RecordingMask?> sessionReplayGetRecordingMask() async {
+  Future<RecordingMaskList?> sessionReplayGetRecordingMask() async {
     final generatedMask = await _api.sessionReplayGetRecordingMask();
 
-    return generatedMask?.toRecordingMask();
+    return generatedMask?.toRecordingMaskList();
   }
 
   @override
   Future<void> sessionReplaySetRecordingMask(
-          {required RecordingMask recordingMask}) async =>
+          {required RecordingMaskList recordingMask}) async =>
       await _api.sessionReplaySetRecordingMask(
-        recordingMask: recordingMask.toGeneratedRecordingMask(),
+        recordingMask: recordingMask.toGeneratedRecordingMaskList(),
       );
 
   @override
@@ -228,7 +227,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<MutableAttributeValue> globalAttributesGet({
     required String key,
-  }) async{
+  }) async {
     final generatedAttribute = await _api.globalAttributesGet(key: key);
 
     return generatedAttribute.toMutableAttributeValue();
@@ -262,7 +261,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetString({
     required String key,
-    required String? value,
+    required String value,
   }) async {
     await _api.globalAttributesSetString(key: key, value: value);
   }
@@ -270,7 +269,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetInt({
     required String key,
-    required int? value,
+    required int value,
   }) async {
     await _api.globalAttributesSetInt(key: key, value: value);
   }
@@ -278,7 +277,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetDouble({
     required String key,
-    required double? value,
+    required double value,
   }) async {
     await _api.globalAttributesSetDouble(key: key, value: value);
   }
@@ -286,7 +285,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetBool({
     required String key,
-    required bool? value,
+    required bool value,
   }) async {
     await _api.globalAttributesSetBool(key: key, value: value);
   }
@@ -294,7 +293,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetStringList({
     required String key,
-    required List<String>? value,
+    required List<String> value,
   }) async {
     await _api.globalAttributesSetStringList(key: key, value: value);
   }
@@ -302,7 +301,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetIntList({
     required String key,
-    required List<int>? value,
+    required List<int> value,
   }) async {
     await _api.globalAttributesSetIntList(key: key, value: value);
   }
@@ -310,7 +309,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetDoubleList({
     required String key,
-    required List<double>? value,
+    required List<double> value,
   }) async {
     await _api.globalAttributesSetDoubleList(key: key, value: value);
   }
@@ -318,7 +317,7 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> globalAttributesSetBoolList({
     required String key,
-    required List<bool>? value,
+    required List<bool> value,
   }) async {
     await _api.globalAttributesSetBoolList(key: key, value: value);
   }

@@ -42,7 +42,7 @@ extension SessionReplayStatusExtension on SessionReplayStatus {
 }
 
 extension GeneratedSessionReplayStatusExtension
-on GeneratedSessionReplayStatus {
+    on GeneratedSessionReplayStatus {
   SessionReplayStatus toSessionReplayStatus() {
     switch (this) {
       case GeneratedSessionReplayStatus.isRecording:
@@ -88,11 +88,17 @@ extension GeneratedRenderingModeExtension on GeneratedRenderingMode {
   }
 }
 
-class RecordingMask {
+class RecordingMaskList {
+  final List<RecordingMaskElement> elements;
+
+  RecordingMaskList({required this.elements});
+}
+
+class RecordingMaskElement {
   final Rect rect;
   final RecordingMaskType type;
 
-  RecordingMask({required this.rect, required this.type});
+  RecordingMaskElement({required this.rect, required this.type});
 }
 
 enum RecordingMaskType {
@@ -139,21 +145,39 @@ extension GeneratedRecordingMaskTypeExtension on GeneratedRecordingMaskType {
   }
 }
 
-extension RecordingMaskExtension on RecordingMask {
-  GeneratedRecordingMask toGeneratedRecordingMask() {
-    return GeneratedRecordingMask(
+extension RecordingMaskExtension on RecordingMaskElement {
+  GeneratedRecordingMaskElement toGeneratedRecordingMaskElement() {
+    return GeneratedRecordingMaskElement(
       rect: rect.toGeneratedRect(),
       type: type.toGeneratedRecordingMaskType(),
     );
   }
 }
 
-extension GeneratedRecordingMaskExtension on GeneratedRecordingMask {
-  RecordingMask toRecordingMask() {
-    return RecordingMask(
+extension GeneratedRecordingMaskExtension on GeneratedRecordingMaskElement {
+  RecordingMaskElement toRecordingMask() {
+    return RecordingMaskElement(
       rect: rect.toRect(),
       type: type.toRecordingMaskType(),
     );
   }
 }
 
+extension RecordingMaskListExtension on RecordingMaskList {
+  GeneratedRecordingMaskList toGeneratedRecordingMaskList() {
+    return GeneratedRecordingMaskList(
+        recordingMaskList: elements
+            .map((element) => element.toGeneratedRecordingMaskElement())
+            .toList());
+  }
+}
+
+extension GeneratedRecordingMaskListExtension on GeneratedRecordingMaskList {
+  RecordingMaskList toRecordingMaskList() {
+    return RecordingMaskList(
+        elements: recordingMaskList
+                ?.map((element) => element.toRecordingMask())
+                .toList() ??
+            []);
+  }
+}

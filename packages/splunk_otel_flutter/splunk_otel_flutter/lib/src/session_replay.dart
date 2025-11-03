@@ -38,11 +38,11 @@ class SessionReplayState {
 class SessionReplayRecordingMaskApi {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
-  Future<RecordingMask?> getRecordingMask() async =>
+  Future<RecordingMaskList?> getRecordingMask() async =>
       await _delegate.sessionReplayGetRecordingMask();
 
   Future<void> setRecordingMask({
-    required RecordingMask recordingMask,
+    required RecordingMaskList recordingMask,
   }) async =>
       await _delegate.sessionReplaySetRecordingMask(
         recordingMask: recordingMask,

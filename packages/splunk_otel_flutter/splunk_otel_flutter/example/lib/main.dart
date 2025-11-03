@@ -12,19 +12,21 @@ void main() async {
 
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpoint: const EndpointConfiguration(
+      endpoint: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),
       appName: 'Splunk 0tel Example App',
       deploymentEnvironment: 'dev',
       enableDebugLogging: true,
-      globalAttributes: {
-        "keyString": "value",
-        "keyInt": 5,
-        "keyDouble": 5.0,
-        "keyBool": Object(),
-      },
+      globalAttributes: MutableAttributes(
+        attributes: {
+          "boolKey": MutableAttributeBool(value: true),
+          "stringKey": MutableAttributeString(value: "testVal"),
+          "intKey": MutableAttributeInt(value: 1),
+          "doubleKey": MutableAttributeDouble(value: 1.3),
+        },
+      ),
     ),
     moduleConfigurations: [
       NavigationModuleConfiguration(isEnabled: true),
@@ -35,6 +37,8 @@ void main() async {
   await SplunkOtelFlutter.instance.sessionReplay.start();
 
   final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
+
+  SplunkOtelFlutter.instance.globalAttributes.setBool(key: "boolKey2", value: true);
 
   debugPrint('-------------');
   debugPrint('Session id: $sessionId');
@@ -53,7 +57,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
+    /*
     // session replay - sensitivity ignored
     SplunkOtelFlutter.instance.sessionReplay.start();
     SplunkOtelFlutter.instance.sessionReplay.stop();
@@ -65,10 +69,7 @@ class _MyAppState extends State<MyApp> {
     );
     SplunkOtelFlutter.instance.sessionReplay.recordingMask.getRecordingMask();
     SplunkOtelFlutter.instance.sessionReplay.recordingMask.setRecordingMask(
-      recordingMask: RecordingMask(
-        rect: Rect.zero,
-        type: RecordingMaskType.covering,
-      ),
+      recordingMask: RecordingMaskList(elements: []),
     );
 
     // state
@@ -145,7 +146,7 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
-
+*/
     // open telemetry ignored
   }
 

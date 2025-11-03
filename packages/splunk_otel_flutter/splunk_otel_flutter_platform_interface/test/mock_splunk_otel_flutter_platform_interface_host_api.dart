@@ -121,7 +121,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<GeneratedRecordingMask?> sessionReplayGetRecordingMask() {
+  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() {
     // TODO: implement sessionReplayGetRecordingMask
     throw UnimplementedError();
   }
@@ -139,7 +139,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMask? recordingMask}) {
+  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) {
     // TODO: implement sessionReplaySetRecordingMask
     throw UnimplementedError();
   }

@@ -43,8 +43,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<RenderingMode> sessionReplayStateGetRenderingMode();
   Future<RenderingMode?> sessionReplayPreferencesGetRenderingMode();
   Future<void> sessionReplayPreferencesSetRenderingMode({required RenderingMode? renderingMode});
-  Future<RecordingMask?> sessionReplayGetRecordingMask();
-  Future<void> sessionReplaySetRecordingMask({required RecordingMask recordingMask});
+  Future<RecordingMaskList?> sessionReplayGetRecordingMask();
+  Future<void> sessionReplaySetRecordingMask({required RecordingMaskList recordingMask});
 
   // State
   Future<String> stateGetAppName();
@@ -71,13 +71,13 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> globalAttributesRemove({required String key});
   Future<void> globalAttributesRemoveAll();
   Future<bool> globalAttributesContains({required String key});
-  Future<void> globalAttributesSetString({required String key, required String? value});
-  Future<void> globalAttributesSetInt({required String key, required int? value});
-  Future<void> globalAttributesSetDouble({required String key, required double? value});
-  Future<void> globalAttributesSetBool({required String key, required bool? value});
-  Future<void> globalAttributesSetStringList({required String key, required List<String>? value});
-  Future<void> globalAttributesSetIntList({required String key, required List<int>? value});
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double>? value});
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool>? value});
+  Future<void> globalAttributesSetString({required String key, required String value});
+  Future<void> globalAttributesSetInt({required String key, required int value});
+  Future<void> globalAttributesSetDouble({required String key, required double value});
+  Future<void> globalAttributesSetBool({required String key, required bool value});
+  Future<void> globalAttributesSetStringList({required String key, required List<String> value});
+  Future<void> globalAttributesSetIntList({required String key, required List<int> value});
+  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
+  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
   Future<void> globalAttributesSetAll({required String key, required MutableAttributes attributes});
  }

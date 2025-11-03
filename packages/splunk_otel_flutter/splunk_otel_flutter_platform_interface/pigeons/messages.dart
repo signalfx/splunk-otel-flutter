@@ -48,11 +48,11 @@ abstract class SplunkOtelFlutterHostApi {
   });
 
   @async
-  GeneratedRecordingMask? sessionReplayGetRecordingMask();
+  GeneratedRecordingMaskList? sessionReplayGetRecordingMask();
 
   @async
   void sessionReplaySetRecordingMask({
-    required GeneratedRecordingMask? recordingMask,
+    required GeneratedRecordingMaskList? recordingMask,
   });
 
   // State
@@ -120,32 +120,32 @@ abstract class SplunkOtelFlutterHostApi {
   bool globalAttributesContains({required String key});
 
   @async
-  void globalAttributesSetString({required String key, required String? value});
+  void globalAttributesSetString({required String key, required String value});
 
   @async
-  void globalAttributesSetInt({required String key, required int? value});
+  void globalAttributesSetInt({required String key, required int value});
 
   @async
-  void globalAttributesSetDouble({required String key, required double? value});
+  void globalAttributesSetDouble({required String key, required double value});
 
   @async
-  void globalAttributesSetBool({required String key, required bool? value});
+  void globalAttributesSetBool({required String key, required bool value});
 
   @async
   void globalAttributesSetStringList(
-      {required String key, required List<String>? value});
+      {required String key, required List<String> value});
 
   @async
   void globalAttributesSetIntList(
-      {required String key, required List<int>? value});
+      {required String key, required List<int> value});
 
   @async
   void globalAttributesSetDoubleList(
-      {required String key, required List<double>? value});
+      {required String key, required List<double> value});
 
   @async
   void globalAttributesSetBoolList(
-      {required String key, required List<bool>? value});
+      {required String key, required List<bool> value});
 
   @async
   void globalAttributesSetAll(
@@ -215,12 +215,16 @@ class GeneratedAgentConfiguration {
 }
 
 class GeneratedEndpointConfiguration {
-  final String realm;
-  final String rumAccessToken;
+  final String? tracesEndpoint;
+  final String? logsEndpoint;
+  final String? realm;
+  final String? rumAccessToken;
 
   GeneratedEndpointConfiguration({
-    required this.realm,
-    required this.rumAccessToken,
+    this.tracesEndpoint,
+    this.logsEndpoint,
+    this.realm,
+    this.rumAccessToken,
   });
 }
 
@@ -254,11 +258,19 @@ enum GeneratedSessionReplayStatus {
 
 enum GeneratedRenderingMode { native, wireframeOnly }
 
-class GeneratedRecordingMask {
+class GeneratedRecordingMaskList {
+  final List<GeneratedRecordingMaskElement>? recordingMaskList;
+
+  GeneratedRecordingMaskList({
+    required this.recordingMaskList,
+  });
+}
+
+class GeneratedRecordingMaskElement {
   final GeneratedRect rect;
   final GeneratedRecordingMaskType type;
 
-  GeneratedRecordingMask({
+  GeneratedRecordingMaskElement({
     required this.rect,
     required this.type,
   });

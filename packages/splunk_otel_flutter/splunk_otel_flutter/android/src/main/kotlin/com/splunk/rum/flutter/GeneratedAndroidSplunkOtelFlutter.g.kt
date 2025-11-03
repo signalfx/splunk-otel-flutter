@@ -259,19 +259,25 @@ data class GeneratedAgentConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedEndpointConfiguration (
-  val realm: String,
-  val rumAccessToken: String
+  val tracesEndpoint: String? = null,
+  val logsEndpoint: String? = null,
+  val realm: String? = null,
+  val rumAccessToken: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedEndpointConfiguration {
-      val realm = pigeonVar_list[0] as String
-      val rumAccessToken = pigeonVar_list[1] as String
-      return GeneratedEndpointConfiguration(realm, rumAccessToken)
+      val tracesEndpoint = pigeonVar_list[0] as String?
+      val logsEndpoint = pigeonVar_list[1] as String?
+      val realm = pigeonVar_list[2] as String?
+      val rumAccessToken = pigeonVar_list[3] as String?
+      return GeneratedEndpointConfiguration(tracesEndpoint, logsEndpoint, realm, rumAccessToken)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
+      tracesEndpoint,
+      logsEndpoint,
       realm,
       rumAccessToken,
     )
@@ -345,16 +351,44 @@ data class GeneratedSessionConfiguration (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class GeneratedRecordingMask (
+data class GeneratedRecordingMaskList (
+  val recordingMaskList: List<GeneratedRecordingMaskElement>? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMaskList {
+      val recordingMaskList = pigeonVar_list[0] as List<GeneratedRecordingMaskElement>?
+      return GeneratedRecordingMaskList(recordingMaskList)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      recordingMaskList,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRecordingMaskList) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRecordingMaskElement (
   val rect: GeneratedRect,
   val type: GeneratedRecordingMaskType
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMask {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMaskElement {
       val rect = pigeonVar_list[0] as GeneratedRect
       val type = pigeonVar_list[1] as GeneratedRecordingMaskType
-      return GeneratedRecordingMask(rect, type)
+      return GeneratedRecordingMaskElement(rect, type)
     }
   }
   fun toList(): List<Any?> {
@@ -364,7 +398,7 @@ data class GeneratedRecordingMask (
     )
   }
   override fun equals(other: Any?): Boolean {
-    if (other !is GeneratedRecordingMask) {
+    if (other !is GeneratedRecordingMaskElement) {
       return false
     }
     if (this === other) {
@@ -723,55 +757,60 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRecordingMask.fromList(it)
+          GeneratedRecordingMaskList.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRect.fromList(it)
+          GeneratedRecordingMaskElement.fromList(it)
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributes.fromList(it)
+          GeneratedRect.fromList(it)
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeInt.fromList(it)
+          GeneratedMutableAttributes.fromList(it)
         }
       }
       144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeDouble.fromList(it)
+          GeneratedMutableAttributeInt.fromList(it)
         }
       }
       145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeString.fromList(it)
+          GeneratedMutableAttributeDouble.fromList(it)
         }
       }
       146.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeBool.fromList(it)
+          GeneratedMutableAttributeString.fromList(it)
         }
       }
       147.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListInt.fromList(it)
+          GeneratedMutableAttributeBool.fromList(it)
         }
       }
       148.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListDouble.fromList(it)
+          GeneratedMutableAttributeListInt.fromList(it)
         }
       }
       149.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListString.fromList(it)
+          GeneratedMutableAttributeListDouble.fromList(it)
         }
       }
       150.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListString.fromList(it)
+        }
+      }
+      151.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListBool.fromList(it)
         }
@@ -825,48 +864,52 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is GeneratedRecordingMask -> {
+      is GeneratedRecordingMaskList -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is GeneratedRect -> {
+      is GeneratedRecordingMaskElement -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributes -> {
+      is GeneratedRect -> {
         stream.write(142)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeInt -> {
+      is GeneratedMutableAttributes -> {
         stream.write(143)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeDouble -> {
+      is GeneratedMutableAttributeInt -> {
         stream.write(144)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeString -> {
+      is GeneratedMutableAttributeDouble -> {
         stream.write(145)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeBool -> {
+      is GeneratedMutableAttributeString -> {
         stream.write(146)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListInt -> {
+      is GeneratedMutableAttributeBool -> {
         stream.write(147)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListDouble -> {
+      is GeneratedMutableAttributeListInt -> {
         stream.write(148)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListString -> {
+      is GeneratedMutableAttributeListDouble -> {
         stream.write(149)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListBool -> {
+      is GeneratedMutableAttributeListString -> {
         stream.write(150)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListBool -> {
+        stream.write(151)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -884,8 +927,8 @@ interface SplunkOtelFlutterHostApi {
   fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit)
   fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit)
   fun sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, callback: (Result<Unit>) -> Unit)
-  fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMask?>) -> Unit)
-  fun sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMask?, callback: (Result<Unit>) -> Unit)
+  fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMaskList?>) -> Unit)
+  fun sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, callback: (Result<Unit>) -> Unit)
   fun stateGetAppName(callback: (Result<String>) -> Unit)
   fun stateGetAppVersion(callback: (Result<String>) -> Unit)
   fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit)
@@ -904,14 +947,14 @@ interface SplunkOtelFlutterHostApi {
   fun globalAttributesRemove(key: String, callback: (Result<Unit>) -> Unit)
   fun globalAttributesRemoveAll(callback: (Result<Unit>) -> Unit)
   fun globalAttributesContains(key: String, callback: (Result<Boolean>) -> Unit)
-  fun globalAttributesSetString(key: String, value: String?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetInt(key: String, value: Long?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetDouble(key: String, value: Double?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetBool(key: String, value: Boolean?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetStringList(key: String, value: List<String>?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetIntList(key: String, value: List<Long>?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetDoubleList(key: String, value: List<Double>?, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetBoolList(key: String, value: List<Boolean>?, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetString(key: String, value: String, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetInt(key: String, value: Long, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetDouble(key: String, value: Double, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetBool(key: String, value: Boolean, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetStringList(key: String, value: List<String>, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetIntList(key: String, value: List<Long>, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetDoubleList(key: String, value: List<Double>, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetBoolList(key: String, value: List<Boolean>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetAll(key: String, value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -1055,7 +1098,7 @@ interface SplunkOtelFlutterHostApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayGetRecordingMask$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.sessionReplayGetRecordingMask{ result: Result<GeneratedRecordingMask?> ->
+            api.sessionReplayGetRecordingMask{ result: Result<GeneratedRecordingMaskList?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
@@ -1074,7 +1117,7 @@ interface SplunkOtelFlutterHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val recordingMaskArg = args[0] as GeneratedRecordingMask?
+            val recordingMaskArg = args[0] as GeneratedRecordingMaskList?
             api.sessionReplaySetRecordingMask(recordingMaskArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1423,7 +1466,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as String?
+            val valueArg = args[1] as String
             api.globalAttributesSetString(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1443,7 +1486,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as Long?
+            val valueArg = args[1] as Long
             api.globalAttributesSetInt(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1463,7 +1506,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as Double?
+            val valueArg = args[1] as Double
             api.globalAttributesSetDouble(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1483,7 +1526,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as Boolean?
+            val valueArg = args[1] as Boolean
             api.globalAttributesSetBool(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1503,7 +1546,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as List<String>?
+            val valueArg = args[1] as List<String>
             api.globalAttributesSetStringList(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1523,7 +1566,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as List<Long>?
+            val valueArg = args[1] as List<Long>
             api.globalAttributesSetIntList(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1543,7 +1586,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as List<Double>?
+            val valueArg = args[1] as List<Double>
             api.globalAttributesSetDoubleList(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1563,7 +1606,7 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val keyArg = args[0] as String
-            val valueArg = args[1] as List<Boolean>?
+            val valueArg = args[1] as List<Boolean>
             api.globalAttributesSetBoolList(keyArg, valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {

@@ -251,16 +251,24 @@ class GeneratedAgentConfiguration {
 
 class GeneratedEndpointConfiguration {
   GeneratedEndpointConfiguration({
-    required this.realm,
-    required this.rumAccessToken,
+    this.tracesEndpoint,
+    this.logsEndpoint,
+    this.realm,
+    this.rumAccessToken,
   });
 
-  String realm;
+  String? tracesEndpoint;
 
-  String rumAccessToken;
+  String? logsEndpoint;
+
+  String? realm;
+
+  String? rumAccessToken;
 
   List<Object?> _toList() {
     return <Object?>[
+      tracesEndpoint,
+      logsEndpoint,
       realm,
       rumAccessToken,
     ];
@@ -272,8 +280,10 @@ class GeneratedEndpointConfiguration {
   static GeneratedEndpointConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedEndpointConfiguration(
-      realm: result[0]! as String,
-      rumAccessToken: result[1]! as String,
+      tracesEndpoint: result[0] as String?,
+      logsEndpoint: result[1] as String?,
+      realm: result[2] as String?,
+      rumAccessToken: result[3] as String?,
     );
   }
 
@@ -377,8 +387,49 @@ class GeneratedSessionConfiguration {
 ;
 }
 
-class GeneratedRecordingMask {
-  GeneratedRecordingMask({
+class GeneratedRecordingMaskList {
+  GeneratedRecordingMaskList({
+    this.recordingMaskList,
+  });
+
+  List<GeneratedRecordingMaskElement>? recordingMaskList;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      recordingMaskList,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedRecordingMaskList decode(Object result) {
+    result as List<Object?>;
+    return GeneratedRecordingMaskList(
+      recordingMaskList: (result[0] as List<Object?>?)?.cast<GeneratedRecordingMaskElement>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedRecordingMaskList || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedRecordingMaskElement {
+  GeneratedRecordingMaskElement({
     required this.rect,
     required this.type,
   });
@@ -397,9 +448,9 @@ class GeneratedRecordingMask {
   Object encode() {
     return _toList();  }
 
-  static GeneratedRecordingMask decode(Object result) {
+  static GeneratedRecordingMaskElement decode(Object result) {
     result as List<Object?>;
-    return GeneratedRecordingMask(
+    return GeneratedRecordingMaskElement(
       rect: result[0]! as GeneratedRect,
       type: result[1]! as GeneratedRecordingMaskType,
     );
@@ -408,7 +459,7 @@ class GeneratedRecordingMask {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRecordingMask || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRecordingMaskElement || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -889,38 +940,41 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMask) {
+    }    else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    }    else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    }    else if (value is GeneratedRect) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    }    else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    }    else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    }    else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    }    else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    }    else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    }    else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    }    else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    }    else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(150);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(151);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -958,26 +1012,28 @@ class _PigeonCodec extends StandardMessageCodec {
       case 139: 
         return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       case 140: 
-        return GeneratedRecordingMask.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
       case 141: 
-        return GeneratedRect.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
       case 142: 
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedRect.decode(readValue(buffer)!);
       case 143: 
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
       case 144: 
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
       case 145: 
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
       case 146: 
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
       case 147: 
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
       case 148: 
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
       case 149: 
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
       case 150: 
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 151: 
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1169,7 +1225,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<GeneratedRecordingMask?> sessionReplayGetRecordingMask() async {
+  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayGetRecordingMask$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1188,11 +1244,11 @@ class SplunkOtelFlutterHostApi {
         details: pigeonVar_replyList[2],
       );
     } else {
-      return (pigeonVar_replyList[0] as GeneratedRecordingMask?);
+      return (pigeonVar_replyList[0] as GeneratedRecordingMaskList?);
     }
   }
 
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMask? recordingMask}) async {
+  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplaySetRecordingMask$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1684,7 +1740,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetString({required String key, required String? value}) async {
+  Future<void> globalAttributesSetString({required String key, required String value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1707,7 +1763,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetInt({required String key, required int? value}) async {
+  Future<void> globalAttributesSetInt({required String key, required int value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1730,7 +1786,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetDouble({required String key, required double? value}) async {
+  Future<void> globalAttributesSetDouble({required String key, required double value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1753,7 +1809,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetBool({required String key, required bool? value}) async {
+  Future<void> globalAttributesSetBool({required String key, required bool value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1776,7 +1832,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetStringList({required String key, required List<String>? value}) async {
+  Future<void> globalAttributesSetStringList({required String key, required List<String> value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1799,7 +1855,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetIntList({required String key, required List<int>? value}) async {
+  Future<void> globalAttributesSetIntList({required String key, required List<int> value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1822,7 +1878,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double>? value}) async {
+  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1845,7 +1901,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool>? value}) async {
+  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,

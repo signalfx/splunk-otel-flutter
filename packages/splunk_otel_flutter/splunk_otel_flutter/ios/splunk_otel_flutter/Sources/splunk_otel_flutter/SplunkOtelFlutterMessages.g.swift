@@ -281,22 +281,30 @@ struct GeneratedAgentConfiguration: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedEndpointConfiguration: Hashable {
-  var realm: String
-  var rumAccessToken: String
+  var tracesEndpoint: String? = nil
+  var logsEndpoint: String? = nil
+  var realm: String? = nil
+  var rumAccessToken: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedEndpointConfiguration? {
-    let realm = pigeonVar_list[0] as! String
-    let rumAccessToken = pigeonVar_list[1] as! String
+    let tracesEndpoint: String? = nilOrValue(pigeonVar_list[0])
+    let logsEndpoint: String? = nilOrValue(pigeonVar_list[1])
+    let realm: String? = nilOrValue(pigeonVar_list[2])
+    let rumAccessToken: String? = nilOrValue(pigeonVar_list[3])
 
     return GeneratedEndpointConfiguration(
+      tracesEndpoint: tracesEndpoint,
+      logsEndpoint: logsEndpoint,
       realm: realm,
       rumAccessToken: rumAccessToken
     )
   }
   func toList() -> [Any?] {
     return [
+      tracesEndpoint,
+      logsEndpoint,
       realm,
       rumAccessToken,
     ]
@@ -359,17 +367,42 @@ struct GeneratedSessionConfiguration: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct GeneratedRecordingMask: Hashable {
+struct GeneratedRecordingMaskList: Hashable {
+  var recordingMaskList: [GeneratedRecordingMaskElement]? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRecordingMaskList? {
+    let recordingMaskList: [GeneratedRecordingMaskElement]? = nilOrValue(pigeonVar_list[0])
+
+    return GeneratedRecordingMaskList(
+      recordingMaskList: recordingMaskList
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      recordingMaskList
+    ]
+  }
+  static func == (lhs: GeneratedRecordingMaskList, rhs: GeneratedRecordingMaskList) -> Bool {
+    return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedRecordingMaskElement: Hashable {
   var rect: GeneratedRect
   var type: GeneratedRecordingMaskType
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRecordingMask? {
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRecordingMaskElement? {
     let rect = pigeonVar_list[0] as! GeneratedRect
     let type = pigeonVar_list[1] as! GeneratedRecordingMaskType
 
-    return GeneratedRecordingMask(
+    return GeneratedRecordingMaskElement(
       rect: rect,
       type: type
     )
@@ -380,7 +413,7 @@ struct GeneratedRecordingMask: Hashable {
       type,
     ]
   }
-  static func == (lhs: GeneratedRecordingMask, rhs: GeneratedRecordingMask) -> Bool {
+  static func == (lhs: GeneratedRecordingMaskElement, rhs: GeneratedRecordingMaskElement) -> Bool {
     return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
   func hash(into hasher: inout Hasher) {
     deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
@@ -695,26 +728,28 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 139:
       return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
     case 140:
-      return GeneratedRecordingMask.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
     case 141:
-      return GeneratedRect.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
     case 142:
-      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
+      return GeneratedRect.fromList(self.readValue() as! [Any?])
     case 143:
-      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
     case 144:
-      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
     case 145:
-      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
     case 146:
-      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
     case 147:
-      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
     case 148:
-      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
     case 149:
-      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
     case 150:
+      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+    case 151:
       return GeneratedMutableAttributeListBool.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -757,38 +792,41 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedSessionConfiguration {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRecordingMask {
+    } else if let value = value as? GeneratedRecordingMaskList {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRect {
+    } else if let value = value as? GeneratedRecordingMaskElement {
       super.writeByte(141)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributes {
+    } else if let value = value as? GeneratedRect {
       super.writeByte(142)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeInt {
+    } else if let value = value as? GeneratedMutableAttributes {
       super.writeByte(143)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeDouble {
+    } else if let value = value as? GeneratedMutableAttributeInt {
       super.writeByte(144)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeString {
+    } else if let value = value as? GeneratedMutableAttributeDouble {
       super.writeByte(145)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeBool {
+    } else if let value = value as? GeneratedMutableAttributeString {
       super.writeByte(146)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListInt {
+    } else if let value = value as? GeneratedMutableAttributeBool {
       super.writeByte(147)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListDouble {
+    } else if let value = value as? GeneratedMutableAttributeListInt {
       super.writeByte(148)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListString {
+    } else if let value = value as? GeneratedMutableAttributeListDouble {
       super.writeByte(149)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListBool {
+    } else if let value = value as? GeneratedMutableAttributeListString {
       super.writeByte(150)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedMutableAttributeListBool {
+      super.writeByte(151)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -820,8 +858,8 @@ protocol SplunkOtelFlutterHostApi {
   func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, Error>) -> Void)
   func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, Error>) -> Void)
   func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, Error>) -> Void)
-  func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMask?, Error>) -> Void)
-  func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMask?, completion: @escaping (Result<Void, Error>) -> Void)
+  func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void)
+  func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, Error>) -> Void)
   func stateGetAppName(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetAppVersion(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetStatus(completion: @escaping (Result<GeneratedStatus, Error>) -> Void)
@@ -840,14 +878,14 @@ protocol SplunkOtelFlutterHostApi {
   func globalAttributesRemove(key: String, completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesRemoveAll(completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesContains(key: String, completion: @escaping (Result<Bool, Error>) -> Void)
-  func globalAttributesSetString(key: String, value: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetInt(key: String, value: Int64?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetDouble(key: String, value: Double?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetBool(key: String, value: Bool?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetStringList(key: String, value: [String]?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetIntList(key: String, value: [Int64]?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetDoubleList(key: String, value: [Double]?, completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetBoolList(key: String, value: [Bool]?, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetString(key: String, value: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetInt(key: String, value: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetDouble(key: String, value: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetBool(key: String, value: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetStringList(key: String, value: [String], completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetIntList(key: String, value: [Int64], completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetDoubleList(key: String, value: [Double], completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetBoolList(key: String, value: [Bool], completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesSetAll(key: String, value: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -987,7 +1025,7 @@ class SplunkOtelFlutterHostApiSetup {
     if let api = api {
       sessionReplaySetRecordingMaskChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let recordingMaskArg: GeneratedRecordingMask? = nilOrValue(args[0])
+        let recordingMaskArg: GeneratedRecordingMaskList? = nilOrValue(args[0])
         api.sessionReplaySetRecordingMask(recordingMask: recordingMaskArg) { result in
           switch result {
           case .success:
@@ -1283,7 +1321,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetStringChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: String? = nilOrValue(args[1])
+        let valueArg = args[1] as! String
         api.globalAttributesSetString(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1301,7 +1339,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetIntChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: Int64? = nilOrValue(args[1])
+        let valueArg = args[1] as! Int64
         api.globalAttributesSetInt(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1319,7 +1357,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetDoubleChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: Double? = nilOrValue(args[1])
+        let valueArg = args[1] as! Double
         api.globalAttributesSetDouble(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1337,7 +1375,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetBoolChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: Bool? = nilOrValue(args[1])
+        let valueArg = args[1] as! Bool
         api.globalAttributesSetBool(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1355,7 +1393,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetStringListChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: [String]? = nilOrValue(args[1])
+        let valueArg = args[1] as! [String]
         api.globalAttributesSetStringList(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1373,7 +1411,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetIntListChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: [Int64]? = nilOrValue(args[1])
+        let valueArg = args[1] as! [Int64]
         api.globalAttributesSetIntList(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1391,7 +1429,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetDoubleListChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: [Double]? = nilOrValue(args[1])
+        let valueArg = args[1] as! [Double]
         api.globalAttributesSetDoubleList(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:
@@ -1409,7 +1447,7 @@ class SplunkOtelFlutterHostApiSetup {
       globalAttributesSetBoolListChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String
-        let valueArg: [Bool]? = nilOrValue(args[1])
+        let valueArg = args[1] as! [Bool]
         api.globalAttributesSetBoolList(key: keyArg, value: valueArg) { result in
           switch result {
           case .success:

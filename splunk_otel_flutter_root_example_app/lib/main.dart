@@ -29,20 +29,14 @@ void main() async {
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
       appVersion: '1.0.0',
-      endpoint: EndpointConfiguration(
+      endpoint: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),
       appName: 'Splunk Root Example App',
       deploymentEnvironment: 'dev',
       enableDebugLogging: true,
-      globalAttributes: {
-        "keyString": "value",
-        "keyInt": 5,
-        "keyDouble": 5.0,
-        "keyBool": true,
-        "keyArray": [1,2,"test","2"]
-      },
+      globalAttributes: MutableAttributes(),
     ),
     moduleConfigurations: [
       NavigationModuleConfiguration(isEnabled: true),

@@ -7,7 +7,7 @@ void main() {
     test('should create with minimal required fields and defaults', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -31,7 +31,7 @@ void main() {
     test('should create without user configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -48,7 +48,7 @@ void main() {
     test('should create without session configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -65,7 +65,7 @@ void main() {
     test('should create with custom user configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -83,7 +83,7 @@ void main() {
     test('should create with custom session configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -99,7 +99,7 @@ void main() {
     test('should create with all optional fields', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: const EndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'eu0',
           rumAccessToken: 'token-123',
         ),
@@ -107,7 +107,7 @@ void main() {
         deploymentEnvironment: 'staging',
         appVersion: '2.0.0',
         enableDebugLogging: true,
-        globalAttributes: {'key': 'value', 'number': 42},
+
         user: const UserConfiguration(
           trackingMode: UserTrackingMode.anonymousTracking,
         ),
@@ -119,8 +119,6 @@ void main() {
       // Assert
       expect(config.appVersion, '2.0.0');
       expect(config.enableDebugLogging, true);
-      expect(config.globalAttributes['key'], 'value');
-      expect(config.globalAttributes['number'], 42);
       expect(config.user.trackingMode, UserTrackingMode.anonymousTracking);
       expect(config.session.samplingRate, 0.5);
       expect(config.instrumentedProcessName, 'com.test.app');
@@ -133,7 +131,7 @@ void main() {
   group('EndpointConfiguration', () {
     test('should create with realm and token', () {
       // Act
-      const config = EndpointConfiguration(
+      final config = EndpointConfiguration.forRum(
         realm: 'us0',
         rumAccessToken: 'test-token',
       );
@@ -145,9 +143,9 @@ void main() {
 
     test('should handle different realms', () {
       // Act
-      const configUS = EndpointConfiguration(realm: 'us0', rumAccessToken: 'token');
-      const configEU = EndpointConfiguration(realm: 'eu0', rumAccessToken: 'token');
-      const configAP = EndpointConfiguration(realm: 'ap0', rumAccessToken: 'token');
+      final configUS = EndpointConfiguration.forRum(realm: 'us0', rumAccessToken: 'token');
+      final configEU = EndpointConfiguration.forRum(realm: 'eu0', rumAccessToken: 'token');
+      final configAP = EndpointConfiguration.forRum(realm: 'ap0', rumAccessToken: 'token');
 
       // Assert
       expect(configUS.realm, 'us0');

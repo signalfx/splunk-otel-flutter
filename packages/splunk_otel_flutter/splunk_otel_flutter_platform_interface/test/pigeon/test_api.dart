@@ -51,38 +51,41 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMask) {
+    }    else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    }    else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    }    else if (value is GeneratedRect) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    }    else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    }    else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    }    else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    }    else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    }    else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    }    else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    }    else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    }    else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(150);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(151);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -120,26 +123,28 @@ class _PigeonCodec extends StandardMessageCodec {
       case 139: 
         return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       case 140: 
-        return GeneratedRecordingMask.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
       case 141: 
-        return GeneratedRect.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
       case 142: 
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedRect.decode(readValue(buffer)!);
       case 143: 
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
       case 144: 
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
       case 145: 
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
       case 146: 
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
       case 147: 
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
       case 148: 
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
       case 149: 
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
       case 150: 
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 151: 
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -165,9 +170,9 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode});
 
-  Future<GeneratedRecordingMask?> sessionReplayGetRecordingMask();
+  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask();
 
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMask? recordingMask});
+  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask});
 
   Future<String> stateGetAppName();
 
@@ -205,21 +210,21 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<bool> globalAttributesContains({required String key});
 
-  Future<void> globalAttributesSetString({required String key, required String? value});
+  Future<void> globalAttributesSetString({required String key, required String value});
 
-  Future<void> globalAttributesSetInt({required String key, required int? value});
+  Future<void> globalAttributesSetInt({required String key, required int value});
 
-  Future<void> globalAttributesSetDouble({required String key, required double? value});
+  Future<void> globalAttributesSetDouble({required String key, required double value});
 
-  Future<void> globalAttributesSetBool({required String key, required bool? value});
+  Future<void> globalAttributesSetBool({required String key, required bool value});
 
-  Future<void> globalAttributesSetStringList({required String key, required List<String>? value});
+  Future<void> globalAttributesSetStringList({required String key, required List<String> value});
 
-  Future<void> globalAttributesSetIntList({required String key, required List<int>? value});
+  Future<void> globalAttributesSetIntList({required String key, required List<int> value});
 
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double>? value});
+  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
 
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool>? value});
+  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
 
   Future<void> globalAttributesSetAll({required String key, required GeneratedMutableAttributes value});
 
@@ -383,7 +388,7 @@ abstract class TestSplunkOtelFlutterHostApi {
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           try {
-            final GeneratedRecordingMask? output = await api.sessionReplayGetRecordingMask();
+            final GeneratedRecordingMaskList? output = await api.sessionReplayGetRecordingMask();
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -404,7 +409,7 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplaySetRecordingMask was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final GeneratedRecordingMask? arg_recordingMask = (args[0] as GeneratedRecordingMask?);
+          final GeneratedRecordingMaskList? arg_recordingMask = (args[0] as GeneratedRecordingMaskList?);
           try {
             await api.sessionReplaySetRecordingMask(recordingMask: arg_recordingMask);
             return wrapResponse(empty: true);
@@ -795,8 +800,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.');
           final String? arg_value = (args[1] as String?);
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.');
           try {
-            await api.globalAttributesSetString(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetString(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -821,8 +828,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null String.');
           final int? arg_value = (args[1] as int?);
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null int.');
           try {
-            await api.globalAttributesSetInt(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetInt(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -847,8 +856,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null String.');
           final double? arg_value = (args[1] as double?);
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null double.');
           try {
-            await api.globalAttributesSetDouble(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetDouble(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -873,8 +884,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null String.');
           final bool? arg_value = (args[1] as bool?);
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null bool.');
           try {
-            await api.globalAttributesSetBool(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetBool(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -899,8 +912,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null String.');
           final List<String>? arg_value = (args[1] as List<Object?>?)?.cast<String>();
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null List<String>.');
           try {
-            await api.globalAttributesSetStringList(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetStringList(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -925,8 +940,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null String.');
           final List<int>? arg_value = (args[1] as List<Object?>?)?.cast<int>();
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null List<int>.');
           try {
-            await api.globalAttributesSetIntList(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetIntList(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -951,8 +968,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null String.');
           final List<double>? arg_value = (args[1] as List<Object?>?)?.cast<double>();
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null List<double>.');
           try {
-            await api.globalAttributesSetDoubleList(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetDoubleList(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -977,8 +996,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(arg_key != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null String.');
           final List<bool>? arg_value = (args[1] as List<Object?>?)?.cast<bool>();
+          assert(arg_value != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null List<bool>.');
           try {
-            await api.globalAttributesSetBoolList(key: arg_key!, value: arg_value);
+            await api.globalAttributesSetBoolList(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
