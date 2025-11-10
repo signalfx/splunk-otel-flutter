@@ -27,6 +27,7 @@ import com.splunk.rum.flutter.extensions.toGeneratedSessionReplayStatus
 import com.splunk.rum.flutter.extensions.toGeneratedStatus
 import com.splunk.rum.flutter.extensions.toGeneratedUserTrackingMode
 import com.splunk.rum.flutter.extensions.toMutableAttributes
+import com.splunk.rum.flutter.extensions.toRecordingMaskList
 import com.splunk.rum.flutter.extensions.toRenderingMode
 import com.splunk.rum.flutter.extensions.toUserTrackingMode
 import com.splunk.rum.flutter.extensions.wrapIntoGeneratedMutableAttribute
@@ -184,7 +185,7 @@ class SplunkOtelFlutterPlugin :
         recordingMask: GeneratedRecordingMaskList?,
         callback: (Result<Unit>) -> Unit
     ) {
-        SplunkRum.instance.sessionReplay.recordingMask = recordingMask?.toGeneratedRecordingMaskList()
+        SplunkRum.instance.sessionReplay.recordingMask = recordingMask?.toRecordingMaskList()
 
         callback(Result.success(Unit))
     }

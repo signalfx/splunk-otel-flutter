@@ -12,6 +12,7 @@ fun GeneratedEndpointConfiguration.toEndpointConfiguration(): EndpointConfigurat
     {
         return EndpointConfiguration(URL(traceEndpoint),URL(sessionReplayEndpoint))
     }
+
     if(traceEndpoint!=null)
     {
         return EndpointConfiguration(URL(traceEndpoint))

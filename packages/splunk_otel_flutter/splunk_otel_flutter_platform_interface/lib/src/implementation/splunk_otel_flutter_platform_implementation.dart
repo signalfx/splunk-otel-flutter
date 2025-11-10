@@ -60,7 +60,7 @@ class SplunkOtelFlutterPlatformImplementation
           deploymentEnvironment: agentConfiguration.deploymentEnvironment,
           appVersion: agentConfiguration.appVersion,
           enableDebugLogging: agentConfiguration.enableDebugLogging,
-          // globalAttributes: agentConfiguration.globalAttributes,     // TODO
+          globalAttributes: agentConfiguration.globalAttributes?.toGeneratedMutableAttributes(),
           user: agentConfiguration.user.toGeneratedUserConfiguration(),
           session: GeneratedSessionConfiguration(
               samplingRate: agentConfiguration.session.samplingRate),

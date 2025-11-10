@@ -71,6 +71,3 @@ android {
         }
     }
 }
-dependencies {
-    implementation 'androidx.privacysandbox.tools:tools-core:1.0.0-alpha13'
-}

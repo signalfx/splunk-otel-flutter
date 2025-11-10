@@ -53,7 +53,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             return
         }
         
-        let mutableAttribues = agentConfiguration.globalAttributes?.toMutableAttributes()
+        let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
         
         let agentConfig = AgentConfiguration(
             endpoint: endpointConfiguration,
@@ -62,7 +62,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         )
             .appVersion(agentConfiguration.appVersion ?? "")
             .enableDebugLogging(agentConfiguration.enableDebugLogging ?? false)
-            .globalAttributes(mutableAttribues ?? MutableAttributes())
+            .globalAttributes(mutableAttributes ?? MutableAttributes())
             .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
@@ -182,7 +182,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     }
     
     func stateGetInstrumentedProcessName(completion: @escaping (Result<String?, any Error>) -> Void) {
-        completion(.success(""))
+        completion(.success(nil))
     }
     
     func stateGetDeferredUntilForeground(completion: @escaping (Result<Bool, any Error>) -> Void) {
@@ -289,10 +289,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     func globalAttributesSetStringList(key: String, value: [String], completion: @escaping (Result<Void, any Error>) -> Void) {
         SplunkRum.shared.globalAttributes.setArray(AttributeArray.fromStringArray(value), for: key)
         
-        print("-------xxxxxxx")
-        print(AttributeArray.fromStringArray(value).values)
-        print(AttributeArray.fromStringArray(value).values.count)
-        
         completion(.success(()))
     }
     
@@ -353,6 +349,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                     details: nil
                 )
                 ))
+                return
             }
         }
 

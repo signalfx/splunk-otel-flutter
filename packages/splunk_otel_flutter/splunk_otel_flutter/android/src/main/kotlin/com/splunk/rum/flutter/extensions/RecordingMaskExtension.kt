@@ -28,7 +28,7 @@ fun RecordingMask.toGeneratedRecordingMaskList(): GeneratedRecordingMaskList {
         })
 }
 
-fun GeneratedRecordingMaskList.toGeneratedRecordingMaskList(): RecordingMask {
+fun GeneratedRecordingMaskList.toRecordingMaskList(): RecordingMask {
     return RecordingMask(
         this.recordingMaskList?.map {
             it.toRecordingMask()
