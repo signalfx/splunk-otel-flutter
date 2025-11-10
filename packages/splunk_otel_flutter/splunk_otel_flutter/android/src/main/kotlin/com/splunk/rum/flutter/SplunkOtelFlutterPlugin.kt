@@ -31,6 +31,7 @@ import com.splunk.rum.flutter.extensions.toRenderingMode
 import com.splunk.rum.flutter.extensions.toUserTrackingMode
 import com.splunk.rum.flutter.extensions.wrapIntoGeneratedMutableAttribute
 import com.splunk.rum.integration.agent.api.AgentConfiguration
+import com.splunk.rum.integration.agent.api.EndpointConfiguration
 import com.splunk.rum.integration.agent.api.SplunkRum
 import com.splunk.rum.integration.agent.api.session.SessionConfiguration
 import com.splunk.rum.integration.agent.api.user.UserConfiguration
@@ -267,10 +268,10 @@ class SplunkOtelFlutterPlugin :
     }
 
     override fun userPreferencesSetUserTrackingMode(
-        trackingMode: GeneratedUserTrackingMode?,
+        trackingMode: GeneratedUserTrackingMode,
         callback: (Result<Unit>) -> Unit
     ) {
-        SplunkRum.instance.user.preferences.trackingMode = trackingMode?.toUserTrackingMode()
+        SplunkRum.instance.user.preferences.trackingMode = trackingMode.toUserTrackingMode()
 
         callback(Result.success(Unit))
     }
@@ -394,11 +395,17 @@ class SplunkOtelFlutterPlugin :
     }
 
     override fun globalAttributesSetAll(
-        key: String,
         value: GeneratedMutableAttributes,
         callback: (Result<Unit>) -> Unit
     ) {
-        SplunkRum.instance.globalAttributes.setAll(value.toMutableAttributes())
+        try {
+            SplunkRum.instance.globalAttributes.setAll(value.toMutableAttributes())
+        }catch (e:Exception)
+        {
+            callback(Result.failure(FlutterError("SET_ALL_FAILED", e.message)))
+
+            return
+        }
 
         callback(Result.success(Unit))
     }

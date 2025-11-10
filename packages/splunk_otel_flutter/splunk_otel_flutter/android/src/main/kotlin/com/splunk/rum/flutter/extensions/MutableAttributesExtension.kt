@@ -18,6 +18,7 @@ fun Attributes.toGeneratedMutableAttributes(): GeneratedMutableAttributes {
     this.forEach { key, value ->
         generatedMap[key.key] = value.wrapIntoGeneratedMutableAttribute()
     }
+
     return GeneratedMutableAttributes(generatedMap)
 }
 
@@ -37,6 +38,7 @@ fun GeneratedMutableAttributes.toMutableAttributes(): MutableAttributes {
             else -> throw IllegalArgumentException("Unsupported GeneratedMutableAttribute type for key $key: ${generatedValueWrapper.javaClass}")
         }
     }
+
     return mutableAttributes
 }
 

@@ -203,10 +203,10 @@ class SplunkOtelFlutterPlatformImplementation
 
   @override
   Future<void> userPreferencesSetUserTrackingMode({
-    required UserTrackingMode? userTrackingMode,
+    required UserTrackingMode userTrackingMode,
   }) async {
     await _api.userPreferencesSetUserTrackingMode(
-      trackingMode: userTrackingMode?.toGeneratedUserTrackingMode(),
+      trackingMode: userTrackingMode.toGeneratedUserTrackingMode(),
     );
   }
 
@@ -324,11 +324,9 @@ class SplunkOtelFlutterPlatformImplementation
 
   @override
   Future<void> globalAttributesSetAll({
-    required String key,
     required MutableAttributes attributes,
   }) async {
     await _api.globalAttributesSetAll(
-      key: key,
       value: attributes.toGeneratedMutableAttributes(),
     );
   }

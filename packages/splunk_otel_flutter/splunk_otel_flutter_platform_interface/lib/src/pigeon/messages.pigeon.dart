@@ -68,6 +68,7 @@ enum GeneratedStatus {
   notInstalled,
   subProcess,
   sampledOut,
+  unsupportedPlatform,
   unsupportedOsVersion,
 }
 
@@ -251,15 +252,15 @@ class GeneratedAgentConfiguration {
 
 class GeneratedEndpointConfiguration {
   GeneratedEndpointConfiguration({
-    this.tracesEndpoint,
-    this.logsEndpoint,
+    this.traceEndpoint,
+    this.sessionReplayEndpoint,
     this.realm,
     this.rumAccessToken,
   });
 
-  String? tracesEndpoint;
+  String? traceEndpoint;
 
-  String? logsEndpoint;
+  String? sessionReplayEndpoint;
 
   String? realm;
 
@@ -267,8 +268,8 @@ class GeneratedEndpointConfiguration {
 
   List<Object?> _toList() {
     return <Object?>[
-      tracesEndpoint,
-      logsEndpoint,
+      traceEndpoint,
+      sessionReplayEndpoint,
       realm,
       rumAccessToken,
     ];
@@ -280,8 +281,8 @@ class GeneratedEndpointConfiguration {
   static GeneratedEndpointConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedEndpointConfiguration(
-      tracesEndpoint: result[0] as String?,
-      logsEndpoint: result[1] as String?,
+      traceEndpoint: result[0] as String?,
+      sessionReplayEndpoint: result[1] as String?,
       realm: result[2] as String?,
       rumAccessToken: result[3] as String?,
     );
@@ -1597,7 +1598,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode? trackingMode}) async {
+  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1924,14 +1925,14 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetAll({required String key, required GeneratedMutableAttributes value}) async {
+  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

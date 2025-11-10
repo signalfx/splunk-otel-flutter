@@ -67,7 +67,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> globalAttributesSetAll({required String key, required GeneratedMutableAttributes value}) {
+  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) {
     // TODO: implement globalAttributesSetAll
     throw UnimplementedError();
   }

@@ -60,14 +60,14 @@ class AgentConfiguration {
 }
 
 class EndpointConfiguration {
-  Uri? tracesEndpoint;
-  Uri? logsEndpoint;
+  Uri? traceEndpoint;
+  Uri? sessionReplayEndpoint;
   String? realm;
   String? rumAccessToken;
 
   EndpointConfiguration._internal({
-    this.tracesEndpoint,
-    this.logsEndpoint,
+    this.traceEndpoint,
+    this.sessionReplayEndpoint,
     this.realm,
     this.rumAccessToken,
   });
@@ -86,17 +86,17 @@ class EndpointConfiguration {
     required Uri tracesEndpoint,
   }) {
     return EndpointConfiguration._internal(
-      tracesEndpoint: tracesEndpoint,
+      traceEndpoint: tracesEndpoint,
     );
   }
 
   factory EndpointConfiguration.forTracesAndLogs({
-    required Uri tracesEndpoint,
-    required Uri logsEndpoint,
+    required Uri traceEndpoint,
+    required Uri sessionReplayEndpoint,
   }) {
     return EndpointConfiguration._internal(
-      tracesEndpoint: tracesEndpoint,
-      logsEndpoint: logsEndpoint,
+      traceEndpoint: traceEndpoint,
+      sessionReplayEndpoint: sessionReplayEndpoint,
     );
   }
 }
@@ -105,8 +105,8 @@ extension GeneratedEndpointConfigurationExtension
     on GeneratedEndpointConfiguration {
   EndpointConfiguration toEndpointConfiguration() {
     return EndpointConfiguration._internal(
-      tracesEndpoint: _parseUri(tracesEndpoint),
-      logsEndpoint: _parseUri(logsEndpoint),
+      traceEndpoint: _parseUri(traceEndpoint),
+      sessionReplayEndpoint: _parseUri(sessionReplayEndpoint),
       realm: realm,
       rumAccessToken: rumAccessToken,
     );
@@ -116,8 +116,8 @@ extension GeneratedEndpointConfigurationExtension
 extension EndpointConfigurationExtension on EndpointConfiguration {
   GeneratedEndpointConfiguration toGeneratedEndpointConfiguration() {
     return GeneratedEndpointConfiguration(
-      tracesEndpoint: tracesEndpoint?.toString(),
-      logsEndpoint: logsEndpoint?.toString(),
+      traceEndpoint: traceEndpoint?.toString(),
+      sessionReplayEndpoint: sessionReplayEndpoint?.toString(),
       realm: realm,
       rumAccessToken: rumAccessToken,
     );

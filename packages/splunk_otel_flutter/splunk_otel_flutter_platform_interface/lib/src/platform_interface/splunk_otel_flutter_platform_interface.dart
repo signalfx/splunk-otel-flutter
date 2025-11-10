@@ -63,7 +63,7 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   // User
   Future<UserTrackingMode> userStateGetUserTrackingMode();
   Future<UserTrackingMode?> userPreferencesGetUserTrackingMode();
-  Future<void> userPreferencesSetUserTrackingMode({required UserTrackingMode? userTrackingMode});
+  Future<void> userPreferencesSetUserTrackingMode({required UserTrackingMode userTrackingMode});
 
   // Global attributes
   Future<MutableAttributeValue> globalAttributesGet({required String key});
@@ -79,5 +79,5 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> globalAttributesSetIntList({required String key, required List<int> value});
   Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
   Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
-  Future<void> globalAttributesSetAll({required String key, required MutableAttributes attributes});
+  Future<void> globalAttributesSetAll({required MutableAttributes attributes});
  }

@@ -19,7 +19,7 @@ class UserPreferences {
       await _delegate.userPreferencesGetUserTrackingMode();
 
   Future<void> setTrackingMode({
-    required UserTrackingMode? userTrackingMode,
+    required UserTrackingMode userTrackingMode,
   }) async =>
       await _delegate.userPreferencesSetUserTrackingMode(
         userTrackingMode: userTrackingMode,

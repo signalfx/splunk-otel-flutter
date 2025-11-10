@@ -10,6 +10,7 @@ fun GeneratedStatus.toAgentApiStatus(): Status {
         GeneratedStatus.SUB_PROCESS -> Status.NotRunning.Subprocess
         GeneratedStatus.SAMPLED_OUT -> Status.NotRunning.SampledOut
         GeneratedStatus.UNSUPPORTED_OS_VERSION -> Status.NotRunning.UnsupportedOsVersion
+        GeneratedStatus.UNSUPPORTED_PLATFORM -> throw IllegalArgumentException("Unsupported GeneratedStatus type for UNSUPPORTED_PLATFORM")
     }
 }
 

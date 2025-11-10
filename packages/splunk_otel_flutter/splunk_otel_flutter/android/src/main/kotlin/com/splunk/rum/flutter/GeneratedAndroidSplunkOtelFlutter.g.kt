@@ -131,7 +131,8 @@ enum class GeneratedStatus(val raw: Int) {
   NOT_INSTALLED(1),
   SUB_PROCESS(2),
   SAMPLED_OUT(3),
-  UNSUPPORTED_OS_VERSION(4);
+  UNSUPPORTED_PLATFORM(4),
+  UNSUPPORTED_OS_VERSION(5);
 
   companion object {
     fun ofRaw(raw: Int): GeneratedStatus? {
@@ -259,25 +260,25 @@ data class GeneratedAgentConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedEndpointConfiguration (
-  val tracesEndpoint: String? = null,
-  val logsEndpoint: String? = null,
+  val traceEndpoint: String? = null,
+  val sessionReplayEndpoint: String? = null,
   val realm: String? = null,
   val rumAccessToken: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedEndpointConfiguration {
-      val tracesEndpoint = pigeonVar_list[0] as String?
-      val logsEndpoint = pigeonVar_list[1] as String?
+      val traceEndpoint = pigeonVar_list[0] as String?
+      val sessionReplayEndpoint = pigeonVar_list[1] as String?
       val realm = pigeonVar_list[2] as String?
       val rumAccessToken = pigeonVar_list[3] as String?
-      return GeneratedEndpointConfiguration(tracesEndpoint, logsEndpoint, realm, rumAccessToken)
+      return GeneratedEndpointConfiguration(traceEndpoint, sessionReplayEndpoint, realm, rumAccessToken)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      tracesEndpoint,
-      logsEndpoint,
+      traceEndpoint,
+      sessionReplayEndpoint,
       realm,
       rumAccessToken,
     )
@@ -941,7 +942,7 @@ interface SplunkOtelFlutterHostApi {
   fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit)
   fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit)
   fun userPreferencesGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode?>) -> Unit)
-  fun userPreferencesSetUserTrackingMode(trackingMode: GeneratedUserTrackingMode?, callback: (Result<Unit>) -> Unit)
+  fun userPreferencesSetUserTrackingMode(trackingMode: GeneratedUserTrackingMode, callback: (Result<Unit>) -> Unit)
   fun globalAttributesGet(key: String, callback: (Result<Any?>) -> Unit)
   fun globalAttributesGetAll(callback: (Result<GeneratedMutableAttributes?>) -> Unit)
   fun globalAttributesRemove(key: String, callback: (Result<Unit>) -> Unit)
@@ -955,7 +956,7 @@ interface SplunkOtelFlutterHostApi {
   fun globalAttributesSetIntList(key: String, value: List<Long>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetDoubleList(key: String, value: List<Double>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetBoolList(key: String, value: List<Boolean>, callback: (Result<Unit>) -> Unit)
-  fun globalAttributesSetAll(key: String, value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
+  fun globalAttributesSetAll(value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterHostApi. */
@@ -1352,7 +1353,7 @@ interface SplunkOtelFlutterHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val trackingModeArg = args[0] as GeneratedUserTrackingMode?
+            val trackingModeArg = args[0] as GeneratedUserTrackingMode
             api.userPreferencesSetUserTrackingMode(trackingModeArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -1625,9 +1626,8 @@ interface SplunkOtelFlutterHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val keyArg = args[0] as String
-            val valueArg = args[1] as GeneratedMutableAttributes
-            api.globalAttributesSetAll(keyArg, valueArg) { result: Result<Unit> ->
+            val valueArg = args[0] as GeneratedMutableAttributes
+            api.globalAttributesSetAll(valueArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

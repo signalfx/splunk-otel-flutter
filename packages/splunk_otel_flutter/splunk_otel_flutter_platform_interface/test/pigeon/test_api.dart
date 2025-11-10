@@ -198,7 +198,7 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode();
 
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode? trackingMode});
+  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode});
 
   Future<Object?> globalAttributesGet({required String key});
 
@@ -226,7 +226,7 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
 
-  Future<void> globalAttributesSetAll({required String key, required GeneratedMutableAttributes value});
+  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value});
 
   static void setUp(TestSplunkOtelFlutterHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -661,8 +661,10 @@ abstract class TestSplunkOtelFlutterHostApi {
           'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final GeneratedUserTrackingMode? arg_trackingMode = (args[0] as GeneratedUserTrackingMode?);
+          assert(arg_trackingMode != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null, expected non-null GeneratedUserTrackingMode.');
           try {
-            await api.userPreferencesSetUserTrackingMode(trackingMode: arg_trackingMode);
+            await api.userPreferencesSetUserTrackingMode(trackingMode: arg_trackingMode!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -1020,14 +1022,11 @@ abstract class TestSplunkOtelFlutterHostApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null, expected non-null String.');
-          final GeneratedMutableAttributes? arg_value = (args[1] as GeneratedMutableAttributes?);
+          final GeneratedMutableAttributes? arg_value = (args[0] as GeneratedMutableAttributes?);
           assert(arg_value != null,
               'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null, expected non-null GeneratedMutableAttributes.');
           try {
-            await api.globalAttributesSetAll(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetAll(value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

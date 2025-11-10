@@ -8,7 +8,7 @@ class GlobalAttributes {
   }) async =>
       _delegate.globalAttributesGet(key: key);
 
-  Future<MutableAttributes> etAll() async =>
+  Future<MutableAttributes> getAll() async =>
       _delegate.globalAttributesGetAll();
 
   Future<void> remove({
@@ -73,6 +73,6 @@ class GlobalAttributes {
       await _delegate.globalAttributesSetBoolList(key: key, value: value);
 
   Future<void> setAll(
-          {required String key, required MutableAttributes attributes}) async =>
-      await _delegate.globalAttributesSetAll(key: key, attributes: attributes);
+          {required MutableAttributes attributes}) async =>
+      await _delegate.globalAttributesSetAll(attributes: attributes);
 }

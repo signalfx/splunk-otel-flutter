@@ -8,26 +8,26 @@ import java.net.URL
 import java.util.IllegalFormatException
 
 fun GeneratedEndpointConfiguration.toEndpointConfiguration(): EndpointConfiguration {
-    if(logsEndpoint!=null && tracesEndpoint!=null)
+    if(sessionReplayEndpoint!=null && traceEndpoint!=null)
     {
-        return EndpointConfiguration(URL(tracesEndpoint),URL(logsEndpoint))
+        return EndpointConfiguration(URL(traceEndpoint),URL(sessionReplayEndpoint))
     }
-    if(tracesEndpoint!=null)
+    if(traceEndpoint!=null)
     {
-        return EndpointConfiguration(URL(tracesEndpoint))
+        return EndpointConfiguration(URL(traceEndpoint))
     }
 
     if(realm!=null &&rumAccessToken!=null){
         return EndpointConfiguration(realm,rumAccessToken)
     }
 
-    throw IllegalArgumentException("Invalid parameter combination")
+    throw IllegalArgumentException("Endpoint configuration - Invalid parameter combination")
 }
 
 fun EndpointConfiguration.toGeneratedEndpointConfiguration(): GeneratedEndpointConfiguration {
     return GeneratedEndpointConfiguration(
-        tracesEndpoint = this.tracesEndpoint?.toString(),
-        logsEndpoint = this.logsEndpoint?.toString(),
+        traceEndpoint = this.tracesEndpoint?.toString(),
+        sessionReplayEndpoint = this.logsEndpoint?.toString(),
         realm = this.realm,
         rumAccessToken = this.rumAccessToken
     )

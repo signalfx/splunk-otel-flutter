@@ -61,21 +61,29 @@ extension MutableAttributesConverter on MutableAttributes {
     final Map<String, Object?> generatedAttributes = {};
     attributes.forEach((key, value) {
       if (value is MutableAttributeInt) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeInt(value: value.value);
       } else if (value is MutableAttributeDouble) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeDouble(value: value.value);
       } else if (value is MutableAttributeString) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeString(value: value.value);
       } else if (value is MutableAttributeBool) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeBool(value: value.value);
       } else if (value is MutableAttributeListInt) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeListInt(value: value.value);
       } else if (value is MutableAttributeListDouble) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeListDouble(value: value.value);
       } else if (value is MutableAttributeListString) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeListString(value: value.value);
       } else if (value is MutableAttributeListBool) {
-        generatedAttributes[key] = value.value;
+        generatedAttributes[key] =
+            GeneratedMutableAttributeListBool(value: value.value);
       }
     });
     return GeneratedMutableAttributes(attributes: generatedAttributes);
@@ -86,22 +94,22 @@ extension GeneratedMutableAttributesConverter on GeneratedMutableAttributes {
   MutableAttributes toMutableAttributes() {
     final Map<String, MutableAttributeValue> mutableAttributes = {};
     attributes.forEach((key, value) {
-      if (value is int) {
-        mutableAttributes[key] = MutableAttributeInt(value: value);
-      } else if (value is double) {
-        mutableAttributes[key] = MutableAttributeDouble(value: value);
-      } else if (value is String) {
-        mutableAttributes[key] = MutableAttributeString(value: value);
-      } else if (value is bool) {
-        mutableAttributes[key] = MutableAttributeBool(value: value);
-      } else if (value is List<int>) {
-        mutableAttributes[key] = MutableAttributeListInt(value: value);
-      } else if (value is List<double>) {
-        mutableAttributes[key] = MutableAttributeListDouble(value: value);
-      } else if (value is List<String>) {
-        mutableAttributes[key] = MutableAttributeListString(value: value);
-      } else if (value is List<bool>) {
-        mutableAttributes[key] = MutableAttributeListBool(value: value);
+      if (value is GeneratedMutableAttributeInt) {
+        mutableAttributes[key] = MutableAttributeInt(value: value.value);
+      } else if (value is GeneratedMutableAttributeDouble) {
+        mutableAttributes[key] = MutableAttributeDouble(value: value.value);
+      } else if (value is GeneratedMutableAttributeString) {
+        mutableAttributes[key] = MutableAttributeString(value: value.value);
+      } else if (value is GeneratedMutableAttributeBool) {
+        mutableAttributes[key] = MutableAttributeBool(value: value.value);
+      } else if (value is GeneratedMutableAttributeListInt) {
+        mutableAttributes[key] = MutableAttributeListInt(value: value.value);
+      } else if (value is GeneratedMutableAttributeListDouble) {
+        mutableAttributes[key] = MutableAttributeListDouble(value: value.value);
+      } else if (value is GeneratedMutableAttributeListString) {
+        mutableAttributes[key] = MutableAttributeListString(value: value.value);
+      } else if (value is GeneratedMutableAttributeListBool) {
+        mutableAttributes[key] = MutableAttributeListBool(value: value.value);
       }
     });
     return MutableAttributes(attributes: mutableAttributes);

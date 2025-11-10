@@ -99,7 +99,7 @@ abstract class SplunkOtelFlutterHostApi {
 
   @async
   void userPreferencesSetUserTrackingMode({
-    required GeneratedUserTrackingMode? trackingMode,
+    required GeneratedUserTrackingMode trackingMode,
   });
 
   // Global attributes
@@ -148,8 +148,7 @@ abstract class SplunkOtelFlutterHostApi {
       {required String key, required List<bool> value});
 
   @async
-  void globalAttributesSetAll(
-      {required String key, required GeneratedMutableAttributes value});
+  void globalAttributesSetAll({required GeneratedMutableAttributes value});
 }
 
 // Modules
@@ -215,14 +214,14 @@ class GeneratedAgentConfiguration {
 }
 
 class GeneratedEndpointConfiguration {
-  final String? tracesEndpoint;
-  final String? logsEndpoint;
+  final String? traceEndpoint;
+  final String? sessionReplayEndpoint;
   final String? realm;
   final String? rumAccessToken;
 
   GeneratedEndpointConfiguration({
-    this.tracesEndpoint,
-    this.logsEndpoint,
+    this.traceEndpoint,
+    this.sessionReplayEndpoint,
     this.realm,
     this.rumAccessToken,
   });
@@ -302,6 +301,7 @@ enum GeneratedStatus {
   notInstalled,
   subProcess,
   sampledOut,
+  unsupportedPlatform,
   unsupportedOsVersion,
 }
 

@@ -157,7 +157,8 @@ enum GeneratedStatus: Int {
   case notInstalled = 1
   case subProcess = 2
   case sampledOut = 3
-  case unsupportedOsVersion = 4
+  case unsupportedPlatform = 4
+  case unsupportedOsVersion = 5
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
@@ -281,30 +282,30 @@ struct GeneratedAgentConfiguration: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedEndpointConfiguration: Hashable {
-  var tracesEndpoint: String? = nil
-  var logsEndpoint: String? = nil
+  var traceEndpoint: String? = nil
+  var sessionReplayEndpoint: String? = nil
   var realm: String? = nil
   var rumAccessToken: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedEndpointConfiguration? {
-    let tracesEndpoint: String? = nilOrValue(pigeonVar_list[0])
-    let logsEndpoint: String? = nilOrValue(pigeonVar_list[1])
+    let traceEndpoint: String? = nilOrValue(pigeonVar_list[0])
+    let sessionReplayEndpoint: String? = nilOrValue(pigeonVar_list[1])
     let realm: String? = nilOrValue(pigeonVar_list[2])
     let rumAccessToken: String? = nilOrValue(pigeonVar_list[3])
 
     return GeneratedEndpointConfiguration(
-      tracesEndpoint: tracesEndpoint,
-      logsEndpoint: logsEndpoint,
+      traceEndpoint: traceEndpoint,
+      sessionReplayEndpoint: sessionReplayEndpoint,
       realm: realm,
       rumAccessToken: rumAccessToken
     )
   }
   func toList() -> [Any?] {
     return [
-      tracesEndpoint,
-      logsEndpoint,
+      traceEndpoint,
+      sessionReplayEndpoint,
       realm,
       rumAccessToken,
     ]
@@ -872,7 +873,7 @@ protocol SplunkOtelFlutterHostApi {
   func sessionStateGetSamplingRate(completion: @escaping (Result<Double, Error>) -> Void)
   func userStateGetUserTrackingMode(completion: @escaping (Result<GeneratedUserTrackingMode, Error>) -> Void)
   func userPreferencesGetUserTrackingMode(completion: @escaping (Result<GeneratedUserTrackingMode?, Error>) -> Void)
-  func userPreferencesSetUserTrackingMode(trackingMode: GeneratedUserTrackingMode?, completion: @escaping (Result<Void, Error>) -> Void)
+  func userPreferencesSetUserTrackingMode(trackingMode: GeneratedUserTrackingMode, completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesGet(key: String, completion: @escaping (Result<Any?, Error>) -> Void)
   func globalAttributesGetAll(completion: @escaping (Result<GeneratedMutableAttributes?, Error>) -> Void)
   func globalAttributesRemove(key: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -886,7 +887,7 @@ protocol SplunkOtelFlutterHostApi {
   func globalAttributesSetIntList(key: String, value: [Int64], completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesSetDoubleList(key: String, value: [Double], completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesSetBoolList(key: String, value: [Bool], completion: @escaping (Result<Void, Error>) -> Void)
-  func globalAttributesSetAll(key: String, value: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
+  func globalAttributesSetAll(value: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1222,7 +1223,7 @@ class SplunkOtelFlutterHostApiSetup {
     if let api = api {
       userPreferencesSetUserTrackingModeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let trackingModeArg: GeneratedUserTrackingMode? = nilOrValue(args[0])
+        let trackingModeArg = args[0] as! GeneratedUserTrackingMode
         api.userPreferencesSetUserTrackingMode(trackingMode: trackingModeArg) { result in
           switch result {
           case .success:
@@ -1464,9 +1465,8 @@ class SplunkOtelFlutterHostApiSetup {
     if let api = api {
       globalAttributesSetAllChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let keyArg = args[0] as! String
-        let valueArg = args[1] as! GeneratedMutableAttributes
-        api.globalAttributesSetAll(key: keyArg, value: valueArg) { result in
+        let valueArg = args[0] as! GeneratedMutableAttributes
+        api.globalAttributesSetAll(value: valueArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
