@@ -72,12 +72,12 @@ void main() {
           expect(genAgent.deferredUntilForeground, true);
 
           // Verify navigation configuration
-          expect(genNav.isEnabled, true);
-          expect(genNav.isAutomatedTrackingEnabled, true);
+          expect(genNav?.isEnabled, true);
+          expect(genNav?.isAutomatedTrackingEnabled, true);
 
           // Verify slow rendering configuration
-          expect(genSlow.isEnabled, true);
-          expect(genSlow.intervalMillis, 1500);
+          expect(genSlow?.isEnabled, true);
+          expect(genSlow?.intervalMillis, 1500);
         };
 
         // Act
@@ -111,10 +111,10 @@ void main() {
           expect(genAgent.enableDebugLogging, false);
 
           // Verify default module configs are used
-          expect(genNav.isEnabled, true);
-          expect(genNav.isAutomatedTrackingEnabled, false);
-          expect(genSlow.isEnabled, true);
-          expect(genSlow.intervalMillis, 1000);
+          expect(genNav?.isEnabled, true);
+          expect(genNav?.isAutomatedTrackingEnabled, false);
+          expect(genSlow?.isEnabled, true);
+          expect(genSlow?.intervalMillis, 1000);
         };
 
         // Act
@@ -144,10 +144,10 @@ void main() {
         );
 
         mockApi.installHandler = (_, genNav, genSlow) async {
-          expect(genNav.isEnabled, false);
-          expect(genNav.isAutomatedTrackingEnabled, false);
+          expect(genNav?.isEnabled, false);
+          expect(genNav?.isAutomatedTrackingEnabled, false);
           // Default slow rendering should still be used
-          expect(genSlow.isEnabled, true);
+          expect(genSlow?.isEnabled, true);
         };
 
         // Act
@@ -175,9 +175,9 @@ void main() {
 
         mockApi.installHandler = (_, genNav, genSlow) async {
           // Default navigation should be used
-          expect(genNav.isEnabled, true);
-          expect(genSlow.isEnabled, false);
-          expect(genSlow.intervalMillis, 250);
+          expect(genNav?.isEnabled, true);
+          expect(genSlow?.isEnabled, false);
+          expect(genSlow?.intervalMillis, 250);
         };
 
         // Act
@@ -452,8 +452,8 @@ void main() {
 
         mockApi.installHandler = (_, genNav, __) async {
           // Should use first one (navConfig1)
-          expect(genNav.isEnabled, true);
-          expect(genNav.isAutomatedTrackingEnabled, true);
+          expect(genNav?.isEnabled, true);
+          expect(genNav?.isAutomatedTrackingEnabled, true);
         };
 
         // Act
@@ -542,7 +542,7 @@ void main() {
           );
 
           mockApi.installHandler = (_, __, genSlow) async {
-            expect(genSlow.intervalMillis, expectedMillis);
+            expect(genSlow?.intervalMillis, expectedMillis);
           };
 
           await implementation.install(

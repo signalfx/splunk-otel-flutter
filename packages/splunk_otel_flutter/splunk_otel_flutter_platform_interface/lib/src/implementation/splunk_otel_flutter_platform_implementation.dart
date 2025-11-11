@@ -38,15 +38,20 @@ class SplunkOtelFlutterPlatformImplementation
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,
   }) async {
-    final navigationModuleConfiguration = moduleConfigurations.firstWhere(
-      (element) => element is NavigationModuleConfiguration,
-      orElse: () => NavigationModuleConfiguration(),
-    ) as NavigationModuleConfiguration;
+    final navigationModuleConfiguration = moduleConfigurations
+        .whereType<NavigationModuleConfiguration>()
+        .cast<NavigationModuleConfiguration?>()
+        .firstOrNull;
 
-    final slowRenderingModuleConfiguration = moduleConfigurations.firstWhere(
-      (element) => element is SlowRenderingModuleConfiguration,
-      orElse: () => SlowRenderingModuleConfiguration(),
-    ) as SlowRenderingModuleConfiguration;
+    final slowRenderingModuleConfiguration = moduleConfigurations
+        .whereType<SlowRenderingModuleConfiguration>()
+        .cast<SlowRenderingModuleConfiguration?>()
+        .firstOrNull;
+
+    final anrModuleConfiguration = moduleConfigurations
+        .whereType<AnrModuleConfiguration>()
+        .cast<AnrModuleConfiguration?>()
+        .firstOrNull;
 
     //TODO more configurations
 
@@ -60,23 +65,32 @@ class SplunkOtelFlutterPlatformImplementation
           deploymentEnvironment: agentConfiguration.deploymentEnvironment,
           appVersion: agentConfiguration.appVersion,
           enableDebugLogging: agentConfiguration.enableDebugLogging,
-          globalAttributes: agentConfiguration.globalAttributes?.toGeneratedMutableAttributes(),
+          globalAttributes: agentConfiguration.globalAttributes
+              ?.toGeneratedMutableAttributes(),
           user: agentConfiguration.user.toGeneratedUserConfiguration(),
           session: GeneratedSessionConfiguration(
               samplingRate: agentConfiguration.session.samplingRate),
           instrumentedProcessName: agentConfiguration.instrumentedProcessName,
           deferredUntilForeground: agentConfiguration.deferredUntilForeground),
-      navigationModuleConfiguration: GeneratedNavigationModuleConfiguration(
-        isEnabled: navigationModuleConfiguration.isEnabled,
-        isAutomatedTrackingEnabled:
-            navigationModuleConfiguration.isAutomatedTrackingEnabled,
-      ),
-      slowRenderingModuleConfiguration:
-          GeneratedSlowRenderingModuleConfiguration(
-        isEnabled: slowRenderingModuleConfiguration.isEnabled,
-        intervalMillis:
-            slowRenderingModuleConfiguration.interval.inMilliseconds,
-      ),
+      navigationModuleConfiguration: navigationModuleConfiguration == null
+          ? null
+          : GeneratedNavigationModuleConfiguration(
+              isEnabled: navigationModuleConfiguration.isEnabled,
+              isAutomatedTrackingEnabled:
+                  navigationModuleConfiguration.isAutomatedTrackingEnabled,
+            ),
+      slowRenderingModuleConfiguration: slowRenderingModuleConfiguration == null
+          ? null
+          : GeneratedSlowRenderingModuleConfiguration(
+              isEnabled: slowRenderingModuleConfiguration.isEnabled,
+              intervalMillis:
+                  slowRenderingModuleConfiguration.interval.inMilliseconds,
+            ),
+      anrModuleConfiguration: anrModuleConfiguration == null
+          ? null
+          : GeneratedAnrModuleConfiguration(
+              isEnabled: anrModuleConfiguration.isEnabled,
+            ),
     );
   }
 

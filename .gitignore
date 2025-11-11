@@ -17,6 +17,8 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
+.run/Flutter_Run_splunk_otel_flutter_example'.run.xml
+
 
 # gradle
 .gradle/

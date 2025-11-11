@@ -21,6 +21,8 @@ import SplunkAgent
 import OpenTelemetryApi
 import SplunkSlowFrameDetector
 import SplunkNavigation
+import SplunkAppStart
+
 
 extension FlutterError: Error {}
 
@@ -32,13 +34,11 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     }
     
     func install(agentConfiguration: GeneratedAgentConfiguration,
-                 navigationModuleConfiguration: GeneratedNavigationModuleConfiguration,
-                 slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration,
+                 navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
+                 slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?,
+                 anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
-        
-        
-
         
         guard let endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() else {
             completion(
@@ -66,25 +66,29 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
-           try SplunkRum.install(with: agentConfig,
-                                              moduleConfigurations: [
-                                                SlowFrameDetectorConfiguration(isEnabled: slowRenderingModuleConfiguration.isEnabled),
-                                                NavigationConfiguration(isEnabled: navigationModuleConfiguration.isEnabled,enableAutomatedTracking: navigationModuleConfiguration.isAutomatedTrackingEnabled)
-                                                // TODO rest configurations
-                                              ]
-            )
-            
+            let moduleConfigurations: [Any] = [
+                slowRenderingModuleConfiguration.map {
+                    SlowFrameDetectorConfiguration(isEnabled: $0.isEnabled)
+                },
+                navigationModuleConfiguration.map {
+                    NavigationConfiguration(
+                        isEnabled: $0.isEnabled,
+                        enableAutomatedTracking: $0.isAutomatedTrackingEnabled
+                    )
+                }
+                // TODO: add rest configurations
+            ].compactMap { $0 } // removes nils automatically
+
+            try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
             completion(.success(()))
         } catch {
-            completion(
-                .failure(
-                    FlutterError(
-                        code: "INSTALL_FAILED",
-                        message: error.localizedDescription,
-                        details: nil,
-                    )
+            completion(.failure(
+                FlutterError(
+                    code: "INSTALL_FAILED",
+                    message: error.localizedDescription,
+                    details: nil
                 )
-            )
+            ))
         }
         
         

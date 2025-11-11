@@ -19,10 +19,11 @@ abstract class SplunkOtelFlutterHostApi {
   @async
   void install({
     required GeneratedAgentConfiguration agentConfiguration,
-    required GeneratedNavigationModuleConfiguration
+    required GeneratedNavigationModuleConfiguration?
         navigationModuleConfiguration,
-    required GeneratedSlowRenderingModuleConfiguration
+    required GeneratedSlowRenderingModuleConfiguration?
         slowRenderingModuleConfiguration,
+    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
   });
 
   // Session replay
@@ -170,6 +171,14 @@ class GeneratedNavigationModuleConfiguration {
   GeneratedNavigationModuleConfiguration({
     required this.isEnabled,
     required this.isAutomatedTrackingEnabled,
+  });
+}
+
+class GeneratedAnrModuleConfiguration {
+  final bool isEnabled;
+
+  GeneratedAnrModuleConfiguration({
+    required this.isEnabled,
   });
 }
 

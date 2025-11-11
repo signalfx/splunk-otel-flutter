@@ -7,8 +7,8 @@ import 'pigeon/test_api.dart';
 class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlutterHostApi {
   Future<void> Function(
       GeneratedAgentConfiguration agentConfiguration,
-      GeneratedNavigationModuleConfiguration navigationModuleConfiguration,
-      GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration,
+      GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
+      GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
       )? installHandler;
 
   Future<void> Function()? sessionReplayStartHandler;
@@ -17,8 +17,9 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   @override
   Future<void> install({
     required GeneratedAgentConfiguration agentConfiguration,
-    required GeneratedNavigationModuleConfiguration navigationModuleConfiguration,
-    required GeneratedSlowRenderingModuleConfiguration slowRenderingModuleConfiguration,
+    required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
   }) async {
     if (installHandler != null) {
       return installHandler!(
