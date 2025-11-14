@@ -32,28 +32,29 @@ class MutableAttributeBool extends MutableAttributeValue {
   MutableAttributeBool({required this.value});
 }
 
-class MutableAttributeListInt extends MutableAttributeValue {
+// Lists are currently set to private will be handled after first release
+class _MutableAttributeListInt extends MutableAttributeValue {
   final List<int> value;
 
-  MutableAttributeListInt({required this.value});
+  _MutableAttributeListInt({required this.value});
 }
 
-class MutableAttributeListDouble extends MutableAttributeValue {
+class _MutableAttributeListDouble extends MutableAttributeValue {
   final List<double> value;
 
-  MutableAttributeListDouble({required this.value});
+  _MutableAttributeListDouble({required this.value});
 }
 
-class MutableAttributeListString extends MutableAttributeValue {
+class _MutableAttributeListString extends MutableAttributeValue {
   final List<String> value;
 
-  MutableAttributeListString({required this.value});
+  _MutableAttributeListString({required this.value});
 }
 
-class MutableAttributeListBool extends MutableAttributeValue {
+class _MutableAttributeListBool extends MutableAttributeValue {
   final List<bool> value;
 
-  MutableAttributeListBool({required this.value});
+  _MutableAttributeListBool({required this.value});
 }
 
 extension MutableAttributesConverter on MutableAttributes {
@@ -72,16 +73,16 @@ extension MutableAttributesConverter on MutableAttributes {
       } else if (value is MutableAttributeBool) {
         generatedAttributes[key] =
             GeneratedMutableAttributeBool(value: value.value);
-      } else if (value is MutableAttributeListInt) {
+      } else if (value is _MutableAttributeListInt) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListInt(value: value.value);
-      } else if (value is MutableAttributeListDouble) {
+      } else if (value is _MutableAttributeListDouble) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListDouble(value: value.value);
-      } else if (value is MutableAttributeListString) {
+      } else if (value is _MutableAttributeListString) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListString(value: value.value);
-      } else if (value is MutableAttributeListBool) {
+      } else if (value is _MutableAttributeListBool) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListBool(value: value.value);
       }
@@ -103,13 +104,13 @@ extension GeneratedMutableAttributesConverter on GeneratedMutableAttributes {
       } else if (value is GeneratedMutableAttributeBool) {
         mutableAttributes[key] = MutableAttributeBool(value: value.value);
       } else if (value is GeneratedMutableAttributeListInt) {
-        mutableAttributes[key] = MutableAttributeListInt(value: value.value);
+        mutableAttributes[key] = _MutableAttributeListInt(value: value.value);
       } else if (value is GeneratedMutableAttributeListDouble) {
-        mutableAttributes[key] = MutableAttributeListDouble(value: value.value);
+        mutableAttributes[key] = _MutableAttributeListDouble(value: value.value);
       } else if (value is GeneratedMutableAttributeListString) {
-        mutableAttributes[key] = MutableAttributeListString(value: value.value);
+        mutableAttributes[key] = _MutableAttributeListString(value: value.value);
       } else if (value is GeneratedMutableAttributeListBool) {
-        mutableAttributes[key] = MutableAttributeListBool(value: value.value);
+        mutableAttributes[key] = _MutableAttributeListBool(value: value.value);
       }
     });
     return MutableAttributes(attributes: mutableAttributes);

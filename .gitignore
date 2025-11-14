@@ -39,3 +39,4 @@ gradle-wrapper.jar
 .flutter-plugins-dependencies
 /build/
 /coverage/
+/.run/Flutter Run -_ 'splunk_otel_flutter_example'.run.xml

@@ -205,10 +205,6 @@ class _MyAppState extends State<MyApp> {
       if (v is MutableAttributeInt) return 'Int(${v.value})';
       if (v is MutableAttributeDouble) return 'Double(${v.value})';
       if (v is MutableAttributeBool) return 'Bool(${v.value})';
-      if (v is MutableAttributeListString) return 'ListString(${v.value})';
-      if (v is MutableAttributeListInt) return 'ListInt(${v.value})';
-      if (v is MutableAttributeListDouble) return 'ListDouble(${v.value})';
-      if (v is MutableAttributeListBool) return 'ListBool(${v.value})';
       return v.runtimeType.toString();
     }
 
@@ -337,34 +333,6 @@ class _MyAppState extends State<MyApp> {
           await sdk.globalAttributes.get(key: 'ga_bool'));
       assert(gaBool.value == true, 'ga_bool roundtrip failed');
 
-      // Lists
-      await sdk.globalAttributes.setStringList(
-          key: 'ga_list_string', value: ['a', 'b']);
-      final gaListStr = castAttr<MutableAttributeListString>(
-          await sdk.globalAttributes.get(key: 'ga_list_string'));
-      assert(listEquals(
-          gaListStr.value, ['a', 'b']), 'ga_list_string roundtrip failed');
-
-      await sdk.globalAttributes.setIntList(
-          key: 'ga_list_int', value: [1, 2, 3]);
-      final gaListInt = castAttr<MutableAttributeListInt>(
-          await sdk.globalAttributes.get(key: 'ga_list_int'));
-      assert(listEquals(
-          gaListInt.value, [1, 2, 3]), 'ga_list_int roundtrip failed');
-
-      await sdk.globalAttributes.setDoubleList(
-          key: 'ga_list_double', value: [1.1, 2.2]);
-      final gaListDouble = castAttr<MutableAttributeListDouble>(
-          await sdk.globalAttributes.get(key: 'ga_list_double'));
-      assert(listEquals(
-          gaListDouble.value, [1.1, 2.2]), 'ga_list_double roundtrip failed');
-
-      await sdk.globalAttributes.setBoolList(
-          key: 'ga_list_bool', value: [true, false]);
-      final gaListBool = castAttr<MutableAttributeListBool>(
-          await sdk.globalAttributes.get(key: 'ga_list_bool'));
-      assert(listEquals(
-          gaListBool.value, [true, false]), 'ga_list_bool roundtrip failed');
 
       // contains()
       final hasGaString = await sdk.globalAttributes.contains(key: 'ga_string');
@@ -384,27 +352,9 @@ class _MyAppState extends State<MyApp> {
             'bundle_int': MutableAttributeInt(value: 7),
             'bundle_double': MutableAttributeDouble(value: 2.71),
             'bundle_string': MutableAttributeString(value: 'pack'),
-            'bundle_list_int': MutableAttributeListInt(value: [9, 8]),
-            'bundle_list_string_empty': MutableAttributeListString(value: []),
           },
         ),
       );
-
-      // Check a few bundle keys came through
-      final bBool = castAttr<MutableAttributeBool>(
-          await sdk.globalAttributes.get(key: 'bundle_bool'));
-      final bStr = castAttr<MutableAttributeString>(
-          await sdk.globalAttributes.get(key: 'bundle_string'));
-      final bList = castAttr<MutableAttributeListInt>(
-          await sdk.globalAttributes.get(key: 'bundle_list_int'));
-      final emptyListString = castAttr<MutableAttributeListString>(
-          await sdk.globalAttributes.get(
-              key: 'bundle_list_string_empty')); //TODO resolve issue with empty array set and get both Android iOS
-      assert(bBool.value == false, 'bundle_bool not persisted');
-      assert(emptyListString.value ==
-          <String>[], 'bundle_list_string_empty not persisted');
-      assert(bStr.value == 'pack', 'bundle_string not persisted');
-      assert(listEquals(bList.value, [9, 8]), 'bundle_list_int not persisted');
 
       // remove() then contains()
       await sdk.globalAttributes.remove(key: 'ga_string');

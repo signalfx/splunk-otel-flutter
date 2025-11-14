@@ -9,20 +9,20 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: "splunk-otel-flutter",
-        targets: ["splunk_otel_flutter"]
+        .library(
+            name: "splunk-otel-flutter",
+            targets: ["splunk_otel_flutter"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.0.1")
+        .package(path: "/Users/zdenda/Development/splunk-otel-ios")
     ],
     targets: [
         .target(
             name: "splunk_otel_flutter",
             dependencies: [
                 .product(name: "SplunkAgent", package: "splunk-otel-ios")
-            ],
-            resources: []
+            ]
         )
     ]
 )

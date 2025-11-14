@@ -24,14 +24,59 @@ import SplunkNavigation
 import SplunkAppStart
 
 
+
 extension FlutterError: Error {}
 
 public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutterHostApi {
-    public static func register(with registrar: FlutterPluginRegistrar) {
-        let instance = SplunkOtelFlutterPlugin()
-        
-        SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let instance = SplunkOtelFlutterPlugin()
+
+    // Observe lifecycle notifications
+    NotificationCenter.default.addObserver(
+      instance,
+      selector: #selector(onDidBecomeActive),
+      name: UIApplication.didBecomeActiveNotification,
+      object: nil
+    )
+
+    NotificationCenter.default.addObserver(
+      instance,
+      selector: #selector(onDidFinishLaunchingNotification),
+      name: UIApplication.didFinishLaunchingNotification,
+      object: nil
+    )
+
+    // If we attached after launch (e.g., add-to-app) and app is already active, synthesize once
+    if UIApplication.shared.applicationState == .active {
+      instance.handleDidBecomeActive()
     }
+
+    SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+
+  // MARK: - Notification handlers
+  @objc private func onDidFinishLaunchingNotification(_ note: Notification) {
+    let launchOptions = note.userInfo as? [UIApplication.LaunchOptionsKey: Any]
+    handleDidFinishLaunching(launchOptions: launchOptions)
+  }
+
+  @objc private func onDidBecomeActive(_ note: Notification) {
+    handleDidBecomeActive()
+  }
+
+  // MARK: - Internals
+  private func handleDidFinishLaunching(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+    print("xxxxxx🔵 didFinishLaunching received at \(nowTS())")
+  }
+
+  private func handleDidBecomeActive() {
+    print("xxxxx🟢 didBecomeActive received at \(nowTS())")
+  }
     
     func install(agentConfiguration: GeneratedAgentConfiguration,
                  navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
@@ -56,7 +101,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
         
         let agentConfig = AgentConfiguration(
-            endpoint: endpointConfiguration,
+            endpoint: EndpointConfiguration(realm: "mon0", rumAccessToken: "jzn-AT776tR8NvkgXSbQ5g"),//endpointConfiguration,
             appName: agentConfiguration.appName,
             deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         )
@@ -78,6 +123,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                 }
                 // TODO: add rest configurations
             ].compactMap { $0 } // removes nils automatically
+            
+            print("xxxxxx⚫️ startedInstall \(nowTS())")
 
             try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
             completion(.success(()))
@@ -94,6 +141,15 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         
         completion(.success(()))
     }
+    
+    private static let ts: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // adds .SSS
+        f.timeZone = TimeZone(secondsFromGMT: 0) // or .current
+        return f
+    }()
+
+    private func nowTS() -> String { Self.ts.string(from: Date()) }
     
     // Session replay
     

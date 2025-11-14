@@ -48,6 +48,8 @@ class GlobalAttributes {
   }) async =>
       await _delegate.globalAttributesSetBool(key: key, value: value);
 
+  // Lists are currently set to private will be handled after first release
+/*
   Future<void> setStringList({
     required String key,
     required List<String> value,
@@ -71,6 +73,7 @@ class GlobalAttributes {
     required List<bool> value,
   }) async =>
       await _delegate.globalAttributesSetBoolList(key: key, value: value);
+*/
 
   Future<void> setAll(
           {required MutableAttributes attributes}) async =>

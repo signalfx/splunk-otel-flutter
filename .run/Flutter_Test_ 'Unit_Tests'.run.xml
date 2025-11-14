@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Flutter Test -&gt; 'Unit Tests'" type="FlutterTestConfigType" factoryName="Flutter Test">
-    <option name="testDir" value="$PROJECT_DIR$/packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/test/unit" />
-    <option name="useRegexp" value="false" />
-    <option name="additionalArgs" value="" />
-    <method v="2" />
-  </configuration>
-</component>
