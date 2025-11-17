@@ -37,10 +37,207 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<String> getSessionId() async {
-    if (getSessionIdHandler != null) {
-      return getSessionIdHandler!();
-    }
-    return 'default-session-id';
+  Future<bool> globalAttributesContains({required String key}) {
+    // TODO: implement globalAttributesContains
+    throw UnimplementedError();
   }
+
+  @override
+  Future<dynamic> globalAttributesGet({required String key}) {
+    // TODO: implement globalAttributesGet
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedMutableAttributes?> globalAttributesGetAll() {
+    // TODO: implement globalAttributesGetAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesRemove({required String key}) {
+    // TODO: implement globalAttributesRemove
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesRemoveAll() {
+    // TODO: implement globalAttributesRemoveAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) {
+    // TODO: implement globalAttributesSetAll
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetBool({required String key, required bool? value}) {
+    // TODO: implement globalAttributesSetBool
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetBoolList({required String key, required List<bool>? value}) {
+    // TODO: implement globalAttributesSetBoolList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetDouble({required String key, required double? value}) {
+    // TODO: implement globalAttributesSetDouble
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetDoubleList({required String key, required List<double>? value}) {
+    // TODO: implement globalAttributesSetDoubleList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetInt({required String key, required int? value}) {
+    // TODO: implement globalAttributesSetInt
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetIntList({required String key, required List<int>? value}) {
+    // TODO: implement globalAttributesSetIntList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetString({required String key, required String? value}) {
+    // TODO: implement globalAttributesSetString
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> globalAttributesSetStringList({required String key, required List<String>? value}) {
+    // TODO: implement globalAttributesSetStringList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() {
+    // TODO: implement sessionReplayGetRecordingMask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() {
+    // TODO: implement sessionReplayPreferencesGetRenderingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) {
+    // TODO: implement sessionReplayPreferencesSetRenderingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) {
+    // TODO: implement sessionReplaySetRecordingMask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() {
+    // TODO: implement sessionReplayStateGetRenderingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() {
+    // TODO: implement sessionReplayStateGetStatus
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sessionReplayStop() {
+    // TODO: implement sessionReplayStop
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> sessionStateGetId() {
+    // TODO: implement sessionStateGetId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<double> sessionStateGetSamplingRate() {
+    // TODO: implement sessionStateGetSamplingRate
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> stateGetAppName() {
+    // TODO: implement stateGetAppName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> stateGetAppVersion() {
+    // TODO: implement stateGetAppVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> stateGetDeferredUntilForeground() {
+    // TODO: implement stateGetDeferredUntilForeground
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> stateGetDeploymentEnvironment() {
+    // TODO: implement stateGetDeploymentEnvironment
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration() {
+    // TODO: implement stateGetEndpointConfiguration
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> stateGetInstrumentedProcessName() {
+    // TODO: implement stateGetInstrumentedProcessName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> stateGetIsDebugLoggingEnabled() {
+    // TODO: implement stateGetIsDebugLoggingEnabled
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedStatus> stateGetStatus() {
+    // TODO: implement stateGetStatus
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode() {
+    // TODO: implement userPreferencesGetUserTrackingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode? trackingMode}) {
+    // TODO: implement userPreferencesSetUserTrackingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GeneratedUserTrackingMode> userStateGetUserTrackingMode() {
+    // TODO: implement userStateGetUserTrackingMode
+    throw UnimplementedError();
+  }
+  
 }

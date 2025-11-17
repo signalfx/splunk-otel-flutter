@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import 'package:splunk_otel_flutter/src/global_attributes.dart';
+import 'package:splunk_otel_flutter/src/session.dart';
+import 'package:splunk_otel_flutter/src/session_replay.dart';
+import 'package:splunk_otel_flutter/src/state.dart';
+import 'package:splunk_otel_flutter/src/user.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 class SplunkOtelFlutter {
@@ -25,21 +30,20 @@ class SplunkOtelFlutter {
 
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
+  final session = Session();
+  final state = State();
+  final user = User();
+  final sessionReplay = SessionReplay();
+  final globalAttributes = GlobalAttributes();
+
   // TODO Android needs App so we will need to attach app from flutter engine
   Future<void> install({
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,
   }) async {
     await _delegate.install(
-        agentConfiguration: agentConfiguration,
-        moduleConfigurations: moduleConfigurations);
-  }
-
-  Future<void> startSessionReplay() async {
-    await _delegate.sessionReplayStart();
-  }
-
-  Future<String> getSessionId() async{
-    return await _delegate.getSessionId();
+      agentConfiguration: agentConfiguration,
+      moduleConfigurations: moduleConfigurations,
+    );
   }
 }

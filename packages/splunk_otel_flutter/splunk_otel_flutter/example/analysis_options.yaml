@@ -13,6 +13,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "**/generated_plugin_registrant.dart"
+    - "lib/main.dart"
 
   errors:
     missing_required_param: error

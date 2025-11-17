@@ -27,7 +27,7 @@ void main() {
       test('should complete full installation with all configurations', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'test-token-abc123',
           ),
@@ -93,7 +93,7 @@ void main() {
       test('should handle minimal configuration installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'eu0',
             rumAccessToken: 'minimal-token',
           ),
@@ -130,7 +130,7 @@ void main() {
       test('should handle installation with only navigation module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -160,7 +160,7 @@ void main() {
       test('should handle installation with only slow rendering module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -192,7 +192,7 @@ void main() {
       test('should install then start session replay', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -226,7 +226,7 @@ void main() {
       test('should install then retrieve session ID', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -248,7 +248,7 @@ void main() {
           agentConfiguration: agentConfig,
           moduleConfigurations: [],
         );
-        final sessionId = await implementation.getSessionId();
+        final sessionId = await implementation.sessionStateGetId();
 
         // Assert
         expect(installCalled, true);
@@ -258,7 +258,7 @@ void main() {
       test('should handle complete session workflow', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'workflow-token',
           ),
@@ -289,7 +289,7 @@ void main() {
           moduleConfigurations: [],
         );
         await implementation.sessionReplayStart();
-        final retrievedSessionId = await implementation.getSessionId();
+        final retrievedSessionId = await implementation.sessionStateGetId();
 
         // Assert
         expect(callOrder, ['install', 'sessionReplay', 'getSessionId']);
@@ -302,7 +302,7 @@ void main() {
         // Arrange & Assert
         expect(
               () => AgentConfiguration(
-            endpoint: const EndpointConfiguration(
+            endpoint: EndpointConfiguration.forRum(
               realm: 'us0',
               rumAccessToken: 'token',
             ),
@@ -317,7 +317,7 @@ void main() {
       test('should handle edge case sampling rates correctly', () async {
         // Test 0.0
         final config0 = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -337,7 +337,7 @@ void main() {
 
         // Test 1.0
         final config1 = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -361,7 +361,7 @@ void main() {
       test('should handle user tracking mode transitions', () async {
         // Test noTracking
         final configNoTracking = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -384,7 +384,7 @@ void main() {
 
         // Test anonymousTracking
         final configAnonymous = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -407,7 +407,7 @@ void main() {
 
         // Test defaultTracking
         final configDefault = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -432,7 +432,7 @@ void main() {
       test('should use first module configuration when duplicates exist', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -468,7 +468,7 @@ void main() {
       test('should handle Android-specific options correctly', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'android-token',
           ),
@@ -493,7 +493,7 @@ void main() {
       test('should handle null Android-specific options', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -528,7 +528,7 @@ void main() {
         ];
 
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -557,7 +557,7 @@ void main() {
       test('should propagate platform errors during installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: const EndpointConfiguration(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -600,7 +600,7 @@ void main() {
 
         // Act & Assert
         expect(
-              () => implementation.getSessionId(),
+              () => implementation.sessionStateGetId(),
           throwsException,
         );
       });

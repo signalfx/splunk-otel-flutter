@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class AgentConfiguration {
@@ -23,15 +24,13 @@ class AgentConfiguration {
   final String deploymentEnvironment;
 
   // Optional properties (common to iOS and Android).
-  // On iOS, this typically defaults to CFBundleShortVersionString.
   final String? appVersion;
 
   // Enables or disables debug logging. Defaults to false.
   final bool enableDebugLogging;
 
   // Global attributes sent with all signals.
-  // iOS: MutableAttributes; Android: Attributes. Represented here as a map.
-  final Map<String, Object?> globalAttributes;
+  final MutableAttributes? globalAttributes;
 
   // TBD in future
   // final SpanInterceptor? spanInterceptor;
@@ -50,25 +49,79 @@ class AgentConfiguration {
     required this.deploymentEnvironment,
     this.appVersion,
     this.enableDebugLogging = false,
-    Map<String, Object?>? globalAttributes,
+    this.globalAttributes,
     //this.spanInterceptor,
     UserConfiguration? user,
     SessionConfiguration? session,
     this.instrumentedProcessName, // Android-only.
     this.deferredUntilForeground = false, // Android-only.
-  })  : globalAttributes = globalAttributes ?? const {},
-        user = user ?? const UserConfiguration(),
+  })  : user = user ?? const UserConfiguration(),
         session = session ?? SessionConfiguration();
 }
 
 class EndpointConfiguration {
-  final String realm;
-  final String rumAccessToken;
+  Uri? traceEndpoint;
+  Uri? sessionReplayEndpoint;
+  String? realm;
+  String? rumAccessToken;
 
-  const EndpointConfiguration({
-    required this.realm,
-    required this.rumAccessToken,
+  EndpointConfiguration._internal({
+    this.traceEndpoint,
+    this.sessionReplayEndpoint,
+    this.realm,
+    this.rumAccessToken,
   });
+
+  factory EndpointConfiguration.forRum({
+    required String realm,
+    required String rumAccessToken,
+  }) {
+    return EndpointConfiguration._internal(
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    );
+  }
+
+  factory EndpointConfiguration.forTraces({
+    required Uri tracesEndpoint,
+  }) {
+    return EndpointConfiguration._internal(
+      traceEndpoint: tracesEndpoint,
+    );
+  }
+
+  factory EndpointConfiguration.forTracesAndLogs({
+    required Uri traceEndpoint,
+    required Uri sessionReplayEndpoint,
+  }) {
+    return EndpointConfiguration._internal(
+      traceEndpoint: traceEndpoint,
+      sessionReplayEndpoint: sessionReplayEndpoint,
+    );
+  }
+}
+
+extension GeneratedEndpointConfigurationExtension
+    on GeneratedEndpointConfiguration {
+  EndpointConfiguration toEndpointConfiguration() {
+    return EndpointConfiguration._internal(
+      traceEndpoint: _parseUri(traceEndpoint),
+      sessionReplayEndpoint: _parseUri(sessionReplayEndpoint),
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    );
+  }
+}
+
+extension EndpointConfigurationExtension on EndpointConfiguration {
+  GeneratedEndpointConfiguration toGeneratedEndpointConfiguration() {
+    return GeneratedEndpointConfiguration(
+      traceEndpoint: traceEndpoint?.toString(),
+      sessionReplayEndpoint: sessionReplayEndpoint?.toString(),
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    );
+  }
 }
 
 class UserConfiguration {
@@ -83,16 +136,29 @@ extension UserConfigurationExtension on UserConfiguration {
   GeneratedUserConfiguration toGeneratedUserConfiguration() {
     switch (trackingMode) {
       case UserTrackingMode.noTracking:
-        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.noTracking);
+        return GeneratedUserConfiguration(
+            trackingMode: GeneratedUserTrackingMode.noTracking);
       case UserTrackingMode.anonymousTracking:
-        return GeneratedUserConfiguration(trackingMode: GeneratedUserTrackingMode.anonymousTracking);
-      }
+        return GeneratedUserConfiguration(
+            trackingMode: GeneratedUserTrackingMode.anonymousTracking);
+    }
   }
 }
 
 enum UserTrackingMode {
   noTracking,
   anonymousTracking,
+}
+
+extension UserTrackingModeExtension on UserTrackingMode {
+  GeneratedUserTrackingMode toGeneratedUserTrackingMode() {
+    switch (this) {
+      case UserTrackingMode.noTracking:
+        return GeneratedUserTrackingMode.noTracking;
+      case UserTrackingMode.anonymousTracking:
+        return GeneratedUserTrackingMode.anonymousTracking;
+    }
+  }
 }
 
 class SessionConfiguration {
@@ -103,5 +169,36 @@ class SessionConfiguration {
       throw ArgumentError(
           "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate");
     }
+  }
+}
+
+class InvalidEndpointConfigurationException implements Exception {
+  final String message;
+  final dynamic originalError;
+
+  InvalidEndpointConfigurationException(this.message, {this.originalError});
+
+  @override
+  String toString() {
+    String result = 'InvalidEndpointConfigurationException: $message';
+    if (originalError != null) {
+      result += '\nOriginal error: $originalError';
+    }
+    return result;
+  }
+}
+
+Uri _parseUri(String? uriString) {
+  if (uriString == null) {
+    throw InvalidEndpointConfigurationException(
+        'Missing required URI string for this configuration type.');
+  }
+  try {
+    return Uri.parse(uriString);
+  } on FormatException catch (e) {
+    throw InvalidEndpointConfigurationException(
+      'Invalid URI format: "$uriString".',
+      originalError: e,
+    );
   }
 }
