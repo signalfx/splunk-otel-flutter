@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Flutter Run -&gt; 'splunk_otel_flutter_example'" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=REALM=&quot;mon0&quot; --dart-define=RUM_ACCESS_TOKEN=&quot;jzn-AT776tR8NvkgXSbQ5g&quot;" />
-    <option name="filePath" value="$PROJECT_DIR$/packages/splunk_otel_flutter/splunk_otel_flutter/example/lib/main.dart" />
-    <method v="2" />
-  </configuration>
-</component>
