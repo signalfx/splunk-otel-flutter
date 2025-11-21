@@ -220,6 +220,31 @@ struct GeneratedNavigationModuleConfiguration: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedAnrModuleConfiguration: Hashable {
+  var isEnabled: Bool
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedAnrModuleConfiguration? {
+    let isEnabled = pigeonVar_list[0] as! Bool
+
+    return GeneratedAnrModuleConfiguration(
+      isEnabled: isEnabled
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      isEnabled
+    ]
+  }
+  static func == (lhs: GeneratedAnrModuleConfiguration, rhs: GeneratedAnrModuleConfiguration) -> Bool {
+    return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedAgentConfiguration: Hashable {
   var endpoint: GeneratedEndpointConfiguration
   var appName: String
@@ -721,36 +746,38 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 135:
       return GeneratedNavigationModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 136:
-      return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedAnrModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 137:
-      return GeneratedEndpointConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
     case 138:
-      return GeneratedUserConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedEndpointConfiguration.fromList(self.readValue() as! [Any?])
     case 139:
-      return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedUserConfiguration.fromList(self.readValue() as! [Any?])
     case 140:
-      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
+      return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
     case 141:
-      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
     case 142:
-      return GeneratedRect.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
     case 143:
-      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
+      return GeneratedRect.fromList(self.readValue() as! [Any?])
     case 144:
-      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
     case 145:
-      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
     case 146:
-      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
     case 147:
-      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
     case 148:
-      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
     case 149:
-      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
     case 150:
-      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
     case 151:
+      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+    case 152:
       return GeneratedMutableAttributeListBool.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -781,53 +808,56 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedNavigationModuleConfiguration {
       super.writeByte(135)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedAgentConfiguration {
+    } else if let value = value as? GeneratedAnrModuleConfiguration {
       super.writeByte(136)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedEndpointConfiguration {
+    } else if let value = value as? GeneratedAgentConfiguration {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedUserConfiguration {
+    } else if let value = value as? GeneratedEndpointConfiguration {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedSessionConfiguration {
+    } else if let value = value as? GeneratedUserConfiguration {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRecordingMaskList {
+    } else if let value = value as? GeneratedSessionConfiguration {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRecordingMaskElement {
+    } else if let value = value as? GeneratedRecordingMaskList {
       super.writeByte(141)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRect {
+    } else if let value = value as? GeneratedRecordingMaskElement {
       super.writeByte(142)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributes {
+    } else if let value = value as? GeneratedRect {
       super.writeByte(143)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeInt {
+    } else if let value = value as? GeneratedMutableAttributes {
       super.writeByte(144)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeDouble {
+    } else if let value = value as? GeneratedMutableAttributeInt {
       super.writeByte(145)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeString {
+    } else if let value = value as? GeneratedMutableAttributeDouble {
       super.writeByte(146)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeBool {
+    } else if let value = value as? GeneratedMutableAttributeString {
       super.writeByte(147)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListInt {
+    } else if let value = value as? GeneratedMutableAttributeBool {
       super.writeByte(148)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListDouble {
+    } else if let value = value as? GeneratedMutableAttributeListInt {
       super.writeByte(149)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListString {
+    } else if let value = value as? GeneratedMutableAttributeListDouble {
       super.writeByte(150)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListBool {
+    } else if let value = value as? GeneratedMutableAttributeListString {
       super.writeByte(151)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedMutableAttributeListBool {
+      super.writeByte(152)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -852,7 +882,7 @@ class SplunkOtelFlutterMessagesPigeonCodec: FlutterStandardMessageCodec, @unchec
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterHostApi {
-  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration, completion: @escaping (Result<Void, Error>) -> Void)
+  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayStart(completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayStop(completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, Error>) -> Void)
@@ -901,9 +931,10 @@ class SplunkOtelFlutterHostApiSetup {
       installChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let agentConfigurationArg = args[0] as! GeneratedAgentConfiguration
-        let navigationModuleConfigurationArg = args[1] as! GeneratedNavigationModuleConfiguration
-        let slowRenderingModuleConfigurationArg = args[2] as! GeneratedSlowRenderingModuleConfiguration
-        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg) { result in
+        let navigationModuleConfigurationArg: GeneratedNavigationModuleConfiguration? = nilOrValue(args[1])
+        let slowRenderingModuleConfigurationArg: GeneratedSlowRenderingModuleConfiguration? = nilOrValue(args[2])
+        let anrModuleConfigurationArg: GeneratedAnrModuleConfiguration? = nilOrValue(args[3])
+        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg, anrModuleConfiguration: anrModuleConfigurationArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))

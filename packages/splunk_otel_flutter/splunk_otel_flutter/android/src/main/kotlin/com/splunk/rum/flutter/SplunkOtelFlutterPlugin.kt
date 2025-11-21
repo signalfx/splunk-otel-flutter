@@ -38,6 +38,7 @@ import com.splunk.rum.integration.agent.api.session.SessionConfiguration
 import com.splunk.rum.integration.agent.api.user.UserConfiguration
 import com.splunk.rum.integration.agent.api.user.UserTrackingMode
 import com.splunk.rum.integration.agent.common.attributes.MutableAttributes
+import com.splunk.rum.integration.anr.AnrModuleConfiguration
 import com.splunk.rum.integration.navigation.NavigationModuleConfiguration
 import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import com.splunk.rum.integration.slowrendering.SlowRenderingModuleConfiguration
@@ -81,8 +82,9 @@ class SplunkOtelFlutterPlugin :
 
     override fun install(
         agentConfiguration: GeneratedAgentConfiguration,
-        navigationModuleConfiguration: GeneratedNavigationModuleConfiguration,
-        slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration,
+        navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
+        slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?,
+        anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
         callback: (Result<Unit>) -> Unit
     ) {
 
@@ -102,15 +104,23 @@ class SplunkOtelFlutterPlugin :
             deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
         )
 
-        val moduleConfigurations = arrayOf(
-            NavigationModuleConfiguration(
-                isEnabled = navigationModuleConfiguration.isEnabled,
-                isAutomatedTrackingEnabled = navigationModuleConfiguration.isAutomatedTrackingEnabled,
-            ),
+        val moduleConfigurations = listOfNotNull(
+            navigationModuleConfiguration?.let {
+                NavigationModuleConfiguration(
+                    isEnabled = it.isEnabled,
+                    isAutomatedTrackingEnabled = it.isAutomatedTrackingEnabled,
+                )
+            },
+            slowRenderingModuleConfiguration?.let{
             SlowRenderingModuleConfiguration(
                 isEnabled = slowRenderingModuleConfiguration.isEnabled,
-                interval = Duration.ofMillis((slowRenderingModuleConfiguration.intervalMillis))
-            )
+                interval = Duration.ofMillis(slowRenderingModuleConfiguration.intervalMillis)
+            )},
+            anrModuleConfiguration?.let {
+                AnrModuleConfiguration(
+                    isEnabled = anrModuleConfiguration.isEnabled
+                )
+            }
         )
 
         try {
@@ -123,7 +133,7 @@ class SplunkOtelFlutterPlugin :
             SplunkRum.install(
                 application = activity!!.application,
                 agentConfiguration = agentConfiguration,
-                moduleConfigurations = moduleConfigurations
+                moduleConfigurations = moduleConfigurations.toTypedArray()
             )
         } catch (e: Exception) {
             callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))

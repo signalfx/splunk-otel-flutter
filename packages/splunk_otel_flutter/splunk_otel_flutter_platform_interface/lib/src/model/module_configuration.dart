@@ -16,6 +16,7 @@
 
 abstract class ModuleConfiguration {
   final bool isEnabled;
+
   ModuleConfiguration({required this.isEnabled});
 }
 
@@ -34,6 +35,18 @@ class NavigationModuleConfiguration extends ModuleConfiguration {
   NavigationModuleConfiguration({
     super.isEnabled = true,
     this.isAutomatedTrackingEnabled = false,
+  });
+}
+
+class AnrModuleConfiguration extends ModuleConfiguration {
+  AnrModuleConfiguration({
+    super.isEnabled = true,
+  });
+}
+
+class ApplicationLifecycleModuleConfiguration extends ModuleConfiguration{
+  ApplicationLifecycleModuleConfiguration({
+    super.isEnabled = true,
   });
 }
 
@@ -72,10 +85,6 @@ class AnrModuleConfiguration extends ModuleConfiguration{
 
 }
 
-class ApplicationLifecycleModuleConfiguration extends ModuleConfiguration{
-
-}
-
 class HttpUrlModuleConfiguration extends ModuleConfiguration{
 
 }
@@ -87,4 +96,3 @@ class OkHttp3AutoModuleConfiguration extends ModuleConfiguration{
 class OkHttp3ManualModuleConfiguration extends ModuleConfiguration{
 
 }*/
-

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 
 void main() async {
@@ -30,7 +31,9 @@ void main() async {
     ),
     moduleConfigurations: [
       NavigationModuleConfiguration(isEnabled: true),
-      SlowRenderingModuleConfiguration(isEnabled: false),
+      SlowRenderingModuleConfiguration(isEnabled: true),
+      AnrModuleConfiguration(isEnabled: true),
+      ApplicationLifecycleModuleConfiguration(isEnabled: true),
     ],
   );
 
@@ -155,11 +158,26 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Plugin example app')),
-        body: const Center(child: Text('Running on:')),
+        body: Column(children: [
+          FilledButton(onPressed: () async {
+            await triggerANR();
+          }, child: const Text('ANR'),)
+        ],),
       ),
     );
   }
 
+  Future<void> triggerANR() async {
+    const _channel = MethodChannel('com.splunk.rum.flutter.example/anr');
+
+
+    try {
+      await _channel.invokeMethod('simulateANR'); // only for Android
+    }
+    catch (e) {
+      debugPrint("Failed to simulate ANR due to: $e");
+    }
+  }
 
 
 // ---- Public API smoke test with set->get->assert checks ----
@@ -199,7 +217,8 @@ class _MyAppState extends State<MyApp> {
       final sessionId = await sdk.session.state.getId();
       final samplingRate = await sdk.session.state.getSamplingRate();
       assert(sessionId.isNotEmpty, 'Session id should not be empty');
-      assert(samplingRate >= 0 && samplingRate <= 1, 'Sampling rate should be in [0,1]');
+      assert(samplingRate >= 0 &&
+          samplingRate <= 1, 'Sampling rate should be in [0,1]');
 
       // ========= State =========
       final appName = await sdk.state.getAppName();
@@ -213,28 +232,35 @@ class _MyAppState extends State<MyApp> {
 
       assert(appName.isNotEmpty, 'App name should not be empty');
       assert(env.isNotEmpty, 'Deployment environment should not be empty');
-      assert(status != Status.notInstalled, 'Agent should be installed for this test');
+      assert(status !=
+          Status.notInstalled, 'Agent should be installed for this test');
       assert(debugEnabled == true, 'Debug logging should be enabled (true)');
 
       // ========= User / UserState & Preferences =========
       final trackingFromState = await sdk.user.state.getTrackingMode();
       final trackingFromPrefs = await sdk.user.preferences.getTrackingMode();
       final trackingModeToSet = trackingFromPrefs ?? trackingFromState;
-      await sdk.user.preferences.setTrackingMode(userTrackingMode: trackingModeToSet);
+      await sdk.user.preferences.setTrackingMode(
+          userTrackingMode: trackingModeToSet);
       final trackingAfter = await sdk.user.preferences.getTrackingMode();
-      assert(trackingAfter == trackingModeToSet, 'User tracking mode did not persist');
+      assert(trackingAfter ==
+          trackingModeToSet, 'User tracking mode did not persist');
 
       // ========= SessionReplay: start/stop, state & preferences =========
       final srModeBefore = await sdk.sessionReplay.state.getRenderingMode();
       final srStatusBefore = await sdk.sessionReplay.state.getStatus();
-      assert(srStatusBefore != SessionReplayStatus.internalError, 'Session Replay should not be in internalError');
+      assert(srStatusBefore != SessionReplayStatus
+          .internalError, 'Session Replay should not be in internalError');
 
-      await sdk.sessionReplay.preferences.setRenderingMode(renderingMode: srModeBefore);
+      await sdk.sessionReplay.preferences.setRenderingMode(
+          renderingMode: srModeBefore);
       final srModePref = await sdk.sessionReplay.preferences.getRenderingMode();
-      assert(srModePref == srModeBefore, 'SR prefs mode should equal state mode after set');
+      assert(srModePref ==
+          srModeBefore, 'SR prefs mode should equal state mode after set');
 
       // Recording mask: set -> get -> assert -> restore
-      final originalMask = await sdk.sessionReplay.recordingMask.getRecordingMask();
+      final originalMask = await sdk.sessionReplay.recordingMask
+          .getRecordingMask();
       final tempMask = RecordingMaskList(
         elements: [
           RecordingMaskElement(
@@ -247,10 +273,14 @@ class _MyAppState extends State<MyApp> {
           ),
         ],
       );
-      await sdk.sessionReplay.recordingMask.setRecordingMask(recordingMask: tempMask);
-      final maskAfterSet = await sdk.sessionReplay.recordingMask.getRecordingMask();
-      assert(maskAfterSet != null, 'Recording mask should not be null after set');
-      assert(maskAfterSet!.elements.length == tempMask.elements.length, 'Recording mask element count mismatch');
+      await sdk.sessionReplay.recordingMask.setRecordingMask(
+          recordingMask: tempMask);
+      final maskAfterSet = await sdk.sessionReplay.recordingMask
+          .getRecordingMask();
+      assert(maskAfterSet !=
+          null, 'Recording mask should not be null after set');
+      assert(maskAfterSet!.elements.length ==
+          tempMask.elements.length, 'Recording mask element count mismatch');
       // Spot-check first element equivalence
       final a = maskAfterSet!.elements.first;
       final b = tempMask.elements.first;
@@ -258,7 +288,8 @@ class _MyAppState extends State<MyApp> {
       assert(a.rect.left == b.rect.left &&
           a.rect.top == b.rect.top &&
           a.rect.width == b.rect.width &&
-          a.rect.height == b.rect.height, 'Recording mask first element rect mismatch');
+          a.rect.height ==
+              b.rect.height, 'Recording mask first element rect mismatch');
 
       // Stop/start roundtrip
       await sdk.sessionReplay.stop();
@@ -269,50 +300,71 @@ class _MyAppState extends State<MyApp> {
       await sdk.sessionReplay.start();
       final srStatusStarted = await sdk.sessionReplay.state.getStatus();
       assert(srStatusStarted == SessionReplayStatus.isRecording ||
-          srStatusStarted == SessionReplayStatus.notStarted, // allow platforms that don't autostart
+          srStatusStarted == SessionReplayStatus
+              .notStarted, // allow platforms that don't autostart
       'SR should be recording or notStarted after start()');
 
       // Restore previous mask if one existed
       if (originalMask != null) {
-        await sdk.sessionReplay.recordingMask.setRecordingMask(recordingMask: originalMask);
-        final restored = await sdk.sessionReplay.recordingMask.getRecordingMask();
-        assert(restored!.elements.length == originalMask.elements.length, 'Original mask was not restored');
+        await sdk.sessionReplay.recordingMask.setRecordingMask(
+            recordingMask: originalMask);
+        final restored = await sdk.sessionReplay.recordingMask
+            .getRecordingMask();
+        assert(restored!.elements.length ==
+            originalMask.elements.length, 'Original mask was not restored');
       }
 
       // ========= GlobalAttributes (all getters/setters with assertions) =========
       // Scalars
       await sdk.globalAttributes.setString(key: 'ga_string', value: 'hello');
-      final gaString = castAttr<MutableAttributeString>(await sdk.globalAttributes.get(key: 'ga_string'));
+      final gaString = castAttr<MutableAttributeString>(
+          await sdk.globalAttributes.get(key: 'ga_string'));
       assert(gaString.value == 'hello', 'ga_string roundtrip failed');
 
       await sdk.globalAttributes.setInt(key: 'ga_int', value: 42);
-      final gaInt = castAttr<MutableAttributeInt>(await sdk.globalAttributes.get(key: 'ga_int'));
+      final gaInt = castAttr<MutableAttributeInt>(
+          await sdk.globalAttributes.get(key: 'ga_int'));
       assert(gaInt.value == 42, 'ga_int roundtrip failed');
 
       await sdk.globalAttributes.etDouble(key: 'ga_double', value: 3.1415);
-      final gaDouble = castAttr<MutableAttributeDouble>(await sdk.globalAttributes.get(key: 'ga_double'));
-      assert((gaDouble.value - 3.1415).abs() < 1e-9, 'ga_double roundtrip failed');
+      final gaDouble = castAttr<MutableAttributeDouble>(
+          await sdk.globalAttributes.get(key: 'ga_double'));
+      assert((gaDouble.value - 3.1415).abs() <
+          1e-9, 'ga_double roundtrip failed');
 
       await sdk.globalAttributes.setBool(key: 'ga_bool', value: true);
-      final gaBool = castAttr<MutableAttributeBool>(await sdk.globalAttributes.get(key: 'ga_bool'));
+      final gaBool = castAttr<MutableAttributeBool>(
+          await sdk.globalAttributes.get(key: 'ga_bool'));
       assert(gaBool.value == true, 'ga_bool roundtrip failed');
 
       // Lists
-      await sdk.globalAttributes.setStringList(key: 'ga_list_string', value: ['a', 'b']);
-      final gaListStr = castAttr<MutableAttributeListString>(await sdk.globalAttributes.get(key: 'ga_list_string'));
-      assert(listEquals(gaListStr.value, ['a', 'b']), 'ga_list_string roundtrip failed');
+      await sdk.globalAttributes.setStringList(
+          key: 'ga_list_string', value: ['a', 'b']);
+      final gaListStr = castAttr<MutableAttributeListString>(
+          await sdk.globalAttributes.get(key: 'ga_list_string'));
+      assert(listEquals(
+          gaListStr.value, ['a', 'b']), 'ga_list_string roundtrip failed');
 
-      await sdk.globalAttributes.setIntList(key: 'ga_list_int', value: [1, 2, 3]);
-      final gaListInt = castAttr<MutableAttributeListInt>(await sdk.globalAttributes.get(key: 'ga_list_int'));
-      assert(listEquals(gaListInt.value, [1, 2, 3]), 'ga_list_int roundtrip failed');
+      await sdk.globalAttributes.setIntList(
+          key: 'ga_list_int', value: [1, 2, 3]);
+      final gaListInt = castAttr<MutableAttributeListInt>(
+          await sdk.globalAttributes.get(key: 'ga_list_int'));
+      assert(listEquals(
+          gaListInt.value, [1, 2, 3]), 'ga_list_int roundtrip failed');
 
-      await sdk.globalAttributes.setDoubleList(key: 'ga_list_double', value: [1.1, 2.2]);
-      final gaListDouble = castAttr<MutableAttributeListDouble>(await sdk.globalAttributes.get(key: 'ga_list_double'));
-      assert(listEquals(gaListDouble.value, [1.1, 2.2]), 'ga_list_double roundtrip failed');
+      await sdk.globalAttributes.setDoubleList(
+          key: 'ga_list_double', value: [1.1, 2.2]);
+      final gaListDouble = castAttr<MutableAttributeListDouble>(
+          await sdk.globalAttributes.get(key: 'ga_list_double'));
+      assert(listEquals(
+          gaListDouble.value, [1.1, 2.2]), 'ga_list_double roundtrip failed');
 
-      await sdk.globalAttributes.setBoolList(key: 'ga_list_bool', value: [true, false]);
-      final gaListBool = castAttr<MutableAttributeListBool>(await sdk.globalAttributes.get(key: 'ga_list_bool'));
-      assert(listEquals(gaListBool.value, [true, false]), 'ga_list_bool roundtrip failed');
+      await sdk.globalAttributes.setBoolList(
+          key: 'ga_list_bool', value: [true, false]);
+      final gaListBool = castAttr<MutableAttributeListBool>(
+          await sdk.globalAttributes.get(key: 'ga_list_bool'));
+      assert(listEquals(
+          gaListBool.value, [true, false]), 'ga_list_bool roundtrip failed');
 
       // contains()
       final hasGaString = await sdk.globalAttributes.contains(key: 'ga_string');
@@ -321,7 +373,8 @@ class _MyAppState extends State<MyApp> {
       // getAll()
       final allBefore = await sdk.globalAttributes.getAll();
       assert(allBefore.attributes.isNotEmpty, 'getAll() should contain items');
-      assert(allBefore.attributes.keys.contains('ga_int'), 'getAll() should include ga_int');
+      assert(allBefore.attributes.keys.contains(
+          'ga_int'), 'getAll() should include ga_int');
 
       // setAll() bundle → verify by reading keys back
       await sdk.globalAttributes.setAll(
@@ -338,29 +391,36 @@ class _MyAppState extends State<MyApp> {
       );
 
       // Check a few bundle keys came through
-      final bBool = castAttr<MutableAttributeBool>(await sdk.globalAttributes.get(key: 'bundle_bool'));
-      final bStr  = castAttr<MutableAttributeString>(await sdk.globalAttributes.get(key: 'bundle_string'));
-      final bList = castAttr<MutableAttributeListInt>(await sdk.globalAttributes.get(key: 'bundle_list_int'));
-      final emptyListString = castAttr<MutableAttributeListString>(await sdk.globalAttributes.get(key: 'bundle_list_string_empty')); //TODO resolve issue with empty array set and get both Android iOS
+      final bBool = castAttr<MutableAttributeBool>(
+          await sdk.globalAttributes.get(key: 'bundle_bool'));
+      final bStr = castAttr<MutableAttributeString>(
+          await sdk.globalAttributes.get(key: 'bundle_string'));
+      final bList = castAttr<MutableAttributeListInt>(
+          await sdk.globalAttributes.get(key: 'bundle_list_int'));
+      final emptyListString = castAttr<MutableAttributeListString>(
+          await sdk.globalAttributes.get(
+              key: 'bundle_list_string_empty')); //TODO resolve issue with empty array set and get both Android iOS
       assert(bBool.value == false, 'bundle_bool not persisted');
-      assert(emptyListString.value == <String>[], 'bundle_list_string_empty not persisted');
+      assert(emptyListString.value ==
+          <String>[], 'bundle_list_string_empty not persisted');
       assert(bStr.value == 'pack', 'bundle_string not persisted');
       assert(listEquals(bList.value, [9, 8]), 'bundle_list_int not persisted');
 
       // remove() then contains()
       await sdk.globalAttributes.remove(key: 'ga_string');
-      final hasAfterRemove = await sdk.globalAttributes.contains(key: 'ga_string');
+      final hasAfterRemove = await sdk.globalAttributes.contains(
+          key: 'ga_string');
       assert(hasAfterRemove == false, 'ga_string should be removed');
 
       // removeAll() then getAll()
       await sdk.globalAttributes.removeAll();
       final allAfter = await sdk.globalAttributes.getAll();
-      assert(allAfter.attributes.isEmpty, 'removeAll() should leave no attributes');
+      assert(allAfter.attributes
+          .isEmpty, 'removeAll() should leave no attributes');
 
       // Final log to make it easy to see result in console
       // ignore: avoid_print
       print('✅ SplunkOtelFlutter public API smoke test with asserts completed');
-
     } catch (e, st) {
       // ignore: avoid_print
       print('⚠️ SplunkOtelFlutter API assert test caught error: $e\n$st');
