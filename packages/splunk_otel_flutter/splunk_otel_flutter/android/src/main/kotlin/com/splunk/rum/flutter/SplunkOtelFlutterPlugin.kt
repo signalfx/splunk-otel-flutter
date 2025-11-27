@@ -18,6 +18,9 @@ package com.splunk.rum.flutter
 
 
 import android.app.Activity
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import com.splunk.rum.flutter.extensions.toEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedMutableAttributes
@@ -38,10 +41,22 @@ import com.splunk.rum.integration.agent.api.session.SessionConfiguration
 import com.splunk.rum.integration.agent.api.user.UserConfiguration
 import com.splunk.rum.integration.agent.api.user.UserTrackingMode
 import com.splunk.rum.integration.agent.common.attributes.MutableAttributes
+import com.splunk.rum.integration.agent.common.module.ModuleConfiguration
 import com.splunk.rum.integration.anr.AnrModuleConfiguration
+import com.splunk.rum.integration.applicationlifecycle.ApplicationLifecycleModuleConfiguration
+import com.splunk.rum.integration.crash.CrashModuleConfiguration
+import com.splunk.rum.integration.customtracking.extension.customTracking
+import com.splunk.rum.integration.httpurlconnection.auto.HttpURLModuleConfiguration
+import com.splunk.rum.integration.interactions.InteractionsModuleConfiguration
 import com.splunk.rum.integration.navigation.NavigationModuleConfiguration
+import com.splunk.rum.integration.navigation.extension.navigation
+import com.splunk.rum.integration.networkmonitor.NetworkMonitorModuleConfiguration
+import com.splunk.rum.integration.okhttp3.auto.OkHttp3AutoModuleConfiguration
+import com.splunk.rum.integration.okhttp3.manual.OkHttp3ManualModuleConfiguration
+import com.splunk.rum.integration.sessionreplay.SessionReplayModuleConfiguration
 import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import com.splunk.rum.integration.slowrendering.SlowRenderingModuleConfiguration
+import com.splunk.rum.integration.startup.StartupModuleConfiguration
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -55,7 +70,6 @@ class SplunkOtelFlutterPlugin :
 
     private var activity: Activity? = null
 
-    // FlutterPlugin
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         SplunkOtelFlutterHostApi.setUp(binding.binaryMessenger, this)
     }
@@ -63,7 +77,6 @@ class SplunkOtelFlutterPlugin :
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     }
 
-    // ActivityAware
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity
     }
@@ -82,18 +95,30 @@ class SplunkOtelFlutterPlugin :
 
     override fun install(
         agentConfiguration: GeneratedAgentConfiguration,
+        // Core
         navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
         slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?,
+        crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?,
+        interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?,
+        networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?,
+        // Android-only
         anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
+        httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?,
+        okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?,
+
+        // iOS-only
+        networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
         callback: (Result<Unit>) -> Unit
     ) {
 
         val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
 
+        val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
+
         val agentConfiguration = AgentConfiguration(
-            endpoint = agentConfiguration.endpoint.toEndpointConfiguration(),
+            endpoint = endpointConfiguration,
             appName = agentConfiguration.appName,
-            enableDebugLogging = agentConfiguration.enableDebugLogging ?: false,
+            enableDebugLogging = true,//agentConfiguration.enableDebugLogging ?: false,
             deploymentEnvironment = agentConfiguration.deploymentEnvironment,
             user = UserConfiguration(
                 trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
@@ -104,42 +129,80 @@ class SplunkOtelFlutterPlugin :
             deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
         )
 
-        val moduleConfigurations = listOfNotNull(
+        val moduleConfigurations: List<ModuleConfiguration> = buildList {
             navigationModuleConfiguration?.let {
-                NavigationModuleConfiguration(
-                    isEnabled = it.isEnabled,
-                    isAutomatedTrackingEnabled = it.isAutomatedTrackingEnabled,
-                )
-            },
-            slowRenderingModuleConfiguration?.let{
-            SlowRenderingModuleConfiguration(
-                isEnabled = slowRenderingModuleConfiguration.isEnabled,
-                interval = Duration.ofMillis(slowRenderingModuleConfiguration.intervalMillis)
-            )},
-            anrModuleConfiguration?.let {
-                AnrModuleConfiguration(
-                    isEnabled = anrModuleConfiguration.isEnabled
+                add(
+                    NavigationModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        isAutomatedTrackingEnabled = it.isAutomatedTrackingEnabled
+                    )
                 )
             }
-        )
+            slowRenderingModuleConfiguration?.let {
+                add(
+                    SlowRenderingModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        interval = Duration.ofMillis(it.intervalMillis)
+                    )
+                )
+            }
+            crashReportsModuleConfiguration?.let {
+                add(CrashModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            interactionsModuleConfiguration?.let {
+                add(InteractionsModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            networkMonitorModuleConfiguration?.let {
+                add(NetworkMonitorModuleConfiguration(isEnabled = it.isEnabled))
+            }
+
+            // Android-only
+            anrModuleConfiguration?.let {
+                add(AnrModuleConfiguration(isEnabled = it.isEnabled))
+            }
+
+            httpUrlModuleConfiguration?.let {
+                add(
+                    HttpURLModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        capturedRequestHeaders = it.capturedRequestHeaders,
+                        capturedResponseHeaders = it.capturedResponseHeaders
+                    )
+                )
+            }
+
+
+            okHttp3AutoModuleConfiguration?.let {
+                add(
+                    OkHttp3AutoModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        capturedRequestHeaders = it.capturedRequestHeaders,
+                        capturedResponseHeaders = it.capturedResponseHeaders
+                    )
+                )
+            }
+        }
 
         try {
-            if(activity == null){
+            if (activity == null) {
                 callback(Result.failure(FlutterError("INSTALL_FAILED", "Activity not available yet")))
-
                 return
             }
 
-            SplunkRum.install(
-                application = activity!!.application,
-                agentConfiguration = agentConfiguration,
-                moduleConfigurations = moduleConfigurations.toTypedArray()
-            )
+            //ANR module forces install to run on main thread
+            Handler(Looper.getMainLooper()).post {
+                SplunkRum.install(
+                    application = activity!!.application,
+                    agentConfiguration = agentConfiguration,
+                    moduleConfigurations = moduleConfigurations.toTypedArray()
+                )
+            }
+
         } catch (e: Exception) {
             callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))
-
             return
         }
+
 
         callback(Result.success(Unit))
     }
@@ -147,13 +210,13 @@ class SplunkOtelFlutterPlugin :
     // Session replay
 
     override fun sessionReplayStart(callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.sessionReplay.start();
+        SplunkRum.instance.sessionReplay.start()
 
         callback(Result.success(Unit))
     }
 
     override fun sessionReplayStop(callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.sessionReplay.stop();
+        SplunkRum.instance.sessionReplay.stop()
 
         callback(Result.success(Unit))
     }
@@ -223,7 +286,7 @@ class SplunkOtelFlutterPlugin :
     override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit) {
         val endpointConfiguration = SplunkRum.instance.state.endpointConfiguration
 
-        callback(Result.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
+        callback(Result.success(endpointConfiguration!!.toGeneratedEndpointConfiguration()))
     }
 
     override fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit) {
@@ -411,12 +474,40 @@ class SplunkOtelFlutterPlugin :
     ) {
         try {
             SplunkRum.instance.globalAttributes.setAll(value.toMutableAttributes())
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             callback(Result.failure(FlutterError("SET_ALL_FAILED", e.message)))
 
             return
         }
+
+        callback(Result.success(Unit))
+    }
+
+    // Custom tracking
+
+    override fun customTrackingTrackCustomEvent(
+        name: String,
+        attributes: GeneratedMutableAttributes,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.customTracking.trackCustomEvent(
+            name,
+            attributes.toMutableAttributes(),
+        )
+
+        callback(Result.success(Unit))
+    }
+
+    override fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.customTracking.trackWorkflow(workflowName)
+
+        callback(Result.success(Unit))
+    }
+
+    // Navigation
+
+    override fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.navigation.track(screenName)
 
         callback(Result.success(Unit))
     }

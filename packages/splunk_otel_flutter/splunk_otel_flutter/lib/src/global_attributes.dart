@@ -36,7 +36,7 @@ class GlobalAttributes {
   }) async =>
       await _delegate.globalAttributesSetInt(key: key, value: value);
 
-  Future<void> etDouble({
+  Future<void> setDouble({
     required String key,
     required double value,
   }) async =>

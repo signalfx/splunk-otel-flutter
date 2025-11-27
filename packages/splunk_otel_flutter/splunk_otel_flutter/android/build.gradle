@@ -6,7 +6,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
     }
 
     dependencies {
@@ -19,7 +18,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
     }
 }
 
@@ -51,7 +49,7 @@ android {
     }
 
     dependencies {
-        implementation("com.splunk:splunk-otel-android:2.0.5-SNAPSHOT")
+        implementation("com.splunk:splunk-otel-android:2.1.0")
 
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 

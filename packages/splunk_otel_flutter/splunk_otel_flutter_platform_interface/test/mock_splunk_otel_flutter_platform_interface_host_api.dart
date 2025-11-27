@@ -7,8 +7,21 @@ import 'pigeon/test_api.dart';
 class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlutterHostApi {
   Future<void> Function(
       GeneratedAgentConfiguration agentConfiguration,
+
+      // Core configurations
       GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
       GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+      GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
+      GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
+      GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+
+      // Android-only configurations
+      GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+      GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+      GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+
+      // iOS-only configurations
+      GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
       )? installHandler;
 
   Future<void> Function()? sessionReplayStartHandler;
@@ -17,15 +30,33 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   @override
   Future<void> install({
     required GeneratedAgentConfiguration agentConfiguration,
+    // Core configurations
     required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
     required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+
+    // Android-only configurations
     required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+
+    // iOS-only configurations
+    required GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
   }) async {
     if (installHandler != null) {
       return installHandler!(
         agentConfiguration,
         navigationModuleConfiguration,
         slowRenderingModuleConfiguration,
+        crashReportsModuleConfiguration,
+        interactionsModuleConfiguration,
+        networkMonitorModuleConfiguration,
+        anrModuleConfiguration,
+        httpUrlModuleConfiguration,
+        okHttp3AutoModuleConfiguration,
+        networkInstrumentationModuleConfiguration,
       );
     }
   }
@@ -238,6 +269,23 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   @override
   Future<GeneratedUserTrackingMode> userStateGetUserTrackingMode() {
     // TODO: implement userStateGetUserTrackingMode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes}) {
+    // TODO: implement customTrackingTrackCustomEvent
+    throw UnimplementedError();
+  }
+  @override
+  Future<void> customTrackingTrackWorkflow({required String workflowName}) {
+    // TODO: implement customTrackingTrackWorkflow
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> navigationTrack({required String screenName}) {
+    // TODO: implement navigationTrack
     throw UnimplementedError();
   }
   

@@ -3,7 +3,17 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.splunk.rum-okhttp3-auto-plugin") version "2.1.0"
+    id("com.splunk.rum-httpurlconnection-auto-plugin") version "2.1.0"
 }
+
+configurations
+    .matching { it.name.contains("ByteBuddyClasspath", ignoreCase = true) }
+    .all {
+        resolutionStrategy {
+            force("net.bytebuddy:byte-buddy:1.14.12")
+        }
+    }
 
 android {
     namespace = "com.splunk.rum.flutter.example"
@@ -41,6 +51,10 @@ android {
 }
 
 dependencies{
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okio:okio:3.4.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 }
 

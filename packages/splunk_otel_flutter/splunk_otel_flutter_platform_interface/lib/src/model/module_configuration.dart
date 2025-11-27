@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-abstract class ModuleConfiguration {
-  final bool isEnabled;
+import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
-  ModuleConfiguration({required this.isEnabled});
+abstract class ModuleConfiguration {
+  ModuleConfiguration();
 }
 
-class SlowRenderingModuleConfiguration extends ModuleConfiguration {
+abstract class ActivableModuleConfiguration extends ModuleConfiguration{
+  final bool isEnabled;
+
+  ActivableModuleConfiguration({required this.isEnabled});
+}
+
+
+class SlowRenderingModuleConfiguration extends ActivableModuleConfiguration {
   final Duration interval;
 
   SlowRenderingModuleConfiguration({
@@ -29,7 +36,7 @@ class SlowRenderingModuleConfiguration extends ModuleConfiguration {
   });
 }
 
-class NavigationModuleConfiguration extends ModuleConfiguration {
+class NavigationModuleConfiguration extends ActivableModuleConfiguration {
   final bool isAutomatedTrackingEnabled;
 
   NavigationModuleConfiguration({
@@ -38,61 +45,146 @@ class NavigationModuleConfiguration extends ModuleConfiguration {
   });
 }
 
-class AnrModuleConfiguration extends ModuleConfiguration {
+class CrashReportsModuleConfiguration extends ActivableModuleConfiguration {
+  CrashReportsModuleConfiguration({
+    super.isEnabled = true,
+  });
+}
+
+class InteractionsModuleConfiguration extends ActivableModuleConfiguration {
+  InteractionsModuleConfiguration({
+    super.isEnabled = true,
+  });
+}
+
+class NetworkMonitorModuleConfiguration extends ActivableModuleConfiguration {
+  NetworkMonitorModuleConfiguration({
+    super.isEnabled = true,
+  });
+}
+
+// only Android
+
+class AnrModuleConfiguration extends ActivableModuleConfiguration {
   AnrModuleConfiguration({
     super.isEnabled = true,
   });
 }
 
-class ApplicationLifecycleModuleConfiguration extends ModuleConfiguration{
-  ApplicationLifecycleModuleConfiguration({
+class HttpUrlModuleConfiguration extends ActivableModuleConfiguration {
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
+
+  HttpUrlModuleConfiguration({
     super.isEnabled = true,
+    this.capturedRequestHeaders = const [],
+    this.capturedResponseHeaders = const [],
   });
 }
 
-/* TODO to be decided
-class AppStartModuleConfiguration extends ModuleConfiguration{
+class OkHttp3AutoModuleConfiguration extends ActivableModuleConfiguration {
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
 
+  OkHttp3AutoModuleConfiguration({
+    super.isEnabled = true,
+    this.capturedRequestHeaders = const [],
+    this.capturedResponseHeaders = const [],
+  });
 }
 
-class CrashReportsModuleConfiguration extends ModuleConfiguration{
-
+// only iOS
+class NetworkInstrumentationModuleConfiguration extends ActivableModuleConfiguration {
+  final List<RegularExpression> ignoreURLs;
+  NetworkInstrumentationModuleConfiguration({
+    super.isEnabled = true,
+    this.ignoreURLs = const [],
+  });
 }
 
-class CustomTrackingModuleConfiguration extends ModuleConfiguration{
-
+enum RegexOption {
+  caseInsensitive,
+  allowCommentsAndWhitespace,
+  ignoreMetacharacters,
+  dotMatchesLineSeparators,
+  anchorsMatchLines,
+  useUnixLineSeparators,
+  useUnicodeWordBoundaries,
 }
 
-class InteractionsModuleConfiguration extends ModuleConfiguration{
+class RegularExpression {
+  final String pattern;
+  final List<RegexOption?>? options;
 
+  RegularExpression({
+    required this.pattern,
+    this.options,
+  });
 }
 
-class NetworkMonitorModuleConfiguration extends ModuleConfiguration{
-
+extension RegexSpecMapper on RegularExpression {
+  GeneratedRegularExpression toGeneratedRegularExpression() {
+    return GeneratedRegularExpression(
+      pattern: pattern,
+      options: options?.map((opt) {
+        switch (opt) {
+          case RegexOption.caseInsensitive:
+            return GeneratedRegexOption.caseInsensitive;
+          case RegexOption.allowCommentsAndWhitespace:
+            return GeneratedRegexOption.allowCommentsAndWhitespace;
+          case RegexOption.ignoreMetacharacters:
+            return GeneratedRegexOption.ignoreMetacharacters;
+          case RegexOption.dotMatchesLineSeparators:
+            return GeneratedRegexOption.dotMatchesLineSeparators;
+          case RegexOption.anchorsMatchLines:
+            return GeneratedRegexOption.anchorsMatchLines;
+          case RegexOption.useUnixLineSeparators:
+            return GeneratedRegexOption.useUnixLineSeparators;
+          case RegexOption.useUnicodeWordBoundaries:
+            return GeneratedRegexOption.useUnicodeWordBoundaries;
+          default:
+            return null;
+        }
+      }).toList(),
+    );
+  }
 }
 
-class SessionReplayModuleConfiguration extends ModuleConfiguration{
-
+extension GeneratedRegexSpecMapper on GeneratedRegularExpression {
+  RegularExpression toRegularExpression() {
+    return RegularExpression(
+      pattern: pattern,
+      options: options?.map((opt) {
+        switch (opt) {
+          case GeneratedRegexOption.caseInsensitive:
+            return RegexOption.caseInsensitive;
+          case GeneratedRegexOption.allowCommentsAndWhitespace:
+            return RegexOption.allowCommentsAndWhitespace;
+          case GeneratedRegexOption.ignoreMetacharacters:
+            return RegexOption.ignoreMetacharacters;
+          case GeneratedRegexOption.dotMatchesLineSeparators:
+            return RegexOption.dotMatchesLineSeparators;
+          case GeneratedRegexOption.anchorsMatchLines:
+            return RegexOption.anchorsMatchLines;
+          case GeneratedRegexOption.useUnixLineSeparators:
+            return RegexOption.useUnixLineSeparators;
+          case GeneratedRegexOption.useUnicodeWordBoundaries:
+            return RegexOption.useUnicodeWordBoundaries;
+          default:
+            return null;
+        }
+      }).toList(),
+    );
+  }
 }
 
-class WebViewModuleConfiguration extends ModuleConfiguration{
-
+extension RegularExpressionListMapper on List<RegularExpression> {
+  List<GeneratedRegularExpression> toGeneratedList() =>
+      map((e) => e.toGeneratedRegularExpression()).toList();
 }
 
-// only Android
-
-class AnrModuleConfiguration extends ModuleConfiguration{
-
+extension GeneratedRegularExpressionListMapper
+on List<GeneratedRegularExpression> {
+  List<RegularExpression> toRegularExpressionList() =>
+      map((e) => e.toRegularExpression()).toList();
 }
-
-class HttpUrlModuleConfiguration extends ModuleConfiguration{
-
-}
-
-class OkHttp3AutoModuleConfiguration extends ModuleConfiguration{
-
-}
-
-class OkHttp3ManualModuleConfiguration extends ModuleConfiguration{
-
-}*/

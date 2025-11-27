@@ -1,90 +1,132 @@
 //
 /*
-Copyright 2025 Splunk Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright 2025 Splunk Inc.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 import Flutter
 import UIKit
-import SplunkAgent
+@_spi(SplunkInternal) import SplunkAgent
 import OpenTelemetryApi
 import SplunkSlowFrameDetector
 import SplunkNavigation
 import SplunkAppStart
-
-
+import SplunkNetwork
+import SplunkInteractions
+import SplunkNetworkMonitor
+import SplunkCrashReports
 
 extension FlutterError: Error {}
 
 public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutterHostApi {
+    
+    private var didFinishLaunchingAt: Date?
+    private var willEnterForegroundAt: Date?
+    
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let instance = SplunkOtelFlutterPlugin()
+        
+        // Observe lifecycle notifications
+           NotificationCenter.default.addObserver(
+               instance,
+               selector: #selector(onDidBecomeActive),
+               name: UIApplication.didBecomeActiveNotification,
+               object: nil
+           )
 
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = SplunkOtelFlutterPlugin()
+           NotificationCenter.default.addObserver(
+               instance,
+               selector: #selector(onDidFinishLaunchingNotification),
+               name: UIApplication.didFinishLaunchingNotification,
+               object: nil
+           )
 
-    // Observe lifecycle notifications
-    NotificationCenter.default.addObserver(
-      instance,
-      selector: #selector(onDidBecomeActive),
-      name: UIApplication.didBecomeActiveNotification,
-      object: nil
-    )
-
-    NotificationCenter.default.addObserver(
-      instance,
-      selector: #selector(onDidFinishLaunchingNotification),
-      name: UIApplication.didFinishLaunchingNotification,
-      object: nil
-    )
-
-    // If we attached after launch (e.g., add-to-app) and app is already active, synthesize once
-    if UIApplication.shared.applicationState == .active {
-      instance.handleDidBecomeActive()
+           NotificationCenter.default.addObserver(
+               instance,
+               selector: #selector(onWillEnterForeground),
+               name: UIApplication.willEnterForegroundNotification,
+               object: nil
+           )
+        
+        SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Notification handlers
+    @objc private func onDidFinishLaunchingNotification(_ note: Notification) {
+        let launchOptions = note.userInfo as? [UIApplication.LaunchOptionsKey: Any]
+        handleDidFinishLaunching(launchOptions: launchOptions)
+    }
+    
+    @objc private func onDidBecomeActive(_ note: Notification) {
+        handleDidBecomeActive()
+    }
+    
+    @objc private func onWillEnterForeground(_ note: Notification) {
+          handleWillEnterForeground()
+      }
+    
+    // MARK: - Internals
+    private func handleDidFinishLaunching(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        didFinishLaunchingAt = Date()
     }
 
-    SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
-  }
+    private func handleWillEnterForeground() {
+        // Mark the moment the app transitions toward foreground (warm start path)
+        willEnterForegroundAt = Date()
+    }
+    
+ 
 
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
+    private func handleDidBecomeActive() {
+        // The "active" moment (common for both cold and warm starts)
+        let becameActiveAt = Date()
 
-  // MARK: - Notification handlers
-  @objc private func onDidFinishLaunchingNotification(_ note: Notification) {
-    let launchOptions = note.userInfo as? [UIApplication.LaunchOptionsKey: Any]
-    handleDidFinishLaunching(launchOptions: launchOptions)
-  }
+        // Send app start timing to Splunk RUM.
+        // - didFinishLaunchingAt: non-nil indicates a cold start path
+        // - willEnterForegroundAt: non-nil indicates a warm start path
+        // Splunk RUM will infer the correct variant based on which timestamps are provided.
+        SplunkRum.shared.appStart.track(
+            didBecomeActive: becameActiveAt,
+            didFinishLaunching: didFinishLaunchingAt,
+            willEnterForeground: willEnterForegroundAt
+        )
 
-  @objc private func onDidBecomeActive(_ note: Notification) {
-    handleDidBecomeActive()
-  }
 
-  // MARK: - Internals
-  private func handleDidFinishLaunching(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-    print("xxxxxx🔵 didFinishLaunching received at \(nowTS())")
-  }
-
-  private func handleDidBecomeActive() {
-    print("xxxxx🟢 didBecomeActive received at \(nowTS())")
-  }
+        // Clear foreground marker so a later activation (e.g., another background->foreground) is measured correctly.
+        willEnterForegroundAt = nil
+    }
     
     func install(agentConfiguration: GeneratedAgentConfiguration,
                  navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
                  slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?,
-                 anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
+                 crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?,
+                 interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?,
+                 networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?,
+                 // Android-only
+                 anrModuleConfiguration: GeneratedAnrModuleConfiguration?, 
+                 httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, 
+                 okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, 
+                 // iOS-only
+                 networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
         
+        // should be always not nil
         guard let endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() else {
             completion(
                 .failure(
@@ -101,7 +143,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
         
         let agentConfig = AgentConfiguration(
-            endpoint: EndpointConfiguration(realm: "mon0", rumAccessToken: "jzn-AT776tR8NvkgXSbQ5g"),//endpointConfiguration,
+            endpoint: endpointConfiguration,
             appName: agentConfiguration.appName,
             deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         )
@@ -112,21 +154,43 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
             let moduleConfigurations: [Any] = [
-                slowRenderingModuleConfiguration.map {
-                    SlowFrameDetectorConfiguration(isEnabled: $0.isEnabled)
-                },
-                navigationModuleConfiguration.map {
-                    NavigationConfiguration(
-                        isEnabled: $0.isEnabled,
-                        enableAutomatedTracking: $0.isAutomatedTrackingEnabled
-                    )
-                }
-                // TODO: add rest configurations
-            ].compactMap { $0 } // removes nils automatically
+                   slowRenderingModuleConfiguration.map {
+                       SlowFrameDetectorConfiguration(isEnabled: $0.isEnabled)
+                   },
+                   navigationModuleConfiguration.map {
+                       NavigationConfiguration(
+                           isEnabled: $0.isEnabled,
+                           enableAutomatedTracking: $0.isAutomatedTrackingEnabled
+                       )
+                   },
+                   networkInstrumentationModuleConfiguration.map {
+                       let ignoredUrls = (try? $0.ignoreURLs.toIgnoreURLs()) ?? IgnoreURLs()
+                       return NetworkInstrumentationConfiguration(
+                           isEnabled: $0.isEnabled,
+                           ignoreURLs: ignoredUrls
+                       )
+                   },
+                   crashReportsModuleConfiguration.map {
+                       CrashReportsConfiguration(
+                           isEnabled: $0.isEnabled,
+                       )
+                   },
+                   interactionsModuleConfiguration.map {
+                       InteractionsConfiguration(
+                           isEnabled: $0.isEnabled,
+                       )
+                   },
+                   networkMonitorModuleConfiguration.map {
+                       NetworkMonitorConfiguration(
+                           isEnabled: $0.isEnabled,
+                       )
+                   },
+               ].compactMap { $0 }// removes nils automatically
             
-            print("xxxxxx⚫️ startedInstall \(nowTS())")
-
-            try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
+            let agent = try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
+          
+            handleDidBecomeActive()
+            
             completion(.success(()))
         } catch {
             completion(.failure(
@@ -148,7 +212,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         f.timeZone = TimeZone(secondsFromGMT: 0) // or .current
         return f
     }()
-
+    
     private func nowTS() -> String { Self.ts.string(from: Date()) }
     
     // Session replay
@@ -294,7 +358,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     
     func globalAttributesGetAll(completion: @escaping (Result<GeneratedMutableAttributes?, Error>) -> Void) {
         let attributes = SplunkRum.shared.globalAttributes.getAll()
-
+        
         var converted: [String: Any?] = [:]
         for (key, value) in attributes {
             converted[key] = value.toGeneratedWrapper()
@@ -369,39 +433,39 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         
         completion(.success(()))
     }
-
+    
     func globalAttributesSetAll(value: GeneratedMutableAttributes, completion: @escaping (Result<Void, any Error>) -> Void) {
         let attributes = SplunkRum.shared.globalAttributes
-
+        
         value.attributes.forEach { (key, wrapped) in
             switch wrapped {
             case let v as GeneratedMutableAttributeInt:
                 attributes.setInt(Int(v.value),for: key)
-
+                
             case let v as GeneratedMutableAttributeDouble:
                 attributes.setDouble(v.value,for: key)
-
+                
             case let v as GeneratedMutableAttributeString:
                 attributes.setString(v.value,for: key)
-
+                
             case let v as GeneratedMutableAttributeBool:
                 attributes.setBool(v.value,for: key)
-
+                
             case let v as GeneratedMutableAttributeListInt:
                 attributes.setArray(AttributeArray.fromIntArray(v.value),for: key)
-
+                
             case let v as GeneratedMutableAttributeListDouble:
                 attributes.setArray(AttributeArray.fromDoubleArray(v.value),for: key)
-
+                
             case let v as GeneratedMutableAttributeListString:
                 attributes.setArray(AttributeArray.fromStringArray(v.value),for: key)
-
+                
             case let v as GeneratedMutableAttributeListBool:
                 attributes.setArray(AttributeArray.fromBoolArray(v.value),for: key)
-
+                
             case .none:
                 break
-
+                
             default:
                 completion(.failure(FlutterError(
                     code: "SET_ALL_FAILED",
@@ -412,7 +476,29 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                 return
             }
         }
-
+        
+        completion(.success(()))
+    }
+    
+    // MARK: - Custom tracking
+    
+    func customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, completion: @escaping (Result<Void, any Error>) -> Void) {
+        SplunkRum.shared.customTracking.trackCustomEvent(name, attributes.toMutableAttributes())
+        
+        completion(.success(()))
+    }
+    
+    func customTrackingTrackWorkflow(workflowName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
+        SplunkRum.shared.customTracking.trackWorkflow(workflowName)
+        
+        completion(.success(()))
+    }
+    
+    // MARK: - Navigation
+    
+    func navigationTrack(screenName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
+        SplunkRum.shared.navigation.track(screen: screenName)
+        
         completion(.success(()))
     }
 }

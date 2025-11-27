@@ -38,6 +38,7 @@ class SplunkOtelFlutterPlatformImplementation
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,
   }) async {
+    // Core modules
     final navigationModuleConfiguration = moduleConfigurations
         .whereType<NavigationModuleConfiguration>()
         .cast<NavigationModuleConfiguration?>()
@@ -48,30 +49,63 @@ class SplunkOtelFlutterPlatformImplementation
         .cast<SlowRenderingModuleConfiguration?>()
         .firstOrNull;
 
+    final crashReportsModuleConfiguration = moduleConfigurations
+        .whereType<CrashReportsModuleConfiguration>()
+        .cast<CrashReportsModuleConfiguration?>()
+        .firstOrNull;
+
+    final interactionsModuleConfiguration = moduleConfigurations
+        .whereType<InteractionsModuleConfiguration>()
+        .cast<InteractionsModuleConfiguration?>()
+        .firstOrNull;
+
+    final networkMonitorModuleConfiguration = moduleConfigurations
+        .whereType<NetworkMonitorModuleConfiguration>()
+        .cast<NetworkMonitorModuleConfiguration?>()
+        .firstOrNull;
+
+    // Android-only modules
     final anrModuleConfiguration = moduleConfigurations
         .whereType<AnrModuleConfiguration>()
         .cast<AnrModuleConfiguration?>()
         .firstOrNull;
 
-    //TODO more configurations
+    final httpUrlModuleConfiguration = moduleConfigurations
+        .whereType<HttpUrlModuleConfiguration>()
+        .cast<HttpUrlModuleConfiguration?>()
+        .firstOrNull;
+
+    final okHttp3AutoModuleConfiguration = moduleConfigurations
+        .whereType<OkHttp3AutoModuleConfiguration>()
+        .cast<OkHttp3AutoModuleConfiguration?>()
+        .firstOrNull;
+
+    final networkInstrumentationModuleConfiguration = moduleConfigurations
+        .whereType<NetworkInstrumentationModuleConfiguration>()
+        .cast<NetworkInstrumentationModuleConfiguration?>()
+        .firstOrNull;
 
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
-          endpoint: GeneratedEndpointConfiguration(
-            realm: agentConfiguration.endpoint.realm,
-            rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
-          ),
-          appName: agentConfiguration.appName,
-          deploymentEnvironment: agentConfiguration.deploymentEnvironment,
-          appVersion: agentConfiguration.appVersion,
-          enableDebugLogging: agentConfiguration.enableDebugLogging,
-          globalAttributes: agentConfiguration.globalAttributes
-              ?.toGeneratedMutableAttributes(),
-          user: agentConfiguration.user.toGeneratedUserConfiguration(),
-          session: GeneratedSessionConfiguration(
-              samplingRate: agentConfiguration.session.samplingRate),
-          instrumentedProcessName: agentConfiguration.instrumentedProcessName,
-          deferredUntilForeground: agentConfiguration.deferredUntilForeground),
+        endpoint: GeneratedEndpointConfiguration(
+          realm: agentConfiguration.endpoint.realm,
+          rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
+        ),
+        appName: agentConfiguration.appName,
+        deploymentEnvironment: agentConfiguration.deploymentEnvironment,
+        appVersion: agentConfiguration.appVersion,
+        enableDebugLogging: agentConfiguration.enableDebugLogging,
+        globalAttributes:
+            agentConfiguration.globalAttributes?.toGeneratedMutableAttributes(),
+        user: agentConfiguration.user.toGeneratedUserConfiguration(),
+        session: GeneratedSessionConfiguration(
+          samplingRate: agentConfiguration.session.samplingRate,
+        ),
+        instrumentedProcessName: agentConfiguration.instrumentedProcessName,
+        deferredUntilForeground: agentConfiguration.deferredUntilForeground,
+      ),
+
+      // Core modules
       navigationModuleConfiguration: navigationModuleConfiguration == null
           ? null
           : GeneratedNavigationModuleConfiguration(
@@ -86,11 +120,58 @@ class SplunkOtelFlutterPlatformImplementation
               intervalMillis:
                   slowRenderingModuleConfiguration.interval.inMilliseconds,
             ),
+      crashReportsModuleConfiguration: crashReportsModuleConfiguration == null
+          ? null
+          : GeneratedCrashReportsModuleConfiguration(
+              isEnabled: crashReportsModuleConfiguration.isEnabled,
+            ),
+      interactionsModuleConfiguration: interactionsModuleConfiguration == null
+          ? null
+          : GeneratedInteractionsModuleConfiguration(
+              isEnabled: interactionsModuleConfiguration.isEnabled,
+            ),
+      networkMonitorModuleConfiguration:
+          networkMonitorModuleConfiguration == null
+              ? null
+              : GeneratedNetworkMonitorModuleConfiguration(
+                  isEnabled: networkMonitorModuleConfiguration.isEnabled,
+                ),
+
+      // Android-only modules
       anrModuleConfiguration: anrModuleConfiguration == null
           ? null
           : GeneratedAnrModuleConfiguration(
               isEnabled: anrModuleConfiguration.isEnabled,
             ),
+      httpUrlModuleConfiguration: httpUrlModuleConfiguration == null
+          ? null
+          : GeneratedHttpUrlModuleConfiguration(
+              isEnabled: httpUrlModuleConfiguration.isEnabled,
+              capturedRequestHeaders:
+                  httpUrlModuleConfiguration.capturedRequestHeaders,
+              capturedResponseHeaders:
+                  httpUrlModuleConfiguration.capturedResponseHeaders,
+            ),
+      okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfiguration == null
+          ? null
+          : GeneratedOkHttp3AutoModuleConfiguration(
+              isEnabled: okHttp3AutoModuleConfiguration.isEnabled,
+              capturedRequestHeaders:
+                  okHttp3AutoModuleConfiguration.capturedRequestHeaders,
+              capturedResponseHeaders:
+                  okHttp3AutoModuleConfiguration.capturedResponseHeaders,
+            ),
+      // iOS only modules
+      networkInstrumentationModuleConfiguration:
+          networkInstrumentationModuleConfiguration == null
+              ? null
+              : GeneratedNetworkInstrumentationModuleConfiguration(
+                  isEnabled:
+                      networkInstrumentationModuleConfiguration.isEnabled,
+                  ignoreURLs: networkInstrumentationModuleConfiguration
+                      .ignoreURLs
+                      .toGeneratedList(),
+                ),
     );
   }
 
@@ -342,6 +423,37 @@ class SplunkOtelFlutterPlatformImplementation
   }) async {
     await _api.globalAttributesSetAll(
       value: attributes.toGeneratedMutableAttributes(),
+    );
+  }
+
+  // Custom Tracking
+
+  @override
+  Future<void> customTrackingTrackCustomEvent({
+    required String name,
+    required MutableAttributes attributes,
+  }) async {
+    await _api.customTrackingTrackCustomEvent(
+      name: name,
+      attributes: attributes.toGeneratedMutableAttributes(),
+    );
+  }
+
+  @override
+  Future<void> customTrackingTrackWorkflow({
+    required String workflowName,
+  }) async {
+    await _api.customTrackingTrackWorkflow(
+      workflowName: workflowName,
+    );
+  }
+
+  // Navigation
+
+  @override
+  Future<void> navigationTrack({required String screenName}) async {
+    await _api.navigationTrack(
+      screenName: screenName,
     );
   }
 }

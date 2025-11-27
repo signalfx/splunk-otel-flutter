@@ -39,6 +39,16 @@ bool _deepEquals(Object? a, Object? b) {
 }
 
 
+enum GeneratedRegexOption {
+  caseInsensitive,
+  allowCommentsAndWhitespace,
+  ignoreMetacharacters,
+  dotMatchesLineSeparators,
+  anchorsMatchLines,
+  useUnixLineSeparators,
+  useUnicodeWordBoundaries,
+}
+
 enum GeneratedUserTrackingMode {
   noTracking,
   anonymousTracking,
@@ -164,6 +174,129 @@ class GeneratedNavigationModuleConfiguration {
 ;
 }
 
+class GeneratedCrashReportsModuleConfiguration {
+  GeneratedCrashReportsModuleConfiguration({
+    required this.isEnabled,
+  });
+
+  bool isEnabled;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedCrashReportsModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedCrashReportsModuleConfiguration(
+      isEnabled: result[0]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedCrashReportsModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedInteractionsModuleConfiguration {
+  GeneratedInteractionsModuleConfiguration({
+    required this.isEnabled,
+  });
+
+  bool isEnabled;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedInteractionsModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedInteractionsModuleConfiguration(
+      isEnabled: result[0]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedInteractionsModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedNetworkMonitorModuleConfiguration {
+  GeneratedNetworkMonitorModuleConfiguration({
+    required this.isEnabled,
+  });
+
+  bool isEnabled;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedNetworkMonitorModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedNetworkMonitorModuleConfiguration(
+      isEnabled: result[0]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedNetworkMonitorModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 class GeneratedAnrModuleConfiguration {
   GeneratedAnrModuleConfiguration({
     required this.isEnabled,
@@ -191,6 +324,200 @@ class GeneratedAnrModuleConfiguration {
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
     if (other is! GeneratedAnrModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedHttpUrlModuleConfiguration {
+  GeneratedHttpUrlModuleConfiguration({
+    required this.isEnabled,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
+  });
+
+  bool isEnabled;
+
+  List<String> capturedRequestHeaders;
+
+  List<String> capturedResponseHeaders;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedHttpUrlModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedHttpUrlModuleConfiguration(
+      isEnabled: result[0]! as bool,
+      capturedRequestHeaders: (result[1] as List<Object?>?)!.cast<String>(),
+      capturedResponseHeaders: (result[2] as List<Object?>?)!.cast<String>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedHttpUrlModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedOkHttp3AutoModuleConfiguration {
+  GeneratedOkHttp3AutoModuleConfiguration({
+    required this.isEnabled,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
+  });
+
+  bool isEnabled;
+
+  List<String> capturedRequestHeaders;
+
+  List<String> capturedResponseHeaders;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedOkHttp3AutoModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedOkHttp3AutoModuleConfiguration(
+      isEnabled: result[0]! as bool,
+      capturedRequestHeaders: (result[1] as List<Object?>?)!.cast<String>(),
+      capturedResponseHeaders: (result[2] as List<Object?>?)!.cast<String>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedOkHttp3AutoModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedNetworkInstrumentationModuleConfiguration {
+  GeneratedNetworkInstrumentationModuleConfiguration({
+    required this.isEnabled,
+    required this.ignoreURLs,
+  });
+
+  bool isEnabled;
+
+  List<GeneratedRegularExpression> ignoreURLs;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+      ignoreURLs,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedNetworkInstrumentationModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedNetworkInstrumentationModuleConfiguration(
+      isEnabled: result[0]! as bool,
+      ignoreURLs: (result[1] as List<Object?>?)!.cast<GeneratedRegularExpression>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedNetworkInstrumentationModuleConfiguration || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedRegularExpression {
+  GeneratedRegularExpression({
+    required this.pattern,
+    this.options,
+  });
+
+  String pattern;
+
+  List<GeneratedRegexOption?>? options;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      pattern,
+      options,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedRegularExpression decode(Object result) {
+    result as List<Object?>;
+    return GeneratedRegularExpression(
+      pattern: result[0]! as String,
+      options: (result[1] as List<Object?>?)?.cast<GeneratedRegexOption?>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedRegularExpression || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -949,77 +1276,101 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedUserTrackingMode) {
+    }    else if (value is GeneratedRegexOption) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSessionReplayStatus) {
+    }    else if (value is GeneratedUserTrackingMode) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRenderingMode) {
+    }    else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    }    else if (value is GeneratedRenderingMode) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedStatus) {
+    }    else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
+    }    else if (value is GeneratedStatus) {
       buffer.putUint8(134);
-      writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNavigationModuleConfiguration) {
+      writeValue(buffer, value.index);
+    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAnrModuleConfiguration) {
+    }    else if (value is GeneratedNavigationModuleConfiguration) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    }    else if (value is GeneratedCrashReportsModuleConfiguration) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    }    else if (value is GeneratedInteractionsModuleConfiguration) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    }    else if (value is GeneratedNetworkMonitorModuleConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    }    else if (value is GeneratedAnrModuleConfiguration) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskList) {
+    }    else if (value is GeneratedHttpUrlModuleConfiguration) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    }    else if (value is GeneratedRegularExpression) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    }    else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    }    else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    }    else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    }    else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    }    else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(150);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    }    else if (value is GeneratedRect) {
       buffer.putUint8(151);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    }    else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(152);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeInt) {
+      buffer.putUint8(153);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeDouble) {
+      buffer.putUint8(154);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeString) {
+      buffer.putUint8(155);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeBool) {
+      buffer.putUint8(156);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListInt) {
+      buffer.putUint8(157);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListDouble) {
+      buffer.putUint8(158);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListString) {
+      buffer.putUint8(159);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(160);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1031,56 +1382,73 @@ class _PigeonCodec extends StandardMessageCodec {
     switch (type) {
       case 129: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedUserTrackingMode.values[value];
+        return value == null ? null : GeneratedRegexOption.values[value];
       case 130: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedSessionReplayStatus.values[value];
+        return value == null ? null : GeneratedUserTrackingMode.values[value];
       case 131: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRenderingMode.values[value];
+        return value == null ? null : GeneratedSessionReplayStatus.values[value];
       case 132: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRecordingMaskType.values[value];
+        return value == null ? null : GeneratedRenderingMode.values[value];
       case 133: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedStatus.values[value];
+        return value == null ? null : GeneratedRecordingMaskType.values[value];
       case 134: 
-        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : GeneratedStatus.values[value];
       case 135: 
-        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
       case 136: 
-        return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
       case 137: 
-        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
+        return GeneratedCrashReportsModuleConfiguration.decode(readValue(buffer)!);
       case 138: 
-        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
+        return GeneratedInteractionsModuleConfiguration.decode(readValue(buffer)!);
       case 139: 
-        return GeneratedUserConfiguration.decode(readValue(buffer)!);
+        return GeneratedNetworkMonitorModuleConfiguration.decode(readValue(buffer)!);
       case 140: 
-        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
+        return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
       case 141: 
-        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
+        return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
       case 142: 
-        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
+        return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
       case 143: 
-        return GeneratedRect.decode(readValue(buffer)!);
+        return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
       case 144: 
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedRegularExpression.decode(readValue(buffer)!);
       case 145: 
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
       case 146: 
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
       case 147: 
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedUserConfiguration.decode(readValue(buffer)!);
       case 148: 
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       case 149: 
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
       case 150: 
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
       case 151: 
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedRect.decode(readValue(buffer)!);
       case 152: 
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+      case 153: 
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+      case 154: 
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+      case 155: 
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+      case 156: 
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+      case 157: 
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+      case 158: 
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+      case 159: 
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 160: 
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1101,14 +1469,14 @@ class SplunkOtelFlutterHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, }) async {
+  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[agentConfiguration, navigationModuleConfiguration, slowRenderingModuleConfiguration, anrModuleConfiguration]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[agentConfiguration, navigationModuleConfiguration, slowRenderingModuleConfiguration, crashReportsModuleConfiguration, interactionsModuleConfiguration, networkMonitorModuleConfiguration, anrModuleConfiguration, httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1979,6 +2347,75 @@ class SplunkOtelFlutterHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[name, attributes]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> customTrackingTrackWorkflow({required String workflowName}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[workflowName]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> navigationTrack({required String screenName}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[screenName]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
