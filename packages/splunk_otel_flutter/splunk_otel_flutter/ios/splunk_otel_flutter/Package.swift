@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "yourPath/splunk-otel-ios")
+        .package(path: "/Users/zdenda/Development/splunk-otel-ios")
     ],
     targets: [
         .target(
