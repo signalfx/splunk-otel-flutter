@@ -7,6 +7,7 @@ plugins {
     id("com.splunk.rum-httpurlconnection-auto-plugin") version "2.1.0"
 }
 
+// Either jetifier has to be disabled or bytebuddy version forced for network interception to work.
 configurations
     .matching { it.name.contains("ByteBuddyClasspath", ignoreCase = true) }
     .all {

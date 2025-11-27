@@ -206,15 +206,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(()))
     }
     
-    private static let ts: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds] // adds .SSS
-        f.timeZone = TimeZone(secondsFromGMT: 0) // or .current
-        return f
-    }()
-    
-    private func nowTS() -> String { Self.ts.string(from: Date()) }
-    
     // Session replay
     
     // MARK: - Session Replay

@@ -118,7 +118,7 @@ class SplunkOtelFlutterPlugin :
         val agentConfiguration = AgentConfiguration(
             endpoint = endpointConfiguration,
             appName = agentConfiguration.appName,
-            enableDebugLogging = true,//agentConfiguration.enableDebugLogging ?: false,
+            enableDebugLogging = agentConfiguration.enableDebugLogging ?: false,
             deploymentEnvironment = agentConfiguration.deploymentEnvironment,
             user = UserConfiguration(
                 trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
@@ -286,7 +286,12 @@ class SplunkOtelFlutterPlugin :
     override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit) {
         val endpointConfiguration = SplunkRum.instance.state.endpointConfiguration
 
-        callback(Result.success(endpointConfiguration!!.toGeneratedEndpointConfiguration()))
+        if (endpointConfiguration == null) {
+            callback(Result.failure(FlutterError("EMPTY_ENDPOINT_CONFIGURATION", "Endpoint configuration not set.")))
+            return
+        }
+
+        callback(Result.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
     }
 
     override fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit) {
