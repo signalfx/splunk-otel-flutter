@@ -71,7 +71,7 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
   // Global attributes
 
-  Future<MutableAttributeValue> globalAttributesGet({required String key});
+  Future<MutableAttributeValue?> globalAttributesGet({required String key});
   Future<MutableAttributes> globalAttributesGetAll();
   Future<void> globalAttributesRemove({required String key});
   Future<void> globalAttributesRemoveAll();

@@ -29,7 +29,7 @@ void main() async {
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
       appVersion: '1.0.0',
-      endpoint: EndpointConfiguration.forRum(
+      endpointConfiguration: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),

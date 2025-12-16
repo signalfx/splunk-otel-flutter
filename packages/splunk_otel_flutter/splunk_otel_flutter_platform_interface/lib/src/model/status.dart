@@ -40,9 +40,9 @@ extension StatusExtension on Status {
       case Status.subProcess:
         return GeneratedStatus.subProcess;
       case Status.sampledOut:
-        return GeneratedStatus.unsupportedPlatform;
+        return GeneratedStatus.sampledOut;
       case Status.unsupportedPlatform:
-        return GeneratedStatus.unsupportedOsVersion;
+        return GeneratedStatus.unsupportedPlatform;
       case Status.unsupportedOsVersion:
         return GeneratedStatus.unsupportedOsVersion;
     }

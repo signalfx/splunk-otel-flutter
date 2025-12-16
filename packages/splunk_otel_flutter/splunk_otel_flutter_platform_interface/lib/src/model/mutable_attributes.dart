@@ -49,6 +49,7 @@ class MutableAttributeBool extends MutableAttributeValue {
 }
 
 // Lists are currently set to private will be handled after first release
+/*
 class _MutableAttributeListInt extends MutableAttributeValue {
   final List<int> value;
 
@@ -71,7 +72,7 @@ class _MutableAttributeListBool extends MutableAttributeValue {
   final List<bool> value;
 
   _MutableAttributeListBool({required this.value});
-}
+}*/
 
 extension MutableAttributesConverter on MutableAttributes {
   GeneratedMutableAttributes toGeneratedMutableAttributes() {
@@ -89,7 +90,7 @@ extension MutableAttributesConverter on MutableAttributes {
       } else if (value is MutableAttributeBool) {
         generatedAttributes[key] =
             GeneratedMutableAttributeBool(value: value.value);
-      } else if (value is _MutableAttributeListInt) {
+      } /*else if (value is _MutableAttributeListInt) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListInt(value: value.value);
       } else if (value is _MutableAttributeListDouble) {
@@ -101,7 +102,7 @@ extension MutableAttributesConverter on MutableAttributes {
       } else if (value is _MutableAttributeListBool) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListBool(value: value.value);
-      }
+      }*/
     });
     return GeneratedMutableAttributes(attributes: generatedAttributes);
   }
@@ -119,7 +120,7 @@ extension GeneratedMutableAttributesConverter on GeneratedMutableAttributes {
         mutableAttributes[key] = MutableAttributeString(value: value.value);
       } else if (value is GeneratedMutableAttributeBool) {
         mutableAttributes[key] = MutableAttributeBool(value: value.value);
-      } else if (value is GeneratedMutableAttributeListInt) {
+      } /* else if (value is GeneratedMutableAttributeListInt) {
         mutableAttributes[key] = _MutableAttributeListInt(value: value.value);
       } else if (value is GeneratedMutableAttributeListDouble) {
         mutableAttributes[key] = _MutableAttributeListDouble(value: value.value);
@@ -127,7 +128,7 @@ extension GeneratedMutableAttributesConverter on GeneratedMutableAttributes {
         mutableAttributes[key] = _MutableAttributeListString(value: value.value);
       } else if (value is GeneratedMutableAttributeListBool) {
         mutableAttributes[key] = _MutableAttributeListBool(value: value.value);
-      }
+      }*/
     });
     return MutableAttributes(attributes: mutableAttributes);
   }
@@ -136,13 +137,18 @@ extension GeneratedMutableAttributesConverter on GeneratedMutableAttributes {
 extension DynamicToMutableAttributeValueConverter on dynamic {
   MutableAttributeValue toMutableAttributeValue() {
     if (this is GeneratedMutableAttributeInt) {
-      return MutableAttributeInt(value: (this as GeneratedMutableAttributeInt).value);
+      return MutableAttributeInt(
+          value: (this as GeneratedMutableAttributeInt).value);
     } else if (this is GeneratedMutableAttributeDouble) {
-      return MutableAttributeDouble(value: (this as GeneratedMutableAttributeDouble).value);
+      return MutableAttributeDouble(
+          value: (this as GeneratedMutableAttributeDouble).value);
     } else if (this is GeneratedMutableAttributeString) {
-      return MutableAttributeString(value: (this as GeneratedMutableAttributeString).value);
+      return MutableAttributeString(
+          value: (this as GeneratedMutableAttributeString).value);
     } else if (this is GeneratedMutableAttributeBool) {
-      return MutableAttributeBool(value: (this as GeneratedMutableAttributeBool).value);
+      return MutableAttributeBool(
+          value: (this as GeneratedMutableAttributeBool).value);
+      /* TODO uncomment when Lists are supported
     } else if (this is GeneratedMutableAttributeListInt) {
       return MutableAttributeListInt(value: (this as GeneratedMutableAttributeListInt).value);
     } else if (this is GeneratedMutableAttributeListDouble) {
@@ -152,6 +158,11 @@ extension DynamicToMutableAttributeValueConverter on dynamic {
     } else if (this is GeneratedMutableAttributeListBool) {
       return MutableAttributeListBool(value: (this as GeneratedMutableAttributeListBool).value);
     }
-    throw ArgumentError('Unsupported GeneratedMutableAttribute type: $runtimeType');
+
+       */
+    }
+    throw ArgumentError(
+      'Unsupported GeneratedMutableAttribute type: $runtimeType',
+    );
   }
 }

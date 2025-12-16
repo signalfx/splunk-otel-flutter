@@ -19,7 +19,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 class GlobalAttributes {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
-  Future<MutableAttributeValue> get({
+  Future<MutableAttributeValue?> get({
     required String key,
   }) async =>
       _delegate.globalAttributesGet(key: key);

@@ -87,10 +87,7 @@ class SplunkOtelFlutterPlatformImplementation
 
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
-        endpoint: GeneratedEndpointConfiguration(
-          realm: agentConfiguration.endpoint.realm,
-          rumAccessToken: agentConfiguration.endpoint.rumAccessToken,
-        ),
+        endpoint: agentConfiguration.endpointConfiguration.toGeneratedEndpointConfiguration(),
         appName: agentConfiguration.appName,
         deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         appVersion: agentConfiguration.appVersion,
@@ -320,12 +317,12 @@ class SplunkOtelFlutterPlatformImplementation
   // Global attributes
 
   @override
-  Future<MutableAttributeValue> globalAttributesGet({
+  Future<MutableAttributeValue?> globalAttributesGet({
     required String key,
   }) async {
     final generatedAttribute = await _api.globalAttributesGet(key: key);
 
-    return generatedAttribute.toMutableAttributeValue();
+    return generatedAttribute?.toMutableAttributeValue();
   }
 
   @override

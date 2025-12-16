@@ -29,7 +29,7 @@ void main() async {
 
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpoint: EndpointConfiguration.forRum(
+      endpointConfiguration: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),
@@ -49,7 +49,6 @@ void main() async {
       NavigationModuleConfiguration(isEnabled: true),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
-      ApplicationLifecycleModuleConfiguration(isEnabled: true),
     ],
   );
 
@@ -342,7 +341,7 @@ class _MyAppState extends State<MyApp> {
           await sdk.globalAttributes.get(key: 'ga_int'));
       assert(gaInt.value == 42, 'ga_int roundtrip failed');
 
-      await sdk.globalAttributes.etDouble(key: 'ga_double', value: 3.1415);
+      await sdk.globalAttributes.getDouble(key: 'ga_double', value: 3.1415);
       final gaDouble = castAttr<MutableAttributeDouble>(
           await sdk.globalAttributes.get(key: 'ga_double'));
       assert((gaDouble.value - 3.1415).abs() <

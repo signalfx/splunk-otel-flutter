@@ -19,7 +19,7 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 
 class AgentConfiguration {
   // Required properties (common to iOS and Android).
-  final EndpointConfiguration endpoint;
+  final EndpointConfiguration endpointConfiguration;
   final String appName;
   final String deploymentEnvironment;
 
@@ -44,7 +44,7 @@ class AgentConfiguration {
   final bool deferredUntilForeground; // Android-only.
 
   AgentConfiguration({
-    required this.endpoint,
+    required this.endpointConfiguration,
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,
@@ -90,7 +90,7 @@ class EndpointConfiguration {
     );
   }
 
-  factory EndpointConfiguration.forTracesAndLogs({
+  factory EndpointConfiguration.forTracesAndSessionReplay({
     required Uri traceEndpoint,
     required Uri sessionReplayEndpoint,
   }) {
@@ -188,11 +188,11 @@ class InvalidEndpointConfigurationException implements Exception {
   }
 }
 
-Uri _parseUri(String? uriString) {
+Uri? _parseUri(String? uriString) {
   if (uriString == null) {
-    throw InvalidEndpointConfigurationException(
-        'Missing required URI string for this configuration type.');
+    return null;
   }
+
   try {
     return Uri.parse(uriString);
   } on FormatException catch (e) {
