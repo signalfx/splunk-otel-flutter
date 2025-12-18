@@ -5,7 +5,7 @@ description: "Demonstrates how to use the splunk_otel_flutter_session_replay.dar
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.8.0
 
 resolution: workspace
 

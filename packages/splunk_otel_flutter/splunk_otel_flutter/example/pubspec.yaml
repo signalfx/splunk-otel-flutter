@@ -2,7 +2,7 @@ name: splunk_otel_flutter_example
 description: "Demonstrates how to use the splunk_otel_flutter plugin."
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.8.0
 
 resolution: workspace
 
