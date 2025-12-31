@@ -13,7 +13,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "**/generated_plugin_registrant.dart"
-    - "lib/main.dart"
+    #- "lib/main.dart"
     - "lib/basic_test_run_widget.dart"
 
   errors:

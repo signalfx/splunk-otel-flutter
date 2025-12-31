@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-/*
+import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart';
+import 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 import '../mock_splunk_otel_flutter_platform_interface_host_api.dart';
 import '../pigeon/test_api.dart';
@@ -45,7 +48,7 @@ void main() {
       test('should complete full installation with all configurations', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'test-token-abc123',
           ),
@@ -53,7 +56,6 @@ void main() {
           deploymentEnvironment: 'production',
           appVersion: '1.0.0',
           enableDebugLogging: true,
-          //TODO global attributes
           user: const UserConfiguration(
             trackingMode: UserTrackingMode.anonymousTracking,
           ),
@@ -73,7 +75,7 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
           installCalled = true;
 
           // Verify agent configuration
@@ -111,7 +113,7 @@ void main() {
       test('should handle minimal configuration installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'eu0',
             rumAccessToken: 'minimal-token',
           ),
@@ -120,7 +122,7 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
           installCalled = true;
 
           // Verify minimal agent config
@@ -128,11 +130,9 @@ void main() {
           expect(genAgent.appVersion, isNull);
           expect(genAgent.enableDebugLogging, false);
 
-          // Verify default module configs are used
-          expect(genNav?.isEnabled, true);
-          expect(genNav?.isAutomatedTrackingEnabled, false);
-          expect(genSlow?.isEnabled, true);
-          expect(genSlow?.intervalMillis, 1000);
+          // Verify no module configs provided (should be null)
+          expect(genNav, isNull);
+          expect(genSlow, isNull);
         };
 
         // Act
@@ -148,7 +148,7 @@ void main() {
       test('should handle installation with only navigation module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -161,11 +161,11 @@ void main() {
           isAutomatedTrackingEnabled: false,
         );
 
-        mockApi.installHandler = (_, genNav, genSlow) async {
+        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
           expect(genNav?.isEnabled, false);
           expect(genNav?.isAutomatedTrackingEnabled, false);
-          // Default slow rendering should still be used
-          expect(genSlow?.isEnabled, true);
+          // No slow rendering module provided
+          expect(genSlow, isNull);
         };
 
         // Act
@@ -178,7 +178,7 @@ void main() {
       test('should handle installation with only slow rendering module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -191,9 +191,9 @@ void main() {
           interval: const Duration(milliseconds: 250),
         );
 
-        mockApi.installHandler = (_, genNav, genSlow) async {
-          // Default navigation should be used
-          expect(genNav?.isEnabled, true);
+        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+          // No navigation module provided
+          expect(genNav, isNull);
           expect(genSlow?.isEnabled, false);
           expect(genSlow?.intervalMillis, 250);
         };
@@ -210,7 +210,7 @@ void main() {
       test('should install then start session replay', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -221,7 +221,7 @@ void main() {
         bool installCalled = false;
         bool sessionReplayCalled = false;
 
-        mockApi.installHandler = (_, __, ___) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
           installCalled = true;
         };
 
@@ -244,7 +244,7 @@ void main() {
       test('should install then retrieve session ID', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -255,11 +255,11 @@ void main() {
         const expectedSessionId = 'session-integration-test-123';
         bool installCalled = false;
 
-        mockApi.installHandler = (_, __, ___) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
           installCalled = true;
         };
 
-        mockApi.getSessionIdHandler = () async => expectedSessionId;
+        mockApi.sessionStateGetIdHandler = () async => expectedSessionId;
 
         // Act
         await implementation.install(
@@ -276,7 +276,7 @@ void main() {
       test('should handle complete session workflow', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'workflow-token',
           ),
@@ -288,7 +288,7 @@ void main() {
         const sessionId = 'workflow-session-abc';
         final callOrder = <String>[];
 
-        mockApi.installHandler = (_, __, ___) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
           callOrder.add('install');
         };
 
@@ -296,7 +296,7 @@ void main() {
           callOrder.add('sessionReplay');
         };
 
-        mockApi.getSessionIdHandler = () async {
+        mockApi.sessionStateGetIdHandler = () async {
           callOrder.add('getSessionId');
           return sessionId;
         };
@@ -320,7 +320,7 @@ void main() {
         // Arrange & Assert
         expect(
               () => AgentConfiguration(
-            endpoint: EndpointConfiguration.forRum(
+            endpointConfiguration: EndpointConfiguration.forRum(
               realm: 'us0',
               rumAccessToken: 'token',
             ),
@@ -335,7 +335,7 @@ void main() {
       test('should handle edge case sampling rates correctly', () async {
         // Test 0.0
         final config0 = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -344,7 +344,7 @@ void main() {
           session: SessionConfiguration(samplingRate: 0.0),
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.session?.samplingRate, 0.0);
         };
 
@@ -355,7 +355,7 @@ void main() {
 
         // Test 1.0
         final config1 = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -364,7 +364,7 @@ void main() {
           session: SessionConfiguration(samplingRate: 1.0),
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.session?.samplingRate, 1.0);
         };
 
@@ -379,7 +379,7 @@ void main() {
       test('should handle user tracking mode transitions', () async {
         // Test noTracking
         final configNoTracking = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -390,7 +390,7 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.noTracking);
         };
@@ -402,7 +402,7 @@ void main() {
 
         // Test anonymousTracking
         final configAnonymous = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -413,7 +413,7 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.anonymousTracking);
         };
@@ -425,7 +425,7 @@ void main() {
 
         // Test defaultTracking
         final configDefault = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -433,7 +433,7 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.noTracking);
         };
@@ -450,7 +450,7 @@ void main() {
       test('should use first module configuration when duplicates exist', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -468,7 +468,7 @@ void main() {
           isAutomatedTrackingEnabled: false,
         );
 
-        mockApi.installHandler = (_, genNav, __) async {
+        mockApi.installHandler = (_, genNav, _, _, _, _, _, _, _, _) async {
           // Should use first one (navConfig1)
           expect(genNav?.isEnabled, true);
           expect(genNav?.isAutomatedTrackingEnabled, true);
@@ -486,7 +486,7 @@ void main() {
       test('should handle Android-specific options correctly', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'android-token',
           ),
@@ -496,7 +496,7 @@ void main() {
           deferredUntilForeground: true,
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.instrumentedProcessName, 'com.example.android.app');
           expect(genAgent.deferredUntilForeground, true);
         };
@@ -511,7 +511,7 @@ void main() {
       test('should handle null Android-specific options', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -521,7 +521,7 @@ void main() {
           deferredUntilForeground: false,
         );
 
-        mockApi.installHandler = (genAgent, _, __) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.instrumentedProcessName, isNull);
           expect(genAgent.deferredUntilForeground, false);
         };
@@ -546,7 +546,7 @@ void main() {
         ];
 
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -559,7 +559,7 @@ void main() {
             interval: duration,
           );
 
-          mockApi.installHandler = (_, __, genSlow) async {
+          mockApi.installHandler = (_, _, genSlow, _, _, _, _, _, _, _) async {
             expect(genSlow?.intervalMillis, expectedMillis);
           };
 
@@ -575,7 +575,7 @@ void main() {
       test('should propagate platform errors during installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
+          endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -583,7 +583,7 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (_, __, ___) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
           throw Exception('Platform installation failed');
         };
 
@@ -612,7 +612,7 @@ void main() {
 
       test('should propagate errors during getSessionId', () async {
         // Arrange
-        mockApi.getSessionIdHandler = () async {
+        mockApi.sessionStateGetIdHandler = () async {
           throw Exception('Failed to get session ID');
         };
 
@@ -623,6 +623,351 @@ void main() {
         );
       });
     });
+
+    group('Global Attributes Integration', () {
+      test('should set and get string attribute', () async {
+        const key = 'user_id';
+        const value = 'user-123';
+
+        mockApi.globalAttributesSetStringHandler = (k, v) async {
+          expect(k, key);
+          expect(v, value);
+        };
+
+        mockApi.globalAttributesGetHandler = (k) async {
+          expect(k, key);
+          return GeneratedMutableAttributeString(value: value);
+        };
+
+        await implementation.globalAttributesSetString(key: key, value: value);
+        final result = await implementation.globalAttributesGet(key: key);
+
+        expect(result, isA<MutableAttributeString>());
+        expect((result as MutableAttributeString).value, value);
+      });
+
+      test('should set and get int attribute', () async {
+        const key = 'user_age';
+        const value = 25;
+
+        mockApi.globalAttributesSetIntHandler = (k, v) async {
+          expect(k, key);
+          expect(v, value);
+        };
+
+        mockApi.globalAttributesGetHandler = (k) async {
+          expect(k, key);
+          return GeneratedMutableAttributeInt(value: value);
+        };
+
+        await implementation.globalAttributesSetInt(key: key, value: value);
+        final result = await implementation.globalAttributesGet(key: key);
+
+        expect(result, isA<MutableAttributeInt>());
+        expect((result as MutableAttributeInt).value, value);
+      });
+
+      test('should set and get double attribute', () async {
+        const key = 'price';
+        const value = 99.99;
+
+        mockApi.globalAttributesSetDoubleHandler = (k, v) async {
+          expect(k, key);
+          expect(v, value);
+        };
+
+        mockApi.globalAttributesGetHandler = (k) async {
+          expect(k, key);
+          return GeneratedMutableAttributeDouble(value: value);
+        };
+
+        await implementation.globalAttributesSetDouble(key: key, value: value);
+        final result = await implementation.globalAttributesGet(key: key);
+
+        expect(result, isA<MutableAttributeDouble>());
+        expect((result as MutableAttributeDouble).value, value);
+      });
+
+      test('should set and get bool attribute', () async {
+        const key = 'is_premium';
+        const value = true;
+
+        mockApi.globalAttributesSetBoolHandler = (k, v) async {
+          expect(k, key);
+          expect(v, value);
+        };
+
+        mockApi.globalAttributesGetHandler = (k) async {
+          expect(k, key);
+          return GeneratedMutableAttributeBool(value: value);
+        };
+
+        await implementation.globalAttributesSetBool(key: key, value: value);
+        final result = await implementation.globalAttributesGet(key: key);
+
+        expect(result, isA<MutableAttributeBool>());
+        expect((result as MutableAttributeBool).value, value);
+      });
+
+      test('should check if attribute contains key', () async {
+        const key = 'user_id';
+
+        mockApi.globalAttributesContainsHandler = (k) async {
+          expect(k, key);
+          return true;
+        };
+
+        final result = await implementation.globalAttributesContains(key: key);
+        expect(result, true);
+      });
+
+      test('should remove attribute', () async {
+        const key = 'user_id';
+
+        mockApi.globalAttributesRemoveHandler = (k) async {
+          expect(k, key);
+        };
+
+        await implementation.globalAttributesRemove(key: key);
+      });
+
+      test('should remove all attributes', () async {
+        bool removeCalled = false;
+
+        mockApi.globalAttributesRemoveAllHandler = () async {
+          removeCalled = true;
+        };
+
+        await implementation.globalAttributesRemoveAll();
+        expect(removeCalled, true);
+      });
+
+      test('should get all attributes', () async {
+        mockApi.globalAttributesGetAllHandler = () async {
+          return GeneratedMutableAttributes(attributes: {
+            'key1': GeneratedMutableAttributeString(value: 'value1'),
+            'key2': GeneratedMutableAttributeInt(value: 42),
+          });
+        };
+
+        final result = await implementation.globalAttributesGetAll();
+        
+        expect(result.attributes.length, 2);
+        expect(result.attributes['key1'], isA<MutableAttributeString>());
+        expect((result.attributes['key1'] as MutableAttributeString).value, 'value1');
+        expect(result.attributes['key2'], isA<MutableAttributeInt>());
+        expect((result.attributes['key2'] as MutableAttributeInt).value, 42);
+      });
+
+      test('should set all attributes', () async {
+        final attributes = MutableAttributes(attributes: {
+          'key1': MutableAttributeString(value: 'value1'),
+          'key2': MutableAttributeInt(value: 42),
+        });
+
+        mockApi.globalAttributesSetAllHandler = (value) async {
+          expect(value.attributes.length, 2);
+          expect(value.attributes['key1'], isA<GeneratedMutableAttributeString>());
+          expect(value.attributes['key2'], isA<GeneratedMutableAttributeInt>());
+        };
+
+        await implementation.globalAttributesSetAll(attributes: attributes);
+      });
+    });
+
+    group('Session Replay Integration', () {
+      test('should start and stop session replay', () async {
+        bool startCalled = false;
+        bool stopCalled = false;
+
+        mockApi.sessionReplayStartHandler = () async {
+          startCalled = true;
+        };
+
+        mockApi.sessionReplayStopHandler = () async {
+          stopCalled = true;
+        };
+
+        await implementation.sessionReplayStart();
+        await implementation.sessionReplayStop();
+
+        expect(startCalled, true);
+        expect(stopCalled, true);
+      });
+
+      test('should get session replay status', () async {
+        mockApi.sessionReplayStateGetStatusHandler = () async {
+          return GeneratedSessionReplayStatus.isRecording;
+        };
+
+        final status = await implementation.sessionReplayStateGetStatus();
+        expect(status, SessionReplayStatus.isRecording);
+      });
+
+      test('should get and set rendering mode preferences', () async {
+        mockApi.sessionReplayPreferencesGetRenderingModeHandler = () async {
+          return GeneratedRenderingMode.wireframeOnly;
+        };
+
+        mockApi.sessionReplayPreferencesSetRenderingModeHandler = (mode) async {
+          expect(mode, GeneratedRenderingMode.native);
+        };
+
+        final mode = await implementation.sessionReplayPreferencesGetRenderingMode();
+        expect(mode, RenderingMode.wireframeOnly);
+
+        await implementation.sessionReplayPreferencesSetRenderingMode(
+          renderingMode: RenderingMode.native,
+        );
+      });
+
+      test('should get state rendering mode', () async {
+        mockApi.sessionReplayStateGetRenderingModeHandler = () async {
+          return GeneratedRenderingMode.native;
+        };
+
+        final mode = await implementation.sessionReplayStateGetRenderingMode();
+        expect(mode, RenderingMode.native);
+      });
+
+      test('should get and set recording mask', () async {
+        final recordingMask = RecordingMaskList(elements: [
+          RecordingMaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: RecordingMaskType.erasing,
+          ),
+        ]);
+
+        mockApi.sessionReplaySetRecordingMaskHandler = (mask) async {
+          expect(mask?.recordingMaskList?.length, 1);
+          expect(mask?.recordingMaskList?.first.type, GeneratedRecordingMaskType.erasing);
+        };
+
+        mockApi.sessionReplayGetRecordingMaskHandler = () async {
+          return GeneratedRecordingMaskList(recordingMaskList: [
+            GeneratedRecordingMaskElement(
+              rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
+              type: GeneratedRecordingMaskType.erasing,
+            ),
+          ]);
+        };
+
+        await implementation.sessionReplaySetRecordingMask(recordingMask: recordingMask);
+        final result = await implementation.sessionReplayGetRecordingMask();
+
+        expect(result?.elements.length, 1);
+        expect(result?.elements.first.type, RecordingMaskType.erasing);
+      });
+    });
+
+    group('State Getters Integration', () {
+      test('should get all state values', () async {
+        mockApi.stateGetAppNameHandler = () async => 'TestApp';
+        mockApi.stateGetAppVersionHandler = () async => '2.0.0';
+        mockApi.stateGetDeploymentEnvironmentHandler = () async => 'staging';
+        mockApi.stateGetIsDebugLoggingEnabledHandler = () async => true;
+        mockApi.stateGetInstrumentedProcessNameHandler = () async => 'com.test.app';
+        mockApi.stateGetDeferredUntilForegroundHandler = () async => true;
+        mockApi.stateGetStatusHandler = () async => GeneratedStatus.running;
+        mockApi.stateGetEndpointConfigurationHandler = () async {
+          return GeneratedEndpointConfiguration(
+            realm: 'eu0',
+            rumAccessToken: 'token-xyz',
+          );
+        };
+
+        expect(await implementation.stateGetAppName(), 'TestApp');
+        expect(await implementation.stateGetAppVersion(), '2.0.0');
+        expect(await implementation.stateGetDeploymentEnvironment(), 'staging');
+        expect(await implementation.stateGetIsDebugLoggingEnabled(), true);
+        expect(await implementation.stateGetInstrumentedProcessName(), 'com.test.app');
+        expect(await implementation.stateGetDeferredUntilForeground(), true);
+        expect(await implementation.stateGetStatus(), Status.running);
+
+        final endpoint = await implementation.stateGetEndpointConfiguration();
+        expect(endpoint.realm, 'eu0');
+        expect(endpoint.rumAccessToken, 'token-xyz');
+      });
+    });
+
+    group('Session State Integration', () {
+      test('should get session id and sampling rate', () async {
+        mockApi.sessionStateGetIdHandler = () async => 'session-abc-123';
+        mockApi.sessionStateGetSamplingRateHandler = () async => 0.5;
+
+        expect(await implementation.sessionStateGetId(), 'session-abc-123');
+        expect(await implementation.sessionStateGetSamplingRate(), 0.5);
+      });
+    });
+
+    group('User Tracking Integration', () {
+      test('should get user tracking mode state', () async {
+        mockApi.userStateGetUserTrackingModeHandler = () async {
+          return GeneratedUserTrackingMode.anonymousTracking;
+        };
+
+        final mode = await implementation.userStateGetUserTrackingMode();
+        expect(mode, UserTrackingMode.anonymousTracking);
+      });
+
+      test('should get and set user tracking mode preferences', () async {
+        mockApi.userPreferencesGetUserTrackingModeHandler = () async {
+          return GeneratedUserTrackingMode.noTracking;
+        };
+
+        mockApi.userPreferencesSetUserTrackingModeHandler = (mode) async {
+          expect(mode, GeneratedUserTrackingMode.anonymousTracking);
+        };
+
+        final mode = await implementation.userPreferencesGetUserTrackingMode();
+        expect(mode, UserTrackingMode.noTracking);
+
+        await implementation.userPreferencesSetUserTrackingMode(
+          userTrackingMode: UserTrackingMode.anonymousTracking,
+        );
+      });
+    });
+
+    group('Custom Tracking Integration', () {
+      test('should track custom event', () async {
+        const eventName = 'button_clicked';
+        final attributes = MutableAttributes(attributes: {
+          'button_id': MutableAttributeString(value: 'submit_btn'),
+          'click_count': MutableAttributeInt(value: 5),
+        });
+
+        mockApi.customTrackingTrackCustomEventHandler = (name, attrs) async {
+          expect(name, eventName);
+          expect(attrs.attributes.length, 2);
+        };
+
+        await implementation.customTrackingTrackCustomEvent(
+          name: eventName,
+          attributes: attributes,
+        );
+      });
+
+      test('should track workflow', () async {
+        const workflowName = 'checkout_flow';
+
+        mockApi.customTrackingTrackWorkflowHandler = (name) async {
+          expect(name, workflowName);
+        };
+
+        await implementation.customTrackingTrackWorkflow(workflowName: workflowName);
+      });
+    });
+
+    group('Navigation Tracking Integration', () {
+      test('should track screen navigation', () async {
+        const screenName = 'HomeScreen';
+
+        mockApi.navigationTrackHandler = (name) async {
+          expect(name, screenName);
+        };
+
+        await implementation.navigationTrack(screenName: screenName);
+      });
+    });
   });
 }
-*/

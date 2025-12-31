@@ -60,6 +60,7 @@ import com.splunk.rum.integration.startup.StartupModuleConfiguration
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.opentelemetry.api.trace.Span
 import java.time.Duration
 
 /** SplunkOtelFlutterPlugin */
@@ -69,6 +70,7 @@ class SplunkOtelFlutterPlugin :
     SplunkOtelFlutterHostApi {
 
     private var activity: Activity? = null
+    private val workflowSpans = mutableMapOf<String, Pair<Span, Long>>()
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         SplunkOtelFlutterHostApi.setUp(binding.binaryMessenger, this)
@@ -504,7 +506,30 @@ class SplunkOtelFlutterPlugin :
     }
 
     override fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.customTracking.trackWorkflow(workflowName)
+        val existingWorkflow = workflowSpans[workflowName]
+
+        if (existingWorkflow == null) {
+            // First call: Start the workflow
+            val span = SplunkRum.instance.customTracking.trackWorkflow(workflowName)
+            val startTime = System.currentTimeMillis()
+
+            if (span != null) {
+                Log.d("flutter_splunk_otel","span created xxxxx")
+                workflowSpans[workflowName] = Pair(span, startTime)
+            }
+        } else {
+            // Second call: End the workflow
+            val (span, startTime) = existingWorkflow
+            val endTime = System.currentTimeMillis()
+            
+            span.setAttribute("workflow.start.time", startTime)
+            span.setAttribute("workflow.end.time", endTime)
+            span.end()
+
+            Log.d("flutter_splunk_otel","span ended xxxxxx")
+
+            workflowSpans.remove(workflowName)
+        }
 
         callback(Result.success(Unit))
     }

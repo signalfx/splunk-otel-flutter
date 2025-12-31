@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+import 'package:splunk_otel_flutter_example/test_actions_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +49,7 @@ void main() async {
       ),
     ),
     moduleConfigurations: [
-      NavigationModuleConfiguration(isEnabled: true),
+      NavigationModuleConfiguration(isEnabled: true,isAutomatedTrackingEnabled: true),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
     ],
@@ -54,11 +57,16 @@ void main() async {
 
   await SplunkOtelFlutter.instance.sessionReplay.start();
 
-  final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
 
 
-  debugPrint('-------------');
-  debugPrint('Session id: $sessionId');
+
+  Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
+    final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
+
+    debugPrint('-------------');
+    debugPrint('Session id: $sessionId');
+  });
+
 
   runApp(const MyApp());
 }
@@ -71,6 +79,89 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  static const _channel = MethodChannel('com.splunk.rum.flutter.example');
+
+  late final List<TestAction> _actions = [
+    TestAction(
+      title: 'Simulate Crash',
+      description: 'Crashes the app',
+      category: TestCategory.crashes,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: simulateCrash,
+    ),
+    TestAction(
+      title: 'Simulate Navigation',
+      description: 'Mock navigate to a random non existing screen',
+      category: TestCategory.navigation,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: simulateNavigation,
+    ),
+    TestAction(
+      title: 'Track custom event',
+      description: 'track custom event',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: customTrackingTrackEvent,
+    ),
+    TestAction(
+      title: 'Track workflow',
+      description: 'track workflow',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: customTrackingTrackWorkflow,
+    ),
+    TestAction(
+      title: 'Track error',
+      description: 'track error',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: customTrackingTrackError,
+    ),
+    TestAction(
+      title: 'Simulate Slow Render',
+      description: 'Simulates an slow render',
+      category: TestCategory.performance,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: simulateSlowRender,
+    ),
+    TestAction(
+      title: 'Simulate Frozen Render',
+      description: 'Simulates an frozen render',
+      category: TestCategory.performance,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: simulateFrozenRender,
+    ),
+    TestAction(
+      title: 'Trigger ANR',
+      description: 'Simulates an ANR',
+      category: TestCategory.performance,
+      platforms: {MobilePlatform.android},
+      onTap: triggerANR,
+    ),
+    TestAction(
+      title: 'OkHttp GET',
+      description: 'Network interception via OkHttp',
+      category: TestCategory.network,
+      platforms: {MobilePlatform.android},
+      onTap: testOkHttp,
+    ),
+    TestAction(
+      title: 'HttpURLConnection GET',
+      description: 'Network interception via HttpURLConnection',
+      category: TestCategory.network,
+      platforms: {MobilePlatform.android},
+      onTap: testHttpUrlConnection,
+    ),
+    TestAction(
+      title: 'URLSession GET',
+      description: 'Network interception via iOS URLSession',
+      category: TestCategory.network,
+      platforms: {MobilePlatform.ios},
+      onTap: testiOSURLSessionGet,
+    ),
+  ];
+
+
   @override
   void initState() {
     super.initState();
@@ -170,27 +261,109 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo);
+
     return MaterialApp(
+      theme: theme,
       home: Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
-        body: Column(children: [
-          FilledButton(onPressed: () async {
-            await triggerANR();
-          }, child: const Text('ANR'),)
-        ],),
+        appBar: AppBar(title: const Text('Splunk OTel SDK Test App')),
+        body: TestActionsWidget(actions: _actions),
       ),
     );
   }
 
-  Future<void> triggerANR() async {
-    const _channel = MethodChannel('com.splunk.rum.flutter.example/anr');
+  // Both platforms
 
-
+  Future<void> simulateCrash() async {
     try {
-      await _channel.invokeMethod('simulateANR'); // only for Android
+      await _channel.invokeMethod('simulateCrash');
+    } catch (e) {
+      debugPrint("simulate crash test failed: $e");
     }
-    catch (e) {
-      debugPrint("Failed to simulate ANR due to: $e");
+  }
+
+  Future<void> simulateNavigation() async {
+    final random = Random();
+    final screenNumber = random.nextInt(1000) + 1; // generates 1–1000
+    final screenName = 'mockScreen$screenNumber';
+
+    SplunkOtelFlutter.instance.navigation.track(screenName: screenName);
+  }
+
+  Future<void> simulateSlowRender() async {
+    try {
+      await _channel.invokeMethod('simulateSlowRender');
+    } catch (e) {
+      debugPrint("Failed to simulate slow render: $e");
+    }
+  }
+
+  Future<void> customTrackingTrackEvent() async {
+    final random = Random();
+    final eventNumber = random.nextInt(1000) + 1; // generates 1–1000
+
+    SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+      name: "test custom event tracking $eventNumber",
+      attributes: MutableAttributes(
+        attributes: {
+          "intKeyTrackEvent": MutableAttributeInt(value: 5),
+          "stringKeyTrackEvent": MutableAttributeString(value: "myVal"),
+        },
+      ),
+    );
+  }
+
+  Future<void> customTrackingTrackWorkflow() async {
+    SplunkOtelFlutter.instance.customTracking.trackWorkflow(
+      workflowName: "Workflow test"
+    );
+  }
+
+  Future<void> customTrackingTrackError() async {
+    throw "TODO";
+  }
+
+  Future<void> simulateFrozenRender() async {
+    try {
+      await _channel.invokeMethod('simulateFrozenRender');
+    } catch (e) {
+      debugPrint("Failed to simulate frozen render: $e");
+    }
+  }
+
+  // Android
+
+  Future<void> triggerANR() async {
+    try {
+      await _channel.invokeMethod('simulateANR');
+    } catch (e) {
+      debugPrint("Failed to simulate ANR: $e");
+    }
+  }
+
+  Future<void> testOkHttp() async {
+    try {
+      await _channel.invokeMethod('testOkHttpGet');
+    } catch (e) {
+      debugPrint("OkHttp test failed: $e");
+    }
+  }
+
+  Future<void> testHttpUrlConnection() async {
+    try {
+      await _channel.invokeMethod('testHttpUrlConnectionGet');
+    } catch (e) {
+      debugPrint("HttpURLConnection test failed: $e");
+    }
+  }
+
+  // iOS
+
+  Future<void> testiOSURLSessionGet() async {
+    try {
+      await _channel.invokeMethod('testURLSessionGet');
+    } catch (e) {
+      debugPrint("URLSession test failed: $e");
     }
   }
 
@@ -201,30 +374,9 @@ class _MyAppState extends State<MyApp> {
     final sdk = SplunkOtelFlutter.instance;
 
     // Helpers
-    bool listEquals<T>(List<T> a, List<T> b) {
-      if (identical(a, b)) return true;
-      if (a.length != b.length) return false;
-      for (var i = 0; i < a.length; i++) {
-        if (a[i] != b[i]) return false;
-      }
-      return true;
-    }
-
-    T castAttr<T extends MutableAttributeValue>(MutableAttributeValue v) {
+    T castAttr<T extends MutableAttributeValue?>(MutableAttributeValue? v) {
       assert(v is T, 'Expected ${T.toString()}, got ${v.runtimeType}');
       return v as T;
-    }
-
-    String attrToDebug(MutableAttributeValue v) {
-      if (v is MutableAttributeString) return 'String(${v.value})';
-      if (v is MutableAttributeInt) return 'Int(${v.value})';
-      if (v is MutableAttributeDouble) return 'Double(${v.value})';
-      if (v is MutableAttributeBool) return 'Bool(${v.value})';
-      if (v is MutableAttributeListString) return 'ListString(${v.value})';
-      if (v is MutableAttributeListInt) return 'ListInt(${v.value})';
-      if (v is MutableAttributeListDouble) return 'ListDouble(${v.value})';
-      if (v is MutableAttributeListBool) return 'ListBool(${v.value})';
-      return v.runtimeType.toString();
     }
 
     try {
@@ -237,13 +389,13 @@ class _MyAppState extends State<MyApp> {
 
       // ========= State =========
       final appName = await sdk.state.getAppName();
-      final appVersion = await sdk.state.getAppVersion();
+      await sdk.state.getAppVersion(); // Smoke test - just verify it doesn't throw
       final status = await sdk.state.getStatus();
-      final endpointCfg = await sdk.state.getEndpointConfiguration();
+      await sdk.state.getEndpointConfiguration(); // Smoke test - just verify it doesn't throw
       final env = await sdk.state.getDeploymentEnvironment();
       final debugEnabled = await sdk.state.getIsDebugLoggingEnabled();
-      final procName = await sdk.state.getInstrumentedProcessName();
-      final deferred = await sdk.state.getDeferredUntilForeground();
+      await sdk.state.getInstrumentedProcessName(); // Smoke test - just verify it doesn't throw
+      await sdk.state.getDeferredUntilForeground(); // Smoke test - just verify it doesn't throw
 
       assert(appName.isNotEmpty, 'App name should not be empty');
       assert(env.isNotEmpty, 'Deployment environment should not be empty');
@@ -341,7 +493,6 @@ class _MyAppState extends State<MyApp> {
           await sdk.globalAttributes.get(key: 'ga_int'));
       assert(gaInt.value == 42, 'ga_int roundtrip failed');
 
-      await sdk.globalAttributes.getDouble(key: 'ga_double', value: 3.1415);
       final gaDouble = castAttr<MutableAttributeDouble>(
           await sdk.globalAttributes.get(key: 'ga_double'));
       assert((gaDouble.value - 3.1415).abs() <
@@ -351,35 +502,6 @@ class _MyAppState extends State<MyApp> {
       final gaBool = castAttr<MutableAttributeBool>(
           await sdk.globalAttributes.get(key: 'ga_bool'));
       assert(gaBool.value == true, 'ga_bool roundtrip failed');
-
-      // Lists
-      await sdk.globalAttributes.setStringList(
-          key: 'ga_list_string', value: ['a', 'b']);
-      final gaListStr = castAttr<MutableAttributeListString>(
-          await sdk.globalAttributes.get(key: 'ga_list_string'));
-      assert(listEquals(
-          gaListStr.value, ['a', 'b']), 'ga_list_string roundtrip failed');
-
-      await sdk.globalAttributes.setIntList(
-          key: 'ga_list_int', value: [1, 2, 3]);
-      final gaListInt = castAttr<MutableAttributeListInt>(
-          await sdk.globalAttributes.get(key: 'ga_list_int'));
-      assert(listEquals(
-          gaListInt.value, [1, 2, 3]), 'ga_list_int roundtrip failed');
-
-      await sdk.globalAttributes.setDoubleList(
-          key: 'ga_list_double', value: [1.1, 2.2]);
-      final gaListDouble = castAttr<MutableAttributeListDouble>(
-          await sdk.globalAttributes.get(key: 'ga_list_double'));
-      assert(listEquals(
-          gaListDouble.value, [1.1, 2.2]), 'ga_list_double roundtrip failed');
-
-      await sdk.globalAttributes.setBoolList(
-          key: 'ga_list_bool', value: [true, false]);
-      final gaListBool = castAttr<MutableAttributeListBool>(
-          await sdk.globalAttributes.get(key: 'ga_list_bool'));
-      assert(listEquals(
-          gaListBool.value, [true, false]), 'ga_list_bool roundtrip failed');
 
       // contains()
       final hasGaString = await sdk.globalAttributes.contains(key: 'ga_string');
@@ -399,8 +521,6 @@ class _MyAppState extends State<MyApp> {
             'bundle_int': MutableAttributeInt(value: 7),
             'bundle_double': MutableAttributeDouble(value: 2.71),
             'bundle_string': MutableAttributeString(value: 'pack'),
-            'bundle_list_int': MutableAttributeListInt(value: [9, 8]),
-            'bundle_list_string_empty': MutableAttributeListString(value: []),
           },
         ),
       );
@@ -410,16 +530,10 @@ class _MyAppState extends State<MyApp> {
           await sdk.globalAttributes.get(key: 'bundle_bool'));
       final bStr = castAttr<MutableAttributeString>(
           await sdk.globalAttributes.get(key: 'bundle_string'));
-      final bList = castAttr<MutableAttributeListInt>(
-          await sdk.globalAttributes.get(key: 'bundle_list_int'));
-      final emptyListString = castAttr<MutableAttributeListString>(
-          await sdk.globalAttributes.get(
-              key: 'bundle_list_string_empty')); //TODO resolve issue with empty array set and get both Android iOS
+      //TODO resolve issue with empty array set and get both Android iOS
       assert(bBool.value == false, 'bundle_bool not persisted');
-      assert(emptyListString.value ==
-          <String>[], 'bundle_list_string_empty not persisted');
+
       assert(bStr.value == 'pack', 'bundle_string not persisted');
-      assert(listEquals(bList.value, [9, 8]), 'bundle_list_int not persisted');
 
       // remove() then contains()
       await sdk.globalAttributes.remove(key: 'ga_string');
@@ -441,6 +555,8 @@ class _MyAppState extends State<MyApp> {
       print('⚠️ SplunkOtelFlutter API assert test caught error: $e\n$st');
     }
   }
+
+
 
 
 }

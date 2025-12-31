@@ -23,7 +23,7 @@ void main() {
     test('should create with minimal required fields and defaults', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -34,8 +34,8 @@ void main() {
       // Assert
       expect(config.appName, 'TestApp');
       expect(config.deploymentEnvironment, 'production');
-      expect(config.endpoint.realm, 'us0');
-      expect(config.endpoint.rumAccessToken, 'token');
+      expect(config.endpointConfiguration.realm, 'us0');
+      expect(config.endpointConfiguration.rumAccessToken, 'token');
       expect(config.appVersion, isNull);
       expect(config.enableDebugLogging, false);
       expect(config.user.trackingMode, UserTrackingMode.noTracking);
@@ -47,7 +47,7 @@ void main() {
     test('should create without user configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -64,7 +64,7 @@ void main() {
     test('should create without session configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -81,7 +81,7 @@ void main() {
     test('should create with custom user configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -99,7 +99,7 @@ void main() {
     test('should create with custom session configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -115,7 +115,7 @@ void main() {
     test('should create with all optional fields', () {
       // Act
       final config = AgentConfiguration(
-        endpoint: EndpointConfiguration.forRum(
+        endpointConfiguration: EndpointConfiguration.forRum(
           realm: 'eu0',
           rumAccessToken: 'token-123',
         ),

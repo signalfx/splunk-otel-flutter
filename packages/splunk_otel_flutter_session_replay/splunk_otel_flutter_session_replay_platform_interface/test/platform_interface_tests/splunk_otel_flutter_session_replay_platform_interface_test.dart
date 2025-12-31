@@ -14,5 +14,22 @@
  * limitations under the License.
  */
 
-void main(){
+import 'package:flutter_test/flutter_test.dart';
+import 'package:splunk_otel_flutter_session_replay_platform_interface/platform_interface/splunk_otel_flutter_session_replay_platform_interface.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('SplunkOtelFlutterSessionReplayPlatformInterface', () {
+    test('should have a default instance', () {
+      expect(SplunkOtelFlutterSessionReplayPlatformInterface.instance, isNotNull);
+    });
+
+    test('instance should be of correct type', () {
+      expect(
+        SplunkOtelFlutterSessionReplayPlatformInterface.instance,
+        isA<SplunkOtelFlutterSessionReplayPlatformInterface>(),
+      );
+    });
+  });
 }

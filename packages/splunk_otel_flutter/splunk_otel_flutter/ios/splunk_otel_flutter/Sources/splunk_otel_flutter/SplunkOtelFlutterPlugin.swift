@@ -33,6 +33,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     
     private var didFinishLaunchingAt: Date?
     private var willEnterForegroundAt: Date?
+    private var workflowSpans: [String: (span: Span, startTime: Int64)] = [:]
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SplunkOtelFlutterPlugin()
@@ -480,7 +481,22 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     }
     
     func customTrackingTrackWorkflow(workflowName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.customTracking.trackWorkflow(workflowName)
+        if let existingWorkflow = workflowSpans[workflowName] {
+            // Second call: End the workflow
+            let endTime = Int64(Date().timeIntervalSince1970 * 1000)
+            
+            existingWorkflow.span.setAttribute(key: "workflow.start.time", value: AttributeValue.int(Int(existingWorkflow.startTime)))
+            existingWorkflow.span.setAttribute(key: "workflow.end.time", value: AttributeValue.int(Int(endTime)))
+            existingWorkflow.span.end()
+            
+            workflowSpans.removeValue(forKey: workflowName)
+        } else {
+            // First call: Start the workflow
+            let span = SplunkRum.shared.customTracking.trackWorkflow(workflowName)
+            let startTime = Int64(Date().timeIntervalSince1970 * 1000)
+            
+            workflowSpans[workflowName] = (span: span, startTime: startTime)
+        }
         
         completion(.success(()))
     }
