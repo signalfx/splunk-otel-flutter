@@ -193,7 +193,7 @@ void main() {
 
   group('MutableAttributes', () {
     test('should create empty attributes', () {
-      final attributes = MutableAttributes();
+      final attributes = const MutableAttributes();
       expect(attributes.attributes, isEmpty);
     });
 

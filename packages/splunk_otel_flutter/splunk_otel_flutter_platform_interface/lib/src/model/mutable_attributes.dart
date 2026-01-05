@@ -19,7 +19,7 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 class MutableAttributes {
   final Map<String, MutableAttributeValue> attributes;
 
-  MutableAttributes({this.attributes = const {}});
+  const MutableAttributes({this.attributes = const {}});
 }
 
 abstract class MutableAttributeValue {}

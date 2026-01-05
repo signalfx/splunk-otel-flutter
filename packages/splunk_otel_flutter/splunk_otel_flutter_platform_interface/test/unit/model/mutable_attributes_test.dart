@@ -21,7 +21,7 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 void main() {
   group('MutableAttributes', () {
     test('should create empty attributes', () {
-      final attributes = MutableAttributes();
+      final attributes = const MutableAttributes();
 
       expect(attributes.attributes, isEmpty);
     });
@@ -150,7 +150,7 @@ void main() {
 
   group('MutableAttributes Conversion to Generated', () {
     test('should convert empty attributes', () {
-      final attributes = MutableAttributes();
+      final attributes = const MutableAttributes();
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes, isEmpty);
@@ -306,7 +306,7 @@ void main() {
     });
 
     test('should handle empty attributes round-trip', () {
-      final original = MutableAttributes();
+      final original = const MutableAttributes();
       final generated = original.toGeneratedMutableAttributes();
       final converted = generated.toMutableAttributes();
 

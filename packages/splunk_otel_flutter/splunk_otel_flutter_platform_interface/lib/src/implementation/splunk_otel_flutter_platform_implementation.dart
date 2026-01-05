@@ -329,7 +329,7 @@ class SplunkOtelFlutterPlatformImplementation
   Future<MutableAttributes> globalAttributesGetAll() async {
     final generatedAttributes = await _api.globalAttributesGetAll();
 
-    return generatedAttributes?.toMutableAttributes() ?? MutableAttributes();
+    return generatedAttributes?.toMutableAttributes() ?? const MutableAttributes();
   }
 
   @override

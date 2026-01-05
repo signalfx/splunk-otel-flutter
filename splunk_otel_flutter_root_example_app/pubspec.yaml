@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   splunk_otel_flutter: ^0.0.1
-  splunk_otel_flutter_session_replay: ^0.0.1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -25,3 +24,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - res/images/
+    - res/movie_images/cover/
+    - res/movie_images/detail/

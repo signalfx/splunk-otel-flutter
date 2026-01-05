@@ -5,7 +5,7 @@ class CustomTracking {
 
   Future<void> trackCustomEvent({
     required String name,
-    required MutableAttributes attributes,
+    MutableAttributes attributes = const MutableAttributes(),
   }) async =>
       await _delegate.customTrackingTrackCustomEvent(
         name: name,

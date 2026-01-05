@@ -53,7 +53,7 @@ void main() {
     });
 
     test('should export MutableAttributes', () {
-      final attrs = MutableAttributes();
+      final attrs = const MutableAttributes();
       expect(attrs, isA<MutableAttributes>());
     });
 
