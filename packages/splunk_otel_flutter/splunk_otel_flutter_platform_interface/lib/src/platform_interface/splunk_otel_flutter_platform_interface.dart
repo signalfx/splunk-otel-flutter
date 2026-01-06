@@ -58,6 +58,10 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<String?> stateGetInstrumentedProcessName();
   Future<bool> stateGetDeferredUntilForeground();
 
+  // Preferences
+
+  Future<EndpointConfiguration?> preferencesGetEndpointConfiguration();
+
   // Session
 
   Future<String> sessionStateGetId();

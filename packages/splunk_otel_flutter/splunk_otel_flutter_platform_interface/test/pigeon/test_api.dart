@@ -236,6 +236,8 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<bool> stateGetDeferredUntilForeground();
 
+  Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration();
+
   Future<String> sessionStateGetId();
 
   Future<double> sessionStateGetSamplingRate();
@@ -619,6 +621,25 @@ abstract class TestSplunkOtelFlutterHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           try {
             final bool output = await api.stateGetDeferredUntilForeground();
+            return <Object?>[output];
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          try {
+            final GeneratedEndpointConfiguration? output = await api.preferencesGetEndpointConfiguration();
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

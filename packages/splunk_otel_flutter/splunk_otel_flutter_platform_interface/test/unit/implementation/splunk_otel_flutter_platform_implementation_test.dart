@@ -195,6 +195,28 @@ void main() {
       });
     });
 
+    group('Preferences', () {
+      test('should get preferences endpoint configuration', () async {
+        mockApi.preferencesGetEndpointConfigurationHandler = () async {
+          return GeneratedEndpointConfiguration(
+            realm: 'ap0',
+            rumAccessToken: 'pref-token-456',
+          );
+        };
+
+        final endpoint = await implementation.preferencesGetEndpointConfiguration();
+        expect(endpoint?.realm, 'ap0');
+        expect(endpoint?.rumAccessToken, 'pref-token-456');
+      });
+
+      test('should handle null preferences endpoint configuration', () async {
+        mockApi.preferencesGetEndpointConfigurationHandler = () async => null;
+
+        final endpoint = await implementation.preferencesGetEndpointConfiguration();
+        expect(endpoint, isNull);
+      });
+    });
+
     group('Session Replay', () {
       test('should start session replay', () async {
         bool called = false;

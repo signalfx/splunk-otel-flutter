@@ -17,6 +17,7 @@
 import 'package:splunk_otel_flutter/src/custom_tracking.dart';
 import 'package:splunk_otel_flutter/src/global_attributes.dart';
 import 'package:splunk_otel_flutter/src/navigation.dart';
+import 'package:splunk_otel_flutter/src/preferences.dart';
 import 'package:splunk_otel_flutter/src/session.dart';
 import 'package:splunk_otel_flutter/src/session_replay.dart';
 import 'package:splunk_otel_flutter/src/state.dart';
@@ -39,6 +40,7 @@ class SplunkOtelFlutter {
   final globalAttributes = GlobalAttributes();
   final customTracking = CustomTracking();
   final navigation = Navigation();
+  final preferences = Preferences();
 
   Future<void> install({
     required AgentConfiguration agentConfiguration,

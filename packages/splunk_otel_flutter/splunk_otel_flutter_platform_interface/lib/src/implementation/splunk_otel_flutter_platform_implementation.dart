@@ -210,6 +210,18 @@ class SplunkOtelFlutterPlatformImplementation
     return generatedStatus.toStatus();
   }
 
+  // Preferences
+
+  @override
+  Future<EndpointConfiguration?> preferencesGetEndpointConfiguration() async {
+    final genEndpointConfig = await _api.preferencesGetEndpointConfiguration();
+
+    return genEndpointConfig?.toEndpointConfiguration();
+  }
+
+
+
+
   // Session Replay
 
   @override

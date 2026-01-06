@@ -305,6 +305,14 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(false))
     }
     
+    // MARK: - Preferences
+    
+    func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, any Error>) -> Void) {
+        let endpointConfiguration = SplunkRum.shared.preference
+        
+        completion(.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
+    }
+    
     // MARK: - Session
     
     func sessionStateGetId(completion: @escaping (Result<String, any Error>) -> Void) {

@@ -1152,6 +1152,7 @@ protocol SplunkOtelFlutterHostApi {
   func stateGetIsDebugLoggingEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func stateGetInstrumentedProcessName(completion: @escaping (Result<String?, Error>) -> Void)
   func stateGetDeferredUntilForeground(completion: @escaping (Result<Bool, Error>) -> Void)
+  func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
   func sessionStateGetId(completion: @escaping (Result<String, Error>) -> Void)
   func sessionStateGetSamplingRate(completion: @escaping (Result<Double, Error>) -> Void)
   func userStateGetUserTrackingMode(completion: @escaping (Result<GeneratedUserTrackingMode, Error>) -> Void)
@@ -1451,6 +1452,21 @@ class SplunkOtelFlutterHostApiSetup {
       }
     } else {
       stateGetDeferredUntilForegroundChannel.setMessageHandler(nil)
+    }
+    let preferencesGetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      preferencesGetEndpointConfigurationChannel.setMessageHandler { _, reply in
+        api.preferencesGetEndpointConfiguration { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      preferencesGetEndpointConfigurationChannel.setMessageHandler(nil)
     }
     let sessionStateGetIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

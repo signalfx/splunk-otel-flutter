@@ -58,6 +58,8 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   Future<String?> Function()? stateGetInstrumentedProcessNameHandler;
   Future<bool> Function()? stateGetDeferredUntilForegroundHandler;
 
+  Future<GeneratedEndpointConfiguration?> Function()? preferencesGetEndpointConfigurationHandler;
+
   Future<String> Function()? sessionStateGetIdHandler;
   Future<double> Function()? sessionStateGetSamplingRateHandler;
 
@@ -403,5 +405,13 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
       return navigationTrackHandler!(screenName);
     }
   }
-  
+
+  @override
+  Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration() async {
+    if (preferencesGetEndpointConfigurationHandler != null) {
+      return preferencesGetEndpointConfigurationHandler!();
+    }
+    return null;
+  }
+
 }

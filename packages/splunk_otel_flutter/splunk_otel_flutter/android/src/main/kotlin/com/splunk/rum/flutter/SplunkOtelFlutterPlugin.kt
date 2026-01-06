@@ -320,6 +320,14 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(deferredUntilForeground))
     }
 
+    // Preferences
+
+    override fun preferencesGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit) {
+        val endpointConfiguration = SplunkRum.instance.preferences.endpointConfiguration
+
+        callback(Result.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
+    }
+
     // Session
 
     override fun sessionStateGetId(callback: (Result<String>) -> Unit) {

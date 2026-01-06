@@ -1277,6 +1277,7 @@ interface SplunkOtelFlutterHostApi {
   fun stateGetIsDebugLoggingEnabled(callback: (Result<Boolean>) -> Unit)
   fun stateGetInstrumentedProcessName(callback: (Result<String?>) -> Unit)
   fun stateGetDeferredUntilForeground(callback: (Result<Boolean>) -> Unit)
+  fun preferencesGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit)
   fun sessionStateGetId(callback: (Result<String>) -> Unit)
   fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit)
   fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit)
@@ -1612,6 +1613,24 @@ interface SplunkOtelFlutterHostApi {
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             api.stateGetDeferredUntilForeground{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.preferencesGetEndpointConfiguration{ result: Result<GeneratedEndpointConfiguration?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
