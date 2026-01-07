@@ -11,6 +11,9 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
+  // Measure install duration
+  final stopwatch = Stopwatch()..start();
+  
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
       endpointConfiguration: EndpointConfiguration.forRum(
@@ -22,6 +25,11 @@ void main() async {
     ),
     moduleConfigurations: [],
   );
+  
+  stopwatch.stop();
+  debugPrint('=============');
+  debugPrint('SplunkOtelFlutter.install() took: ${stopwatch.elapsedMilliseconds} ms');
+  debugPrint('=============');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkOtelFlutter.instance.session.state.getId();

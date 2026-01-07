@@ -30,6 +30,9 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
+  // Measure install duration
+  final stopwatch = Stopwatch()..start();
+
   await SplunkOtelFlutter.instance.install(
     agentConfiguration: AgentConfiguration(
       endpointConfiguration: EndpointConfiguration.forRum(
@@ -56,20 +59,28 @@ void main() async {
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
       InteractionsModuleConfiguration(isEnabled: false),
-      SlowRenderingModuleConfiguration(isEnabled: false, interval: const Duration(seconds: 1)),
+      SlowRenderingModuleConfiguration(
+        isEnabled: false,
+        interval: const Duration(seconds: 1),
+      ),
       AnrModuleConfiguration(isEnabled: false),
-      CrashReportsModuleConfiguration(isEnabled: false)
+      CrashReportsModuleConfiguration(isEnabled: false),
     ],
   );
 
+  stopwatch.stop();
+  debugPrint('=============');
+  debugPrint(
+    'SplunkOtelFlutter.install() took: ${stopwatch.elapsedMilliseconds} ms',
+  );
+  debugPrint('=============');
+
   await SplunkOtelFlutter.instance.sessionReplay.start();
 
-  Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
-    final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
+  final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
 
-    debugPrint('-------------');
-    debugPrint('Session id: $sessionId');
-  });
+  debugPrint('-------------');
+  debugPrint('Session id: $sessionId');
 
   runApp(const MyApp());
 }

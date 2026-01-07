@@ -21,6 +21,7 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import java.util.concurrent.CountDownLatch
 import com.splunk.rum.flutter.extensions.toEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedMutableAttributes
@@ -192,7 +193,7 @@ class SplunkOtelFlutterPlugin :
             }
 
             //ANR module forces install to run on main thread
-            Handler(Looper.getMainLooper()).post {
+            runOnMainThreadSync {
                 SplunkRum.install(
                     application = activity!!.application,
                     agentConfiguration = agentConfiguration,
@@ -204,7 +205,6 @@ class SplunkOtelFlutterPlugin :
             callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))
             return
         }
-
 
         callback(Result.success(Unit))
     }
@@ -548,5 +548,37 @@ class SplunkOtelFlutterPlugin :
         SplunkRum.instance.navigation.track(screenName)
 
         callback(Result.success(Unit))
+    }
+}
+
+/**
+ * Executes the given block synchronously on the main thread.
+ * If already on the main thread, executes immediately to avoid deadlock.
+ * Otherwise, posts to the main thread and blocks until execution completes.
+ * If an exception occurs on the main thread, it will be re-thrown on the calling thread.
+ */
+private fun runOnMainThreadSync(block: () -> Unit) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        // Already on main thread - execute immediately to avoid deadlock
+        block()
+    } else {
+        // On a background thread - post to main and wait
+        val latch = CountDownLatch(1)
+        var throwable: Throwable? = null
+        
+        Handler(Looper.getMainLooper()).post {
+            try {
+                block()
+            } catch (e: Throwable) {
+                throwable = e
+            } finally {
+                latch.countDown()
+            }
+        }
+        
+        latch.await()
+        
+        // Re-throw any exception that occurred on the main thread
+        throwable?.let { throw it }
     }
 }
