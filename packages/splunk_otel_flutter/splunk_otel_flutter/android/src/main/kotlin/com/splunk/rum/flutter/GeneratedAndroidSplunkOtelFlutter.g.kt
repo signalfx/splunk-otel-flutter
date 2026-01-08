@@ -78,6 +78,22 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
+enum class GeneratedRegexOption(val raw: Int) {
+  CASE_INSENSITIVE(0),
+  ALLOW_COMMENTS_AND_WHITESPACE(1),
+  IGNORE_METACHARACTERS(2),
+  DOT_MATCHES_LINE_SEPARATORS(3),
+  ANCHORS_MATCH_LINES(4),
+  USE_UNIX_LINE_SEPARATORS(5),
+  USE_UNICODE_WORD_BOUNDARIES(6);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedRegexOption? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class GeneratedUserTrackingMode(val raw: Int) {
   NO_TRACKING(0),
   ANONYMOUS_TRACKING(1);
@@ -204,6 +220,90 @@ data class GeneratedNavigationModuleConfiguration (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedCrashReportsModuleConfiguration (
+  val isEnabled: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedCrashReportsModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      return GeneratedCrashReportsModuleConfiguration(isEnabled)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedCrashReportsModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedInteractionsModuleConfiguration (
+  val isEnabled: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedInteractionsModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      return GeneratedInteractionsModuleConfiguration(isEnabled)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedInteractionsModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedNetworkMonitorModuleConfiguration (
+  val isEnabled: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedNetworkMonitorModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      return GeneratedNetworkMonitorModuleConfiguration(isEnabled)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedNetworkMonitorModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedAnrModuleConfiguration (
   val isEnabled: Boolean
 )
@@ -221,6 +321,136 @@ data class GeneratedAnrModuleConfiguration (
   }
   override fun equals(other: Any?): Boolean {
     if (other !is GeneratedAnrModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedHttpUrlModuleConfiguration (
+  val isEnabled: Boolean,
+  val capturedRequestHeaders: List<String>,
+  val capturedResponseHeaders: List<String>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedHttpUrlModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      val capturedRequestHeaders = pigeonVar_list[1] as List<String>
+      val capturedResponseHeaders = pigeonVar_list[2] as List<String>
+      return GeneratedHttpUrlModuleConfiguration(isEnabled, capturedRequestHeaders, capturedResponseHeaders)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedHttpUrlModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedOkHttp3AutoModuleConfiguration (
+  val isEnabled: Boolean,
+  val capturedRequestHeaders: List<String>,
+  val capturedResponseHeaders: List<String>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedOkHttp3AutoModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      val capturedRequestHeaders = pigeonVar_list[1] as List<String>
+      val capturedResponseHeaders = pigeonVar_list[2] as List<String>
+      return GeneratedOkHttp3AutoModuleConfiguration(isEnabled, capturedRequestHeaders, capturedResponseHeaders)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedOkHttp3AutoModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedNetworkInstrumentationModuleConfiguration (
+  val isEnabled: Boolean,
+  val ignoreURLs: List<GeneratedRegularExpression>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedNetworkInstrumentationModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      val ignoreURLs = pigeonVar_list[1] as List<GeneratedRegularExpression>
+      return GeneratedNetworkInstrumentationModuleConfiguration(isEnabled, ignoreURLs)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+      ignoreURLs,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedNetworkInstrumentationModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRegularExpression (
+  val pattern: String,
+  val options: List<GeneratedRegexOption?>? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRegularExpression {
+      val pattern = pigeonVar_list[0] as String
+      val options = pigeonVar_list[1] as List<GeneratedRegexOption?>?
+      return GeneratedRegularExpression(pattern, options)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      pattern,
+      options,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRegularExpression) {
       return false
     }
     if (this === other) {
@@ -731,120 +961,160 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedUserTrackingMode.ofRaw(it.toInt())
+          GeneratedRegexOption.ofRaw(it.toInt())
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedSessionReplayStatus.ofRaw(it.toInt())
+          GeneratedUserTrackingMode.ofRaw(it.toInt())
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedRenderingMode.ofRaw(it.toInt())
+          GeneratedSessionReplayStatus.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedRecordingMaskType.ofRaw(it.toInt())
+          GeneratedRenderingMode.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedStatus.ofRaw(it.toInt())
+          GeneratedRecordingMaskType.ofRaw(it.toInt())
         }
       }
       134.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSlowRenderingModuleConfiguration.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedStatus.ofRaw(it.toInt())
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedNavigationModuleConfiguration.fromList(it)
+          GeneratedSlowRenderingModuleConfiguration.fromList(it)
         }
       }
       136.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAnrModuleConfiguration.fromList(it)
+          GeneratedNavigationModuleConfiguration.fromList(it)
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAgentConfiguration.fromList(it)
+          GeneratedCrashReportsModuleConfiguration.fromList(it)
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedEndpointConfiguration.fromList(it)
+          GeneratedInteractionsModuleConfiguration.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedUserConfiguration.fromList(it)
+          GeneratedNetworkMonitorModuleConfiguration.fromList(it)
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSessionConfiguration.fromList(it)
+          GeneratedAnrModuleConfiguration.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRecordingMaskList.fromList(it)
+          GeneratedHttpUrlModuleConfiguration.fromList(it)
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRecordingMaskElement.fromList(it)
+          GeneratedOkHttp3AutoModuleConfiguration.fromList(it)
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRect.fromList(it)
+          GeneratedNetworkInstrumentationModuleConfiguration.fromList(it)
         }
       }
       144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributes.fromList(it)
+          GeneratedRegularExpression.fromList(it)
         }
       }
       145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeInt.fromList(it)
+          GeneratedAgentConfiguration.fromList(it)
         }
       }
       146.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeDouble.fromList(it)
+          GeneratedEndpointConfiguration.fromList(it)
         }
       }
       147.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeString.fromList(it)
+          GeneratedUserConfiguration.fromList(it)
         }
       }
       148.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeBool.fromList(it)
+          GeneratedSessionConfiguration.fromList(it)
         }
       }
       149.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListInt.fromList(it)
+          GeneratedRecordingMaskList.fromList(it)
         }
       }
       150.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListDouble.fromList(it)
+          GeneratedRecordingMaskElement.fromList(it)
         }
       }
       151.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListString.fromList(it)
+          GeneratedRect.fromList(it)
         }
       }
       152.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributes.fromList(it)
+        }
+      }
+      153.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeInt.fromList(it)
+        }
+      }
+      154.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeDouble.fromList(it)
+        }
+      }
+      155.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeString.fromList(it)
+        }
+      }
+      156.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeBool.fromList(it)
+        }
+      }
+      157.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListInt.fromList(it)
+        }
+      }
+      158.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListDouble.fromList(it)
+        }
+      }
+      159.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListString.fromList(it)
+        }
+      }
+      160.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListBool.fromList(it)
         }
@@ -854,100 +1124,132 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is GeneratedUserTrackingMode -> {
+      is GeneratedRegexOption -> {
         stream.write(129)
         writeValue(stream, value.raw)
       }
-      is GeneratedSessionReplayStatus -> {
+      is GeneratedUserTrackingMode -> {
         stream.write(130)
         writeValue(stream, value.raw)
       }
-      is GeneratedRenderingMode -> {
+      is GeneratedSessionReplayStatus -> {
         stream.write(131)
         writeValue(stream, value.raw)
       }
-      is GeneratedRecordingMaskType -> {
+      is GeneratedRenderingMode -> {
         stream.write(132)
         writeValue(stream, value.raw)
       }
-      is GeneratedStatus -> {
+      is GeneratedRecordingMaskType -> {
         stream.write(133)
         writeValue(stream, value.raw)
       }
-      is GeneratedSlowRenderingModuleConfiguration -> {
+      is GeneratedStatus -> {
         stream.write(134)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is GeneratedNavigationModuleConfiguration -> {
+      is GeneratedSlowRenderingModuleConfiguration -> {
         stream.write(135)
         writeValue(stream, value.toList())
       }
-      is GeneratedAnrModuleConfiguration -> {
+      is GeneratedNavigationModuleConfiguration -> {
         stream.write(136)
         writeValue(stream, value.toList())
       }
-      is GeneratedAgentConfiguration -> {
+      is GeneratedCrashReportsModuleConfiguration -> {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is GeneratedEndpointConfiguration -> {
+      is GeneratedInteractionsModuleConfiguration -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is GeneratedUserConfiguration -> {
+      is GeneratedNetworkMonitorModuleConfiguration -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is GeneratedSessionConfiguration -> {
+      is GeneratedAnrModuleConfiguration -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is GeneratedRecordingMaskList -> {
+      is GeneratedHttpUrlModuleConfiguration -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is GeneratedRecordingMaskElement -> {
+      is GeneratedOkHttp3AutoModuleConfiguration -> {
         stream.write(142)
         writeValue(stream, value.toList())
       }
-      is GeneratedRect -> {
+      is GeneratedNetworkInstrumentationModuleConfiguration -> {
         stream.write(143)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributes -> {
+      is GeneratedRegularExpression -> {
         stream.write(144)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeInt -> {
+      is GeneratedAgentConfiguration -> {
         stream.write(145)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeDouble -> {
+      is GeneratedEndpointConfiguration -> {
         stream.write(146)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeString -> {
+      is GeneratedUserConfiguration -> {
         stream.write(147)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeBool -> {
+      is GeneratedSessionConfiguration -> {
         stream.write(148)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListInt -> {
+      is GeneratedRecordingMaskList -> {
         stream.write(149)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListDouble -> {
+      is GeneratedRecordingMaskElement -> {
         stream.write(150)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListString -> {
+      is GeneratedRect -> {
         stream.write(151)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListBool -> {
+      is GeneratedMutableAttributes -> {
         stream.write(152)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeInt -> {
+        stream.write(153)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeDouble -> {
+        stream.write(154)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeString -> {
+        stream.write(155)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeBool -> {
+        stream.write(156)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListInt -> {
+        stream.write(157)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListDouble -> {
+        stream.write(158)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListString -> {
+        stream.write(159)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListBool -> {
+        stream.write(160)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -958,7 +1260,7 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterHostApi {
-  fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, callback: (Result<Unit>) -> Unit)
+  fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, callback: (Result<Unit>) -> Unit)
   fun sessionReplayStart(callback: (Result<Unit>) -> Unit)
   fun sessionReplayStop(callback: (Result<Unit>) -> Unit)
   fun sessionReplayStateGetStatus(callback: (Result<GeneratedSessionReplayStatus>) -> Unit)
@@ -975,6 +1277,7 @@ interface SplunkOtelFlutterHostApi {
   fun stateGetIsDebugLoggingEnabled(callback: (Result<Boolean>) -> Unit)
   fun stateGetInstrumentedProcessName(callback: (Result<String?>) -> Unit)
   fun stateGetDeferredUntilForeground(callback: (Result<Boolean>) -> Unit)
+  fun preferencesGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit)
   fun sessionStateGetId(callback: (Result<String>) -> Unit)
   fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit)
   fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit)
@@ -994,6 +1297,9 @@ interface SplunkOtelFlutterHostApi {
   fun globalAttributesSetDoubleList(key: String, value: List<Double>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetBoolList(key: String, value: List<Boolean>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetAll(value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
+  fun customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
+  fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit)
+  fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterHostApi. */
@@ -1012,8 +1318,14 @@ interface SplunkOtelFlutterHostApi {
             val agentConfigurationArg = args[0] as GeneratedAgentConfiguration
             val navigationModuleConfigurationArg = args[1] as GeneratedNavigationModuleConfiguration?
             val slowRenderingModuleConfigurationArg = args[2] as GeneratedSlowRenderingModuleConfiguration?
-            val anrModuleConfigurationArg = args[3] as GeneratedAnrModuleConfiguration?
-            api.install(agentConfigurationArg, navigationModuleConfigurationArg, slowRenderingModuleConfigurationArg, anrModuleConfigurationArg) { result: Result<Unit> ->
+            val crashReportsModuleConfigurationArg = args[3] as GeneratedCrashReportsModuleConfiguration?
+            val interactionsModuleConfigurationArg = args[4] as GeneratedInteractionsModuleConfiguration?
+            val networkMonitorModuleConfigurationArg = args[5] as GeneratedNetworkMonitorModuleConfiguration?
+            val anrModuleConfigurationArg = args[6] as GeneratedAnrModuleConfiguration?
+            val httpUrlModuleConfigurationArg = args[7] as GeneratedHttpUrlModuleConfiguration?
+            val okHttp3AutoModuleConfigurationArg = args[8] as GeneratedOkHttp3AutoModuleConfiguration?
+            val networkInstrumentationModuleConfigurationArg = args[9] as GeneratedNetworkInstrumentationModuleConfiguration?
+            api.install(agentConfigurationArg, navigationModuleConfigurationArg, slowRenderingModuleConfigurationArg, crashReportsModuleConfigurationArg, interactionsModuleConfigurationArg, networkMonitorModuleConfigurationArg, anrModuleConfigurationArg, httpUrlModuleConfigurationArg, okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfigurationArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
@@ -1301,6 +1613,24 @@ interface SplunkOtelFlutterHostApi {
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             api.stateGetDeferredUntilForeground{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.preferencesGetEndpointConfiguration{ result: Result<GeneratedEndpointConfiguration?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
@@ -1666,6 +1996,64 @@ interface SplunkOtelFlutterHostApi {
             val args = message as List<Any?>
             val valueArg = args[0] as GeneratedMutableAttributes
             api.globalAttributesSetAll(valueArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val nameArg = args[0] as String
+            val attributesArg = args[1] as GeneratedMutableAttributes
+            api.customTrackingTrackCustomEvent(nameArg, attributesArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val workflowNameArg = args[0] as String
+            api.customTrackingTrackWorkflow(workflowNameArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val screenNameArg = args[0] as String
+            api.navigationTrack(screenNameArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

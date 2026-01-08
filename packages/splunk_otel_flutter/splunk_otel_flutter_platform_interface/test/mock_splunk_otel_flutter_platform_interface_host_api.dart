@@ -23,25 +23,100 @@ import 'pigeon/test_api.dart';
 class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlutterHostApi {
   Future<void> Function(
       GeneratedAgentConfiguration agentConfiguration,
+
+      // Core configurations
       GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
       GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+      GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
+      GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
+      GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+
+      // Android-only configurations
+      GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+      GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+      GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+
+      // iOS-only configurations
+      GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
       )? installHandler;
 
   Future<void> Function()? sessionReplayStartHandler;
-  Future<String> Function()? getSessionIdHandler;
+  Future<void> Function()? sessionReplayStopHandler;
+  Future<GeneratedSessionReplayStatus> Function()? sessionReplayStateGetStatusHandler;
+  Future<GeneratedRenderingMode> Function()? sessionReplayStateGetRenderingModeHandler;
+  Future<GeneratedRenderingMode?> Function()? sessionReplayPreferencesGetRenderingModeHandler;
+  Future<void> Function(GeneratedRenderingMode?)? sessionReplayPreferencesSetRenderingModeHandler;
+  Future<GeneratedRecordingMaskList?> Function()? sessionReplayGetRecordingMaskHandler;
+  Future<void> Function(GeneratedRecordingMaskList?)? sessionReplaySetRecordingMaskHandler;
+
+  Future<String> Function()? stateGetAppNameHandler;
+  Future<String> Function()? stateGetAppVersionHandler;
+  Future<GeneratedStatus> Function()? stateGetStatusHandler;
+  Future<GeneratedEndpointConfiguration> Function()? stateGetEndpointConfigurationHandler;
+  Future<String> Function()? stateGetDeploymentEnvironmentHandler;
+  Future<bool> Function()? stateGetIsDebugLoggingEnabledHandler;
+  Future<String?> Function()? stateGetInstrumentedProcessNameHandler;
+  Future<bool> Function()? stateGetDeferredUntilForegroundHandler;
+
+  Future<GeneratedEndpointConfiguration?> Function()? preferencesGetEndpointConfigurationHandler;
+
+  Future<String> Function()? sessionStateGetIdHandler;
+  Future<double> Function()? sessionStateGetSamplingRateHandler;
+
+  Future<GeneratedUserTrackingMode> Function()? userStateGetUserTrackingModeHandler;
+  Future<GeneratedUserTrackingMode?> Function()? userPreferencesGetUserTrackingModeHandler;
+  Future<void> Function(GeneratedUserTrackingMode)? userPreferencesSetUserTrackingModeHandler;
+
+  Future<Object?> Function(String)? globalAttributesGetHandler;
+  Future<GeneratedMutableAttributes?> Function()? globalAttributesGetAllHandler;
+  Future<void> Function(String)? globalAttributesRemoveHandler;
+  Future<void> Function()? globalAttributesRemoveAllHandler;
+  Future<bool> Function(String)? globalAttributesContainsHandler;
+  Future<void> Function(String, String)? globalAttributesSetStringHandler;
+  Future<void> Function(String, int)? globalAttributesSetIntHandler;
+  Future<void> Function(String, double)? globalAttributesSetDoubleHandler;
+  Future<void> Function(String, bool)? globalAttributesSetBoolHandler;
+  Future<void> Function(String, List<String>)? globalAttributesSetStringListHandler;
+  Future<void> Function(String, List<int>)? globalAttributesSetIntListHandler;
+  Future<void> Function(String, List<double>)? globalAttributesSetDoubleListHandler;
+  Future<void> Function(String, List<bool>)? globalAttributesSetBoolListHandler;
+  Future<void> Function(GeneratedMutableAttributes)? globalAttributesSetAllHandler;
+
+  Future<void> Function(String, GeneratedMutableAttributes)? customTrackingTrackCustomEventHandler;
+  Future<void> Function(String)? customTrackingTrackWorkflowHandler;
+
+  Future<void> Function(String)? navigationTrackHandler;
 
   @override
   Future<void> install({
     required GeneratedAgentConfiguration agentConfiguration,
+    // Core configurations
     required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
     required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+
+    // Android-only configurations
     required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+
+    // iOS-only configurations
+    required GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
   }) async {
     if (installHandler != null) {
       return installHandler!(
         agentConfiguration,
         navigationModuleConfiguration,
         slowRenderingModuleConfiguration,
+        crashReportsModuleConfiguration,
+        interactionsModuleConfiguration,
+        networkMonitorModuleConfiguration,
+        anrModuleConfiguration,
+        httpUrlModuleConfiguration,
+        okHttp3AutoModuleConfiguration,
+        networkInstrumentationModuleConfiguration,
       );
     }
   }
@@ -54,207 +129,289 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<bool> globalAttributesContains({required String key}) {
-    // TODO: implement globalAttributesContains
-    throw UnimplementedError();
+  Future<void> sessionReplayStop() async {
+    if (sessionReplayStopHandler != null) {
+      return sessionReplayStopHandler!();
+    }
   }
 
   @override
-  Future<dynamic> globalAttributesGet({required String key}) {
-    // TODO: implement globalAttributesGet
-    throw UnimplementedError();
+  Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() async {
+    if (sessionReplayStateGetStatusHandler != null) {
+      return sessionReplayStateGetStatusHandler!();
+    }
+    return GeneratedSessionReplayStatus.notStarted;
   }
 
   @override
-  Future<GeneratedMutableAttributes?> globalAttributesGetAll() {
-    // TODO: implement globalAttributesGetAll
-    throw UnimplementedError();
+  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() async {
+    if (sessionReplayStateGetRenderingModeHandler != null) {
+      return sessionReplayStateGetRenderingModeHandler!();
+    }
+    return GeneratedRenderingMode.native;
   }
 
   @override
-  Future<void> globalAttributesRemove({required String key}) {
-    // TODO: implement globalAttributesRemove
-    throw UnimplementedError();
+  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
+    if (sessionReplayPreferencesGetRenderingModeHandler != null) {
+      return sessionReplayPreferencesGetRenderingModeHandler!();
+    }
+    return null;
   }
 
   @override
-  Future<void> globalAttributesRemoveAll() {
-    // TODO: implement globalAttributesRemoveAll
-    throw UnimplementedError();
+  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) async {
+    if (sessionReplayPreferencesSetRenderingModeHandler != null) {
+      return sessionReplayPreferencesSetRenderingModeHandler!(renderingMode);
+    }
   }
 
   @override
-  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) {
-    // TODO: implement globalAttributesSetAll
-    throw UnimplementedError();
+  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() async {
+    if (sessionReplayGetRecordingMaskHandler != null) {
+      return sessionReplayGetRecordingMaskHandler!();
+    }
+    return null;
   }
 
   @override
-  Future<void> globalAttributesSetBool({required String key, required bool? value}) {
-    // TODO: implement globalAttributesSetBool
-    throw UnimplementedError();
+  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) async {
+    if (sessionReplaySetRecordingMaskHandler != null) {
+      return sessionReplaySetRecordingMaskHandler!(recordingMask);
+    }
   }
 
   @override
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool>? value}) {
-    // TODO: implement globalAttributesSetBoolList
-    throw UnimplementedError();
+  Future<String> stateGetAppName() async {
+    if (stateGetAppNameHandler != null) {
+      return stateGetAppNameHandler!();
+    }
+    return 'MockApp';
   }
 
   @override
-  Future<void> globalAttributesSetDouble({required String key, required double? value}) {
-    // TODO: implement globalAttributesSetDouble
-    throw UnimplementedError();
+  Future<String> stateGetAppVersion() async {
+    if (stateGetAppVersionHandler != null) {
+      return stateGetAppVersionHandler!();
+    }
+    return '1.0.0';
   }
 
   @override
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double>? value}) {
-    // TODO: implement globalAttributesSetDoubleList
-    throw UnimplementedError();
+  Future<GeneratedStatus> stateGetStatus() async {
+    if (stateGetStatusHandler != null) {
+      return stateGetStatusHandler!();
+    }
+    return GeneratedStatus.running;
   }
 
   @override
-  Future<void> globalAttributesSetInt({required String key, required int? value}) {
-    // TODO: implement globalAttributesSetInt
-    throw UnimplementedError();
+  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration() async {
+    if (stateGetEndpointConfigurationHandler != null) {
+      return stateGetEndpointConfigurationHandler!();
+    }
+    return GeneratedEndpointConfiguration(realm: 'us0', rumAccessToken: 'token');
   }
 
   @override
-  Future<void> globalAttributesSetIntList({required String key, required List<int>? value}) {
-    // TODO: implement globalAttributesSetIntList
-    throw UnimplementedError();
+  Future<String> stateGetDeploymentEnvironment() async {
+    if (stateGetDeploymentEnvironmentHandler != null) {
+      return stateGetDeploymentEnvironmentHandler!();
+    }
+    return 'production';
   }
 
   @override
-  Future<void> globalAttributesSetString({required String key, required String? value}) {
-    // TODO: implement globalAttributesSetString
-    throw UnimplementedError();
+  Future<bool> stateGetIsDebugLoggingEnabled() async {
+    if (stateGetIsDebugLoggingEnabledHandler != null) {
+      return stateGetIsDebugLoggingEnabledHandler!();
+    }
+    return false;
   }
 
   @override
-  Future<void> globalAttributesSetStringList({required String key, required List<String>? value}) {
-    // TODO: implement globalAttributesSetStringList
-    throw UnimplementedError();
+  Future<String?> stateGetInstrumentedProcessName() async {
+    if (stateGetInstrumentedProcessNameHandler != null) {
+      return stateGetInstrumentedProcessNameHandler!();
+    }
+    return null;
   }
 
   @override
-  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() {
-    // TODO: implement sessionReplayGetRecordingMask
-    throw UnimplementedError();
+  Future<bool> stateGetDeferredUntilForeground() async {
+    if (stateGetDeferredUntilForegroundHandler != null) {
+      return stateGetDeferredUntilForegroundHandler!();
+    }
+    return false;
   }
 
   @override
-  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() {
-    // TODO: implement sessionReplayPreferencesGetRenderingMode
-    throw UnimplementedError();
+  Future<String> sessionStateGetId() async {
+    if (sessionStateGetIdHandler != null) {
+      return sessionStateGetIdHandler!();
+    }
+    return 'session-id-123';
   }
 
   @override
-  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) {
-    // TODO: implement sessionReplayPreferencesSetRenderingMode
-    throw UnimplementedError();
+  Future<double> sessionStateGetSamplingRate() async {
+    if (sessionStateGetSamplingRateHandler != null) {
+      return sessionStateGetSamplingRateHandler!();
+    }
+    return 1.0;
   }
 
   @override
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) {
-    // TODO: implement sessionReplaySetRecordingMask
-    throw UnimplementedError();
+  Future<GeneratedUserTrackingMode> userStateGetUserTrackingMode() async {
+    if (userStateGetUserTrackingModeHandler != null) {
+      return userStateGetUserTrackingModeHandler!();
+    }
+    return GeneratedUserTrackingMode.noTracking;
   }
 
   @override
-  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() {
-    // TODO: implement sessionReplayStateGetRenderingMode
-    throw UnimplementedError();
+  Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode() async {
+    if (userPreferencesGetUserTrackingModeHandler != null) {
+      return userPreferencesGetUserTrackingModeHandler!();
+    }
+    return null;
   }
 
   @override
-  Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() {
-    // TODO: implement sessionReplayStateGetStatus
-    throw UnimplementedError();
+  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode}) async {
+    if (userPreferencesSetUserTrackingModeHandler != null) {
+      return userPreferencesSetUserTrackingModeHandler!(trackingMode);
+    }
   }
 
   @override
-  Future<void> sessionReplayStop() {
-    // TODO: implement sessionReplayStop
-    throw UnimplementedError();
+  Future<Object?> globalAttributesGet({required String key}) async {
+    if (globalAttributesGetHandler != null) {
+      return globalAttributesGetHandler!(key);
+    }
+    return null;
   }
 
   @override
-  Future<String> sessionStateGetId() {
-    // TODO: implement sessionStateGetId
-    throw UnimplementedError();
+  Future<GeneratedMutableAttributes?> globalAttributesGetAll() async {
+    if (globalAttributesGetAllHandler != null) {
+      return globalAttributesGetAllHandler!();
+    }
+    return null;
   }
 
   @override
-  Future<double> sessionStateGetSamplingRate() {
-    // TODO: implement sessionStateGetSamplingRate
-    throw UnimplementedError();
+  Future<void> globalAttributesRemove({required String key}) async {
+    if (globalAttributesRemoveHandler != null) {
+      return globalAttributesRemoveHandler!(key);
+    }
   }
 
   @override
-  Future<String> stateGetAppName() {
-    // TODO: implement stateGetAppName
-    throw UnimplementedError();
+  Future<void> globalAttributesRemoveAll() async {
+    if (globalAttributesRemoveAllHandler != null) {
+      return globalAttributesRemoveAllHandler!();
+    }
   }
 
   @override
-  Future<String> stateGetAppVersion() {
-    // TODO: implement stateGetAppVersion
-    throw UnimplementedError();
+  Future<bool> globalAttributesContains({required String key}) async {
+    if (globalAttributesContainsHandler != null) {
+      return globalAttributesContainsHandler!(key);
+    }
+    return false;
   }
 
   @override
-  Future<bool> stateGetDeferredUntilForeground() {
-    // TODO: implement stateGetDeferredUntilForeground
-    throw UnimplementedError();
+  Future<void> globalAttributesSetString({required String key, required String value}) async {
+    if (globalAttributesSetStringHandler != null) {
+      return globalAttributesSetStringHandler!(key, value);
+    }
   }
 
   @override
-  Future<String> stateGetDeploymentEnvironment() {
-    // TODO: implement stateGetDeploymentEnvironment
-    throw UnimplementedError();
+  Future<void> globalAttributesSetInt({required String key, required int value}) async {
+    if (globalAttributesSetIntHandler != null) {
+      return globalAttributesSetIntHandler!(key, value);
+    }
   }
 
   @override
-  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration() {
-    // TODO: implement stateGetEndpointConfiguration
-    throw UnimplementedError();
+  Future<void> globalAttributesSetDouble({required String key, required double value}) async {
+    if (globalAttributesSetDoubleHandler != null) {
+      return globalAttributesSetDoubleHandler!(key, value);
+    }
   }
 
   @override
-  Future<String?> stateGetInstrumentedProcessName() {
-    // TODO: implement stateGetInstrumentedProcessName
-    throw UnimplementedError();
+  Future<void> globalAttributesSetBool({required String key, required bool value}) async {
+    if (globalAttributesSetBoolHandler != null) {
+      return globalAttributesSetBoolHandler!(key, value);
+    }
   }
 
   @override
-  Future<bool> stateGetIsDebugLoggingEnabled() {
-    // TODO: implement stateGetIsDebugLoggingEnabled
-    throw UnimplementedError();
+  Future<void> globalAttributesSetStringList({required String key, required List<String> value}) async {
+    if (globalAttributesSetStringListHandler != null) {
+      return globalAttributesSetStringListHandler!(key, value);
+    }
   }
 
   @override
-  Future<GeneratedStatus> stateGetStatus() {
-    // TODO: implement stateGetStatus
-    throw UnimplementedError();
+  Future<void> globalAttributesSetIntList({required String key, required List<int> value}) async {
+    if (globalAttributesSetIntListHandler != null) {
+      return globalAttributesSetIntListHandler!(key, value);
+    }
   }
 
   @override
-  Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode() {
-    // TODO: implement userPreferencesGetUserTrackingMode
-    throw UnimplementedError();
+  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value}) async {
+    if (globalAttributesSetDoubleListHandler != null) {
+      return globalAttributesSetDoubleListHandler!(key, value);
+    }
   }
 
   @override
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode? trackingMode}) {
-    // TODO: implement userPreferencesSetUserTrackingMode
-    throw UnimplementedError();
+  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value}) async {
+    if (globalAttributesSetBoolListHandler != null) {
+      return globalAttributesSetBoolListHandler!(key, value);
+    }
   }
 
   @override
-  Future<GeneratedUserTrackingMode> userStateGetUserTrackingMode() {
-    // TODO: implement userStateGetUserTrackingMode
-    throw UnimplementedError();
+  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) async {
+    if (globalAttributesSetAllHandler != null) {
+      return globalAttributesSetAllHandler!(value);
+    }
   }
-  
+
+  @override
+  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes}) async {
+    if (customTrackingTrackCustomEventHandler != null) {
+      return customTrackingTrackCustomEventHandler!(name, attributes);
+    }
+  }
+
+  @override
+  Future<void> customTrackingTrackWorkflow({required String workflowName}) async {
+    if (customTrackingTrackWorkflowHandler != null) {
+      return customTrackingTrackWorkflowHandler!(workflowName);
+    }
+  }
+
+  @override
+  Future<void> navigationTrack({required String screenName}) async {
+    if (navigationTrackHandler != null) {
+      return navigationTrackHandler!(screenName);
+    }
+  }
+
+  @override
+  Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration() async {
+    if (preferencesGetEndpointConfigurationHandler != null) {
+      return preferencesGetEndpointConfigurationHandler!();
+    }
+    return null;
+  }
+
 }

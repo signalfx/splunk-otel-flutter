@@ -8,7 +8,8 @@ pluginManagement {
             flutterSdkPath
         }
 
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+    // do not use "includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")" it breaks gradle sync
+    includeBuild(file("$flutterSdkPath/packages/flutter_tools/gradle").toPath().toRealPath().toAbsolutePath().toString())
 
     repositories {
         google()

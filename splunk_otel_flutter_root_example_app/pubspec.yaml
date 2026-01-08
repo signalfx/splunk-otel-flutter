@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.0
-  flutter: '>=3.3.0'
+  sdk: ^3.8.0
+  flutter: '>=3.32.0'
 
 resolution: workspace
 
@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   splunk_otel_flutter: ^0.0.1
-  splunk_otel_flutter_session_replay: ^0.0.1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -25,3 +24,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - res/images/
+    - res/movie_images/cover/
+    - res/movie_images/detail/

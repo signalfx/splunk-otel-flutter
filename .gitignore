@@ -18,7 +18,6 @@ migrate_working_dir/
 *.iws
 .idea/
 .run/Flutter_Run_splunk_otel_flutter_example'.run.xml
-Flutter Run -_ 'splunk_otel_flutter_example'.run.xml
 
 
 # gradle
@@ -26,6 +25,7 @@ Flutter Run -_ 'splunk_otel_flutter_example'.run.xml
 gradlew
 gradlew.bat
 gradle-wrapper.jar
+**/gradle/wrapper/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -38,5 +38,6 @@ gradle-wrapper.jar
 **/doc/api/
 .dart_tool/
 .flutter-plugins-dependencies
-/build/
+build/
 /coverage/
+/.run/Flutter Run -_ 'splunk_otel_flutter_example'.run.xml

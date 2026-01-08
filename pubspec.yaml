@@ -1,7 +1,7 @@
 name: splunk_otel_workspace
 publish_to: none
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 
 workspace:
   # Main Plugin
@@ -24,16 +24,16 @@ dev_dependencies:
 melos:
   scripts:
     analyze:
-      run: dart analyze --fatal-warnings .
+      run: melos exec -- dart analyze --fatal-warnings .
       description: Run Dart analyzer across all packages.
     test:
-      run: flutter test
       description: Run tests across all packages.
+      run: melos exec --dir-exists=test --fail-fast --ignore="*example*" -- flutter test
     format:
-      run: dart format .
+      run: melos exec -- dart format .
       description: Format code across all packages.
     clean:
-      run: flutter clean
+      run: melos exec -- flutter clean
       description: Clean Flutter builds across all packages.
     
       # Script to generate Pigeon code for all interface packages.

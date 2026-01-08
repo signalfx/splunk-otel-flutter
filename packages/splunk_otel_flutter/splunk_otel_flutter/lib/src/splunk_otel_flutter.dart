@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import 'package:splunk_otel_flutter/src/custom_tracking.dart';
 import 'package:splunk_otel_flutter/src/global_attributes.dart';
+import 'package:splunk_otel_flutter/src/navigation.dart';
 import 'package:splunk_otel_flutter/src/session.dart';
 import 'package:splunk_otel_flutter/src/session_replay.dart';
 import 'package:splunk_otel_flutter/src/state.dart';
@@ -35,8 +37,9 @@ class SplunkOtelFlutter {
   final user = User();
   final sessionReplay = SessionReplay();
   final globalAttributes = GlobalAttributes();
+  final customTracking = CustomTracking();
+  final navigation = Navigation();
 
-  // TODO Android needs App so we will need to attach app from flutter engine
   Future<void> install({
     required AgentConfiguration agentConfiguration,
     required List<ModuleConfiguration> moduleConfigurations,

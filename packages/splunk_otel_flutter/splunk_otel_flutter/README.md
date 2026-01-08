@@ -1,15 +1,56 @@
-# splunk_otel_flutter_session_replay
+# splunk_otel_flutter
 
-A new Flutter project.
+> ⚠️ **Alpha Release**: This package is currently in alpha. APIs may change, and it is not recommended for production use.
 
-## Getting Started
+Splunk OpenTelemetry instrumentation for Flutter applications. This package enables real-time monitoring, tracing, and observability for your Flutter apps using Splunk Observability Cloud.
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 🔍 Distributed tracing
+- 📊 Performance monitoring (slow rendering, ANR detection)
+- 🐛 Crash reporting
+- 🌐 Network request instrumentation
+- 📱 Navigation tracking
+- 🔧 Custom event tracking
+- 📝 Global attributes management
+- 👤 User tracking modes
 
+## Usage
+
+```dart
+import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SplunkOtelFlutter.instance.install(
+    agentConfiguration: AgentConfiguration(
+      endpointConfiguration: EndpointConfiguration.forRum(
+        realm: 'your-realm',
+        rumAccessToken: 'your-rum-access-token',
+      ),
+      appName: 'Your App name',
+      deploymentEnvironment: 'dev',
+    ),
+    moduleConfigurations: [
+      NavigationModuleConfiguration(isEnabled: true),
+      SlowRenderingModuleConfiguration(isEnabled: true),
+      AnrModuleConfiguration(isEnabled: true),
+      CrashReportsModuleConfiguration(isEnabled: true),
+    ],
+  );
+
+  runApp(MyApp());
+}
+```
+
+## Requirements
+
+- Flutter SDK: `>=3.32.0`
+- Dart SDK: `>=3.8.0 <4.0.0`
+- iOS: 15.0+
+- Android: API level 24+
+
+## Documentation
+
+For detailed documentation, visit the [Flutter instrumentation guide](https://help.splunk.com/en/appdynamics-saas/end-user-monitoring/25.5.0/end-user-monitoring/mobile-real-user-monitoring/instrument-flutter-applications).

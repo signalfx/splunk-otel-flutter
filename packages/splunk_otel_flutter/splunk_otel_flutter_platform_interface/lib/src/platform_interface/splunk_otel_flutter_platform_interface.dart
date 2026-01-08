@@ -37,6 +37,7 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
 
   // Session replay
+
   Future<void> sessionReplayStart();
   Future<void> sessionReplayStop();
   Future<SessionReplayStatus> sessionReplayStateGetStatus();
@@ -47,6 +48,7 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> sessionReplaySetRecordingMask({required RecordingMaskList recordingMask});
 
   // State
+
   Future<String> stateGetAppName();
   Future<String> stateGetAppVersion();
   Future<Status> stateGetStatus();
@@ -56,17 +58,24 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<String?> stateGetInstrumentedProcessName();
   Future<bool> stateGetDeferredUntilForeground();
 
+  // Preferences
+
+  Future<EndpointConfiguration?> preferencesGetEndpointConfiguration();
+
   // Session
+
   Future<String> sessionStateGetId();
   Future<double> sessionStateGetSamplingRate();
 
   // User
+
   Future<UserTrackingMode> userStateGetUserTrackingMode();
   Future<UserTrackingMode?> userPreferencesGetUserTrackingMode();
   Future<void> userPreferencesSetUserTrackingMode({required UserTrackingMode userTrackingMode});
 
   // Global attributes
-  Future<MutableAttributeValue> globalAttributesGet({required String key});
+
+  Future<MutableAttributeValue?> globalAttributesGet({required String key});
   Future<MutableAttributes> globalAttributesGetAll();
   Future<void> globalAttributesRemove({required String key});
   Future<void> globalAttributesRemoveAll();
@@ -80,4 +89,13 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
   Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
   Future<void> globalAttributesSetAll({required MutableAttributes attributes});
- }
+
+  // Custom tracking
+
+  Future<void> customTrackingTrackCustomEvent({required String name,required MutableAttributes attributes});
+  Future<void> customTrackingTrackWorkflow({required String workflowName});
+
+  // Navigation
+
+  Future<void> navigationTrack({required String screenName});
+}

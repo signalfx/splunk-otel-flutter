@@ -17,14 +17,29 @@ import 'package:pigeon/pigeon.dart';
 @HostApi(dartHostTestHandler: 'TestSplunkOtelFlutterHostApi')
 abstract class SplunkOtelFlutterHostApi {
   @async
-  void install({
-    required GeneratedAgentConfiguration agentConfiguration,
-    required GeneratedNavigationModuleConfiguration?
-        navigationModuleConfiguration,
-    required GeneratedSlowRenderingModuleConfiguration?
-        slowRenderingModuleConfiguration,
-    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
-  });
+  void install(
+      {required GeneratedAgentConfiguration agentConfiguration,
+      // Core configurations
+      required GeneratedNavigationModuleConfiguration?
+          navigationModuleConfiguration,
+      required GeneratedSlowRenderingModuleConfiguration?
+          slowRenderingModuleConfiguration,
+      required GeneratedCrashReportsModuleConfiguration?
+          crashReportsModuleConfiguration,
+      required GeneratedInteractionsModuleConfiguration?
+          interactionsModuleConfiguration,
+      required GeneratedNetworkMonitorModuleConfiguration?
+          networkMonitorModuleConfiguration,
+
+      // Android-only configurations
+      required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+      required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+      required GeneratedOkHttp3AutoModuleConfiguration?
+          okHttp3AutoModuleConfiguration,
+
+      // iOS-only configurations
+      required GeneratedNetworkInstrumentationModuleConfiguration?
+          networkInstrumentationModuleConfiguration});
 
   // Session replay
 
@@ -81,6 +96,11 @@ abstract class SplunkOtelFlutterHostApi {
 
   @async
   bool stateGetDeferredUntilForeground();
+
+  // Preferences
+
+  @async
+  GeneratedEndpointConfiguration? preferencesGetEndpointConfiguration();
 
   // Session
 
@@ -150,9 +170,22 @@ abstract class SplunkOtelFlutterHostApi {
 
   @async
   void globalAttributesSetAll({required GeneratedMutableAttributes value});
+
+  // Custom tracking
+
+  @async
+  void customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes});
+
+  @async
+  void customTrackingTrackWorkflow({required String workflowName});
+
+  // Navigation
+
+  @async
+  void navigationTrack({required String screenName});
 }
 
-// Modules
+// Configurations
 
 class GeneratedSlowRenderingModuleConfiguration {
   final bool isEnabled;
@@ -174,11 +207,92 @@ class GeneratedNavigationModuleConfiguration {
   });
 }
 
+class GeneratedCrashReportsModuleConfiguration {
+  final bool isEnabled;
+
+  GeneratedCrashReportsModuleConfiguration({
+    required this.isEnabled,
+  });
+}
+
+class GeneratedInteractionsModuleConfiguration {
+  final bool isEnabled;
+
+  GeneratedInteractionsModuleConfiguration({
+    required this.isEnabled,
+  });
+}
+
+class GeneratedNetworkMonitorModuleConfiguration {
+  final bool isEnabled;
+
+  GeneratedNetworkMonitorModuleConfiguration({
+    required this.isEnabled,
+  });
+}
+
+// ANDROID ONLY
+
 class GeneratedAnrModuleConfiguration {
   final bool isEnabled;
 
   GeneratedAnrModuleConfiguration({
     required this.isEnabled,
+  });
+}
+
+class GeneratedHttpUrlModuleConfiguration {
+  final bool isEnabled;
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
+
+  GeneratedHttpUrlModuleConfiguration({
+    required this.isEnabled,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
+  });
+}
+
+class GeneratedOkHttp3AutoModuleConfiguration {
+  final bool isEnabled;
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
+
+  GeneratedOkHttp3AutoModuleConfiguration({
+    required this.isEnabled,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
+  });
+}
+
+// iOS ONLY
+class GeneratedNetworkInstrumentationModuleConfiguration {
+  final bool isEnabled;
+  final List<GeneratedRegularExpression> ignoreURLs;
+
+  GeneratedNetworkInstrumentationModuleConfiguration({
+    required this.isEnabled,
+    required this.ignoreURLs,
+  });
+}
+
+enum GeneratedRegexOption {
+  caseInsensitive,
+  allowCommentsAndWhitespace,
+  ignoreMetacharacters,
+  dotMatchesLineSeparators,
+  anchorsMatchLines,
+  useUnixLineSeparators,
+  useUnicodeWordBoundaries,
+}
+
+class GeneratedRegularExpression {
+  final String pattern;
+  final List<GeneratedRegexOption?>? options;
+
+  GeneratedRegularExpression({
+    required this.pattern,
+    required this.options,
   });
 }
 

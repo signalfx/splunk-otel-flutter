@@ -19,7 +19,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 class GlobalAttributes {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
-  Future<MutableAttributeValue> get({
+  Future<MutableAttributeValue?> get({
     required String key,
   }) async =>
       _delegate.globalAttributesGet(key: key);
@@ -52,7 +52,7 @@ class GlobalAttributes {
   }) async =>
       await _delegate.globalAttributesSetInt(key: key, value: value);
 
-  Future<void> etDouble({
+  Future<void> setDouble({
     required String key,
     required double value,
   }) async =>
@@ -64,6 +64,8 @@ class GlobalAttributes {
   }) async =>
       await _delegate.globalAttributesSetBool(key: key, value: value);
 
+  // Lists are currently set to private will be handled after first release
+/*
   Future<void> setStringList({
     required String key,
     required List<String> value,
@@ -87,6 +89,7 @@ class GlobalAttributes {
     required List<bool> value,
   }) async =>
       await _delegate.globalAttributesSetBoolList(key: key, value: value);
+*/
 
   Future<void> setAll(
           {required MutableAttributes attributes}) async =>

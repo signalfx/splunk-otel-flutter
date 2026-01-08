@@ -43,8 +43,8 @@ fun GeneratedEndpointConfiguration.toEndpointConfiguration(): EndpointConfigurat
 
 fun EndpointConfiguration.toGeneratedEndpointConfiguration(): GeneratedEndpointConfiguration {
     return GeneratedEndpointConfiguration(
-        traceEndpoint = this.tracesEndpoint?.toString(),
-        sessionReplayEndpoint = this.logsEndpoint?.toString(),
+        traceEndpoint = this.traceEndpoint.toString(),
+        sessionReplayEndpoint = this.sessionReplayEndpoint?.toString(),
         realm = this.realm,
         rumAccessToken = this.rumAccessToken
     )
