@@ -49,5 +49,8 @@ void main() async {
 - Flutter SDK: `>=3.32.0`
 - Dart SDK: `>=3.8.0 <4.0.0`
 - iOS: 15.0+
-- Android: API level 21+
+- Android: API level 24+
 
+## Documentation
+
+For detailed documentation, visit the [Flutter instrumentation guide](https://help.splunk.com/en/appdynamics-saas/end-user-monitoring/25.5.0/end-user-monitoring/mobile-real-user-monitoring/instrument-flutter-applications).
