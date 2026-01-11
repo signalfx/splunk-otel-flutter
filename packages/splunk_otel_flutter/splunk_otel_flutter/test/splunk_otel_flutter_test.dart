@@ -56,12 +56,6 @@ void main() {
       final attrs = const MutableAttributes();
       expect(attrs, isA<MutableAttributes>());
     });
-
-    test('should export session replay types', () {
-      expect(RenderingMode.native, isA<RenderingMode>());
-      expect(SessionReplayStatus.isRecording, isA<SessionReplayStatus>());
-      expect(RecordingMaskType.erasing, isA<RecordingMaskType>());
-    });
   });
 }
 

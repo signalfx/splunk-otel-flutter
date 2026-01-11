@@ -39,8 +39,6 @@ void main() async {
   });
 
 
-  await SplunkOtelFlutter.instance.sessionReplay.start();
-
   runApp(const DemoApp());
 }
 

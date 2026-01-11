@@ -25,14 +25,9 @@ import java.util.concurrent.CountDownLatch
 import com.splunk.rum.flutter.extensions.toEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedEndpointConfiguration
 import com.splunk.rum.flutter.extensions.toGeneratedMutableAttributes
-import com.splunk.rum.flutter.extensions.toGeneratedRecordingMaskList
-import com.splunk.rum.flutter.extensions.toGeneratedRenderingMode
-import com.splunk.rum.flutter.extensions.toGeneratedSessionReplayStatus
 import com.splunk.rum.flutter.extensions.toGeneratedStatus
 import com.splunk.rum.flutter.extensions.toGeneratedUserTrackingMode
 import com.splunk.rum.flutter.extensions.toMutableAttributes
-import com.splunk.rum.flutter.extensions.toRecordingMaskList
-import com.splunk.rum.flutter.extensions.toRenderingMode
 import com.splunk.rum.flutter.extensions.toUserTrackingMode
 import com.splunk.rum.flutter.extensions.wrapIntoGeneratedMutableAttribute
 import com.splunk.rum.integration.agent.api.AgentConfiguration
@@ -54,8 +49,6 @@ import com.splunk.rum.integration.navigation.extension.navigation
 import com.splunk.rum.integration.networkmonitor.NetworkMonitorModuleConfiguration
 import com.splunk.rum.integration.okhttp3.auto.OkHttp3AutoModuleConfiguration
 import com.splunk.rum.integration.okhttp3.manual.OkHttp3ManualModuleConfiguration
-import com.splunk.rum.integration.sessionreplay.SessionReplayModuleConfiguration
-import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import com.splunk.rum.integration.slowrendering.SlowRenderingModuleConfiguration
 import com.splunk.rum.integration.startup.StartupModuleConfiguration
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -205,62 +198,6 @@ class SplunkOtelFlutterPlugin :
             callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))
             return
         }
-
-        callback(Result.success(Unit))
-    }
-
-    // Session replay
-
-    override fun sessionReplayStart(callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.sessionReplay.start()
-
-        callback(Result.success(Unit))
-    }
-
-    override fun sessionReplayStop(callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.sessionReplay.stop()
-
-        callback(Result.success(Unit))
-    }
-
-    override fun sessionReplayStateGetStatus(callback: (Result<GeneratedSessionReplayStatus>) -> Unit) {
-        val status = SplunkRum.instance.sessionReplay.state.status
-
-        callback(Result.success(status.toGeneratedSessionReplayStatus()))
-    }
-
-    override fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit) {
-        val renderingMode = SplunkRum.instance.sessionReplay.state.renderingMode
-
-        callback(Result.success(renderingMode.toGeneratedRenderingMode()))
-    }
-
-    override fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit) {
-        val renderingMode = SplunkRum.instance.sessionReplay.preferences.renderingMode
-
-        callback(Result.success(renderingMode?.toGeneratedRenderingMode()))
-    }
-
-    override fun sessionReplayPreferencesSetRenderingMode(
-        renderingMode: GeneratedRenderingMode?,
-        callback: (Result<Unit>) -> Unit
-    ) {
-        SplunkRum.instance.sessionReplay.preferences.renderingMode = renderingMode?.toRenderingMode()
-
-        callback(Result.success(Unit))
-    }
-
-    override fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMaskList?>) -> Unit) {
-        val recordingMask = SplunkRum.instance.sessionReplay.recordingMask
-
-        callback(Result.success(recordingMask?.toGeneratedRecordingMaskList()))
-    }
-
-    override fun sessionReplaySetRecordingMask(
-        recordingMask: GeneratedRecordingMaskList?,
-        callback: (Result<Unit>) -> Unit
-    ) {
-        SplunkRum.instance.sessionReplay.recordingMask = recordingMask?.toRecordingMaskList()
 
         callback(Result.success(Unit))
     }

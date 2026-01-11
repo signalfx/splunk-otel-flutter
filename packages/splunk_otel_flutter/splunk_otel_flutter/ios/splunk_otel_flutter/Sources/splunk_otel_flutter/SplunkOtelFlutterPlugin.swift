@@ -207,58 +207,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(()))
     }
     
-    // Session replay
-    
-    // MARK: - Session Replay
-    
-    func sessionReplayStart(completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.start()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayStop(completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.stop()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, any Error>) -> Void) {
-        let status = SplunkRum.shared.sessionReplay.state.status
-        
-        completion(.success(status.toGeneratedSessionReplayStatus()))
-    }
-    
-    func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, any Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.state.renderingMode
-        
-        completion(.success(renderingMode.toGeneratedRenderingMode()))
-    }
-    
-    func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, any Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.preferences.renderingMode
-        
-        completion(.success(renderingMode?.toGeneratedRenderingMode()))
-    }
-    
-    func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.preferences.renderingMode = renderingMode?.toRenderingMode()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, any Error>) -> Void) {
-        let recordingMask = SplunkRum.shared.sessionReplay.recordingMask
-        
-        completion(.success(recordingMask?.toGeneratedRecordingMaskList()))
-    }
-    
-    func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.recordingMask = recordingMask?.toRecordingMask()
-        
-        completion(.success(()))
-    }
-    
     // MARK: - State
     
     func stateGetAppName(completion: @escaping (Result<String, any Error>) -> Void) {
