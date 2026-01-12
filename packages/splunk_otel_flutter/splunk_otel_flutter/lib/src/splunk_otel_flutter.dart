@@ -40,7 +40,7 @@ class SplunkOtelFlutter {
 
   Future<void> install({
     required AgentConfiguration agentConfiguration,
-    required List<ModuleConfiguration> moduleConfigurations,
+    List<ModuleConfiguration> moduleConfigurations = const [],
   }) async {
     await _delegate.install(
       agentConfiguration: agentConfiguration,

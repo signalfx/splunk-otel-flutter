@@ -23,7 +23,6 @@ void main() async {
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
     ),
-    moduleConfigurations: [],
   );
   
   stopwatch.stop();
