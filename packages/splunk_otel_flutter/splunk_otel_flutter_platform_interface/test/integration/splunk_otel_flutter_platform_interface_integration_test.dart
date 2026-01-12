@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
-import 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 import '../mock_splunk_otel_flutter_platform_interface_host_api.dart';
@@ -234,7 +231,6 @@ void main() {
           agentConfiguration: agentConfig,
           moduleConfigurations: [],
         );
-        await implementation.sessionReplayStart();
 
         // Assert
         expect(installCalled, true);
@@ -306,7 +302,7 @@ void main() {
           agentConfiguration: agentConfig,
           moduleConfigurations: [],
         );
-        await implementation.sessionReplayStart();
+
         final retrievedSessionId = await implementation.sessionStateGetId();
 
         // Assert
@@ -597,19 +593,6 @@ void main() {
         );
       });
 
-      test('should propagate errors during session replay start', () async {
-        // Arrange
-        mockApi.sessionReplayStartHandler = () async {
-          throw Exception('Session replay failed');
-        };
-
-        // Act & Assert
-        expect(
-              () => implementation.sessionReplayStart(),
-          throwsException,
-        );
-      });
-
       test('should propagate errors during getSessionId', () async {
         // Arrange
         mockApi.sessionStateGetIdHandler = () async {
@@ -772,91 +755,6 @@ void main() {
         };
 
         await implementation.globalAttributesSetAll(attributes: attributes);
-      });
-    });
-
-    group('Session Replay Integration', () {
-      test('should start and stop session replay', () async {
-        bool startCalled = false;
-        bool stopCalled = false;
-
-        mockApi.sessionReplayStartHandler = () async {
-          startCalled = true;
-        };
-
-        mockApi.sessionReplayStopHandler = () async {
-          stopCalled = true;
-        };
-
-        await implementation.sessionReplayStart();
-        await implementation.sessionReplayStop();
-
-        expect(startCalled, true);
-        expect(stopCalled, true);
-      });
-
-      test('should get session replay status', () async {
-        mockApi.sessionReplayStateGetStatusHandler = () async {
-          return GeneratedSessionReplayStatus.isRecording;
-        };
-
-        final status = await implementation.sessionReplayStateGetStatus();
-        expect(status, SessionReplayStatus.isRecording);
-      });
-
-      test('should get and set rendering mode preferences', () async {
-        mockApi.sessionReplayPreferencesGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.wireframeOnly;
-        };
-
-        mockApi.sessionReplayPreferencesSetRenderingModeHandler = (mode) async {
-          expect(mode, GeneratedRenderingMode.native);
-        };
-
-        final mode = await implementation.sessionReplayPreferencesGetRenderingMode();
-        expect(mode, RenderingMode.wireframeOnly);
-
-        await implementation.sessionReplayPreferencesSetRenderingMode(
-          renderingMode: RenderingMode.native,
-        );
-      });
-
-      test('should get state rendering mode', () async {
-        mockApi.sessionReplayStateGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.native;
-        };
-
-        final mode = await implementation.sessionReplayStateGetRenderingMode();
-        expect(mode, RenderingMode.native);
-      });
-
-      test('should get and set recording mask', () async {
-        final recordingMask = RecordingMaskList(elements: [
-          RecordingMaskElement(
-            rect: const Rect.fromLTWH(0, 0, 100, 100),
-            type: RecordingMaskType.erasing,
-          ),
-        ]);
-
-        mockApi.sessionReplaySetRecordingMaskHandler = (mask) async {
-          expect(mask?.recordingMaskList?.length, 1);
-          expect(mask?.recordingMaskList?.first.type, GeneratedRecordingMaskType.erasing);
-        };
-
-        mockApi.sessionReplayGetRecordingMaskHandler = () async {
-          return GeneratedRecordingMaskList(recordingMaskList: [
-            GeneratedRecordingMaskElement(
-              rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
-              type: GeneratedRecordingMaskType.erasing,
-            ),
-          ]);
-        };
-
-        await implementation.sessionReplaySetRecordingMask(recordingMask: recordingMask);
-        final result = await implementation.sessionReplayGetRecordingMask();
-
-        expect(result?.elements.length, 1);
-        expect(result?.elements.first.type, RecordingMaskType.erasing);
       });
     });
 

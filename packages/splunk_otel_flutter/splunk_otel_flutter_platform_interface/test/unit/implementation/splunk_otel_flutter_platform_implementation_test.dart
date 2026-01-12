@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
-import 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 import '../../mock_splunk_otel_flutter_platform_interface_host_api.dart';
@@ -214,100 +211,6 @@ void main() {
 
         final endpoint = await implementation.preferencesGetEndpointConfiguration();
         expect(endpoint, isNull);
-      });
-    });
-
-    group('Session Replay', () {
-      test('should start session replay', () async {
-        bool called = false;
-        mockApi.sessionReplayStartHandler = () async {
-          called = true;
-        };
-
-        await implementation.sessionReplayStart();
-        expect(called, true);
-      });
-
-      test('should stop session replay', () async {
-        bool called = false;
-        mockApi.sessionReplayStopHandler = () async {
-          called = true;
-        };
-
-        await implementation.sessionReplayStop();
-        expect(called, true);
-      });
-
-      test('should get session replay status', () async {
-        mockApi.sessionReplayStateGetStatusHandler = () async {
-          return GeneratedSessionReplayStatus.isRecording;
-        };
-
-        final status = await implementation.sessionReplayStateGetStatus();
-        expect(status, SessionReplayStatus.isRecording);
-      });
-
-      test('should get state rendering mode', () async {
-        mockApi.sessionReplayStateGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.wireframeOnly;
-        };
-
-        final mode = await implementation.sessionReplayStateGetRenderingMode();
-        expect(mode, RenderingMode.wireframeOnly);
-      });
-
-      test('should get preferences rendering mode', () async {
-        mockApi.sessionReplayPreferencesGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.native;
-        };
-
-        final mode = await implementation.sessionReplayPreferencesGetRenderingMode();
-        expect(mode, RenderingMode.native);
-      });
-
-      test('should set preferences rendering mode', () async {
-        GeneratedRenderingMode? receivedMode;
-        mockApi.sessionReplayPreferencesSetRenderingModeHandler = (mode) async {
-          receivedMode = mode;
-        };
-
-        await implementation.sessionReplayPreferencesSetRenderingMode(
-          renderingMode: RenderingMode.wireframeOnly,
-        );
-        expect(receivedMode, GeneratedRenderingMode.wireframeOnly);
-      });
-
-      test('should get recording mask', () async {
-        mockApi.sessionReplayGetRecordingMaskHandler = () async {
-          return GeneratedRecordingMaskList(recordingMaskList: [
-            GeneratedRecordingMaskElement(
-              rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
-              type: GeneratedRecordingMaskType.erasing,
-            ),
-          ]);
-        };
-
-        final mask = await implementation.sessionReplayGetRecordingMask();
-        expect(mask?.elements.length, 1);
-        expect(mask?.elements.first.type, RecordingMaskType.erasing);
-      });
-
-      test('should set recording mask', () async {
-        GeneratedRecordingMaskList? receivedMask;
-        mockApi.sessionReplaySetRecordingMaskHandler = (mask) async {
-          receivedMask = mask;
-        };
-
-        final recordingMask = RecordingMaskList(elements: [
-          RecordingMaskElement(
-            rect: const Rect.fromLTWH(0, 0, 100, 100),
-            type: RecordingMaskType.covering,
-          ),
-        ]);
-
-        await implementation.sessionReplaySetRecordingMask(recordingMask: recordingMask);
-        expect(receivedMask?.recordingMaskList?.length, 1);
-        expect(receivedMask?.recordingMaskList?.first.type, GeneratedRecordingMaskType.covering);
       });
     });
 

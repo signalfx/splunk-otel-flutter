@@ -41,36 +41,6 @@ abstract class SplunkOtelFlutterHostApi {
       required GeneratedNetworkInstrumentationModuleConfiguration?
           networkInstrumentationModuleConfiguration});
 
-  // Session replay
-
-  @async
-  void sessionReplayStart();
-
-  @async
-  void sessionReplayStop();
-
-  @async
-  GeneratedSessionReplayStatus sessionReplayStateGetStatus();
-
-  @async
-  GeneratedRenderingMode sessionReplayStateGetRenderingMode();
-
-  @async
-  GeneratedRenderingMode? sessionReplayPreferencesGetRenderingMode();
-
-  @async
-  void sessionReplayPreferencesSetRenderingMode({
-    required GeneratedRenderingMode? renderingMode,
-  });
-
-  @async
-  GeneratedRecordingMaskList? sessionReplayGetRecordingMask();
-
-  @async
-  void sessionReplaySetRecordingMask({
-    required GeneratedRecordingMaskList? recordingMask,
-  });
-
   // State
 
   @async

@@ -122,66 +122,6 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> sessionReplayStart() async {
-    if (sessionReplayStartHandler != null) {
-      return sessionReplayStartHandler!();
-    }
-  }
-
-  @override
-  Future<void> sessionReplayStop() async {
-    if (sessionReplayStopHandler != null) {
-      return sessionReplayStopHandler!();
-    }
-  }
-
-  @override
-  Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() async {
-    if (sessionReplayStateGetStatusHandler != null) {
-      return sessionReplayStateGetStatusHandler!();
-    }
-    return GeneratedSessionReplayStatus.notStarted;
-  }
-
-  @override
-  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() async {
-    if (sessionReplayStateGetRenderingModeHandler != null) {
-      return sessionReplayStateGetRenderingModeHandler!();
-    }
-    return GeneratedRenderingMode.native;
-  }
-
-  @override
-  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
-    if (sessionReplayPreferencesGetRenderingModeHandler != null) {
-      return sessionReplayPreferencesGetRenderingModeHandler!();
-    }
-    return null;
-  }
-
-  @override
-  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) async {
-    if (sessionReplayPreferencesSetRenderingModeHandler != null) {
-      return sessionReplayPreferencesSetRenderingModeHandler!(renderingMode);
-    }
-  }
-
-  @override
-  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() async {
-    if (sessionReplayGetRecordingMaskHandler != null) {
-      return sessionReplayGetRecordingMaskHandler!();
-    }
-    return null;
-  }
-
-  @override
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) async {
-    if (sessionReplaySetRecordingMaskHandler != null) {
-      return sessionReplaySetRecordingMaskHandler!(recordingMask);
-    }
-  }
-
-  @override
   Future<String> stateGetAppName() async {
     if (stateGetAppNameHandler != null) {
       return stateGetAppNameHandler!();
