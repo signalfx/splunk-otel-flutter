@@ -497,7 +497,7 @@ class _MyAppState extends State<MyApp> {
       final bStr = castAttr<MutableAttributeString>(
         await sdk.globalAttributes.get(key: 'bundle_string'),
       );
-      //TODO resolve issue with empty array set and get both Android iOS
+
       assert(bBool.value == false, 'bundle_bool not persisted');
 
       assert(bStr.value == 'pack', 'bundle_string not persisted');
