@@ -26,14 +26,18 @@ class TestAction {
   final TestCategory category;
   final Set<MobilePlatform> platforms;
   final Future<void> Function() onTap;
+  final Future<void> Function(BuildContext)? onTapWithContext;
 
   const TestAction({
     required this.title,
     required this.category,
     required this.platforms,
-    required this.onTap,
+    this.onTap = _defaultOnTap,
+    this.onTapWithContext,
     required this.description,
   });
+
+  static Future<void> _defaultOnTap() async {}
 }
 
 /// Displays tests grouped by category with platform color-coded buttons and badges.
@@ -178,12 +182,16 @@ class _TestActionsWidgetState extends State<TestActionsWidget> {
                   action: a,
                   lastPressed:
                   _lastPressedByTitle[a.title], // may be null
-                  onPressed: () async {
+                  onPressed: (BuildContext ctx) async {
                     // update timestamp immediately; then run the action
                     setState(() {
                       _lastPressedByTitle[a.title] = DateTime.now();
                     });
-                    await a.onTap();
+                    if (a.onTapWithContext != null) {
+                      await a.onTapWithContext!(ctx);
+                    } else {
+                      await a.onTap();
+                    }
                   },
                   formatHms: _hms,
                 );
@@ -209,7 +217,7 @@ class _TestActionsWidgetState extends State<TestActionsWidget> {
 class _ActionCard extends StatelessWidget {
   final TestAction action;
   final DateTime? lastPressed;
-  final Future<void> Function() onPressed;
+  final Future<void> Function(BuildContext) onPressed;
   final String Function(DateTime) formatHms;
 
   const _ActionCard({
@@ -312,7 +320,7 @@ class _ActionCard extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                     minimumSize: const Size(0, 34),
                   ),
-                  onPressed: onPressed,
+                  onPressed: () => onPressed(context),
                   child: const Text('Test'),
                 ),
               ],
