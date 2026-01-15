@@ -20,6 +20,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_example/test_actions_widget.dart';
+import 'package:splunk_otel_flutter_example/webview_screen.dart';
+import 'package:splunk_otel_flutter_example/browser_launcher_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +57,7 @@ void main() async {
     moduleConfigurations: [
       NavigationModuleConfiguration(
         isEnabled: true,
-        isAutomatedTrackingEnabled: false,
+        isAutomatedTrackingEnabled: true,
       ),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
@@ -107,6 +110,34 @@ class _MyAppState extends State<MyApp> {
       category: TestCategory.navigation,
       platforms: {MobilePlatform.android, MobilePlatform.ios},
       onTap: simulateNavigation,
+    ),
+    TestAction(
+      title: 'Open WebView',
+      description: 'Navigate to WebView screen to test web content',
+      category: TestCategory.navigation,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTapWithContext: openWebView,
+    ),
+    TestAction(
+      title: 'Browser Options',
+      description: 'Choose between Custom Tabs, Safari VC, or External Browser',
+      category: TestCategory.navigation,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTapWithContext: openBrowserOptions,
+    ),
+    TestAction(
+      title: 'In-App Browser',
+      description: 'Custom Tabs (Android) / Safari VC (iOS)',
+      category: TestCategory.navigation,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: launchInAppBrowser,
+    ),
+    TestAction(
+      title: 'External Browser',
+      description: 'Opens in default system browser',
+      category: TestCategory.navigation,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: launchExternalBrowser,
     ),
     TestAction(
       title: 'Track custom event',
@@ -303,6 +334,50 @@ class _MyAppState extends State<MyApp> {
     final screenName = 'mockScreen$screenNumber';
 
     SplunkOtelFlutter.instance.navigation.track(screenName: screenName);
+  }
+
+  Future<void> openWebView(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const WebViewScreen(),
+      ),
+    );
+  }
+
+  Future<void> openBrowserOptions(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const BrowserLauncherScreen(),
+      ),
+    );
+  }
+
+  Future<void> launchInAppBrowser() async {
+    final url = Uri.parse('https://www.splunk.com');
+    try {
+      // Uses Custom Tabs on Android and SFSafariViewController on iOS
+      await launchUrl(
+        url,
+        mode: LaunchMode.inAppWebView,
+      );
+      debugPrint('Launched in-app browser for: $url');
+    } catch (e) {
+      debugPrint('Failed to launch in-app browser: $e');
+    }
+  }
+
+  Future<void> launchExternalBrowser() async {
+    final url = Uri.parse('https://www.splunk.com');
+    try {
+      // Opens in external browser app
+      await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+      debugPrint('Launched external browser for: $url');
+    } catch (e) {
+      debugPrint('Failed to launch external browser: $e');
+    }
   }
 
   Future<void> simulateSlowRender() async {
