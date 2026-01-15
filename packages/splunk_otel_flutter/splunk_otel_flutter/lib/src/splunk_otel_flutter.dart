@@ -22,22 +22,90 @@ import 'package:splunk_otel_flutter/src/state.dart';
 import 'package:splunk_otel_flutter/src/user.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// Splunk RUM SDK entry point.
+///
+/// Use `SplunkOtelFlutter.instance.install()` to initialize the SDK, then access features
+/// via `SplunkOtelFlutter.instance`.
+///
+/// Example:
+/// ```dart
+/// await SplunkOtelFlutter.instance.install(
+///   agentConfiguration: AgentConfiguration(
+///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
+///     appName: 'MyApp',
+///     deploymentEnvironment: 'production',
+///   ),
+///   moduleConfigurations: [],
+/// );
+///
+/// // Access SDK features
+/// await SplunkOtelFlutter.instance.globalAttributes.setString(
+///   key: 'user.tier',
+///   value: 'premium',
+/// );
+/// ```
 class SplunkOtelFlutter {
   static final SplunkOtelFlutter _instance = SplunkOtelFlutter._internal();
 
   SplunkOtelFlutter._internal();
 
+  /// SDK singleton instance.
+  ///
+  /// Access after calling `install()`.
   static SplunkOtelFlutter get instance => _instance;
 
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
+  /// Session management.
+  ///
+  /// Provides access to session ID and sampling rate.
   final session = Session();
+
+  /// Current agent runtime state.
+  ///
+  /// Reflects status, configuration, and endpoint settings.
   final state = State();
+
+  /// User tracking management.
+  ///
+  /// Controls user identification mode.
   final user = User();
+
+  /// Global attributes sent with all signals.
+  ///
+  /// Thread-safe mutable collection for enriching telemetry data.
   final globalAttributes = GlobalAttributes();
+
+  /// Custom event and workflow tracking.
+  ///
+  /// Track business events and measure workflow durations.
   final customTracking = CustomTracking();
+
+  /// Navigation tracking.
+  ///
+  /// Manually track screen navigation events.
   final navigation = Navigation();
 
+  /// Installs the Splunk RUM SDK.
+  ///
+  /// Call once at app startup before accessing other SDK features.
+  ///
+  /// [agentConfiguration] - Agent configuration.
+  /// [moduleConfigurations] - Optional module configurations for features.
+  ///
+  /// Example:
+  /// ```dart
+  /// await SplunkOtelFlutter.instance.install(
+  ///   agentConfiguration: AgentConfiguration(
+  ///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
+  ///     appName: 'MyApp',
+  ///     deploymentEnvironment: 'production',
+  ///   ),
+  ///   moduleConfigurations: [
+  ///     SlowRenderingModuleConfiguration(enabled: true, pollingIntervalMs: 1000),
+  ///   ],
+  /// );
+  /// ```
   Future<void> install({
     required AgentConfiguration agentConfiguration,
     List<ModuleConfiguration> moduleConfigurations = const [],

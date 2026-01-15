@@ -16,48 +16,97 @@
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// Thread-safe mutable collection of attributes.
+///
+/// Attributes set via this API are sent with all telemetry signals (spans, events).
+///
+/// Access via `SplunkOtelFlutter.instance.globalAttributes`.
+///
+/// Example:
+/// ```dart
+/// final attrs = SplunkOtelFlutter.instance.globalAttributes;
+///
+/// await attrs.setString(key: 'user.name', value: 'Alice');
+/// await attrs.setInt(key: 'user.loginCount', value: 5);
+/// await attrs.setBool(key: 'user.isPremium', value: true);
+///
+/// final name = await attrs.get(key: 'user.name');
+/// ```
 class GlobalAttributes {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
+  /// Gets an attribute value (any type).
+  ///
+  /// [key] - Attribute key.
+  ///
+  /// Returns the value or `null` if not set.
   Future<MutableAttributeValue?> get({
     required String key,
   }) async =>
       _delegate.globalAttributesGet(key: key);
 
+  /// Gets all attributes.
+  ///
+  /// Returns all key-value pairs.
   Future<MutableAttributes> getAll() async =>
       _delegate.globalAttributesGetAll();
 
+  /// Removes an attribute.
+  ///
+  /// [key] - Attribute key.
   Future<void> remove({
     required String key,
   }) async =>
       await _delegate.globalAttributesRemove(key: key);
 
+  /// Removes all attributes.
   Future<void> removeAll() async =>
       await _delegate.globalAttributesRemoveAll();
 
+  /// Checks if an attribute exists.
+  ///
+  /// [key] - Attribute key.
+  ///
+  /// Returns `true` if attribute is set.
   Future<bool> contains({
     required String key,
   }) async =>
       await _delegate.globalAttributesContains(key: key);
 
+  /// Sets a string attribute.
+  ///
+  /// [key] - Attribute key.
+  /// [value] - String value.
   Future<void> setString({
     required String key,
     required String value,
   }) async =>
       await _delegate.globalAttributesSetString(key: key, value: value);
 
+  /// Sets an integer attribute.
+  ///
+  /// [key] - Attribute key.
+  /// [value] - Integer value.
   Future<void> setInt({
     required String key,
     required int value,
   }) async =>
       await _delegate.globalAttributesSetInt(key: key, value: value);
 
+  /// Sets a double attribute.
+  ///
+  /// [key] - Attribute key.
+  /// [value] - Double value.
   Future<void> setDouble({
     required String key,
     required double value,
   }) async =>
       await _delegate.globalAttributesSetDouble(key: key, value: value);
 
+  /// Sets a boolean attribute.
+  ///
+  /// [key] - Attribute key.
+  /// [value] - Boolean value.
   Future<void> setBool({
     required String key,
     required bool value,
@@ -91,6 +140,19 @@ class GlobalAttributes {
       await _delegate.globalAttributesSetBoolList(key: key, value: value);
 */
 
+  /// Sets multiple attributes.
+  ///
+  /// [attributes] - Key-value pairs to set.
+  ///
+  /// Example:
+  /// ```dart
+  /// await attrs.setAll(
+  ///   attributes: MutableAttributes({
+  ///     'app.version': '2.0.0',
+  ///     'app.build': 1234,
+  ///   }),
+  /// );
+  /// ```
   Future<void> setAll(
           {required MutableAttributes attributes}) async =>
       await _delegate.globalAttributesSetAll(attributes: attributes);

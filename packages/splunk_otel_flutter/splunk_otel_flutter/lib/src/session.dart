@@ -16,14 +16,28 @@
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// Session management.
+///
+/// Provides access to current session ID and sampling rate.
 class Session {
+  /// Current session state.
+  ///
+  /// Provides access to session ID and sampling rate.
   final state = SessionState();
 }
 
+/// Current session state.
 class SessionState {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
+  /// Gets unique session identifier.
+  ///
+  /// Returns the current session ID string.
   Future<String> getId() async => await _delegate.sessionStateGetId();
 
+  /// Gets session sampling rate.
+  ///
+  /// Returns a value between 0.0 and 1.0 indicating the sampling rate
+  /// for the current session.
   Future<double> getSamplingRate() async => await _delegate.sessionStateGetSamplingRate();
 }
