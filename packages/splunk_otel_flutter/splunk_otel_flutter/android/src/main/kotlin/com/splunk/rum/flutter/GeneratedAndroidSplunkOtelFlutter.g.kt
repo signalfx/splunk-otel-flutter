@@ -1290,7 +1290,8 @@ interface SplunkOtelFlutterHostApi {
   fun globalAttributesSetBoolList(key: String, value: List<Boolean>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetAll(value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
   fun customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
-  fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit)
+  fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit)
+  fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit)
   fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -1877,12 +1878,32 @@ interface SplunkOtelFlutterHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val workflowNameArg = args[0] as String
-            api.customTrackingTrackWorkflow(workflowNameArg) { result: Result<Unit> ->
+            api.customTrackingStartWorkflow(workflowNameArg) { result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val handleArg = args[0] as Long
+            api.customTrackingEndWorkflow(handleArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

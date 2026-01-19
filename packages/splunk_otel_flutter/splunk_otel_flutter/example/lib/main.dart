@@ -404,9 +404,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> customTrackingTrackWorkflow() async {
-    SplunkOtelFlutter.instance.customTracking.trackWorkflow(
-      workflowName: "Workflow test",
+    final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+      name: "Workflow test",
     );
+    // Simulate some work
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await workflow.end();
   }
 
   Future<void> customTrackingTrackError() async {

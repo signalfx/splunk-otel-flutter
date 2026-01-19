@@ -845,14 +845,24 @@ void main() {
         );
       });
 
-      test('should track workflow', () async {
+      test('should start and end workflow', () async {
         const workflowName = 'checkout_flow';
+        int? receivedHandle;
 
-        mockApi.customTrackingTrackWorkflowHandler = (name) async {
+        mockApi.customTrackingStartWorkflowHandler = (name) async {
           expect(name, workflowName);
+          return 789; // Return a mock handle
         };
 
-        await implementation.customTrackingTrackWorkflow(workflowName: workflowName);
+        mockApi.customTrackingEndWorkflowHandler = (handle) async {
+          receivedHandle = handle;
+        };
+
+        final handle = await implementation.customTrackingStartWorkflow(workflowName: workflowName);
+        expect(handle, 789);
+
+        await implementation.customTrackingEndWorkflow(handle: handle);
+        expect(receivedHandle, 789);
       });
     });
 

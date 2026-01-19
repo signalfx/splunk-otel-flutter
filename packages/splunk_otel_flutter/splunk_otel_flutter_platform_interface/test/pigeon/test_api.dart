@@ -262,7 +262,9 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes});
 
-  Future<void> customTrackingTrackWorkflow({required String workflowName});
+  Future<int> customTrackingStartWorkflow({required String workflowName});
+
+  Future<void> customTrackingEndWorkflow({required int handle});
 
   Future<void> navigationTrack({required String screenName});
 
@@ -966,20 +968,45 @@ abstract class TestSplunkOtelFlutterHostApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow was null.');
+          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_workflowName = (args[0] as String?);
           assert(arg_workflowName != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow was null, expected non-null String.');
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null, expected non-null String.');
           try {
-            await api.customTrackingTrackWorkflow(workflowName: arg_workflowName!);
+            final int output = await api.customTrackingStartWorkflow(workflowName: arg_workflowName!);
+            return <Object?>[output];
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_handle = (args[0] as int?);
+          assert(arg_handle != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null, expected non-null int.');
+          try {
+            await api.customTrackingEndWorkflow(handle: arg_handle!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

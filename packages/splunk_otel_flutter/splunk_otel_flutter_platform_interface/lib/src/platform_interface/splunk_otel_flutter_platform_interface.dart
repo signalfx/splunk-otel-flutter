@@ -82,7 +82,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   // Custom tracking
 
   Future<void> customTrackingTrackCustomEvent({required String name,required MutableAttributes attributes});
-  Future<void> customTrackingTrackWorkflow({required String workflowName});
+  Future<int> customTrackingStartWorkflow({required String workflowName});
+  Future<void> customTrackingEndWorkflow({required int handle});
 
   // Navigation
 

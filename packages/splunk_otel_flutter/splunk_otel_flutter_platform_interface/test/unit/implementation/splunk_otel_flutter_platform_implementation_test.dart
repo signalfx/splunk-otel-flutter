@@ -460,14 +460,26 @@ void main() {
         expect(receivedAttributes?.attributes.length, 1);
       });
 
-      test('should track workflow', () async {
+      test('should start workflow', () async {
         String? receivedWorkflowName;
-        mockApi.customTrackingTrackWorkflowHandler = (workflowName) async {
+        mockApi.customTrackingStartWorkflowHandler = (workflowName) async {
           receivedWorkflowName = workflowName;
+          return 123; // Return a mock handle
         };
 
-        await implementation.customTrackingTrackWorkflow(workflowName: 'checkout');
+        final handle = await implementation.customTrackingStartWorkflow(workflowName: 'checkout');
         expect(receivedWorkflowName, 'checkout');
+        expect(handle, 123);
+      });
+
+      test('should end workflow', () async {
+        int? receivedHandle;
+        mockApi.customTrackingEndWorkflowHandler = (handle) async {
+          receivedHandle = handle;
+        };
+
+        await implementation.customTrackingEndWorkflow(handle: 456);
+        expect(receivedHandle, 456);
       });
     });
 

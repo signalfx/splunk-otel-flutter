@@ -16,6 +16,23 @@
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// Handle to an active workflow span.
+///
+/// Call `end()` to complete the workflow and record its duration.
+class WorkflowHandle {
+  final int _handle;
+  final SplunkOtelFlutterPlatformImplementation _delegate;
+
+  WorkflowHandle._(this._handle, this._delegate);
+
+  /// Ends the workflow span.
+  ///
+  /// Records the workflow duration from `startWorkflow()` to this call.
+  Future<void> end() async {
+    await _delegate.customTrackingEndWorkflow(handle: _handle);
+  }
+}
+
 /// Custom event and workflow tracking.
 ///
 /// Use to capture business events and measure user workflows.
@@ -29,6 +46,15 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 ///     'order.items': 3,
 ///   }),
 /// );
+/// ```
+///
+/// Example workflow:
+/// ```dart
+/// final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+///   name: 'user_login',
+/// );
+/// // ... user completes login ...
+/// await workflow.end();
 /// ```
 class CustomTracking {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
@@ -59,32 +85,29 @@ class CustomTracking {
         attributes: attributes,
       );
 
-  /// Tracks a workflow span for duration measurement.
+  /// Starts a workflow span for duration measurement.
   ///
-  /// Call this method twice for each workflow: the first call starts the workflow,
-  /// and the second call ends it, measuring the duration between them. This pattern
-  /// can be repeated infinitely, always pairing up start and end calls.
+  /// Returns a handle to end the workflow later. The span duration
+  /// measures time between start and end.
   ///
-  /// [workflowName] - Workflow name (becomes span name and `workflow.name` attribute).
+  /// [name] - Workflow name (becomes span name and `workflow.name` attribute).
+  ///
+  /// Returns a handle to end the workflow.
   ///
   /// Example:
   /// ```dart
-  /// // Start the workflow
-  /// await SplunkOtelFlutter.instance.customTracking.trackWorkflow(
-  ///   workflowName: 'user_login',
+  /// final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+  ///   name: 'user_login',
   /// );
   ///
-  /// // ... workflow executes ...
+  /// // ... user completes login ...
   ///
-  /// // End the workflow (measures duration)
-  /// await SplunkOtelFlutter.instance.customTracking.trackWorkflow(
-  ///   workflowName: 'user_login',
-  /// );
+  /// await workflow.end();
   /// ```
-  Future<void> trackWorkflow({
-    required String workflowName,
-  }) async =>
-      await _delegate.customTrackingTrackWorkflow(
-        workflowName: workflowName,
-      );
+  Future<WorkflowHandle> startWorkflow({required String name}) async {
+    final handle = await _delegate.customTrackingStartWorkflow(
+      workflowName: name,
+    );
+    return WorkflowHandle._(handle, _delegate);
+  }
 }

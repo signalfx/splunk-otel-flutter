@@ -93,7 +93,8 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
 
     // Custom tracking
     SplunkOtelFlutter.instance.customTracking.trackCustomEvent(name: "testEvent", attributes: MutableAttributes());
-    SplunkOtelFlutter.instance.customTracking.trackWorkflow(workflowName: "testWorkflow");
+    final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(name: "testWorkflow");
+    await workflow.end();
 
     // Navigation
     SplunkOtelFlutter.instance.navigation.track(screenName: "testScreen");

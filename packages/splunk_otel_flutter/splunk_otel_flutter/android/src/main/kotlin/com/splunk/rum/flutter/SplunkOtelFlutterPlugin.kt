@@ -64,7 +64,8 @@ class SplunkOtelFlutterPlugin :
     SplunkOtelFlutterHostApi {
 
     private var activity: Activity? = null
-    private val workflowSpans = mutableMapOf<String, Pair<Span, Long>>()
+    private val workflowSpans = mutableMapOf<Long, Pair<Span, Long>>()
+    private var workflowHandleCounter: Long = 0
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         SplunkOtelFlutterHostApi.setUp(binding.binaryMessenger, this)
@@ -450,31 +451,43 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(Unit))
     }
 
-    override fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit) {
-        val existingWorkflow = workflowSpans[workflowName]
+    override fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit) {
+        // Start the workflow and generate a unique handle
+        val span = SplunkRum.instance.customTracking.trackWorkflow(workflowName)
+        val startTime = System.currentTimeMillis()
 
-        if (existingWorkflow == null) {
-            // First call: Start the workflow
-            val span = SplunkRum.instance.customTracking.trackWorkflow(workflowName)
-            val startTime = System.currentTimeMillis()
-
-            if (span != null) {
-                Log.d("flutter_splunk_otel","span created xxxxx")
-                workflowSpans[workflowName] = Pair(span, startTime)
-            }
-        } else {
-            // Second call: End the workflow
-            val (span, startTime) = existingWorkflow
-            val endTime = System.currentTimeMillis()
+        if (span != null) {
+            workflowHandleCounter++
+            val handle = workflowHandleCounter
             
-            span.setAttribute("workflow.start.time", startTime)
-            span.setAttribute("workflow.end.time", endTime)
-            span.end()
-
-            Log.d("flutter_splunk_otel","span ended xxxxxx")
-
-            workflowSpans.remove(workflowName)
+            Log.d("flutter_splunk_otel","span created with handle $handle")
+            workflowSpans[handle] = Pair(span, startTime)
+            
+            callback(Result.success(handle))
+        } else {
+            callback(Result.failure(Exception("Failed to start workflow")))
         }
+    }
+
+    override fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit) {
+        val workflow = workflowSpans[handle]
+
+        if (workflow == null) {
+            callback(Result.failure(Exception("Invalid workflow handle")))
+            return
+        }
+
+        // End the workflow
+        val (span, startTime) = workflow
+        val endTime = System.currentTimeMillis()
+        
+        span.setAttribute("workflow.start.time", startTime)
+        span.setAttribute("workflow.end.time", endTime)
+        span.end()
+
+        Log.d("flutter_splunk_otel","span ended with handle $handle")
+
+        workflowSpans.remove(handle)
 
         callback(Result.success(Unit))
     }

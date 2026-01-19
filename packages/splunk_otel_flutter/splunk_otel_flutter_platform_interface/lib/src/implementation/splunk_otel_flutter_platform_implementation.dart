@@ -391,11 +391,20 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
   @override
-  Future<void> customTrackingTrackWorkflow({
+  Future<int> customTrackingStartWorkflow({
     required String workflowName,
   }) async {
-    await _api.customTrackingTrackWorkflow(
+    return await _api.customTrackingStartWorkflow(
       workflowName: workflowName,
+    );
+  }
+
+  @override
+  Future<void> customTrackingEndWorkflow({
+    required int handle,
+  }) async {
+    await _api.customTrackingEndWorkflow(
+      handle: handle,
     );
   }
 

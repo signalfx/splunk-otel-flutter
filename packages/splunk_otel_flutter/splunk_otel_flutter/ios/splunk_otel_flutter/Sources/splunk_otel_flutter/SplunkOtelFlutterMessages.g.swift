@@ -1165,7 +1165,8 @@ protocol SplunkOtelFlutterHostApi {
   func globalAttributesSetBoolList(key: String, value: [Bool], completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesSetAll(value: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
   func customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
-  func customTrackingTrackWorkflow(workflowName: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func customTrackingStartWorkflow(workflowName: String, completion: @escaping (Result<Int64, Error>) -> Void)
+  func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func navigationTrack(screenName: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -1673,12 +1674,29 @@ class SplunkOtelFlutterHostApiSetup {
     } else {
       customTrackingTrackCustomEventChannel.setMessageHandler(nil)
     }
-    let customTrackingTrackWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let customTrackingStartWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      customTrackingTrackWorkflowChannel.setMessageHandler { message, reply in
+      customTrackingStartWorkflowChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let workflowNameArg = args[0] as! String
-        api.customTrackingTrackWorkflow(workflowName: workflowNameArg) { result in
+        api.customTrackingStartWorkflow(workflowName: workflowNameArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      customTrackingStartWorkflowChannel.setMessageHandler(nil)
+    }
+    let customTrackingEndWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      customTrackingEndWorkflowChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let handleArg = args[0] as! Int64
+        api.customTrackingEndWorkflow(handle: handleArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1688,7 +1706,7 @@ class SplunkOtelFlutterHostApiSetup {
         }
       }
     } else {
-      customTrackingTrackWorkflowChannel.setMessageHandler(nil)
+      customTrackingEndWorkflowChannel.setMessageHandler(nil)
     }
     let navigationTrackChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
