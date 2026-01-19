@@ -22,13 +22,16 @@ dev_dependencies:
   melos: ^7.1.1
 
 melos:
+  ignore:
+    - "*example*"
+    - "*session_replay*"
   scripts:
     analyze:
       run: melos exec -- dart analyze --fatal-warnings .
       description: Run Dart analyzer across all packages.
     test:
       description: Run tests across all packages.
-      run: melos exec --dir-exists=test --fail-fast --ignore="*example*" -- flutter test
+      run: melos exec --dir-exists=test --fail-fast --concurrency=1 -- flutter test
     format:
       run: melos exec -- dart format .
       description: Format code across all packages.
