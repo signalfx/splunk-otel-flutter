@@ -25,6 +25,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - res/images/
     - res/movie_images/cover/
     - res/movie_images/detail/
