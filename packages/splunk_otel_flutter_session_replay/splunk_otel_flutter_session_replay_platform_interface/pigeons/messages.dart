@@ -20,7 +20,6 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'splunk_otel_flutter_session_replay_platform_interface',
     kotlinOut:
     '../splunk_otel_flutter_session_replay/android/src/main/kotlin/com/splunk/rum/flutter/GeneratedAndroidSplunkOtelFlutterSessionReplay.g.kt',
@@ -32,7 +31,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 
-@HostApi(dartHostTestHandler: 'TestSplunkOtelFlutterSessionReplayHostApi')
+@HostApi()
 abstract class SplunkOtelFlutterSessionReplayHostApi {
   @async
   void install();
