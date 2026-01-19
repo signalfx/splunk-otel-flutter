@@ -3,7 +3,6 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'splunk_otel_flutter_platform_interface',
     kotlinOut:
         '../splunk_otel_flutter/android/src/main/kotlin/com/splunk/rum/flutter/GeneratedAndroidSplunkOtelFlutter.g.kt',
@@ -14,7 +13,7 @@ import 'package:pigeon/pigeon.dart';
         '../splunk_otel_flutter/ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkOtelFlutterMessages.g.swift',
   ),
 )
-@HostApi(dartHostTestHandler: 'TestSplunkOtelFlutterHostApi')
+@HostApi()
 abstract class SplunkOtelFlutterHostApi {
   @async
   void install(
