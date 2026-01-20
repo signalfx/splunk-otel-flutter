@@ -14,7 +14,7 @@ void main() async {
   // Measure install duration
   final stopwatch = Stopwatch()..start();
   
-  await SplunkOtelFlutter.instance.install(
+  await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
       endpointConfiguration: EndpointConfiguration.forRum(
         realm: realm,
@@ -27,11 +27,11 @@ void main() async {
   
   stopwatch.stop();
   debugPrint('=============');
-  debugPrint('SplunkOtelFlutter.install() took: ${stopwatch.elapsedMilliseconds} ms');
+  debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
   debugPrint('=============');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
-    final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
+    final sessionId = await SplunkRum.instance.session.state.getId();
 
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');

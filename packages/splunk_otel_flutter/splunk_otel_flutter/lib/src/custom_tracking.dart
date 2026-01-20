@@ -41,7 +41,7 @@ class WorkflowHandle {
 ///
 /// Example custom event:
 /// ```dart
-/// await SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+/// await SplunkRum.instance.customTracking.trackCustomEvent(
 ///   name: 'checkout_complete',
 ///   attributes: MutableAttributes({
 ///     'order.total': 99.99,
@@ -53,7 +53,7 @@ class WorkflowHandle {
 /// Example workflow tracking:
 /// ```dart
 /// // Start the workflow and get a handle
-/// final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+/// final workflow = await SplunkRum.instance.customTracking.startWorkflow(
 ///   name: 'user_login',
 /// );
 ///
@@ -74,7 +74,7 @@ class CustomTracking {
   ///
   /// Example:
   /// ```dart
-  /// await SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+  /// await SplunkRum.instance.customTracking.trackCustomEvent(
   ///   name: 'user_signup',
   ///   attributes: MutableAttributes({
   ///     'user.email': 'user@example.com',
@@ -103,7 +103,7 @@ class CustomTracking {
   /// Example:
   /// ```dart
   /// // Start the workflow and get a handle
-  /// final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+  /// final workflow = await SplunkRum.instance.customTracking.startWorkflow(
   ///   name: 'user_login',
   /// );
   ///

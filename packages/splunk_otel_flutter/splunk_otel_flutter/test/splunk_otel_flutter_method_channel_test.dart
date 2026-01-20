@@ -20,41 +20,41 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutter', () {
+  group('SplunkRum', () {
     test('should be a singleton', () {
-      final instance1 = SplunkOtelFlutter.instance;
-      final instance2 = SplunkOtelFlutter.instance;
+      final instance1 = SplunkRum.instance;
+      final instance2 = SplunkRum.instance;
 
       expect(instance1, same(instance2));
     });
 
     test('should expose session module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.session, isNotNull);
     });
 
     test('should expose state module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.state, isNotNull);
     });
 
     test('should expose user module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.user, isNotNull);
     });
 
     test('should expose globalAttributes module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.globalAttributes, isNotNull);
     });
 
     test('should expose customTracking module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.customTracking, isNotNull);
     });
 
     test('should expose navigation module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.navigation, isNotNull);
     });
   });

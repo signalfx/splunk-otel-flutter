@@ -20,11 +20,11 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 ///
 /// Attributes set via this API are sent with all telemetry signals (spans, events).
 ///
-/// Access via `SplunkOtelFlutter.instance.globalAttributes`.
+/// Access via `SplunkRum.instance.globalAttributes`.
 ///
 /// Example:
 /// ```dart
-/// final attrs = SplunkOtelFlutter.instance.globalAttributes;
+/// final attrs = SplunkRum.instance.globalAttributes;
 ///
 /// await attrs.setString(key: 'user.name', value: 'Alice');
 /// await attrs.setInt(key: 'user.loginCount', value: 5);

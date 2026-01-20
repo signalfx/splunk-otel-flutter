@@ -206,7 +206,7 @@ class PremiumDialog extends StatelessWidget {
           ),
           onPressed: () {
             // Track navigation to premium screen
-            SplunkOtelFlutter.instance.navigation.track(screenName: 'Premium Account Screen - Intro');
+            SplunkRum.instance.navigation.track(screenName: 'Premium Account Screen - Intro');
             Navigator.push(
               context,
               MaterialPageRoute(

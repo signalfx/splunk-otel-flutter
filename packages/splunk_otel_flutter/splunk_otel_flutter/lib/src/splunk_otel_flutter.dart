@@ -24,12 +24,12 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 
 /// Splunk RUM SDK entry point.
 ///
-/// Use `SplunkOtelFlutter.instance.install()` to initialize the SDK, then access features
-/// via `SplunkOtelFlutter.instance`.
+/// Use `SplunkRum.instance.install()` to initialize the SDK, then access features
+/// via `SplunkRum.instance`.
 ///
 /// Example:
 /// ```dart
-/// await SplunkOtelFlutter.instance.install(
+/// await SplunkRum.instance.install(
 ///   agentConfiguration: AgentConfiguration(
 ///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
 ///     appName: 'MyApp',
@@ -39,20 +39,20 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 /// );
 ///
 /// // Access SDK features
-/// await SplunkOtelFlutter.instance.globalAttributes.setString(
+/// await SplunkRum.instance.globalAttributes.setString(
 ///   key: 'user.tier',
 ///   value: 'premium',
 /// );
 /// ```
-class SplunkOtelFlutter {
-  static final SplunkOtelFlutter _instance = SplunkOtelFlutter._internal();
+class SplunkRum {
+  static final SplunkRum _instance = SplunkRum._internal();
 
-  SplunkOtelFlutter._internal();
+  SplunkRum._internal();
 
   /// SDK singleton instance.
   ///
   /// Access after calling `install()`.
-  static SplunkOtelFlutter get instance => _instance;
+  static SplunkRum get instance => _instance;
 
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
@@ -95,7 +95,7 @@ class SplunkOtelFlutter {
   ///
   /// Example:
   /// ```dart
-  /// await SplunkOtelFlutter.instance.install(
+  /// await SplunkRum.instance.install(
   ///   agentConfiguration: AgentConfiguration(
   ///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
   ///     appName: 'MyApp',

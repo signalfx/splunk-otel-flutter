@@ -52,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   _controller.text == "ondrej@smartlook.com" ||
                   _controller.text == "pavel@smartlook.com") {
                 // Track successful password reset
-                SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+                SplunkRum.instance.customTracking.trackCustomEvent(
                   name: 'password_reset',
                   attributes: MutableAttributes(
                     attributes: {
@@ -75,7 +75,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 exit(0);
               } else {
                 // Track failed password reset
-                SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+                SplunkRum.instance.customTracking.trackCustomEvent(
                   name: 'password_reset',
                   attributes: MutableAttributes(
                     attributes: {

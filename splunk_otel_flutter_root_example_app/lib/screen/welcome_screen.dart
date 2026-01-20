@@ -25,7 +25,7 @@ class WelcomeScreen extends StatelessWidget {
           text: "Get started",
           onTap: () {
             // Track navigation using Splunk RUM
-            SplunkOtelFlutter.instance.navigation.track(screenName: 'Login Screen');
+            SplunkRum.instance.navigation.track(screenName: 'Login Screen');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

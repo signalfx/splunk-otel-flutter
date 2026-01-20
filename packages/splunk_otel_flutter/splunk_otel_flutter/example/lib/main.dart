@@ -36,7 +36,7 @@ void main() async {
   // Measure install duration
   final stopwatch = Stopwatch()..start();
 
-  await SplunkOtelFlutter.instance.install(
+  await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
       endpointConfiguration: EndpointConfiguration.forRum(
         realm: realm,
@@ -74,11 +74,11 @@ void main() async {
   stopwatch.stop();
   debugPrint('=============');
   debugPrint(
-    'SplunkOtelFlutter.install() took: ${stopwatch.elapsedMilliseconds} ms',
+    'SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms',
   );
   debugPrint('=============');
 
-  final sessionId = await SplunkOtelFlutter.instance.session.state.getId();
+  final sessionId = await SplunkRum.instance.session.state.getId();
 
   debugPrint('-------------');
   debugPrint('Session id: $sessionId');
@@ -211,88 +211,88 @@ class _MyAppState extends State<MyApp> {
     //exercisePublicApiWithAsserts();
     /*
     // session replay - sensitivity ignored
-    SplunkOtelFlutter.instance.sessionReplay.start();
-    SplunkOtelFlutter.instance.sessionReplay.stop();
-    SplunkOtelFlutter.instance.sessionReplay.state.getStatus();
-    SplunkOtelFlutter.instance.sessionReplay.state.getRenderingMode();
-    SplunkOtelFlutter.instance.sessionReplay.preferences.getRenderingMode();
-    SplunkOtelFlutter.instance.sessionReplay.preferences.setRenderingMode(
+    SplunkRum.instance.sessionReplay.start();
+    SplunkRum.instance.sessionReplay.stop();
+    SplunkRum.instance.sessionReplay.state.getStatus();
+    SplunkRum.instance.sessionReplay.state.getRenderingMode();
+    SplunkRum.instance.sessionReplay.preferences.getRenderingMode();
+    SplunkRum.instance.sessionReplay.preferences.setRenderingMode(
       renderingMode: RenderingMode.native,
     );
-    SplunkOtelFlutter.instance.sessionReplay.recordingMask.getRecordingMask();
-    SplunkOtelFlutter.instance.sessionReplay.recordingMask.setRecordingMask(
+    SplunkRum.instance.sessionReplay.recordingMask.getRecordingMask();
+    SplunkRum.instance.sessionReplay.recordingMask.setRecordingMask(
       recordingMask: RecordingMaskList(elements: []),
     );
 
     // state
-    SplunkOtelFlutter.instance.state.getAppName();
-    SplunkOtelFlutter.instance.state.getAppVersion();
-    SplunkOtelFlutter.instance.state.getStatus();
-    SplunkOtelFlutter.instance.state.getEndpointConfiguration();
-    SplunkOtelFlutter.instance.state.getDeploymentEnvironment();
-    SplunkOtelFlutter.instance.state.getIsDebugLoggingEnabled();
-    SplunkOtelFlutter.instance.state.getInstrumentedProcessName();
-    SplunkOtelFlutter.instance.state.getDeferredUntilForeground();
+    SplunkRum.instance.state.getAppName();
+    SplunkRum.instance.state.getAppVersion();
+    SplunkRum.instance.state.getStatus();
+    SplunkRum.instance.state.getEndpointConfiguration();
+    SplunkRum.instance.state.getDeploymentEnvironment();
+    SplunkRum.instance.state.getIsDebugLoggingEnabled();
+    SplunkRum.instance.state.getInstrumentedProcessName();
+    SplunkRum.instance.state.getDeferredUntilForeground();
 
     // preferences
-    SplunkOtelFlutter.instance.preferences.getEndpointConfiguration();
+    SplunkRum.instance.preferences.getEndpointConfiguration();
 
     // session
-    SplunkOtelFlutter.instance.session.state.getId();
-    SplunkOtelFlutter.instance.session.state.getSamplingRate();
+    SplunkRum.instance.session.state.getId();
+    SplunkRum.instance.session.state.getSamplingRate();
 
     // user
-    SplunkOtelFlutter.instance.user.state.getTrackingMode();
-    SplunkOtelFlutter.instance.user.preferences.getTrackingMode();
-    SplunkOtelFlutter.instance.user.preferences.setTrackingMode(
+    SplunkRum.instance.user.state.getTrackingMode();
+    SplunkRum.instance.user.preferences.getTrackingMode();
+    SplunkRum.instance.user.preferences.setTrackingMode(
       userTrackingMode: UserTrackingMode.noTracking,
     );
 
     // global attributes
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesGet(
+    SplunkRum.instance.globalAttributes.globalAttributesGet(
       key: "my_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesGetAll();
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesRemove(
+    SplunkRum.instance.globalAttributes.globalAttributesGetAll();
+    SplunkRum.instance.globalAttributes.globalAttributesRemove(
       key: "old_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesRemoveAll();
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesContains(
+    SplunkRum.instance.globalAttributes.globalAttributesRemoveAll();
+    SplunkRum.instance.globalAttributes.globalAttributesContains(
       key: "existing_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetString(
+    SplunkRum.instance.globalAttributes.globalAttributesSetString(
       key: "user_name",
       value: "Alice",
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetInt(
+    SplunkRum.instance.globalAttributes.globalAttributesSetInt(
       key: "user_id",
       value: 123,
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetDouble(
+    SplunkRum.instance.globalAttributes.globalAttributesSetDouble(
       key: "app_version",
       value: 1.5,
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetBool(
+    SplunkRum.instance.globalAttributes.globalAttributesSetBool(
       key: "is_logged_in",
       value: true,
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetStringList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetStringList(
       key: "tags",
       value: ["mobile", "flutter"],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetIntList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetIntList(
       key: "permissions",
       value: [1, 2, 3],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetDoubleList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetDoubleList(
       key: "scores",
       value: [9.5, 8.0],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetBoolList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetBoolList(
       key: "features",
       value: [true, false],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetAll(
+    SplunkRum.instance.globalAttributes.globalAttributesSetAll(
       key: "bulk_data",
       attributes: MutableAttributes(
         attributes: {
@@ -333,7 +333,7 @@ class _MyAppState extends State<MyApp> {
     final screenNumber = random.nextInt(1000) + 1; // generates 1–1000
     final screenName = 'mockScreen$screenNumber';
 
-    SplunkOtelFlutter.instance.navigation.track(screenName: screenName);
+    SplunkRum.instance.navigation.track(screenName: screenName);
   }
 
   Future<void> openWebView(BuildContext context) async {
@@ -392,7 +392,7 @@ class _MyAppState extends State<MyApp> {
     final random = Random();
     final eventNumber = random.nextInt(1000) + 1; // generates 1–1000
 
-    SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+    SplunkRum.instance.customTracking.trackCustomEvent(
       name: "test custom event tracking $eventNumber",
       attributes: MutableAttributes(
         attributes: {
@@ -404,7 +404,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> customTrackingTrackWorkflow() async {
-    final workflow = await SplunkOtelFlutter.instance.customTracking.startWorkflow(
+    final workflow = await SplunkRum.instance.customTracking.startWorkflow(
       name: "Workflow test",
     );
     // Simulate some work
@@ -463,7 +463,7 @@ class _MyAppState extends State<MyApp> {
   // ---- Public API smoke test with set->get->assert checks ----
 
   Future<void> exercisePublicApiWithAsserts() async {
-    final sdk = SplunkOtelFlutter.instance;
+    final sdk = SplunkRum.instance;
 
     // Helpers
     T castAttr<T extends MutableAttributeValue?>(MutableAttributeValue? v) {
@@ -597,10 +597,10 @@ class _MyAppState extends State<MyApp> {
 
       // Final log to make it easy to see result in console
       // ignore: avoid_print
-      print('✅ SplunkOtelFlutter public API smoke test with asserts completed');
+      print('✅ SplunkRum public API smoke test with asserts completed');
     } catch (e, st) {
       // ignore: avoid_print
-      print('⚠️ SplunkOtelFlutter API assert test caught error: $e\n$st');
+      print('⚠️ SplunkRum API assert test caught error: $e\n$st');
     }
   }
 }

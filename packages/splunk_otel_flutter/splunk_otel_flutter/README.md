@@ -23,7 +23,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SplunkOtelFlutter.instance.install(
+  await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
       endpointConfiguration: EndpointConfiguration.forRum(
         realm: 'your-realm',

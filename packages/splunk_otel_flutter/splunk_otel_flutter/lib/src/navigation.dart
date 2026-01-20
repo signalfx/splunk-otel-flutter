@@ -31,7 +31,7 @@ class Navigation {
   ///
   /// Example:
   /// ```dart
-  /// await SplunkOtelFlutter.instance.navigation.track(
+  /// await SplunkRum.instance.navigation.track(
   ///   screenName: 'HomeScreen',
   /// );
   /// ```

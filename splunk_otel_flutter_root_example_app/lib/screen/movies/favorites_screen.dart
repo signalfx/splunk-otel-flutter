@@ -73,8 +73,8 @@ class FavoriteMovieWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         // Track movie detail view with Splunk RUM
-        SplunkOtelFlutter.instance.navigation.track(screenName: 'Movie Detail Screen');
-        SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+        SplunkRum.instance.navigation.track(screenName: 'Movie Detail Screen');
+        SplunkRum.instance.customTracking.trackCustomEvent(
           name: 'movie_view',
           attributes: MutableAttributes(
             attributes: {
