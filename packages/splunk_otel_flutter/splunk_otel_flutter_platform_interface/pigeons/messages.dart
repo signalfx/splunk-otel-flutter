@@ -3,7 +3,6 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'splunk_otel_flutter_platform_interface',
     kotlinOut:
         '../splunk_otel_flutter/android/src/main/kotlin/com/splunk/rum/flutter/GeneratedAndroidSplunkOtelFlutter.g.kt',
@@ -14,7 +13,7 @@ import 'package:pigeon/pigeon.dart';
         '../splunk_otel_flutter/ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkOtelFlutterMessages.g.swift',
   ),
 )
-@HostApi(dartHostTestHandler: 'TestSplunkOtelFlutterHostApi')
+@HostApi()
 abstract class SplunkOtelFlutterHostApi {
   @async
   void install(
@@ -40,36 +39,6 @@ abstract class SplunkOtelFlutterHostApi {
       // iOS-only configurations
       required GeneratedNetworkInstrumentationModuleConfiguration?
           networkInstrumentationModuleConfiguration});
-
-  // Session replay
-
-  @async
-  void sessionReplayStart();
-
-  @async
-  void sessionReplayStop();
-
-  @async
-  GeneratedSessionReplayStatus sessionReplayStateGetStatus();
-
-  @async
-  GeneratedRenderingMode sessionReplayStateGetRenderingMode();
-
-  @async
-  GeneratedRenderingMode? sessionReplayPreferencesGetRenderingMode();
-
-  @async
-  void sessionReplayPreferencesSetRenderingMode({
-    required GeneratedRenderingMode? renderingMode,
-  });
-
-  @async
-  GeneratedRecordingMaskList? sessionReplayGetRecordingMask();
-
-  @async
-  void sessionReplaySetRecordingMask({
-    required GeneratedRecordingMaskList? recordingMask,
-  });
 
   // State
 
@@ -177,7 +146,10 @@ abstract class SplunkOtelFlutterHostApi {
   void customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes});
 
   @async
-  void customTrackingTrackWorkflow({required String workflowName});
+  int customTrackingStartWorkflow({required String workflowName});
+
+  @async
+  void customTrackingEndWorkflow({required int handle});
 
   // Navigation
 

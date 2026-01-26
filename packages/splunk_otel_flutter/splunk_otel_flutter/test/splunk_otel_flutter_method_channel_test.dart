@@ -14,54 +14,47 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutter', () {
+  group('SplunkRum', () {
     test('should be a singleton', () {
-      final instance1 = SplunkOtelFlutter.instance;
-      final instance2 = SplunkOtelFlutter.instance;
+      final instance1 = SplunkRum.instance;
+      final instance2 = SplunkRum.instance;
 
       expect(instance1, same(instance2));
     });
 
     test('should expose session module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.session, isNotNull);
     });
 
     test('should expose state module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.state, isNotNull);
     });
 
     test('should expose user module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.user, isNotNull);
     });
 
-    test('should expose sessionReplay module', () {
-      final instance = SplunkOtelFlutter.instance;
-      expect(instance.sessionReplay, isNotNull);
-    });
-
     test('should expose globalAttributes module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.globalAttributes, isNotNull);
     });
 
     test('should expose customTracking module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.customTracking, isNotNull);
     });
 
     test('should expose navigation module', () {
-      final instance = SplunkOtelFlutter.instance;
+      final instance = SplunkRum.instance;
       expect(instance.navigation, isNotNull);
     });
   });
@@ -114,7 +107,6 @@ void main() {
       expect(config.realm, equals('us0'));
       expect(config.rumAccessToken, equals('test-token'));
       expect(config.traceEndpoint, isNull);
-      expect(config.sessionReplayEndpoint, isNull);
     });
 
     test('should create endpoint configuration for traces', () {
@@ -124,21 +116,6 @@ void main() {
       );
 
       expect(config.traceEndpoint, equals(tracesUri));
-      expect(config.realm, isNull);
-      expect(config.sessionReplayEndpoint, isNull);
-    });
-
-    test('should create endpoint configuration for traces and session replay', () {
-      final tracesUri = Uri.parse('https://traces.example.com');
-      final replayUri = Uri.parse('https://replay.example.com');
-      
-      final config = EndpointConfiguration.forTracesAndSessionReplay(
-        traceEndpoint: tracesUri,
-        sessionReplayEndpoint: replayUri,
-      );
-
-      expect(config.traceEndpoint, equals(tracesUri));
-      expect(config.sessionReplayEndpoint, equals(replayUri));
       expect(config.realm, isNull);
     });
   });
@@ -218,55 +195,6 @@ void main() {
       expect(Status.values, contains(Status.sampledOut));
       expect(Status.values, contains(Status.unsupportedPlatform));
       expect(Status.values, contains(Status.unsupportedOsVersion));
-    });
-  });
-
-  group('SessionReplay', () {
-    test('SessionReplayStatus should have expected values', () {
-      expect(SessionReplayStatus.values.length, equals(6));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.isRecording));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.notStarted));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.stopped));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.belowMinSdkVersion));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.storageLimitReached));
-      expect(SessionReplayStatus.values, contains(SessionReplayStatus.internalError));
-    });
-
-    test('RenderingMode should have expected values', () {
-      expect(RenderingMode.values.length, equals(2));
-      expect(RenderingMode.values, contains(RenderingMode.native));
-      expect(RenderingMode.values, contains(RenderingMode.wireframeOnly));
-    });
-
-    test('RecordingMaskType should have expected values', () {
-      expect(RecordingMaskType.values.length, equals(2));
-      expect(RecordingMaskType.values, contains(RecordingMaskType.erasing));
-      expect(RecordingMaskType.values, contains(RecordingMaskType.covering));
-    });
-
-    test('RecordingMaskElement should be creatable', () {
-      final rect = const Rect.fromLTWH(10, 20, 100, 50);
-      final element = RecordingMaskElement(
-        rect: rect,
-        type: RecordingMaskType.erasing,
-      );
-
-      expect(element.type, equals(RecordingMaskType.erasing));
-      expect(element.rect, equals(rect));
-    });
-
-    test('RecordingMaskList should be creatable', () {
-      final rect = const Rect.fromLTWH(0, 0, 50, 50);
-      final maskList = RecordingMaskList(elements: [
-        RecordingMaskElement(
-          rect: rect,
-          type: RecordingMaskType.covering,
-        ),
-      ]);
-
-      expect(maskList.elements.length, equals(1));
-      expect(maskList.elements[0].type, equals(RecordingMaskType.covering));
-      expect(maskList.elements[0].rect, equals(rect));
     });
   });
 }

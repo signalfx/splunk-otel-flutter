@@ -33,7 +33,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     
     private var didFinishLaunchingAt: Date?
     private var willEnterForegroundAt: Date?
-    private var workflowSpans: [String: (span: Span, startTime: Int64)] = [:]
+    private var workflowSpans: [Int64: (span: Span, startTime: Int64)] = [:]
+    private var workflowHandleCounter: Int64 = 0
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SplunkOtelFlutterPlugin()
@@ -203,58 +204,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             ))
         }
         
-        
-        completion(.success(()))
-    }
-    
-    // Session replay
-    
-    // MARK: - Session Replay
-    
-    func sessionReplayStart(completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.start()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayStop(completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.stop()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, any Error>) -> Void) {
-        let status = SplunkRum.shared.sessionReplay.state.status
-        
-        completion(.success(status.toGeneratedSessionReplayStatus()))
-    }
-    
-    func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, any Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.state.renderingMode
-        
-        completion(.success(renderingMode.toGeneratedRenderingMode()))
-    }
-    
-    func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, any Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.preferences.renderingMode
-        
-        completion(.success(renderingMode?.toGeneratedRenderingMode()))
-    }
-    
-    func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.preferences.renderingMode = renderingMode?.toRenderingMode()
-        
-        completion(.success(()))
-    }
-    
-    func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, any Error>) -> Void) {
-        let recordingMask = SplunkRum.shared.sessionReplay.recordingMask
-        
-        completion(.success(recordingMask?.toGeneratedRecordingMaskList()))
-    }
-    
-    func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.recordingMask = recordingMask?.toRecordingMask()
         
         completion(.success(()))
     }
@@ -490,23 +439,33 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(()))
     }
     
-    func customTrackingTrackWorkflow(workflowName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
-        if let existingWorkflow = workflowSpans[workflowName] {
-            // Second call: End the workflow
-            let endTime = Int64(Date().timeIntervalSince1970 * 1000)
-            
-            existingWorkflow.span.setAttribute(key: "workflow.start.time", value: AttributeValue.int(Int(existingWorkflow.startTime)))
-            existingWorkflow.span.setAttribute(key: "workflow.end.time", value: AttributeValue.int(Int(endTime)))
-            existingWorkflow.span.end()
-            
-            workflowSpans.removeValue(forKey: workflowName)
-        } else {
-            // First call: Start the workflow
-            let span = SplunkRum.shared.customTracking.trackWorkflow(workflowName)
-            let startTime = Int64(Date().timeIntervalSince1970 * 1000)
-            
-            workflowSpans[workflowName] = (span: span, startTime: startTime)
+    func customTrackingStartWorkflow(workflowName: String, completion: @escaping (Result<Int64, any Error>) -> Void) {
+        // Start the workflow and generate a unique handle
+        let span = SplunkRum.shared.customTracking.trackWorkflow(workflowName)
+        let startTime = Int64(Date().timeIntervalSince1970 * 1000)
+        
+        workflowHandleCounter += 1
+        let handle = workflowHandleCounter
+        
+        workflowSpans[handle] = (span: span, startTime: startTime)
+        
+        completion(.success(handle))
+    }
+    
+    func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, any Error>) -> Void) {
+        guard let workflow = workflowSpans[handle] else {
+            completion(.failure(NSError(domain: "SplunkOtelFlutter", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid workflow handle"])))
+            return
         }
+        
+        // End the workflow
+        let endTime = Int64(Date().timeIntervalSince1970 * 1000)
+        
+        workflow.span.setAttribute(key: "workflow.start.time", value: AttributeValue.int(Int(workflow.startTime)))
+        workflow.span.setAttribute(key: "workflow.end.time", value: AttributeValue.int(Int(endTime)))
+        workflow.span.end()
+        
+        workflowSpans.removeValue(forKey: handle)
         
         completion(.success(()))
     }

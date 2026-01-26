@@ -83,7 +83,8 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   Future<void> Function(GeneratedMutableAttributes)? globalAttributesSetAllHandler;
 
   Future<void> Function(String, GeneratedMutableAttributes)? customTrackingTrackCustomEventHandler;
-  Future<void> Function(String)? customTrackingTrackWorkflowHandler;
+  Future<int> Function(String)? customTrackingStartWorkflowHandler;
+  Future<void> Function(int)? customTrackingEndWorkflowHandler;
 
   Future<void> Function(String)? navigationTrackHandler;
 
@@ -118,66 +119,6 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
         okHttp3AutoModuleConfiguration,
         networkInstrumentationModuleConfiguration,
       );
-    }
-  }
-
-  @override
-  Future<void> sessionReplayStart() async {
-    if (sessionReplayStartHandler != null) {
-      return sessionReplayStartHandler!();
-    }
-  }
-
-  @override
-  Future<void> sessionReplayStop() async {
-    if (sessionReplayStopHandler != null) {
-      return sessionReplayStopHandler!();
-    }
-  }
-
-  @override
-  Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() async {
-    if (sessionReplayStateGetStatusHandler != null) {
-      return sessionReplayStateGetStatusHandler!();
-    }
-    return GeneratedSessionReplayStatus.notStarted;
-  }
-
-  @override
-  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() async {
-    if (sessionReplayStateGetRenderingModeHandler != null) {
-      return sessionReplayStateGetRenderingModeHandler!();
-    }
-    return GeneratedRenderingMode.native;
-  }
-
-  @override
-  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
-    if (sessionReplayPreferencesGetRenderingModeHandler != null) {
-      return sessionReplayPreferencesGetRenderingModeHandler!();
-    }
-    return null;
-  }
-
-  @override
-  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) async {
-    if (sessionReplayPreferencesSetRenderingModeHandler != null) {
-      return sessionReplayPreferencesSetRenderingModeHandler!(renderingMode);
-    }
-  }
-
-  @override
-  Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() async {
-    if (sessionReplayGetRecordingMaskHandler != null) {
-      return sessionReplayGetRecordingMaskHandler!();
-    }
-    return null;
-  }
-
-  @override
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) async {
-    if (sessionReplaySetRecordingMaskHandler != null) {
-      return sessionReplaySetRecordingMaskHandler!(recordingMask);
     }
   }
 
@@ -393,9 +334,17 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> customTrackingTrackWorkflow({required String workflowName}) async {
-    if (customTrackingTrackWorkflowHandler != null) {
-      return customTrackingTrackWorkflowHandler!(workflowName);
+  Future<int> customTrackingStartWorkflow({required String workflowName}) async {
+    if (customTrackingStartWorkflowHandler != null) {
+      return customTrackingStartWorkflowHandler!(workflowName);
+    }
+    return 1; // Return a default handle for testing
+  }
+
+  @override
+  Future<void> customTrackingEndWorkflow({required int handle}) async {
+    if (customTrackingEndWorkflowHandler != null) {
+      return customTrackingEndWorkflowHandler!(handle);
     }
   }
 

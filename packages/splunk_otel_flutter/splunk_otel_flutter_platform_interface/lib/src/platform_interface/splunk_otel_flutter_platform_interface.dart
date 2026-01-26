@@ -36,17 +36,6 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
   Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
 
-  // Session replay
-
-  Future<void> sessionReplayStart();
-  Future<void> sessionReplayStop();
-  Future<SessionReplayStatus> sessionReplayStateGetStatus();
-  Future<RenderingMode> sessionReplayStateGetRenderingMode();
-  Future<RenderingMode?> sessionReplayPreferencesGetRenderingMode();
-  Future<void> sessionReplayPreferencesSetRenderingMode({required RenderingMode? renderingMode});
-  Future<RecordingMaskList?> sessionReplayGetRecordingMask();
-  Future<void> sessionReplaySetRecordingMask({required RecordingMaskList recordingMask});
-
   // State
 
   Future<String> stateGetAppName();
@@ -93,7 +82,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   // Custom tracking
 
   Future<void> customTrackingTrackCustomEvent({required String name,required MutableAttributes attributes});
-  Future<void> customTrackingTrackWorkflow({required String workflowName});
+  Future<int> customTrackingStartWorkflow({required String workflowName});
+  Future<void> customTrackingEndWorkflow({required int handle});
 
   // Navigation
 

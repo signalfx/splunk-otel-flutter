@@ -36,10 +36,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       exit(2);
     }
     if (index == 1) {
-      SplunkOtelFlutter.instance.navigation.track(screenName: 'Favorites Screen');
+      SplunkRum.instance.navigation.track(screenName: 'Favorites Screen');
     }
     if (index == 0) {
-      SplunkOtelFlutter.instance.navigation.track(screenName: 'Home Screen');
+      SplunkRum.instance.navigation.track(screenName: 'Home Screen');
     }
     setState(() {
       _selectedIndex = index;

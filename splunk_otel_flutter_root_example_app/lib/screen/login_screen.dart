@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: InkWell(
             onTap: () {
               // Track navigation using Splunk RUM
-              SplunkOtelFlutter.instance.navigation.track(screenName: 'Forgot Password Screen');
+              SplunkRum.instance.navigation.track(screenName: 'Forgot Password Screen');
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -77,8 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   _loginController.text == "ondrej@smartlook.com" ||
                   _loginController.text == "pavel@smartlook.com") {
                 // Track successful login
-                await SplunkOtelFlutter.instance.navigation.track(screenName: 'Home Screen');
-                await SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+                await SplunkRum.instance.navigation.track(screenName: 'Home Screen');
+                await SplunkRum.instance.customTracking.trackCustomEvent(
                   name: 'login',
                   attributes: MutableAttributes(
                     attributes: {
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
 
                 // Set user identifier for Splunk RUM
-                SplunkOtelFlutter.instance.globalAttributes.setString(
+                SplunkRum.instance.globalAttributes.setString(
                   key: 'user.email',
                   value: _loginController.text,
                 );
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 exit(0);
               } else {
                 // Track failed login
-               await SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+               await SplunkRum.instance.customTracking.trackCustomEvent(
                   name: 'login',
                   attributes: MutableAttributes(
                     attributes: {

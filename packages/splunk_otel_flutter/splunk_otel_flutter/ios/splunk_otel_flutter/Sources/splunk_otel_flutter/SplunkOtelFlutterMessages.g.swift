@@ -1136,14 +1136,6 @@ class SplunkOtelFlutterMessagesPigeonCodec: FlutterStandardMessageCodec, @unchec
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterHostApi {
   func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
-  func sessionReplayStart(completion: @escaping (Result<Void, Error>) -> Void)
-  func sessionReplayStop(completion: @escaping (Result<Void, Error>) -> Void)
-  func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, Error>) -> Void)
-  func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, Error>) -> Void)
-  func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, Error>) -> Void)
-  func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, Error>) -> Void)
-  func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void)
-  func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, Error>) -> Void)
   func stateGetAppName(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetAppVersion(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetStatus(completion: @escaping (Result<GeneratedStatus, Error>) -> Void)
@@ -1173,7 +1165,8 @@ protocol SplunkOtelFlutterHostApi {
   func globalAttributesSetBoolList(key: String, value: [Bool], completion: @escaping (Result<Void, Error>) -> Void)
   func globalAttributesSetAll(value: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
   func customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
-  func customTrackingTrackWorkflow(workflowName: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func customTrackingStartWorkflow(workflowName: String, completion: @escaping (Result<Int64, Error>) -> Void)
+  func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func navigationTrack(screenName: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -1208,130 +1201,6 @@ class SplunkOtelFlutterHostApiSetup {
       }
     } else {
       installChannel.setMessageHandler(nil)
-    }
-    let sessionReplayStartChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStart\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayStartChannel.setMessageHandler { _, reply in
-        api.sessionReplayStart { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayStartChannel.setMessageHandler(nil)
-    }
-    let sessionReplayStopChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStop\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayStopChannel.setMessageHandler { _, reply in
-        api.sessionReplayStop { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayStopChannel.setMessageHandler(nil)
-    }
-    let sessionReplayStateGetStatusChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetStatus\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayStateGetStatusChannel.setMessageHandler { _, reply in
-        api.sessionReplayStateGetStatus { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayStateGetStatusChannel.setMessageHandler(nil)
-    }
-    let sessionReplayStateGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayStateGetRenderingModeChannel.setMessageHandler { _, reply in
-        api.sessionReplayStateGetRenderingMode { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayStateGetRenderingModeChannel.setMessageHandler(nil)
-    }
-    let sessionReplayPreferencesGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler { _, reply in
-        api.sessionReplayPreferencesGetRenderingMode { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler(nil)
-    }
-    let sessionReplayPreferencesSetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesSetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let renderingModeArg: GeneratedRenderingMode? = nilOrValue(args[0])
-        api.sessionReplayPreferencesSetRenderingMode(renderingMode: renderingModeArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler(nil)
-    }
-    let sessionReplayGetRecordingMaskChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayGetRecordingMask\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayGetRecordingMaskChannel.setMessageHandler { _, reply in
-        api.sessionReplayGetRecordingMask { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayGetRecordingMaskChannel.setMessageHandler(nil)
-    }
-    let sessionReplaySetRecordingMaskChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplaySetRecordingMask\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplaySetRecordingMaskChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let recordingMaskArg: GeneratedRecordingMaskList? = nilOrValue(args[0])
-        api.sessionReplaySetRecordingMask(recordingMask: recordingMaskArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplaySetRecordingMaskChannel.setMessageHandler(nil)
     }
     let stateGetAppNameChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -1805,12 +1674,29 @@ class SplunkOtelFlutterHostApiSetup {
     } else {
       customTrackingTrackCustomEventChannel.setMessageHandler(nil)
     }
-    let customTrackingTrackWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let customTrackingStartWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      customTrackingTrackWorkflowChannel.setMessageHandler { message, reply in
+      customTrackingStartWorkflowChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let workflowNameArg = args[0] as! String
-        api.customTrackingTrackWorkflow(workflowName: workflowNameArg) { result in
+        api.customTrackingStartWorkflow(workflowName: workflowNameArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      customTrackingStartWorkflowChannel.setMessageHandler(nil)
+    }
+    let customTrackingEndWorkflowChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      customTrackingEndWorkflowChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let handleArg = args[0] as! Int64
+        api.customTrackingEndWorkflow(handle: handleArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1820,7 +1706,7 @@ class SplunkOtelFlutterHostApiSetup {
         }
       }
     } else {
-      customTrackingTrackWorkflowChannel.setMessageHandler(nil)
+      customTrackingEndWorkflowChannel.setMessageHandler(nil)
     }
     let navigationTrackChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

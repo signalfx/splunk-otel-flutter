@@ -24,7 +24,7 @@ class PremiumScreenIntro extends StatelessWidget {
             text: "CONTINUE",
             onTap: () {
               // Track navigation to month selection screen
-              SplunkOtelFlutter.instance.navigation.track(screenName: 'Premium Account Screen - Month Selection');
+              SplunkRum.instance.navigation.track(screenName: 'Premium Account Screen - Month Selection');
               Navigator.push(
                 context,
                 MaterialPageRoute(

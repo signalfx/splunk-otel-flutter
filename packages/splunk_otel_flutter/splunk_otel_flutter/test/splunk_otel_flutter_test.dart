@@ -21,9 +21,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Splunk OTel Flutter Package', () {
-    test('should export SplunkOtelFlutter class', () {
-      expect(SplunkOtelFlutter.instance, isNotNull);
-      expect(SplunkOtelFlutter.instance, isA<SplunkOtelFlutter>());
+    test('should export SplunkRum class', () {
+      expect(SplunkRum.instance, isNotNull);
+      expect(SplunkRum.instance, isA<SplunkRum>());
     });
 
     test('should export AgentConfiguration class', () {
@@ -55,12 +55,6 @@ void main() {
     test('should export MutableAttributes', () {
       final attrs = const MutableAttributes();
       expect(attrs, isA<MutableAttributes>());
-    });
-
-    test('should export session replay types', () {
-      expect(RenderingMode.native, isA<RenderingMode>());
-      expect(SessionReplayStatus.isRecording, isA<SessionReplayStatus>());
-      expect(RecordingMaskType.erasing, isA<RecordingMaskType>());
     });
   });
 }

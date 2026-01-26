@@ -17,7 +17,6 @@
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
-import 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -220,63 +219,6 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
 
-
-
-  // Session Replay
-
-  @override
-  Future<void> sessionReplayStart() async {
-    await _api.sessionReplayStart();
-  }
-
-  @override
-  Future<void> sessionReplayStop() async {
-    await _api.sessionReplayStop();
-  }
-
-  @override
-  Future<RecordingMaskList?> sessionReplayGetRecordingMask() async {
-    final generatedMask = await _api.sessionReplayGetRecordingMask();
-
-    return generatedMask?.toRecordingMaskList();
-  }
-
-  @override
-  Future<void> sessionReplaySetRecordingMask(
-          {required RecordingMaskList recordingMask}) async =>
-      await _api.sessionReplaySetRecordingMask(
-        recordingMask: recordingMask.toGeneratedRecordingMaskList(),
-      );
-
-  @override
-  Future<RenderingMode> sessionReplayStateGetRenderingMode() async {
-    final generatedRenderingMode =
-        await _api.sessionReplayStateGetRenderingMode();
-
-    return generatedRenderingMode.toRenderingMode();
-  }
-
-  @override
-  Future<RenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
-    final generatedRenderingMode =
-        await _api.sessionReplayPreferencesGetRenderingMode();
-
-    return generatedRenderingMode?.toRenderingMode();
-  }
-
-  @override
-  Future<void> sessionReplayPreferencesSetRenderingMode(
-          {required RenderingMode? renderingMode}) async =>
-      await _api.sessionReplayPreferencesSetRenderingMode(
-          renderingMode: renderingMode?.toGeneratedRenderingMode());
-
-  @override
-  Future<SessionReplayStatus> sessionReplayStateGetStatus() async {
-    final generatedStatus = await _api.sessionReplayStateGetStatus();
-
-    return generatedStatus.toSessionReplayStatus();
-  }
-
   // Session
 
   @override
@@ -449,11 +391,20 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
   @override
-  Future<void> customTrackingTrackWorkflow({
+  Future<int> customTrackingStartWorkflow({
     required String workflowName,
   }) async {
-    await _api.customTrackingTrackWorkflow(
+    return await _api.customTrackingStartWorkflow(
       workflowName: workflowName,
+    );
+  }
+
+  @override
+  Future<void> customTrackingEndWorkflow({
+    required int handle,
+  }) async {
+    await _api.customTrackingEndWorkflow(
+      handle: handle,
     );
   }
 

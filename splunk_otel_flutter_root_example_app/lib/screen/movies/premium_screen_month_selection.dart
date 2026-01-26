@@ -68,7 +68,7 @@ class _PremiumScreenMonthSelectionState
           text: "PURCHASE",
           onTap: () {
             // Track purchase button click with Splunk RUM
-            SplunkOtelFlutter.instance.customTracking.trackCustomEvent(
+            SplunkRum.instance.customTracking.trackCustomEvent(
               name: 'purchase_initiated',
               attributes: MutableAttributes(
                 attributes: {
@@ -79,7 +79,7 @@ class _PremiumScreenMonthSelectionState
             );
             if (_currentSliderValue == 2) {
               // Track failed purchase
-              SplunkOtelFlutter.instance.navigation.track(screenName: 'Purchase Failed Screen');
+              SplunkRum.instance.navigation.track(screenName: 'Purchase Failed Screen');
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -88,7 +88,7 @@ class _PremiumScreenMonthSelectionState
               );
             } else {
               // Track successful purchase
-              SplunkOtelFlutter.instance.navigation.track(screenName: 'Purchase Succeeded Screen');
+              SplunkRum.instance.navigation.track(screenName: 'Purchase Succeeded Screen');
               Navigator.push(
                 context,
                 MaterialPageRoute(

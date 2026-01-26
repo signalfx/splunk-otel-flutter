@@ -16,87 +16,73 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
 
 
   Future<void> wholeApiDefinition()async{
-    // session replay - sensitivity ignored
-    SplunkOtelFlutter.instance.sessionReplay.start();
-    SplunkOtelFlutter.instance.sessionReplay.stop();
-    SplunkOtelFlutter.instance.sessionReplay.state.getStatus();
-    SplunkOtelFlutter.instance.sessionReplay.state.getRenderingMode();
-    SplunkOtelFlutter.instance.sessionReplay.preferences.getRenderingMode();
-    SplunkOtelFlutter.instance.sessionReplay.preferences.setRenderingMode(
-      renderingMode: RenderingMode.native,
-    );
-    SplunkOtelFlutter.instance.sessionReplay.recordingMask.getRecordingMask();
-    SplunkOtelFlutter.instance.sessionReplay.recordingMask.setRecordingMask(
-      recordingMask: RecordingMaskList(elements: []),
-    );
-
     // state
-    SplunkOtelFlutter.instance.state.getAppName();
-    SplunkOtelFlutter.instance.state.getAppVersion();
-    SplunkOtelFlutter.instance.state.getStatus();
-    SplunkOtelFlutter.instance.state.getEndpointConfiguration();
-    SplunkOtelFlutter.instance.state.getDeploymentEnvironment();
-    SplunkOtelFlutter.instance.state.getIsDebugLoggingEnabled();
-    SplunkOtelFlutter.instance.state.getInstrumentedProcessName();
-    SplunkOtelFlutter.instance.state.getDeferredUntilForeground();
+    SplunkRum.instance.state.getAppName();
+    SplunkRum.instance.state.getAppVersion();
+    SplunkRum.instance.state.getStatus();
+    SplunkRum.instance.state.getEndpointConfiguration();
+    SplunkRum.instance.state.getDeploymentEnvironment();
+    SplunkRum.instance.state.getIsDebugLoggingEnabled();
+    SplunkRum.instance.state.getInstrumentedProcessName();
+    SplunkRum.instance.state.getDeferredUntilForeground();
 
     // session
-    SplunkOtelFlutter.instance.session.state.getId();
-    SplunkOtelFlutter.instance.session.state.getSamplingRate();
+    SplunkRum.instance.session.state.getId();
+    SplunkRum.instance.session.state.getSamplingRate();
 
     // user
-    SplunkOtelFlutter.instance.user.state.getTrackingMode();
-    SplunkOtelFlutter.instance.user.preferences.getTrackingMode();
-    SplunkOtelFlutter.instance.user.preferences.setTrackingMode(
+    SplunkRum.instance.user.state.getTrackingMode();
+    SplunkRum.instance.user.preferences.getTrackingMode();
+    SplunkRum.instance.user.preferences.setTrackingMode(
       userTrackingMode: UserTrackingMode.noTracking,
     );
 
     // global attributes
-    SplunkOtelFlutter.instance.globalAttributes.get(
+    SplunkRum.instance.globalAttributes.get(
       key: "my_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.getAll();
-    SplunkOtelFlutter.instance.globalAttributes.remove(
+    SplunkRum.instance.globalAttributes.getAll();
+    SplunkRum.instance.globalAttributes.remove(
       key: "old_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.removeAll();
-    SplunkOtelFlutter.instance.globalAttributes.contains(
+    SplunkRum.instance.globalAttributes.removeAll();
+    SplunkRum.instance.globalAttributes.contains(
       key: "existing_key",
     );
-    SplunkOtelFlutter.instance.globalAttributes.setString(
+    SplunkRum.instance.globalAttributes.setString(
       key: "user_name",
       value: "Alice",
     );
-    SplunkOtelFlutter.instance.globalAttributes.setInt(
+    SplunkRum.instance.globalAttributes.setInt(
       key: "user_id",
       value: 123,
     );
-    SplunkOtelFlutter.instance.globalAttributes.setDouble(
+    SplunkRum.instance.globalAttributes.setDouble(
       key: "app_version",
       value: 1.5,
     );
-    SplunkOtelFlutter.instance.globalAttributes.setBool(
+    SplunkRum.instance.globalAttributes.setBool(
       key: "is_logged_in",
       value: true,
     );
     /*
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetStringList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetStringList(
       key: "tags",
       value: ["mobile", "flutter"],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetIntList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetIntList(
       key: "permissions",
       value: [1, 2, 3],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetDoubleList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetDoubleList(
       key: "scores",
       value: [9.5, 8.0],
     );
-    SplunkOtelFlutter.instance.globalAttributes.globalAttributesSetBoolList(
+    SplunkRum.instance.globalAttributes.globalAttributesSetBoolList(
       key: "features",
       value: [true, false],
     );*/
-    SplunkOtelFlutter.instance.globalAttributes.setAll(
+    SplunkRum.instance.globalAttributes.setAll(
       attributes: MutableAttributes(
         attributes: {
           "attr1": MutableAttributeString(value: "val1"),
@@ -106,18 +92,19 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
     );
 
     // Custom tracking
-    SplunkOtelFlutter.instance.customTracking.trackCustomEvent(name: "testEvent", attributes: MutableAttributes());
-    SplunkOtelFlutter.instance.customTracking.trackWorkflow(workflowName: "testWorkflow");
+    SplunkRum.instance.customTracking.trackCustomEvent(name: "testEvent", attributes: MutableAttributes());
+    final workflow = await SplunkRum.instance.customTracking.startWorkflow(name: "testWorkflow");
+    await workflow.end();
 
     // Navigation
-    SplunkOtelFlutter.instance.navigation.track(screenName: "testScreen");
+    SplunkRum.instance.navigation.track(screenName: "testScreen");
   }
 
 
 // ---- Public API smoke test with set->get->assert checks ----
 
   Future<void> exercisePublicApiWithAsserts() async {
-    final sdk = SplunkOtelFlutter.instance;
+    final sdk = SplunkRum.instance;
 
     // Helpers
     bool listEquals<T>(List<T> a, List<T> b) {
@@ -175,74 +162,6 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
       final trackingAfter = await sdk.user.preferences.getTrackingMode();
       assert(trackingAfter ==
           trackingModeToSet, 'User tracking mode did not persist');
-
-      // ========= SessionReplay: start/stop, state & preferences =========
-      final srModeBefore = await sdk.sessionReplay.state.getRenderingMode();
-      final srStatusBefore = await sdk.sessionReplay.state.getStatus();
-      assert(srStatusBefore != SessionReplayStatus
-          .internalError, 'Session Replay should not be in internalError');
-
-      await sdk.sessionReplay.preferences.setRenderingMode(
-          renderingMode: srModeBefore);
-      final srModePref = await sdk.sessionReplay.preferences.getRenderingMode();
-      assert(srModePref ==
-          srModeBefore, 'SR prefs mode should equal state mode after set');
-
-      // Recording mask: set -> get -> assert -> restore
-      final originalMask = await sdk.sessionReplay.recordingMask
-          .getRecordingMask();
-      final tempMask = RecordingMaskList(
-        elements: [
-          RecordingMaskElement(
-            rect: const Rect.fromLTWH(10, 10, 120, 40),
-            type: RecordingMaskType.erasing,
-          ),
-          RecordingMaskElement(
-            rect: const Rect.fromLTWH(20, 70, 200, 60),
-            type: RecordingMaskType.covering,
-          ),
-        ],
-      );
-      await sdk.sessionReplay.recordingMask.setRecordingMask(
-          recordingMask: tempMask);
-      final maskAfterSet = await sdk.sessionReplay.recordingMask
-          .getRecordingMask();
-      assert(maskAfterSet !=
-          null, 'Recording mask should not be null after set');
-      assert(maskAfterSet!.elements.length ==
-          tempMask.elements.length, 'Recording mask element count mismatch');
-      // Spot-check first element equivalence
-      final a = maskAfterSet!.elements.first;
-      final b = tempMask.elements.first;
-      assert(a.type == b.type, 'Recording mask first element type mismatch');
-      assert(a.rect.left == b.rect.left &&
-          a.rect.top == b.rect.top &&
-          a.rect.width == b.rect.width &&
-          a.rect.height ==
-              b.rect.height, 'Recording mask first element rect mismatch');
-
-      // Stop/start roundtrip
-      await sdk.sessionReplay.stop();
-      final srStatusStopped = await sdk.sessionReplay.state.getStatus();
-      assert(srStatusStopped == SessionReplayStatus.stopped ||
-          srStatusStopped == SessionReplayStatus.notStarted,
-      'SR should report stopped/notStarted after stop()');
-      await sdk.sessionReplay.start();
-      final srStatusStarted = await sdk.sessionReplay.state.getStatus();
-      assert(srStatusStarted == SessionReplayStatus.isRecording ||
-          srStatusStarted == SessionReplayStatus
-              .notStarted, // allow platforms that don't autostart
-      'SR should be recording or notStarted after start()');
-
-      // Restore previous mask if one existed
-      if (originalMask != null) {
-        await sdk.sessionReplay.recordingMask.setRecordingMask(
-            recordingMask: originalMask);
-        final restored = await sdk.sessionReplay.recordingMask
-            .getRecordingMask();
-        assert(restored!.elements.length ==
-            originalMask.elements.length, 'Original mask was not restored');
-      }
 
       // ========= GlobalAttributes (all getters/setters with assertions) =========
       // Scalars
@@ -310,12 +229,12 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
 
       // Final log to make it easy to see result in console
       // ignore: avoid_print
-      print('✅ SplunkOtelFlutter public API smoke test with asserts completed');
+      print('✅ SplunkRum public API smoke test with asserts completed');
 
 
     } catch (e, st) {
       // ignore: avoid_print
-      print('⚠️ SplunkOtelFlutter API assert test caught error: $e\n$st');
+      print('⚠️ SplunkRum API assert test caught error: $e\n$st');
     }
   }
 }

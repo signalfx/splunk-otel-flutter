@@ -1261,14 +1261,6 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterHostApi {
   fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, callback: (Result<Unit>) -> Unit)
-  fun sessionReplayStart(callback: (Result<Unit>) -> Unit)
-  fun sessionReplayStop(callback: (Result<Unit>) -> Unit)
-  fun sessionReplayStateGetStatus(callback: (Result<GeneratedSessionReplayStatus>) -> Unit)
-  fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit)
-  fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit)
-  fun sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, callback: (Result<Unit>) -> Unit)
-  fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMaskList?>) -> Unit)
-  fun sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, callback: (Result<Unit>) -> Unit)
   fun stateGetAppName(callback: (Result<String>) -> Unit)
   fun stateGetAppVersion(callback: (Result<String>) -> Unit)
   fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit)
@@ -1298,7 +1290,8 @@ interface SplunkOtelFlutterHostApi {
   fun globalAttributesSetBoolList(key: String, value: List<Boolean>, callback: (Result<Unit>) -> Unit)
   fun globalAttributesSetAll(value: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
   fun customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
-  fun customTrackingTrackWorkflow(workflowName: String, callback: (Result<Unit>) -> Unit)
+  fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit)
+  fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit)
   fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -1326,150 +1319,6 @@ interface SplunkOtelFlutterHostApi {
             val okHttp3AutoModuleConfigurationArg = args[8] as GeneratedOkHttp3AutoModuleConfiguration?
             val networkInstrumentationModuleConfigurationArg = args[9] as GeneratedNetworkInstrumentationModuleConfiguration?
             api.install(agentConfigurationArg, navigationModuleConfigurationArg, slowRenderingModuleConfigurationArg, crashReportsModuleConfigurationArg, interactionsModuleConfigurationArg, networkMonitorModuleConfigurationArg, anrModuleConfigurationArg, httpUrlModuleConfigurationArg, okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfigurationArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStart$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayStart{ result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStop$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayStop{ result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetStatus$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayStateGetStatus{ result: Result<GeneratedSessionReplayStatus> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayStateGetRenderingMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayStateGetRenderingMode{ result: Result<GeneratedRenderingMode> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesGetRenderingMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayPreferencesGetRenderingMode{ result: Result<GeneratedRenderingMode?> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayPreferencesSetRenderingMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val renderingModeArg = args[0] as GeneratedRenderingMode?
-            api.sessionReplayPreferencesSetRenderingMode(renderingModeArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplayGetRecordingMask$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.sessionReplayGetRecordingMask{ result: Result<GeneratedRecordingMaskList?> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionReplaySetRecordingMask$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val recordingMaskArg = args[0] as GeneratedRecordingMaskList?
-            api.sessionReplaySetRecordingMask(recordingMaskArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
@@ -2029,12 +1878,32 @@ interface SplunkOtelFlutterHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackWorkflow$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val workflowNameArg = args[0] as String
-            api.customTrackingTrackWorkflow(workflowNameArg) { result: Result<Unit> ->
+            api.customTrackingStartWorkflow(workflowNameArg) { result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val handleArg = args[0] as Long
+            api.customTrackingEndWorkflow(handleArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

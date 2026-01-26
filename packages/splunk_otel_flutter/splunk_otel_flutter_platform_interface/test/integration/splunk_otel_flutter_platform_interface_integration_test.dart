@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
-import 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 import '../mock_splunk_otel_flutter_platform_interface_host_api.dart';
@@ -203,115 +200,6 @@ void main() {
           agentConfiguration: agentConfig,
           moduleConfigurations: [slowConfig],
         );
-      });
-    });
-
-    group('Session Management Flow', () {
-      test('should install then start session replay', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'token',
-          ),
-          appName: 'SessionApp',
-          deploymentEnvironment: 'production',
-        );
-
-        bool installCalled = false;
-        bool sessionReplayCalled = false;
-
-        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
-          installCalled = true;
-        };
-
-        mockApi.sessionReplayStartHandler = () async {
-          sessionReplayCalled = true;
-        };
-
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [],
-        );
-        await implementation.sessionReplayStart();
-
-        // Assert
-        expect(installCalled, true);
-        expect(sessionReplayCalled, true);
-      });
-
-      test('should install then retrieve session ID', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'token',
-          ),
-          appName: 'SessionIdApp',
-          deploymentEnvironment: 'production',
-        );
-
-        const expectedSessionId = 'session-integration-test-123';
-        bool installCalled = false;
-
-        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
-          installCalled = true;
-        };
-
-        mockApi.sessionStateGetIdHandler = () async => expectedSessionId;
-
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [],
-        );
-        final sessionId = await implementation.sessionStateGetId();
-
-        // Assert
-        expect(installCalled, true);
-        expect(sessionId, expectedSessionId);
-      });
-
-      test('should handle complete session workflow', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'workflow-token',
-          ),
-          appName: 'WorkflowApp',
-          deploymentEnvironment: 'production',
-          session: SessionConfiguration(samplingRate: 1.0),
-        );
-
-        const sessionId = 'workflow-session-abc';
-        final callOrder = <String>[];
-
-        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _) async {
-          callOrder.add('install');
-        };
-
-        mockApi.sessionReplayStartHandler = () async {
-          callOrder.add('sessionReplay');
-        };
-
-        mockApi.sessionStateGetIdHandler = () async {
-          callOrder.add('getSessionId');
-          return sessionId;
-        };
-
-        // Act - Complete workflow
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [],
-        );
-        await implementation.sessionReplayStart();
-        final retrievedSessionId = await implementation.sessionStateGetId();
-
-        // Assert
-        expect(callOrder, ['install', 'sessionReplay', 'getSessionId']);
-        expect(retrievedSessionId, sessionId);
       });
     });
 
@@ -597,19 +485,6 @@ void main() {
         );
       });
 
-      test('should propagate errors during session replay start', () async {
-        // Arrange
-        mockApi.sessionReplayStartHandler = () async {
-          throw Exception('Session replay failed');
-        };
-
-        // Act & Assert
-        expect(
-              () => implementation.sessionReplayStart(),
-          throwsException,
-        );
-      });
-
       test('should propagate errors during getSessionId', () async {
         // Arrange
         mockApi.sessionStateGetIdHandler = () async {
@@ -775,91 +650,6 @@ void main() {
       });
     });
 
-    group('Session Replay Integration', () {
-      test('should start and stop session replay', () async {
-        bool startCalled = false;
-        bool stopCalled = false;
-
-        mockApi.sessionReplayStartHandler = () async {
-          startCalled = true;
-        };
-
-        mockApi.sessionReplayStopHandler = () async {
-          stopCalled = true;
-        };
-
-        await implementation.sessionReplayStart();
-        await implementation.sessionReplayStop();
-
-        expect(startCalled, true);
-        expect(stopCalled, true);
-      });
-
-      test('should get session replay status', () async {
-        mockApi.sessionReplayStateGetStatusHandler = () async {
-          return GeneratedSessionReplayStatus.isRecording;
-        };
-
-        final status = await implementation.sessionReplayStateGetStatus();
-        expect(status, SessionReplayStatus.isRecording);
-      });
-
-      test('should get and set rendering mode preferences', () async {
-        mockApi.sessionReplayPreferencesGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.wireframeOnly;
-        };
-
-        mockApi.sessionReplayPreferencesSetRenderingModeHandler = (mode) async {
-          expect(mode, GeneratedRenderingMode.native);
-        };
-
-        final mode = await implementation.sessionReplayPreferencesGetRenderingMode();
-        expect(mode, RenderingMode.wireframeOnly);
-
-        await implementation.sessionReplayPreferencesSetRenderingMode(
-          renderingMode: RenderingMode.native,
-        );
-      });
-
-      test('should get state rendering mode', () async {
-        mockApi.sessionReplayStateGetRenderingModeHandler = () async {
-          return GeneratedRenderingMode.native;
-        };
-
-        final mode = await implementation.sessionReplayStateGetRenderingMode();
-        expect(mode, RenderingMode.native);
-      });
-
-      test('should get and set recording mask', () async {
-        final recordingMask = RecordingMaskList(elements: [
-          RecordingMaskElement(
-            rect: const Rect.fromLTWH(0, 0, 100, 100),
-            type: RecordingMaskType.erasing,
-          ),
-        ]);
-
-        mockApi.sessionReplaySetRecordingMaskHandler = (mask) async {
-          expect(mask?.recordingMaskList?.length, 1);
-          expect(mask?.recordingMaskList?.first.type, GeneratedRecordingMaskType.erasing);
-        };
-
-        mockApi.sessionReplayGetRecordingMaskHandler = () async {
-          return GeneratedRecordingMaskList(recordingMaskList: [
-            GeneratedRecordingMaskElement(
-              rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
-              type: GeneratedRecordingMaskType.erasing,
-            ),
-          ]);
-        };
-
-        await implementation.sessionReplaySetRecordingMask(recordingMask: recordingMask);
-        final result = await implementation.sessionReplayGetRecordingMask();
-
-        expect(result?.elements.length, 1);
-        expect(result?.elements.first.type, RecordingMaskType.erasing);
-      });
-    });
-
     group('State Getters Integration', () {
       test('should get all state values', () async {
         mockApi.stateGetAppNameHandler = () async => 'TestApp';
@@ -947,14 +737,24 @@ void main() {
         );
       });
 
-      test('should track workflow', () async {
+      test('should start and end workflow', () async {
         const workflowName = 'checkout_flow';
+        int? receivedHandle;
 
-        mockApi.customTrackingTrackWorkflowHandler = (name) async {
+        mockApi.customTrackingStartWorkflowHandler = (name) async {
           expect(name, workflowName);
+          return 789; // Return a mock handle
         };
 
-        await implementation.customTrackingTrackWorkflow(workflowName: workflowName);
+        mockApi.customTrackingEndWorkflowHandler = (handle) async {
+          receivedHandle = handle;
+        };
+
+        final handle = await implementation.customTrackingStartWorkflow(workflowName: workflowName);
+        expect(handle, 789);
+
+        await implementation.customTrackingEndWorkflow(handle: handle);
+        expect(receivedHandle, 789);
       });
     });
 
