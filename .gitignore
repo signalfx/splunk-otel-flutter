@@ -25,7 +25,7 @@ migrate_working_dir/
 gradlew
 gradlew.bat
 gradle-wrapper.jar
-**/gradle/wrapper/
+# Note: gradle-wrapper.properties are checked-in, excluded via .pubignore for publishing
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
