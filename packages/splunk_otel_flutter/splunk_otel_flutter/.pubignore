@@ -1,0 +1,22 @@
+# Gradle wrapper files - not needed in published package
+**/gradle-wrapper.properties
+**/gradle-wrapper.jar
+**/gradle/wrapper/
+
+# Example app - not needed in published package
+example/
+
+# Build artifacts
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
