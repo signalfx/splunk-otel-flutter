@@ -50,16 +50,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      - name: Install Monorepo Dependencies
-        run: flutter pub get
-        shell: bash
-
       - name: Activate Melos
         run: dart pub global activate melos
         shell: bash
 
       - name: Add Dart global executables to PATH
         run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+        shell: bash
+
+      - name: Bootstrap Melos Workspace
+        run: melos bootstrap
         shell: bash
 
       - name: Run Melos Analyze
@@ -89,16 +89,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      - name: Install Monorepo Dependencies
-        run: flutter pub get
-        shell: bash
-
       - name: Activate Melos
         run: dart pub global activate melos
         shell: bash
 
       - name: Add Dart global executables to PATH
         run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+        shell: bash
+
+      - name: Bootstrap Melos Workspace
+        run: melos bootstrap
         shell: bash
 
       - name: Run Melos Test

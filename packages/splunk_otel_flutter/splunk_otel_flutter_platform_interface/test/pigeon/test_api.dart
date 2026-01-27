@@ -11,6 +11,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
+List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+  if (empty) {
+    return <Object?>[];
+  }
+  if (error == null) {
+    return <Object?>[result];
+  }
+  return <Object?>[error.code, error.message, error.details];
+}
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
