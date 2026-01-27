@@ -61,68 +61,71 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GeneratedNetworkMonitorModuleConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAnrModuleConfiguration) {
+    }    else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedHttpUrlModuleConfiguration) {
+    }    else if (value is GeneratedAnrModuleConfiguration) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
+    }    else if (value is GeneratedHttpUrlModuleConfiguration) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
+    }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRegularExpression) {
+    }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    }    else if (value is GeneratedRegularExpression) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    }    else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    }    else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    }    else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskList) {
+    }    else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    }    else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(150);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    }    else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(151);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    }    else if (value is GeneratedRect) {
       buffer.putUint8(152);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    }    else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(153);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    }    else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(154);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    }    else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(155);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    }    else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(156);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    }    else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(157);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    }    else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(158);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    }    else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(159);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    }    else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(160);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(161);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -161,46 +164,48 @@ class _PigeonCodec extends StandardMessageCodec {
       case 139: 
         return GeneratedNetworkMonitorModuleConfiguration.decode(readValue(buffer)!);
       case 140: 
-        return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedApplicationLifecycleModuleConfiguration.decode(readValue(buffer)!);
       case 141: 
-        return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
       case 142: 
-        return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
       case 143: 
-        return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
+        return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
       case 144: 
-        return GeneratedRegularExpression.decode(readValue(buffer)!);
+        return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
       case 145: 
-        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
+        return GeneratedRegularExpression.decode(readValue(buffer)!);
       case 146: 
-        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
+        return GeneratedAgentConfiguration.decode(readValue(buffer)!);
       case 147: 
-        return GeneratedUserConfiguration.decode(readValue(buffer)!);
+        return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
       case 148: 
-        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
+        return GeneratedUserConfiguration.decode(readValue(buffer)!);
       case 149: 
-        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
+        return GeneratedSessionConfiguration.decode(readValue(buffer)!);
       case 150: 
-        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
       case 151: 
-        return GeneratedRect.decode(readValue(buffer)!);
+        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
       case 152: 
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedRect.decode(readValue(buffer)!);
       case 153: 
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
       case 154: 
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
       case 155: 
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
       case 156: 
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
       case 157: 
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
       case 158: 
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
       case 159: 
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
       case 160: 
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 161: 
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -212,7 +217,7 @@ abstract class TestSplunkOtelFlutterHostApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, });
+  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, });
 
   Future<String> stateGetAppName();
 
@@ -299,12 +304,13 @@ abstract class TestSplunkOtelFlutterHostApi {
           final GeneratedCrashReportsModuleConfiguration? arg_crashReportsModuleConfiguration = (args[3] as GeneratedCrashReportsModuleConfiguration?);
           final GeneratedInteractionsModuleConfiguration? arg_interactionsModuleConfiguration = (args[4] as GeneratedInteractionsModuleConfiguration?);
           final GeneratedNetworkMonitorModuleConfiguration? arg_networkMonitorModuleConfiguration = (args[5] as GeneratedNetworkMonitorModuleConfiguration?);
-          final GeneratedAnrModuleConfiguration? arg_anrModuleConfiguration = (args[6] as GeneratedAnrModuleConfiguration?);
-          final GeneratedHttpUrlModuleConfiguration? arg_httpUrlModuleConfiguration = (args[7] as GeneratedHttpUrlModuleConfiguration?);
-          final GeneratedOkHttp3AutoModuleConfiguration? arg_okHttp3AutoModuleConfiguration = (args[8] as GeneratedOkHttp3AutoModuleConfiguration?);
-          final GeneratedNetworkInstrumentationModuleConfiguration? arg_networkInstrumentationModuleConfiguration = (args[9] as GeneratedNetworkInstrumentationModuleConfiguration?);
+          final GeneratedApplicationLifecycleModuleConfiguration? arg_applicationLifecycleModuleConfiguration = (args[6] as GeneratedApplicationLifecycleModuleConfiguration?);
+          final GeneratedAnrModuleConfiguration? arg_anrModuleConfiguration = (args[7] as GeneratedAnrModuleConfiguration?);
+          final GeneratedHttpUrlModuleConfiguration? arg_httpUrlModuleConfiguration = (args[8] as GeneratedHttpUrlModuleConfiguration?);
+          final GeneratedOkHttp3AutoModuleConfiguration? arg_okHttp3AutoModuleConfiguration = (args[9] as GeneratedOkHttp3AutoModuleConfiguration?);
+          final GeneratedNetworkInstrumentationModuleConfiguration? arg_networkInstrumentationModuleConfiguration = (args[10] as GeneratedNetworkInstrumentationModuleConfiguration?);
           try {
-            await api.install(agentConfiguration: arg_agentConfiguration!, navigationModuleConfiguration: arg_navigationModuleConfiguration, slowRenderingModuleConfiguration: arg_slowRenderingModuleConfiguration, crashReportsModuleConfiguration: arg_crashReportsModuleConfiguration, interactionsModuleConfiguration: arg_interactionsModuleConfiguration, networkMonitorModuleConfiguration: arg_networkMonitorModuleConfiguration, anrModuleConfiguration: arg_anrModuleConfiguration, httpUrlModuleConfiguration: arg_httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration: arg_okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration: arg_networkInstrumentationModuleConfiguration);
+            await api.install(agentConfiguration: arg_agentConfiguration!, navigationModuleConfiguration: arg_navigationModuleConfiguration, slowRenderingModuleConfiguration: arg_slowRenderingModuleConfiguration, crashReportsModuleConfiguration: arg_crashReportsModuleConfiguration, interactionsModuleConfiguration: arg_interactionsModuleConfiguration, networkMonitorModuleConfiguration: arg_networkMonitorModuleConfiguration, applicationLifecycleModuleConfiguration: arg_applicationLifecycleModuleConfiguration, anrModuleConfiguration: arg_anrModuleConfiguration, httpUrlModuleConfiguration: arg_httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration: arg_okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration: arg_networkInstrumentationModuleConfiguration);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
