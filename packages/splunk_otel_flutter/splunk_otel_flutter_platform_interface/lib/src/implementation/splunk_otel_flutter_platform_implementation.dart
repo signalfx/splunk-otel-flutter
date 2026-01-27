@@ -63,6 +63,11 @@ class SplunkOtelFlutterPlatformImplementation
         .cast<NetworkMonitorModuleConfiguration?>()
         .firstOrNull;
 
+    final applicationLifecycleModuleConfiguration = moduleConfigurations
+        .whereType<ApplicationLifecycleModuleConfiguration>()
+        .cast<ApplicationLifecycleModuleConfiguration?>()
+        .firstOrNull;
+
     // Android-only modules
     final anrModuleConfiguration = moduleConfigurations
         .whereType<AnrModuleConfiguration>()
@@ -131,6 +136,12 @@ class SplunkOtelFlutterPlatformImplementation
               ? null
               : GeneratedNetworkMonitorModuleConfiguration(
                   isEnabled: networkMonitorModuleConfiguration.isEnabled,
+                ),
+      applicationLifecycleModuleConfiguration:
+          applicationLifecycleModuleConfiguration == null
+              ? null
+              : GeneratedApplicationLifecycleModuleConfiguration(
+                  isEnabled: applicationLifecycleModuleConfiguration.isEnabled,
                 ),
 
       // Android-only modules

@@ -98,6 +98,7 @@ class SplunkOtelFlutterPlugin :
         crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?,
         interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?,
         networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?,
+        applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?,
         // Android-only
         anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
         httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?,
@@ -151,6 +152,9 @@ class SplunkOtelFlutterPlugin :
             }
             networkMonitorModuleConfiguration?.let {
                 add(NetworkMonitorModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            applicationLifecycleModuleConfiguration?.let {
+                add(ApplicationLifecycleModuleConfiguration(isEnabled = it.isEnabled))
             }
 
             // Android-only

@@ -305,6 +305,31 @@ struct GeneratedNetworkMonitorModuleConfiguration: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedApplicationLifecycleModuleConfiguration: Hashable {
+  var isEnabled: Bool
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedApplicationLifecycleModuleConfiguration? {
+    let isEnabled = pigeonVar_list[0] as! Bool
+
+    return GeneratedApplicationLifecycleModuleConfiguration(
+      isEnabled: isEnabled
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      isEnabled
+    ]
+  }
+  static func == (lhs: GeneratedApplicationLifecycleModuleConfiguration, rhs: GeneratedApplicationLifecycleModuleConfiguration) -> Bool {
+    return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedAnrModuleConfiguration: Hashable {
   var isEnabled: Bool
 
@@ -967,46 +992,48 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 139:
       return GeneratedNetworkMonitorModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 140:
-      return GeneratedAnrModuleConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedApplicationLifecycleModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 141:
-      return GeneratedHttpUrlModuleConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedAnrModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 142:
-      return GeneratedOkHttp3AutoModuleConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedHttpUrlModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 143:
-      return GeneratedNetworkInstrumentationModuleConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedOkHttp3AutoModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 144:
-      return GeneratedRegularExpression.fromList(self.readValue() as! [Any?])
+      return GeneratedNetworkInstrumentationModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 145:
-      return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedRegularExpression.fromList(self.readValue() as! [Any?])
     case 146:
-      return GeneratedEndpointConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
     case 147:
-      return GeneratedUserConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedEndpointConfiguration.fromList(self.readValue() as! [Any?])
     case 148:
-      return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
+      return GeneratedUserConfiguration.fromList(self.readValue() as! [Any?])
     case 149:
-      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
+      return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
     case 150:
-      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
     case 151:
-      return GeneratedRect.fromList(self.readValue() as! [Any?])
+      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
     case 152:
-      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
+      return GeneratedRect.fromList(self.readValue() as! [Any?])
     case 153:
-      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
     case 154:
-      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
     case 155:
-      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
     case 156:
-      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
     case 157:
-      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
     case 158:
-      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
     case 159:
-      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
     case 160:
+      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+    case 161:
       return GeneratedMutableAttributeListBool.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -1049,68 +1076,71 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedNetworkMonitorModuleConfiguration {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedAnrModuleConfiguration {
+    } else if let value = value as? GeneratedApplicationLifecycleModuleConfiguration {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedHttpUrlModuleConfiguration {
+    } else if let value = value as? GeneratedAnrModuleConfiguration {
       super.writeByte(141)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedOkHttp3AutoModuleConfiguration {
+    } else if let value = value as? GeneratedHttpUrlModuleConfiguration {
       super.writeByte(142)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedNetworkInstrumentationModuleConfiguration {
+    } else if let value = value as? GeneratedOkHttp3AutoModuleConfiguration {
       super.writeByte(143)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRegularExpression {
+    } else if let value = value as? GeneratedNetworkInstrumentationModuleConfiguration {
       super.writeByte(144)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedAgentConfiguration {
+    } else if let value = value as? GeneratedRegularExpression {
       super.writeByte(145)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedEndpointConfiguration {
+    } else if let value = value as? GeneratedAgentConfiguration {
       super.writeByte(146)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedUserConfiguration {
+    } else if let value = value as? GeneratedEndpointConfiguration {
       super.writeByte(147)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedSessionConfiguration {
+    } else if let value = value as? GeneratedUserConfiguration {
       super.writeByte(148)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRecordingMaskList {
+    } else if let value = value as? GeneratedSessionConfiguration {
       super.writeByte(149)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRecordingMaskElement {
+    } else if let value = value as? GeneratedRecordingMaskList {
       super.writeByte(150)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedRect {
+    } else if let value = value as? GeneratedRecordingMaskElement {
       super.writeByte(151)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributes {
+    } else if let value = value as? GeneratedRect {
       super.writeByte(152)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeInt {
+    } else if let value = value as? GeneratedMutableAttributes {
       super.writeByte(153)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeDouble {
+    } else if let value = value as? GeneratedMutableAttributeInt {
       super.writeByte(154)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeString {
+    } else if let value = value as? GeneratedMutableAttributeDouble {
       super.writeByte(155)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeBool {
+    } else if let value = value as? GeneratedMutableAttributeString {
       super.writeByte(156)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListInt {
+    } else if let value = value as? GeneratedMutableAttributeBool {
       super.writeByte(157)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListDouble {
+    } else if let value = value as? GeneratedMutableAttributeListInt {
       super.writeByte(158)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListString {
+    } else if let value = value as? GeneratedMutableAttributeListDouble {
       super.writeByte(159)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListBool {
+    } else if let value = value as? GeneratedMutableAttributeListString {
       super.writeByte(160)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedMutableAttributeListBool {
+      super.writeByte(161)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1135,7 +1165,7 @@ class SplunkOtelFlutterMessagesPigeonCodec: FlutterStandardMessageCodec, @unchec
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterHostApi {
-  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
+  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
   func stateGetAppName(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetAppVersion(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetStatus(completion: @escaping (Result<GeneratedStatus, Error>) -> Void)
@@ -1186,11 +1216,12 @@ class SplunkOtelFlutterHostApiSetup {
         let crashReportsModuleConfigurationArg: GeneratedCrashReportsModuleConfiguration? = nilOrValue(args[3])
         let interactionsModuleConfigurationArg: GeneratedInteractionsModuleConfiguration? = nilOrValue(args[4])
         let networkMonitorModuleConfigurationArg: GeneratedNetworkMonitorModuleConfiguration? = nilOrValue(args[5])
-        let anrModuleConfigurationArg: GeneratedAnrModuleConfiguration? = nilOrValue(args[6])
-        let httpUrlModuleConfigurationArg: GeneratedHttpUrlModuleConfiguration? = nilOrValue(args[7])
-        let okHttp3AutoModuleConfigurationArg: GeneratedOkHttp3AutoModuleConfiguration? = nilOrValue(args[8])
-        let networkInstrumentationModuleConfigurationArg: GeneratedNetworkInstrumentationModuleConfiguration? = nilOrValue(args[9])
-        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg, crashReportsModuleConfiguration: crashReportsModuleConfigurationArg, interactionsModuleConfiguration: interactionsModuleConfigurationArg, networkMonitorModuleConfiguration: networkMonitorModuleConfigurationArg, anrModuleConfiguration: anrModuleConfigurationArg, httpUrlModuleConfiguration: httpUrlModuleConfigurationArg, okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfiguration: networkInstrumentationModuleConfigurationArg) { result in
+        let applicationLifecycleModuleConfigurationArg: GeneratedApplicationLifecycleModuleConfiguration? = nilOrValue(args[6])
+        let anrModuleConfigurationArg: GeneratedAnrModuleConfiguration? = nilOrValue(args[7])
+        let httpUrlModuleConfigurationArg: GeneratedHttpUrlModuleConfiguration? = nilOrValue(args[8])
+        let okHttp3AutoModuleConfigurationArg: GeneratedOkHttp3AutoModuleConfiguration? = nilOrValue(args[9])
+        let networkInstrumentationModuleConfigurationArg: GeneratedNetworkInstrumentationModuleConfiguration? = nilOrValue(args[10])
+        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg, crashReportsModuleConfiguration: crashReportsModuleConfigurationArg, interactionsModuleConfiguration: interactionsModuleConfigurationArg, networkMonitorModuleConfiguration: networkMonitorModuleConfigurationArg, applicationLifecycleModuleConfiguration: applicationLifecycleModuleConfigurationArg, anrModuleConfiguration: anrModuleConfigurationArg, httpUrlModuleConfiguration: httpUrlModuleConfigurationArg, okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfiguration: networkInstrumentationModuleConfigurationArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
