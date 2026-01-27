@@ -102,7 +102,10 @@ class SplunkRum {
   ///     deploymentEnvironment: 'production',
   ///   ),
   ///   moduleConfigurations: [
-  ///     SlowRenderingModuleConfiguration(enabled: true, pollingIntervalMs: 1000),
+  ///     SlowRenderingModuleConfiguration(
+  ///       isEnabled: true,
+  ///       interval: const Duration(seconds: 1),
+  ///     ),
   ///   ],
   /// );
   /// ```

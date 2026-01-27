@@ -61,13 +61,14 @@ void main() async {
       ),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
-      InteractionsModuleConfiguration(isEnabled: false),
+      InteractionsModuleConfiguration(isEnabled: true),
       SlowRenderingModuleConfiguration(
-        isEnabled: false,
+        isEnabled: true,
         interval: const Duration(seconds: 1),
       ),
-      AnrModuleConfiguration(isEnabled: false),
-      CrashReportsModuleConfiguration(isEnabled: false),
+      AnrModuleConfiguration(isEnabled: true),
+      CrashReportsModuleConfiguration(isEnabled: true),
+      ApplicationLifecycleModuleConfiguration(isEnabled: false),
     ],
   );
 
