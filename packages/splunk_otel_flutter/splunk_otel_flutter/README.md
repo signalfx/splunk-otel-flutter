@@ -93,6 +93,13 @@ flutter config --enable-swift-package-manager
 
 For more information, see the [official Flutter documentation on Swift Package Manager](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers).
 
+### iOS dSYM Upload (Crash Symbolication)
+
+This package ships with a dSYM uploader script at `dsymUploader/upload-dsyms.sh`.
+Add a Run Script build phase to your iOS `Runner` target and reference the script
+from the plugin path (typically `ios/.symlinks/plugins/splunk_otel_flutter/dsymUploader/upload-dsyms.sh`).
+See `dsymUploader/README.md` for full setup steps and troubleshooting.
+
 ## Quick Start
 
 ### 1. Initialize the SDK
