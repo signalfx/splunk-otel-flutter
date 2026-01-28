@@ -1,39 +1,38 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# splunk_otel_flutter_platform_interface
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Platform interface package for Splunk OpenTelemetry Flutter SDK.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+This package defines the platform interface contracts used for communication between Flutter and native platforms (Android/iOS) via Pigeon code generation.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Overview
 
-## Features
+This package provides:
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- Platform interface definitions for the Splunk RUM SDK
+- Data models and configuration classes
+- Pigeon message definitions for native communication
+- Abstract platform implementation contracts
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+This package is typically used as a dependency by the main `splunk_otel_flutter` package and platform-specific implementations. End users should depend on `splunk_otel_flutter` instead.
 
-```dart
-const like = 'sample';
-```
+## Requirements
 
-## Additional information
+- Dart SDK: `>=3.8.0 <4.0.0`
+- Flutter SDK: `>=3.32.0`
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## License
+
+Copyright 2025 Splunk Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.

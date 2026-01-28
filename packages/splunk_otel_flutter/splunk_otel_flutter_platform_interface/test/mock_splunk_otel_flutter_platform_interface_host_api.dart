@@ -30,6 +30,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
       GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
       GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
       GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+      GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration,
 
       // Android-only configurations
       GeneratedAnrModuleConfiguration? anrModuleConfiguration,
@@ -97,6 +98,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
     required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
     required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
     required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
+    required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration,
 
     // Android-only configurations
     required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
@@ -114,6 +116,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
         crashReportsModuleConfiguration,
         interactionsModuleConfiguration,
         networkMonitorModuleConfiguration,
+        applicationLifecycleModuleConfiguration,
         anrModuleConfiguration,
         httpUrlModuleConfiguration,
         okHttp3AutoModuleConfiguration,

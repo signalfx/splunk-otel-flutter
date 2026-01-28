@@ -1,7 +1,8 @@
 name: splunk_otel_flutter_platform_interface
 description: "Splunk Flutter Agent interface"
-version: 0.0.1
-#TODO add repository and homepage before release
+version: 1.0.0-dev.1
+repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
+homepage: https://github.com/signalfx/splunk-otel-flutter
 
 environment:
   sdk: '>=3.8.0 <4.0.0'

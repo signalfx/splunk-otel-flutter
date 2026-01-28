@@ -119,6 +119,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?,
                  interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?,
                  networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?,
+                 applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?,
                  // Android-only
                  anrModuleConfiguration: GeneratedAnrModuleConfiguration?, 
                  httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, 

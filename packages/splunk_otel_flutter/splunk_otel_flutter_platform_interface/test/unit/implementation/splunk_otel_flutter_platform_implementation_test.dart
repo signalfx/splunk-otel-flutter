@@ -62,7 +62,7 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
           installCalled = true;
           expect(genAgent.appName, 'TestApp');
           expect(genAgent.deploymentEnvironment, 'test');
@@ -89,7 +89,7 @@ void main() {
         final navConfig = NavigationModuleConfiguration(isEnabled: true);
         final slowConfig = SlowRenderingModuleConfiguration(isEnabled: false);
 
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
           expect(genNav?.isEnabled, true);
           expect(genSlow?.isEnabled, false);
           expect(genCrash, isNull);
@@ -123,7 +123,7 @@ void main() {
           NetworkInstrumentationModuleConfiguration(),
         ];
 
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
           expect(genNav, isNotNull);
           expect(genSlow, isNotNull);
           expect(genCrash, isNotNull);

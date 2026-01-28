@@ -304,6 +304,34 @@ data class GeneratedNetworkMonitorModuleConfiguration (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedApplicationLifecycleModuleConfiguration (
+  val isEnabled: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedApplicationLifecycleModuleConfiguration {
+      val isEnabled = pigeonVar_list[0] as Boolean
+      return GeneratedApplicationLifecycleModuleConfiguration(isEnabled)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      isEnabled,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedApplicationLifecycleModuleConfiguration) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedAnrModuleConfiguration (
   val isEnabled: Boolean
 )
@@ -1016,105 +1044,110 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAnrModuleConfiguration.fromList(it)
+          GeneratedApplicationLifecycleModuleConfiguration.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedHttpUrlModuleConfiguration.fromList(it)
+          GeneratedAnrModuleConfiguration.fromList(it)
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedOkHttp3AutoModuleConfiguration.fromList(it)
+          GeneratedHttpUrlModuleConfiguration.fromList(it)
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedNetworkInstrumentationModuleConfiguration.fromList(it)
+          GeneratedOkHttp3AutoModuleConfiguration.fromList(it)
         }
       }
       144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRegularExpression.fromList(it)
+          GeneratedNetworkInstrumentationModuleConfiguration.fromList(it)
         }
       }
       145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedAgentConfiguration.fromList(it)
+          GeneratedRegularExpression.fromList(it)
         }
       }
       146.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedEndpointConfiguration.fromList(it)
+          GeneratedAgentConfiguration.fromList(it)
         }
       }
       147.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedUserConfiguration.fromList(it)
+          GeneratedEndpointConfiguration.fromList(it)
         }
       }
       148.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedSessionConfiguration.fromList(it)
+          GeneratedUserConfiguration.fromList(it)
         }
       }
       149.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRecordingMaskList.fromList(it)
+          GeneratedSessionConfiguration.fromList(it)
         }
       }
       150.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRecordingMaskElement.fromList(it)
+          GeneratedRecordingMaskList.fromList(it)
         }
       }
       151.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedRect.fromList(it)
+          GeneratedRecordingMaskElement.fromList(it)
         }
       }
       152.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributes.fromList(it)
+          GeneratedRect.fromList(it)
         }
       }
       153.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeInt.fromList(it)
+          GeneratedMutableAttributes.fromList(it)
         }
       }
       154.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeDouble.fromList(it)
+          GeneratedMutableAttributeInt.fromList(it)
         }
       }
       155.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeString.fromList(it)
+          GeneratedMutableAttributeDouble.fromList(it)
         }
       }
       156.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeBool.fromList(it)
+          GeneratedMutableAttributeString.fromList(it)
         }
       }
       157.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListInt.fromList(it)
+          GeneratedMutableAttributeBool.fromList(it)
         }
       }
       158.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListDouble.fromList(it)
+          GeneratedMutableAttributeListInt.fromList(it)
         }
       }
       159.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListString.fromList(it)
+          GeneratedMutableAttributeListDouble.fromList(it)
         }
       }
       160.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListString.fromList(it)
+        }
+      }
+      161.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListBool.fromList(it)
         }
@@ -1168,88 +1201,92 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is GeneratedAnrModuleConfiguration -> {
+      is GeneratedApplicationLifecycleModuleConfiguration -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is GeneratedHttpUrlModuleConfiguration -> {
+      is GeneratedAnrModuleConfiguration -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is GeneratedOkHttp3AutoModuleConfiguration -> {
+      is GeneratedHttpUrlModuleConfiguration -> {
         stream.write(142)
         writeValue(stream, value.toList())
       }
-      is GeneratedNetworkInstrumentationModuleConfiguration -> {
+      is GeneratedOkHttp3AutoModuleConfiguration -> {
         stream.write(143)
         writeValue(stream, value.toList())
       }
-      is GeneratedRegularExpression -> {
+      is GeneratedNetworkInstrumentationModuleConfiguration -> {
         stream.write(144)
         writeValue(stream, value.toList())
       }
-      is GeneratedAgentConfiguration -> {
+      is GeneratedRegularExpression -> {
         stream.write(145)
         writeValue(stream, value.toList())
       }
-      is GeneratedEndpointConfiguration -> {
+      is GeneratedAgentConfiguration -> {
         stream.write(146)
         writeValue(stream, value.toList())
       }
-      is GeneratedUserConfiguration -> {
+      is GeneratedEndpointConfiguration -> {
         stream.write(147)
         writeValue(stream, value.toList())
       }
-      is GeneratedSessionConfiguration -> {
+      is GeneratedUserConfiguration -> {
         stream.write(148)
         writeValue(stream, value.toList())
       }
-      is GeneratedRecordingMaskList -> {
+      is GeneratedSessionConfiguration -> {
         stream.write(149)
         writeValue(stream, value.toList())
       }
-      is GeneratedRecordingMaskElement -> {
+      is GeneratedRecordingMaskList -> {
         stream.write(150)
         writeValue(stream, value.toList())
       }
-      is GeneratedRect -> {
+      is GeneratedRecordingMaskElement -> {
         stream.write(151)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributes -> {
+      is GeneratedRect -> {
         stream.write(152)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeInt -> {
+      is GeneratedMutableAttributes -> {
         stream.write(153)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeDouble -> {
+      is GeneratedMutableAttributeInt -> {
         stream.write(154)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeString -> {
+      is GeneratedMutableAttributeDouble -> {
         stream.write(155)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeBool -> {
+      is GeneratedMutableAttributeString -> {
         stream.write(156)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListInt -> {
+      is GeneratedMutableAttributeBool -> {
         stream.write(157)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListDouble -> {
+      is GeneratedMutableAttributeListInt -> {
         stream.write(158)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListString -> {
+      is GeneratedMutableAttributeListDouble -> {
         stream.write(159)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListBool -> {
+      is GeneratedMutableAttributeListString -> {
         stream.write(160)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListBool -> {
+        stream.write(161)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1260,7 +1297,7 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterHostApi {
-  fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, callback: (Result<Unit>) -> Unit)
+  fun install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, callback: (Result<Unit>) -> Unit)
   fun stateGetAppName(callback: (Result<String>) -> Unit)
   fun stateGetAppVersion(callback: (Result<String>) -> Unit)
   fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit)
@@ -1314,11 +1351,12 @@ interface SplunkOtelFlutterHostApi {
             val crashReportsModuleConfigurationArg = args[3] as GeneratedCrashReportsModuleConfiguration?
             val interactionsModuleConfigurationArg = args[4] as GeneratedInteractionsModuleConfiguration?
             val networkMonitorModuleConfigurationArg = args[5] as GeneratedNetworkMonitorModuleConfiguration?
-            val anrModuleConfigurationArg = args[6] as GeneratedAnrModuleConfiguration?
-            val httpUrlModuleConfigurationArg = args[7] as GeneratedHttpUrlModuleConfiguration?
-            val okHttp3AutoModuleConfigurationArg = args[8] as GeneratedOkHttp3AutoModuleConfiguration?
-            val networkInstrumentationModuleConfigurationArg = args[9] as GeneratedNetworkInstrumentationModuleConfiguration?
-            api.install(agentConfigurationArg, navigationModuleConfigurationArg, slowRenderingModuleConfigurationArg, crashReportsModuleConfigurationArg, interactionsModuleConfigurationArg, networkMonitorModuleConfigurationArg, anrModuleConfigurationArg, httpUrlModuleConfigurationArg, okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfigurationArg) { result: Result<Unit> ->
+            val applicationLifecycleModuleConfigurationArg = args[6] as GeneratedApplicationLifecycleModuleConfiguration?
+            val anrModuleConfigurationArg = args[7] as GeneratedAnrModuleConfiguration?
+            val httpUrlModuleConfigurationArg = args[8] as GeneratedHttpUrlModuleConfiguration?
+            val okHttp3AutoModuleConfigurationArg = args[9] as GeneratedOkHttp3AutoModuleConfiguration?
+            val networkInstrumentationModuleConfigurationArg = args[10] as GeneratedNetworkInstrumentationModuleConfiguration?
+            api.install(agentConfigurationArg, navigationModuleConfigurationArg, slowRenderingModuleConfigurationArg, crashReportsModuleConfigurationArg, interactionsModuleConfigurationArg, networkMonitorModuleConfigurationArg, applicationLifecycleModuleConfigurationArg, anrModuleConfigurationArg, httpUrlModuleConfigurationArg, okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfigurationArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
