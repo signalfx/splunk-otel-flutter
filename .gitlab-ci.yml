@@ -126,9 +126,8 @@ dry_run:
       # Create credentials file from GitLab variable
       # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
       # generated locally via: flutter pub login
-      # Location: macOS/Linux: ~/Library/Application Support/dart/pub-credentials.json
-      #           Windows: %APPDATA%\dart\pub-credentials.json
-      CREDENTIALS_DIR="$HOME/Library/Application Support/dart"
+      # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
+      CREDENTIALS_DIR="$HOME/.config/dart"
       mkdir -p "$CREDENTIALS_DIR"
       # Try base64 decode first (if encoded), otherwise use as-is
       echo "$PUB_CREDENTIALS" | base64 -d > "$CREDENTIALS_DIR/pub-credentials.json" 2>/dev/null || echo "$PUB_CREDENTIALS" > "$CREDENTIALS_DIR/pub-credentials.json"
@@ -145,7 +144,7 @@ dry_run:
       cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
       flutter pub publish --dry-run || {
         echo "Dry run failed for splunk_otel_flutter_platform_interface"
-        rm -f "$HOME/Library/Application Support/dart/pub-credentials.json"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
         exit 1
       }
       
@@ -154,12 +153,12 @@ dry_run:
       cd ../splunk_otel_flutter
       flutter pub publish --dry-run || {
         echo "Dry run failed for splunk_otel_flutter"
-        rm -f "$HOME/Library/Application Support/dart/pub-credentials.json"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
         exit 1
       }
       
       # Clean up credentials
-      rm -f ~/.pub-cache/credentials.json
+      rm -f "$HOME/.config/dart/pub-credentials.json"
       
       echo "=== Dry run completed successfully ==="
       echo "Ready to publish version: $MAIN_PACKAGE_VERSION"
@@ -207,9 +206,8 @@ release:
       # Create credentials file from GitLab variable
       # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
       # generated locally via: flutter pub login
-      # Location: macOS/Linux: ~/Library/Application Support/dart/pub-credentials.json
-      #           Windows: %APPDATA%\dart\pub-credentials.json
-      CREDENTIALS_DIR="$HOME/Library/Application Support/dart"
+      # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
+      CREDENTIALS_DIR="$HOME/.config/dart"
       mkdir -p "$CREDENTIALS_DIR"
       # Try base64 decode first (if encoded), otherwise use as-is
       echo "$PUB_CREDENTIALS" | base64 -d > "$CREDENTIALS_DIR/pub-credentials.json" 2>/dev/null || echo "$PUB_CREDENTIALS" > "$CREDENTIALS_DIR/pub-credentials.json"
@@ -226,7 +224,7 @@ release:
       cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
       flutter pub publish --force || {
         echo "Publishing failed for splunk_otel_flutter_platform_interface"
-        rm -f "$HOME/Library/Application Support/dart/pub-credentials.json"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
         exit 1
       }
       
@@ -239,12 +237,12 @@ release:
       cd ../splunk_otel_flutter
       flutter pub publish --force || {
         echo "Publishing failed for splunk_otel_flutter"
-        rm -f "$HOME/Library/Application Support/dart/pub-credentials.json"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
         exit 1
       }
       
       # Clean up credentials
-      rm -f ~/.pub-cache/credentials.json
+      rm -f "$HOME/.config/dart/pub-credentials.json"
       
       echo "=== Release completed successfully ==="
       echo "Packages published to pub.dev:"
