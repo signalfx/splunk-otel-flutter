@@ -1,5 +1,5 @@
 name: splunk_otel_flutter_platform_interface
-description: "Splunk Flutter Agent interface"
+description: "Platform interface for Splunk OpenTelemetry Flutter instrumentation. Provides APIs for real user monitoring, tracing, and analytics."
 version: 1.0.0-dev.1
 repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
 homepage: https://github.com/signalfx/splunk-otel-flutter
@@ -13,7 +13,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
+  plugin_platform_interface: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -16,35 +16,55 @@
 
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
+/// A collection of key-value attributes that can be modified.
+///
+/// Used for global attributes and custom event attributes.
 class MutableAttributes {
+  /// The map of attribute keys to values.
   final Map<String, MutableAttributeValue> attributes;
 
+  /// Creates a mutable attributes collection.
   const MutableAttributes({this.attributes = const {}});
 }
 
+/// Base class for attribute values.
+///
+/// Attributes can be integers, doubles, strings, or booleans.
 abstract class MutableAttributeValue {}
 
+/// An integer attribute value.
 class MutableAttributeInt extends MutableAttributeValue {
+  /// The integer value.
   final int value;
 
+  /// Creates an integer attribute.
   MutableAttributeInt({required this.value});
 }
 
+/// A double attribute value.
 class MutableAttributeDouble extends MutableAttributeValue {
+  /// The double value.
   final double value;
 
+  /// Creates a double attribute.
   MutableAttributeDouble({required this.value});
 }
 
+/// A string attribute value.
 class MutableAttributeString extends MutableAttributeValue {
+  /// The string value.
   final String value;
 
+  /// Creates a string attribute.
   MutableAttributeString({required this.value});
 }
 
+/// A boolean attribute value.
 class MutableAttributeBool extends MutableAttributeValue {
+  /// The boolean value.
   final bool value;
 
+  /// Creates a boolean attribute.
   MutableAttributeBool({required this.value});
 }
 

@@ -17,32 +17,57 @@
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
+/// Configuration for the Splunk OpenTelemetry agent.
+///
+/// This class holds all configuration parameters needed to initialize and run
+/// the Splunk RUM agent on both Android and iOS platforms.
+///
+/// Example:
+/// ```dart
+/// final config = AgentConfiguration(
+///   endpointConfiguration: EndpointConfiguration.forRum(
+///     realm: 'us0',
+///     rumAccessToken: 'your-token',
+///   ),
+///   appName: 'MyApp',
+///   deploymentEnvironment: 'production',
+/// );
+/// ```
 class AgentConfiguration {
-  // Required properties (common to iOS and Android).
+  /// Backend endpoint configuration for sending telemetry data.
   final EndpointConfiguration endpointConfiguration;
+  
+  /// The name of your application.
   final String appName;
+  
+  /// The deployment environment (e.g., 'production', 'staging', 'dev').
   final String deploymentEnvironment;
 
-  // Optional properties (common to iOS and Android).
+  /// The version of your application. Optional.
   final String? appVersion;
 
-  // Enables or disables debug logging. Defaults to false.
+  /// Enables or disables debug logging. Defaults to false.
   final bool enableDebugLogging;
 
-  // Global attributes sent with all signals.
+  /// Global attributes sent with all signals.
   final MutableAttributes? globalAttributes;
 
   // TBD in future
   // final SpanInterceptor? spanInterceptor;
 
-  // User and session configuration (common to iOS and Android).
+  /// User tracking configuration.
   final UserConfiguration user;
+  
+  /// Session sampling configuration.
   final SessionConfiguration session;
 
-  // Android-only extras.
-  final String? instrumentedProcessName; // Android-only.
-  final bool deferredUntilForeground; // Android-only.
+  /// **Android only.** Name of the process to instrument. Optional.
+  final String? instrumentedProcessName;
+  
+  /// **Android only.** Whether to defer initialization until app foreground. Defaults to false.
+  final bool deferredUntilForeground;
 
+  /// Creates an agent configuration.
   AgentConfiguration({
     required this.endpointConfiguration,
     required this.appName,
@@ -59,10 +84,21 @@ class AgentConfiguration {
         session = session ?? SessionConfiguration();
 }
 
+/// Configuration for telemetry data endpoints.
+///
+/// Defines where telemetry data (traces, session replays) should be sent.
+/// Use one of the factory constructors to create an instance.
 class EndpointConfiguration {
+  /// Custom trace endpoint URL.
   Uri? traceEndpoint;
+  
+  /// Custom session replay endpoint URL.
   Uri? sessionReplayEndpoint;
+  
+  /// Splunk realm (e.g., 'us0', 'us1', 'eu0').
   String? realm;
+  
+  /// RUM access token for authentication.
   String? rumAccessToken;
 
   EndpointConfiguration._internal({
@@ -72,6 +108,18 @@ class EndpointConfiguration {
     this.rumAccessToken,
   });
 
+  /// Creates endpoint configuration for Splunk RUM using realm and token.
+  ///
+  /// This is the recommended approach for production deployments using
+  /// Splunk Observability Cloud.
+  ///
+  /// Example:
+  /// ```dart
+  /// EndpointConfiguration.forRum(
+  ///   realm: 'us0',
+  ///   rumAccessToken: 'your-token-here',
+  /// )
+  /// ```
   factory EndpointConfiguration.forRum({
     required String realm,
     required String rumAccessToken,
@@ -82,6 +130,9 @@ class EndpointConfiguration {
     );
   }
 
+  /// Creates endpoint configuration with a custom traces endpoint.
+  ///
+  /// Use this for self-hosted or custom backend deployments.
   factory EndpointConfiguration.forTraces({
     required Uri tracesEndpoint,
   }) {
@@ -90,6 +141,9 @@ class EndpointConfiguration {
     );
   }
 
+  /// Creates endpoint configuration with custom traces and session replay endpoints.
+  ///
+  /// Use this for self-hosted or custom backend deployments with session replay support.
   factory EndpointConfiguration.forTracesAndSessionReplay({
     required Uri traceEndpoint,
     required Uri sessionReplayEndpoint,
@@ -124,9 +178,16 @@ extension EndpointConfigurationExtension on EndpointConfiguration {
   }
 }
 
+/// Configuration for user tracking behavior.
+///
+/// Controls how user information is tracked and reported.
 class UserConfiguration {
+  /// The user tracking mode.
   final UserTrackingMode trackingMode;
 
+  /// Creates a user configuration with the specified tracking mode.
+  ///
+  /// Defaults to [UserTrackingMode.noTracking].
   const UserConfiguration({
     this.trackingMode = UserTrackingMode.noTracking,
   });
@@ -145,8 +206,12 @@ extension UserConfigurationExtension on UserConfiguration {
   }
 }
 
+/// Defines how user information is tracked.
 enum UserTrackingMode {
+  /// No user tracking. User-specific data is not collected.
   noTracking,
+  
+  /// Anonymous user tracking. Collects user data without personal identifiers.
   anonymousTracking,
 }
 
@@ -161,9 +226,20 @@ extension UserTrackingModeExtension on UserTrackingMode {
   }
 }
 
+/// Configuration for session sampling.
+///
+/// Controls what percentage of sessions are sampled and sent to the backend.
 class SessionConfiguration {
+  /// The sampling rate for sessions. Must be between 0.0 and 1.0.
+  ///
+  /// A value of 1.0 means all sessions are sampled (100%).
+  /// A value of 0.5 means half of sessions are sampled (50%).
+  /// Defaults to 1.0.
   final double samplingRate;
 
+  /// Creates a session configuration with the specified sampling rate.
+  ///
+  /// Throws [ArgumentError] if [samplingRate] is not between 0.0 and 1.0.
   SessionConfiguration({this.samplingRate = 1.0}) {
     if (samplingRate < 0.0 || samplingRate > 1.0) {
       throw ArgumentError(
@@ -172,10 +248,17 @@ class SessionConfiguration {
   }
 }
 
+/// Exception thrown when endpoint configuration is invalid.
+///
+/// This typically occurs when a URI string cannot be parsed or is malformed.
 class InvalidEndpointConfigurationException implements Exception {
+  /// The error message describing what went wrong.
   final String message;
+  
+  /// The original error that caused this exception, if any.
   final dynamic originalError;
 
+  /// Creates an invalid endpoint configuration exception.
   InvalidEndpointConfigurationException(this.message, {this.originalError});
 
   @override

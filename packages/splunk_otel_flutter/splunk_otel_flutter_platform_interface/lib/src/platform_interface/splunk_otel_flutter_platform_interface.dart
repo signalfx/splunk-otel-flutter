@@ -17,23 +17,46 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// The interface that platform implementations of splunk_otel_flutter must extend.
+///
+/// This abstract class defines the API contract that platform-specific implementations
+/// (iOS, Android) must fulfill to provide Splunk OpenTelemetry functionality.
 abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
+  /// Creates a new instance with the verification token.
   SplunkOtelFlutterPlatformInterface(): super(token: _token);
 
   static final Object _token = Object();
 
   static SplunkOtelFlutterPlatformInterface? _instance;
 
+  /// The default instance of [SplunkOtelFlutterPlatformInterface].
   static SplunkOtelFlutterPlatformInterface get instance {
     return _instance ??= SplunkOtelFlutterPlatformImplementation.instance;
   }
 
+  /// Sets the default instance of [SplunkOtelFlutterPlatformInterface].
+  ///
+  /// This should only be used for testing or providing a custom implementation.
   static set instance(SplunkOtelFlutterPlatformInterface instance) {
     PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
+  /// Installs and initializes the Splunk agent with the given configuration.
+  ///
+  /// Must be called before using any other agent functionality.
+  ///
+  /// Example:
+  /// ```dart
+  /// await SplunkOtelFlutterPlatformInterface.instance.install(
+  ///   agentConfiguration: AgentConfiguration(...),
+  ///   moduleConfigurations: [
+  ///     CrashReportsModuleConfiguration(),
+  ///     NavigationModuleConfiguration(),
+  ///   ],
+  /// );
+  /// ```
   Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
 
   // State

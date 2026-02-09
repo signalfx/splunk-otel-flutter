@@ -1,0 +1,12 @@
+name: splunk_otel_flutter_platform_interface_example
+description: Example application demonstrating splunk_otel_flutter_platform_interface usage.
+publish_to: none
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  splunk_otel_flutter_platform_interface:
+    path: ../
