@@ -1,6 +1,6 @@
 name: splunk_otel_flutter
 description: "Splunk OpenTelemetry Flutter plugin for real user monitoring (RUM). Track app performance, crashes, network requests, and user interactions."
-version: 1.0.0-dev.1
+version: 1.0.0-alpha.1
 repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter/splunk_otel_flutter
 homepage: https://github.com/signalfx/splunk-otel-flutter
 
@@ -13,7 +13,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  splunk_otel_flutter_platform_interface: ^1.0.0-dev.1
+  splunk_otel_flutter_platform_interface: ^1.0.0-alpha.1
 
 dev_dependencies:
   flutter_test:

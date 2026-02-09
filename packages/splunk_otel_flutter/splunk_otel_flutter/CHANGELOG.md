@@ -1,6 +1,5 @@
-## 1.0.0-dev.1
+## 1.0.0-alpha.1
 
-* Initial development release
 * Core Flutter plugin implementation for Splunk OpenTelemetry
 * Android and iOS platform support
 * Basic telemetry collection and export functionality
@@ -8,6 +7,7 @@
 * Session tracking and management
 * Custom attributes support
 
-## 0.0.1
 
-* Initial release with codebase setup
+## 1.0.0-dev.1
+
+* Initial development release

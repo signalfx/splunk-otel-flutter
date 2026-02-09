@@ -14,7 +14,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  splunk_otel_flutter_platform_interface: ^1.0.0-dev.1
+  splunk_otel_flutter_platform_interface: ^1.0.0-alpha.1
   splunk_otel_flutter_session_replay_platform_interface: ^0.0.1
 
 dev_dependencies:
