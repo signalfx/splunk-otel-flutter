@@ -18,23 +18,27 @@ import 'dart:ui';
 
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
+/// Status of session replay recording.
 enum SessionReplayStatus {
+  /// Session replay is actively recording.
   isRecording,
 
-  /// Recording have not been started.
+  /// Recording has not been started.
   notStarted,
 
   /// Recording was stopped.
   stopped,
 
-  /// The device's Android sdk is below supported minimum.
+  /// The device's Android SDK is below the supported minimum version.
   belowMinSdkVersion,
 
   /// The device's storage is too low to start recording.
   storageLimitReached,
 
-  ///  It was impossible to start the recording because the internal
-  ///  database could not be open, or another internal error occurred.
+  /// Recording could not start due to an internal error.
+  ///
+  /// This typically occurs when the internal database cannot be opened
+  /// or another internal error occurred.
   internalError,
 }
 
@@ -77,8 +81,12 @@ extension GeneratedSessionReplayStatusExtension
   }
 }
 
+/// Rendering mode for session replay.
 enum RenderingMode {
+  /// Native rendering with actual UI content.
   native,
+  
+  /// Wireframe-only rendering with layout structure but no actual content.
   wireframeOnly,
 }
 
@@ -104,21 +112,35 @@ extension GeneratedRenderingModeExtension on GeneratedRenderingMode {
   }
 }
 
+/// A list of recording mask elements for session replay.
+///
+/// Masks are used to hide or obscure sensitive content during session replay.
 class RecordingMaskList {
+  /// The list of mask elements.
   final List<RecordingMaskElement> elements;
 
+  /// Creates a recording mask list.
   RecordingMaskList({required this.elements});
 }
 
+/// A single mask element that defines an area to mask in session replay.
 class RecordingMaskElement {
+  /// The rectangular area to mask.
   final Rect rect;
+  
+  /// The type of masking to apply.
   final RecordingMaskType type;
 
+  /// Creates a recording mask element.
   RecordingMaskElement({required this.rect, required this.type});
 }
 
+/// Type of recording mask to apply.
 enum RecordingMaskType {
+  /// Erase the content in the masked area.
   erasing,
+  
+  /// Cover the content with a solid overlay.
   covering,
 }
 

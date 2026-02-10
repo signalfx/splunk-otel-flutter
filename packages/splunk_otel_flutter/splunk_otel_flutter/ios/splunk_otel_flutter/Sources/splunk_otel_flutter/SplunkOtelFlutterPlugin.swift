@@ -204,9 +204,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                 )
             ))
         }
-        
-        
-        completion(.success(()))
     }
     
     // MARK: - State

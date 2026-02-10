@@ -16,9 +16,17 @@
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
+/// User preferences for agent configuration.
+///
+/// Stores persistent configuration preferences that can override
+/// the initial agent configuration.
 class Preferences {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
 
+  /// Gets the saved endpoint configuration preference.
+  ///
+  /// Returns the endpoint configuration stored in preferences,
+  /// or `null` if no preference has been set.
   Future<EndpointConfiguration?> getEndpointConfiguration() async =>
       await _delegate.preferencesGetEndpointConfiguration();
 }

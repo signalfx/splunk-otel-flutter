@@ -26,6 +26,9 @@ jobs:
         uses: wagoid/commitlint-github-action@v6
         with:
           configFile: .commitlintrc.yml
+          # Only lint the latest commit to avoid failing on historical messages
+          # (e.g. develop→main PRs with pre-commitlint merge commits).
+          commitDepth: 1
 
   flutter-analyze:
     runs-on: ubuntu-24.04

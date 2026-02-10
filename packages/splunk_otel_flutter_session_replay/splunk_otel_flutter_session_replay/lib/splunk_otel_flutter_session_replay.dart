@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
+/// Splunk session replay module for Flutter applications.
+///
+/// This library provides session recording and replay capabilities, allowing you
+/// to capture and analyze user interactions for debugging and optimization.
+///
+/// **Note:** This module is currently under development.
+library splunk_otel_flutter_session_replay;
+
+/// Main entry point for the Splunk session replay module.
+///
+/// Provides methods to install and configure session replay functionality.
 class SplunkOtelFlutterSessionReplay {
+  /// Installs the session replay module.
+  ///
+  /// **Note:** This method is currently not implemented.
   Future<void> install() {
     // TODO: implement install
     throw UnimplementedError();

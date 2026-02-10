@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
+/// Platform interface for Splunk OpenTelemetry Flutter instrumentation.
+///
+/// This library provides the platform interface layer for the Splunk OpenTelemetry
+/// Flutter plugin, enabling real user monitoring (RUM), distributed tracing,
+/// and application analytics across Android and iOS platforms.
+///
+/// Key features:
+/// - Agent configuration and lifecycle management
+/// - Module-based instrumentation (network, crashes, navigation, etc.)
+/// - Global attributes and custom tracking
+/// - Session and user tracking
+library splunk_otel_flutter_platform_interface;
+
 export 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 export 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 export 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart' hide GeneratedEndpointConfigurationExtension, EndpointConfigurationExtension;

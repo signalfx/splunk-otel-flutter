@@ -16,17 +16,24 @@
 
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
+/// Represents the current status of the Splunk agent.
 enum Status {
+  /// The agent is running and collecting telemetry data.
   running,
+  
   /// The agent has not been installed.
   notInstalled,
-  /// Android only
+  
+  /// **Android only.** The agent is in a subprocess.
   subProcess,
-  ///  The agent is not running because of being sampled out locally.
+  
+  /// The agent is not running because it was sampled out locally.
   sampledOut,
-  /// The platform is not supported by Agent.
+  
+  /// The platform is not supported by the agent.
   unsupportedPlatform,
-  /// The operating system is not supported for this version.
+  
+  /// The operating system version is not supported.
   unsupportedOsVersion,
 }
 
