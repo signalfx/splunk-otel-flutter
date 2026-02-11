@@ -1,0 +1,38 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-inference: true
+    strict-raw-types: true
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
+  exclude:
+    - build/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/generated_plugin_registrant.dart"
+    #- "lib/main.dart"
+    - "lib/basic_test_run_widget.dart"
+
+  errors:
+    missing_required_param: error
+    missing_return: error
+    dead_code: warning
+    todo: warning
+    prefer_const_constructors: error
+    prefer_const_literals_to_create_immutables: error
+
+linter:
+  rules:
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - use_key_in_widget_constructors
+    - avoid_print
+    - prefer_final_locals
+    - prefer_final_fields
+    - prefer_spread_collections
+    - prefer_if_null_operators
+    - unnecessary_string_interpolations
+    - unnecessary_parenthesis

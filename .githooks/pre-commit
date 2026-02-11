@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-commit hook: check BOTH formatting and code issues (no auto-fix).
+
+# --- Configuration ---
+# Set DEBUG to "true" for verbose output during debugging
+DEBUG="true"
+
+log_debug() {
+  if [ "$DEBUG" = "true" ]; then
+    echo "DEBUG: $@" >&2
+  fi
+}
+
+log_info() {
+  echo "INFO: $@" >&2
+}
+
+log_error() {
+  echo "ERROR: $@" >&2
+}
+
+# --- Tooling Setup ---
+# Prefer FVM if present; fall back to flutter on PATH.
+FLUTTER_CMD_PREFIX=""
+if command -v fvm >/dev/null 2>&1; then
+  FLUTTER_CMD_PREFIX="fvm"
+  log_info "Using FVM Flutter."
+else
+  FLUTTER_CMD_PREFIX="flutter" # Use 'flutter' directly, melos exec will handle the path
+  log_info "Using system Flutter."
+fi
+
+# Ensure tools exist and are executable in this environment.
+command -v dart >/dev/null 2>&1 || { log_error "Dart not found on PATH."; exit 1; }
+# Check Flutter command using FLUTTER_CMD_PREFIX
+if [ "$FLUTTER_CMD_PREFIX" = "fvm" ]; then
+  fvm flutter --version >/dev/null 2>&1 || { log_error "FVM Flutter not configured correctly. Check your FVM setup."; exit 1; }
+else
+  flutter --version >/dev/null 2>&1 || { log_error "Flutter not found on PATH. Check your PATH."; exit 1; }
+fi
+command -v melos >/dev/null 2>&1 || { log_error "Melos not found on PATH. Please install it globally: dart pub global activate melos"; exit 1; }
+
+log_debug "Dart executable: $(command -v dart)"
+if [ "$FLUTTER_CMD_PREFIX" = "fvm" ]; then
+  log_debug "Flutter executable (via FVM): $(which fvm 2>/dev/null) flutter"
+else
+  log_debug "Flutter executable: $(which flutter 2>/dev/null)"
+fi
+log_debug "Melos executable: $(command -v melos)"
+
+# Determine monorepo root (this is still the git root)
+MONOREPO_ROOT=$(git rev-parse --show-toplevel)
+log_info "Monorepo root detected: $MONOREPO_ROOT"
+
+# --- Melos Bootstrap ---
+log_info "Running melos bootstrap to resolve monorepo dependencies (Melos 7.0.0+ auto-discovers packages)..."
+# Execute melos bootstrap from the monorepo root.
+# The '||' ensures that if melos bootstrap fails, the hook exits immediately.
+(
+  cd "$MONOREPO_ROOT" || { log_error "Failed to change directory to $MONOREPO_ROOT"; exit 1; }
+  melos bootstrap
+) || { log_error "Melos bootstrap failed. Check melos output above for details."; exit 1; }
+log_info "Melos bootstrap completed."
+
+# --- Collect staged Dart files for formatting check. ---
+staged_dart_z=$(git diff --cached -z --name-only --diff-filter=ACMRT | grep -z -E '\.dart$' || true)
+if [[ -z "$staged_dart_z" ]]; then
+  log_info "No staged Dart changes; skipping format and analyze."
+  exit 0
+fi
+
+log_info "Checking Dart format (no auto-fix, using staged content)..."
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+
+bad=()
+
+# Recreate the staged snapshot and check formatting on those files.
+while IFS= read -r -d '' path; do
+  mkdir -p "$tmpdir/$(dirname "$path")"
+  git show ":$path" > "$tmpdir/$path" || true
+
+  # Check-only: fail if formatting would change the file.
+  if ! dart format --output=none --set-exit-if-changed "$tmpdir/$path" >/dev/null 2>&1; then
+    bad+=("$path")
+  fi
+done <<< "$staged_dart_z"
+
+if (( ${#bad[@]} > 0 )); then
+  {
+    log_error "These staged files are not properly formatted:"
+    for f in "${bad[@]}"; do log_error "  - $f"; done
+    log_error
+    log_error "Please run: dart format ."
+    log_error "Then restage and commit again."
+  } >&2
+  exit 1
+fi
+
+log_info "Running Dart analyze across all Melos packages (warnings fail)..."
+# Use melos exec to run flutter analyze for all packages.
+# melos exec ensures the command is run in the correct context for each package
+# and handles the local dependency resolution.
+# We explicitly run 'flutter pub get' first within the melos exec,
+# even though bootstrap should have done it, for maximum robustness.
+(
+  cd "$MONOREPO_ROOT" || { log_error "Failed to change directory to $MONOREPO_ROOT"; exit 1; }
+  # First, ensure all packages have their dependencies fetched within the melos context
+  melos exec -- "$FLUTTER_CMD_PREFIX pub get" || { log_error "Failed to run '$FLUTTER_CMD_PREFIX pub get' for all packages via melos exec."; exit 1; }
+  # Then, run the analysis
+  melos exec -- "$FLUTTER_CMD_PREFIX analyze --no-fatal-infos --fatal-warnings" || { log_error "Analysis failed for one or more packages via melos exec."; exit 1; }
+)
+
+log_info "Pre-commit hook completed successfully."

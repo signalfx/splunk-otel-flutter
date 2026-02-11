@@ -1,0 +1,538 @@
+/*
+ * Copyright 2025 Splunk Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.splunk.rum.flutter
+
+
+import android.app.Activity
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import java.util.concurrent.CountDownLatch
+import com.splunk.rum.flutter.extensions.toEndpointConfiguration
+import com.splunk.rum.flutter.extensions.toGeneratedEndpointConfiguration
+import com.splunk.rum.flutter.extensions.toGeneratedMutableAttributes
+import com.splunk.rum.flutter.extensions.toGeneratedStatus
+import com.splunk.rum.flutter.extensions.toGeneratedUserTrackingMode
+import com.splunk.rum.flutter.extensions.toMutableAttributes
+import com.splunk.rum.flutter.extensions.toUserTrackingMode
+import com.splunk.rum.flutter.extensions.wrapIntoGeneratedMutableAttribute
+import com.splunk.rum.integration.agent.api.AgentConfiguration
+import com.splunk.rum.integration.agent.api.EndpointConfiguration
+import com.splunk.rum.integration.agent.api.SplunkRum
+import com.splunk.rum.integration.agent.api.session.SessionConfiguration
+import com.splunk.rum.integration.agent.api.user.UserConfiguration
+import com.splunk.rum.integration.agent.api.user.UserTrackingMode
+import com.splunk.rum.integration.agent.common.attributes.MutableAttributes
+import com.splunk.rum.integration.agent.common.module.ModuleConfiguration
+import com.splunk.rum.integration.anr.AnrModuleConfiguration
+import com.splunk.rum.integration.applicationlifecycle.ApplicationLifecycleModuleConfiguration
+import com.splunk.rum.integration.crash.CrashModuleConfiguration
+import com.splunk.rum.integration.customtracking.extension.customTracking
+import com.splunk.rum.integration.httpurlconnection.auto.HttpURLModuleConfiguration
+import com.splunk.rum.integration.interactions.InteractionsModuleConfiguration
+import com.splunk.rum.integration.navigation.NavigationModuleConfiguration
+import com.splunk.rum.integration.navigation.extension.navigation
+import com.splunk.rum.integration.networkmonitor.NetworkMonitorModuleConfiguration
+import com.splunk.rum.integration.okhttp3.auto.OkHttp3AutoModuleConfiguration
+import com.splunk.rum.integration.okhttp3.manual.OkHttp3ManualModuleConfiguration
+import com.splunk.rum.integration.slowrendering.SlowRenderingModuleConfiguration
+import com.splunk.rum.integration.startup.StartupModuleConfiguration
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.opentelemetry.api.trace.Span
+import java.time.Duration
+
+/** SplunkOtelFlutterPlugin */
+class SplunkOtelFlutterPlugin :
+    FlutterPlugin,
+    ActivityAware,
+    SplunkOtelFlutterHostApi {
+
+    private var activity: Activity? = null
+    private val workflowSpans = mutableMapOf<Long, Pair<Span, Long>>()
+    private var workflowHandleCounter: Long = 0
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        SplunkOtelFlutterHostApi.setUp(binding.binaryMessenger, this)
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        activity = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivity() {
+        activity = null
+    }
+
+    override fun install(
+        agentConfiguration: GeneratedAgentConfiguration,
+        // Core
+        navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?,
+        slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?,
+        crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?,
+        interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?,
+        networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?,
+        applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?,
+        // Android-only
+        anrModuleConfiguration: GeneratedAnrModuleConfiguration?,
+        httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?,
+        okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?,
+
+        // iOS-only
+        networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
+        callback: (Result<Unit>) -> Unit
+    ) {
+
+        val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
+
+        val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
+
+        val agentConfiguration = AgentConfiguration(
+            endpoint = endpointConfiguration,
+            appName = agentConfiguration.appName,
+            enableDebugLogging = agentConfiguration.enableDebugLogging ?: false,
+            deploymentEnvironment = agentConfiguration.deploymentEnvironment,
+            user = UserConfiguration(
+                trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
+            ),
+            session = SessionConfiguration(agentConfiguration.session?.samplingRate ?: 1.0),
+            globalAttributes = globalAttributes ?: MutableAttributes(),
+            instrumentedProcessName = agentConfiguration.instrumentedProcessName,
+            deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
+        )
+
+        val moduleConfigurations: List<ModuleConfiguration> = buildList {
+            navigationModuleConfiguration?.let {
+                add(
+                    NavigationModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        isAutomatedTrackingEnabled = it.isAutomatedTrackingEnabled
+                    )
+                )
+            }
+            slowRenderingModuleConfiguration?.let {
+                add(
+                    SlowRenderingModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        interval = Duration.ofMillis(it.intervalMillis)
+                    )
+                )
+            }
+            crashReportsModuleConfiguration?.let {
+                add(CrashModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            interactionsModuleConfiguration?.let {
+                add(InteractionsModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            networkMonitorModuleConfiguration?.let {
+                add(NetworkMonitorModuleConfiguration(isEnabled = it.isEnabled))
+            }
+            applicationLifecycleModuleConfiguration?.let {
+                add(ApplicationLifecycleModuleConfiguration(isEnabled = it.isEnabled))
+            }
+
+            // Android-only
+            anrModuleConfiguration?.let {
+                add(AnrModuleConfiguration(isEnabled = it.isEnabled))
+            }
+
+            httpUrlModuleConfiguration?.let {
+                add(
+                    HttpURLModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        capturedRequestHeaders = it.capturedRequestHeaders,
+                        capturedResponseHeaders = it.capturedResponseHeaders
+                    )
+                )
+            }
+
+
+            okHttp3AutoModuleConfiguration?.let {
+                add(
+                    OkHttp3AutoModuleConfiguration(
+                        isEnabled = it.isEnabled,
+                        capturedRequestHeaders = it.capturedRequestHeaders,
+                        capturedResponseHeaders = it.capturedResponseHeaders
+                    )
+                )
+            }
+        }
+
+        try {
+            if (activity == null) {
+                callback(Result.failure(FlutterError("INSTALL_FAILED", "Activity not available yet")))
+                return
+            }
+
+            //ANR module forces install to run on main thread
+            runOnMainThreadSync {
+                SplunkRum.install(
+                    application = activity!!.application,
+                    agentConfiguration = agentConfiguration,
+                    moduleConfigurations = moduleConfigurations.toTypedArray()
+                )
+            }
+
+        } catch (e: Exception) {
+            callback(Result.failure(FlutterError("INSTALL_FAILED", e.message)))
+            return
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    // State
+
+    override fun stateGetAppName(callback: (Result<String>) -> Unit) {
+        val appName = SplunkRum.instance.state.appName
+
+        callback(Result.success(appName))
+    }
+
+    override fun stateGetAppVersion(callback: (Result<String>) -> Unit) {
+        val appVersion = SplunkRum.instance.state.appVersion
+
+        callback(Result.success(appVersion))
+    }
+
+    override fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit) {
+        val status = SplunkRum.instance.state.status
+
+        callback(Result.success(status.toGeneratedStatus()))
+    }
+
+    override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit) {
+        val endpointConfiguration = SplunkRum.instance.state.endpointConfiguration
+
+        if (endpointConfiguration == null) {
+            callback(Result.failure(FlutterError("EMPTY_ENDPOINT_CONFIGURATION", "Endpoint configuration not set.")))
+            return
+        }
+
+        callback(Result.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
+    }
+
+    override fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit) {
+        val deploymentEnvironment = SplunkRum.instance.state.deploymentEnvironment
+
+        callback(Result.success(deploymentEnvironment))
+    }
+
+    override fun stateGetIsDebugLoggingEnabled(callback: (Result<Boolean>) -> Unit) {
+        val isDebugLoggingEnabled = SplunkRum.instance.state.isDebugLoggingEnabled
+
+        callback(Result.success(isDebugLoggingEnabled))
+    }
+
+    override fun stateGetInstrumentedProcessName(callback: (Result<String?>) -> Unit) {
+        val instrumentedProcessName = SplunkRum.instance.state.instrumentedProcessName
+
+        callback(Result.success(instrumentedProcessName))
+    }
+
+    override fun stateGetDeferredUntilForeground(callback: (Result<Boolean>) -> Unit) {
+        val deferredUntilForeground = SplunkRum.instance.state.deferredUntilForeground
+
+        callback(Result.success(deferredUntilForeground))
+    }
+
+    // Preferences
+
+    override fun preferencesGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit) {
+        val endpointConfiguration = SplunkRum.instance.preferences.endpointConfiguration
+
+        callback(Result.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
+    }
+
+    // Session
+
+    override fun sessionStateGetId(callback: (Result<String>) -> Unit) {
+        val sessionId = SplunkRum.instance.session.state.id
+
+        callback(Result.success(sessionId))
+    }
+
+    override fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit) {
+        val samplingRate = SplunkRum.instance.session.state.samplingRate
+
+        callback(Result.success(samplingRate))
+    }
+
+    // User
+
+    override fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit) {
+        val trackingMode = SplunkRum.instance.user.state.trackingMode
+
+        callback(Result.success(trackingMode.toGeneratedUserTrackingMode()))
+    }
+
+    override fun userPreferencesGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode?>) -> Unit) {
+        val trackingMode = SplunkRum.instance.user.preferences.trackingMode
+
+        callback(Result.success(trackingMode?.toGeneratedUserTrackingMode()))
+    }
+
+    override fun userPreferencesSetUserTrackingMode(
+        trackingMode: GeneratedUserTrackingMode,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.user.preferences.trackingMode = trackingMode.toUserTrackingMode()
+
+        callback(Result.success(Unit))
+    }
+
+    // Global attributes
+
+    override fun globalAttributesGet(key: String, callback: (Result<Any?>) -> Unit) {
+        val attribute = SplunkRum.instance.globalAttributes.get<Any?>(key)
+        val convertedAttribute = attribute?.wrapIntoGeneratedMutableAttribute()
+
+        callback(Result.success(convertedAttribute))
+    }
+
+    override fun globalAttributesGetAll(callback: (Result<GeneratedMutableAttributes?>) -> Unit) {
+        val attributes = SplunkRum.instance.globalAttributes.getAll()
+        val convertedAttributes = attributes.toGeneratedMutableAttributes()
+
+        callback(Result.success(convertedAttributes))
+    }
+
+    override fun globalAttributesRemove(key: String, callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.globalAttributes.remove(key)
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesRemoveAll(callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.globalAttributes.removeAll()
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesContains(key: String, callback: (Result<Boolean>) -> Unit) {
+        val doesContain = SplunkRum.instance.globalAttributes.contains(key)
+
+        callback(Result.success(doesContain))
+    }
+
+    override fun globalAttributesSetString(
+        key: String,
+        value: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes[key] = value
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetInt(key: String, value: Long, callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.globalAttributes[key] = value
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetDouble(
+        key: String,
+        value: Double,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes[key] = value
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetBool(
+        key: String,
+        value: Boolean,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes[key] = value
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetStringList(
+        key: String,
+        value: List<String>,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes.update {
+            put(key, *value.toTypedArray())
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetIntList(
+        key: String,
+        value: List<Long>,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes.update {
+            put(key, *value.toLongArray())
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetDoubleList(
+        key: String,
+        value: List<Double>,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes.update {
+            put(key, *value.toDoubleArray())
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetBoolList(
+        key: String,
+        value: List<Boolean>,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.globalAttributes.update {
+            put(key, *value.toBooleanArray())
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    override fun globalAttributesSetAll(
+        value: GeneratedMutableAttributes,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        try {
+            SplunkRum.instance.globalAttributes.setAll(value.toMutableAttributes())
+        } catch (e: Exception) {
+            callback(Result.failure(FlutterError("SET_ALL_FAILED", e.message)))
+
+            return
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    // Custom tracking
+
+    override fun customTrackingTrackCustomEvent(
+        name: String,
+        attributes: GeneratedMutableAttributes,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        SplunkRum.instance.customTracking.trackCustomEvent(
+            name,
+            attributes.toMutableAttributes(),
+        )
+
+        callback(Result.success(Unit))
+    }
+
+    override fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit) {
+        // Start the workflow and generate a unique handle
+        val span = SplunkRum.instance.customTracking.trackWorkflow(workflowName)
+        val startTime = System.currentTimeMillis()
+
+        if (span != null) {
+            workflowHandleCounter++
+            val handle = workflowHandleCounter
+            
+            Log.d("flutter_splunk_otel","span created with handle $handle")
+            workflowSpans[handle] = Pair(span, startTime)
+            
+            callback(Result.success(handle))
+        } else {
+            callback(Result.failure(Exception("Failed to start workflow")))
+        }
+    }
+
+    override fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit) {
+        val workflow = workflowSpans[handle]
+
+        if (workflow == null) {
+            callback(Result.failure(Exception("Invalid workflow handle")))
+            return
+        }
+
+        // End the workflow
+        val (span, startTime) = workflow
+        val endTime = System.currentTimeMillis()
+        
+        span.setAttribute("workflow.start.time", startTime)
+        span.setAttribute("workflow.end.time", endTime)
+        span.end()
+
+        Log.d("flutter_splunk_otel","span ended with handle $handle")
+
+        workflowSpans.remove(handle)
+
+        callback(Result.success(Unit))
+    }
+
+    // Navigation
+
+    override fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit) {
+        SplunkRum.instance.navigation.track(screenName)
+
+        callback(Result.success(Unit))
+    }
+}
+
+/**
+ * Executes the given block synchronously on the main thread.
+ * If already on the main thread, executes immediately to avoid deadlock.
+ * Otherwise, posts to the main thread and blocks until execution completes.
+ * If an exception occurs on the main thread, it will be re-thrown on the calling thread.
+ */
+private fun runOnMainThreadSync(block: () -> Unit) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        // Already on main thread - execute immediately to avoid deadlock
+        block()
+    } else {
+        // On a background thread - post to main and wait
+        val latch = CountDownLatch(1)
+        var throwable: Throwable? = null
+        
+        Handler(Looper.getMainLooper()).post {
+            try {
+                block()
+            } catch (e: Throwable) {
+                throwable = e
+            } finally {
+                latch.countDown()
+            }
+        }
+        
+        latch.await()
+        
+        // Re-throw any exception that occurred on the main thread
+        throwable?.let { throw it }
+    }
+}

@@ -1,0 +1,109 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Enforce conventional commits on all commits in the PR.
+  commitlint:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Commitlint
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.yml
+          # Only lint the latest commit to avoid failing on historical messages
+          # (e.g. develop→main PRs with pre-commitlint merge commits).
+          commitDepth: 1
+
+  flutter-analyze:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flutter (stable)
+        shell: bash
+        run: |
+          FLUTTER_HOME="$RUNNER_TEMP/flutter"
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$FLUTTER_HOME"
+          export PATH="$PATH:$FLUTTER_HOME/bin"
+          echo "$FLUTTER_HOME/bin" >> "$GITHUB_PATH"
+          flutter --version
+          flutter precache --universal
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+        shell: bash
+
+      - name: Add Dart global executables to PATH
+        run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+        shell: bash
+
+      - name: Bootstrap Melos Workspace
+        run: melos bootstrap
+        shell: bash
+
+      - name: Run Melos Analyze
+        run: melos analyze
+        shell: bash
+
+  flutter-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flutter (stable)
+        shell: bash
+        run: |
+          FLUTTER_HOME="$RUNNER_TEMP/flutter"
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 "$FLUTTER_HOME"
+          export PATH="$PATH:$FLUTTER_HOME/bin"
+          echo "$FLUTTER_HOME/bin" >> "$GITHUB_PATH"
+          flutter --version
+          flutter precache --universal
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+        shell: bash
+
+      - name: Add Dart global executables to PATH
+        run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+        shell: bash
+
+      - name: Bootstrap Melos Workspace
+        run: melos bootstrap
+        shell: bash
+
+      - name: Run Melos Test
+        run: melos test
+        shell: bash

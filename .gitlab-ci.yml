@@ -1,0 +1,252 @@
+# GitLab CI/CD configuration for Splunk OpenTelemetry Flutter SDK
+# 
+# Setup Instructions:
+# 1. Generate credentials locally (one-time, requires Google OAuth login):
+#    - Run `flutter pub login` on your local machine
+#    - This opens a browser for Google OAuth authentication with pub.dev
+#    - After successful login, credentials are saved to:
+#      macOS/Linux: ~/Library/Application Support/dart/pub-credentials.json
+#      Windows: %APPDATA%\dart\pub-credentials.json
+#    - Note: `flutter pub token add` does NOT authenticate - it only stores existing tokens
+# 2. Store credentials in GitLab CI/CD Variables:
+#    - In GitLab, go to Settings > CI/CD > Variables
+#    - Add a variable named PUB_CREDENTIALS
+#    - Copy the ENTIRE contents of pub-credentials.json (the full JSON)
+#      macOS: cat ~/Library/Application\ Support/dart/pub-credentials.json | pbcopy
+#    - Paste it as the PUB_CREDENTIALS variable value
+#    - Optionally base64-encode it: `cat ~/Library/Application\ Support/dart/pub-credentials.json | base64`
+#    - Set the variable as "Protected" and "Masked" for security
+# 3. CI will automatically use these credentials to authenticate with pub.dev
+#
+# Release Process:
+# 1. Update version in pubspec.yaml files to the version you want to release
+#    - For dev: 1.0.0-dev.1, 1.0.0-dev.2, etc.
+#    - For alpha: 1.0.0-alpha.1, 1.0.0-alpha.2, etc.
+#    - For stable: 1.0.0, 1.0.1, 1.1.0, etc.
+# 2. Commit and push to GitLab (can be from GitHub mirror)
+# 3. Go to CI/CD > Pipelines > Run pipeline
+# 4. Select the branch/commit you want to release from
+# 5. Run the "dry_run" job manually to test
+# 6. If dry run succeeds, run the "release" job to publish to pub.dev
+#
+# Note: The version is read directly from pubspec.yaml files.
+# Make sure both packages have the same version before releasing.
+
+default:
+  image: 'cirrusci/flutter:stable'
+
+stages:
+  - setup
+  - build
+  - dry-run
+  - release
+
+# Setup stage - install dependencies
+setup_dependencies:
+  stage: setup
+  script:
+    - flutter --version
+    - flutter pub get
+    - cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface && flutter pub get
+    - cd ../../../
+    - cd packages/splunk_otel_flutter/splunk_otel_flutter && flutter pub get
+    - cd ../../../
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .dart_tool/
+      - .flutter/
+      - .pub-cache/
+
+# Build artifacts stage - validate packages
+build_artifacts:
+  stage: build
+  script:
+    - flutter pub get
+    - |
+      # Validate platform interface package
+      echo "=== Validating splunk_otel_flutter_platform_interface ==="
+      cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
+      flutter pub get
+      flutter analyze
+      flutter test
+      cd ../../../
+    - |
+      # Validate main package
+      echo "=== Validating splunk_otel_flutter ==="
+      cd packages/splunk_otel_flutter/splunk_otel_flutter
+      flutter pub get
+      flutter analyze
+      flutter test
+      cd ../../../
+  artifacts:
+    paths:
+      - packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/
+      - packages/splunk_otel_flutter/splunk_otel_flutter/
+    expire_in: 1 week
+
+# Dry run - test publishing without actually publishing
+dry_run:
+  stage: dry-run
+  dependencies:
+    - build_artifacts
+  script:
+    - |
+      set -e
+      
+      # Extract version from pubspec.yaml
+      PLATFORM_INTERFACE_VERSION=$(grep "^version:" packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml | sed 's/version: //' | tr -d ' ')
+      MAIN_PACKAGE_VERSION=$(grep "^version:" packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml | sed 's/version: //' | tr -d ' ')
+      
+      echo "=== Package Versions ==="
+      echo "splunk_otel_flutter_platform_interface: $PLATFORM_INTERFACE_VERSION"
+      echo "splunk_otel_flutter: $MAIN_PACKAGE_VERSION"
+      
+      # Validate versions are set
+      if [ -z "$PLATFORM_INTERFACE_VERSION" ] || [ -z "$MAIN_PACKAGE_VERSION" ]; then
+        echo "Error: Could not extract version from pubspec.yaml files"
+        exit 1
+      fi
+      
+      # Validate versions match
+      if [ "$PLATFORM_INTERFACE_VERSION" != "$MAIN_PACKAGE_VERSION" ]; then
+        echo "Error: Version mismatch between packages"
+        echo "Platform interface: $PLATFORM_INTERFACE_VERSION"
+        echo "Main package: $MAIN_PACKAGE_VERSION"
+        exit 1
+      fi
+      
+      # Setup credentials
+      if [ -z "$PUB_CREDENTIALS" ]; then
+        echo "Error: PUB_CREDENTIALS environment variable is not set"
+        echo "Please add PUB_CREDENTIALS to GitLab CI/CD variables"
+        exit 1
+      fi
+      
+      # Create credentials file from GitLab variable
+      # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
+      # generated locally via: flutter pub login
+      # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
+      CREDENTIALS_DIR="$HOME/.config/dart"
+      mkdir -p "$CREDENTIALS_DIR"
+      # Try base64 decode first (if encoded), otherwise use as-is
+      echo "$PUB_CREDENTIALS" | base64 -d > "$CREDENTIALS_DIR/pub-credentials.json" 2>/dev/null || echo "$PUB_CREDENTIALS" > "$CREDENTIALS_DIR/pub-credentials.json"
+      chmod 600 "$CREDENTIALS_DIR/pub-credentials.json"
+      
+      # Verify credentials file exists and is valid JSON
+      if [ ! -f "$CREDENTIALS_DIR/pub-credentials.json" ] || [ ! -s "$CREDENTIALS_DIR/pub-credentials.json" ]; then
+        echo "Error: Failed to create pub-credentials.json file"
+        exit 1
+      fi
+      
+      # Publish platform interface first (dependency)
+      echo "=== Dry Run: Publishing splunk_otel_flutter_platform_interface ==="
+      cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
+      flutter pub publish --dry-run || {
+        echo "Dry run failed for splunk_otel_flutter_platform_interface"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
+        exit 1
+      }
+      
+      # Publish main package
+      echo "=== Dry Run: Publishing splunk_otel_flutter ==="
+      cd ../splunk_otel_flutter
+      flutter pub publish --dry-run || {
+        echo "Dry run failed for splunk_otel_flutter"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
+        exit 1
+      }
+      
+      # Clean up credentials
+      rm -f "$HOME/.config/dart/pub-credentials.json"
+      
+      echo "=== Dry run completed successfully ==="
+      echo "Ready to publish version: $MAIN_PACKAGE_VERSION"
+  when: manual
+  allow_failure: false
+
+# Release - actually publish to pub.dev
+release:
+  stage: release
+  dependencies:
+    - build_artifacts
+  script:
+    - |
+      set -e
+      
+      # Extract version from pubspec.yaml
+      PLATFORM_INTERFACE_VERSION=$(grep "^version:" packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml | sed 's/version: //' | tr -d ' ')
+      MAIN_PACKAGE_VERSION=$(grep "^version:" packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml | sed 's/version: //' | tr -d ' ')
+      
+      echo "=== Package Versions ==="
+      echo "splunk_otel_flutter_platform_interface: $PLATFORM_INTERFACE_VERSION"
+      echo "splunk_otel_flutter: $MAIN_PACKAGE_VERSION"
+      
+      # Validate versions are set
+      if [ -z "$PLATFORM_INTERFACE_VERSION" ] || [ -z "$MAIN_PACKAGE_VERSION" ]; then
+        echo "Error: Could not extract version from pubspec.yaml files"
+        exit 1
+      fi
+      
+      # Validate versions match
+      if [ "$PLATFORM_INTERFACE_VERSION" != "$MAIN_PACKAGE_VERSION" ]; then
+        echo "Error: Version mismatch between packages"
+        echo "Platform interface: $PLATFORM_INTERFACE_VERSION"
+        echo "Main package: $MAIN_PACKAGE_VERSION"
+        exit 1
+      fi
+      
+      # Setup credentials
+      if [ -z "$PUB_CREDENTIALS" ]; then
+        echo "Error: PUB_CREDENTIALS environment variable is not set"
+        echo "Please add PUB_CREDENTIALS to GitLab CI/CD variables"
+        exit 1
+      fi
+      
+      # Create credentials file from GitLab variable
+      # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
+      # generated locally via: flutter pub login
+      # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
+      CREDENTIALS_DIR="$HOME/.config/dart"
+      mkdir -p "$CREDENTIALS_DIR"
+      # Try base64 decode first (if encoded), otherwise use as-is
+      echo "$PUB_CREDENTIALS" | base64 -d > "$CREDENTIALS_DIR/pub-credentials.json" 2>/dev/null || echo "$PUB_CREDENTIALS" > "$CREDENTIALS_DIR/pub-credentials.json"
+      chmod 600 "$CREDENTIALS_DIR/pub-credentials.json"
+      
+      # Verify credentials file exists and is valid JSON
+      if [ ! -f "$CREDENTIALS_DIR/pub-credentials.json" ] || [ ! -s "$CREDENTIALS_DIR/pub-credentials.json" ]; then
+        echo "Error: Failed to create pub-credentials.json file"
+        exit 1
+      fi
+      
+      # Publish platform interface first (dependency)
+      echo "=== Publishing splunk_otel_flutter_platform_interface ==="
+      cd packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface
+      flutter pub publish --force || {
+        echo "Publishing failed for splunk_otel_flutter_platform_interface"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
+        exit 1
+      }
+      
+      # Wait for pub.dev to process the first package
+      echo "Waiting 15 seconds for pub.dev to process platform interface..."
+      sleep 15
+      
+      # Publish main package
+      echo "=== Publishing splunk_otel_flutter ==="
+      cd ../splunk_otel_flutter
+      flutter pub publish --force || {
+        echo "Publishing failed for splunk_otel_flutter"
+        rm -f "$HOME/.config/dart/pub-credentials.json"
+        exit 1
+      }
+      
+      # Clean up credentials
+      rm -f "$HOME/.config/dart/pub-credentials.json"
+      
+      echo "=== Release completed successfully ==="
+      echo "Packages published to pub.dev:"
+      echo "  - splunk_otel_flutter_platform_interface@$PLATFORM_INTERFACE_VERSION"
+      echo "  - splunk_otel_flutter@$MAIN_PACKAGE_VERSION"
+  when: manual
+  allow_failure: false

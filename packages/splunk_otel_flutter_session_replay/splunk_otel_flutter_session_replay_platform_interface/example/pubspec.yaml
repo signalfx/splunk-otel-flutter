@@ -1,0 +1,10 @@
+name: splunk_otel_flutter_session_replay_platform_interface_example
+description: Example for splunk_otel_flutter_session_replay_platform_interface
+publish_to: none
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+
+dependencies:
+  splunk_otel_flutter_session_replay_platform_interface:
+    path: ../

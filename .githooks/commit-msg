@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+
+# Read the first line as the header.
+header=""
+IFS= read -r header < "$msg_file" || true
+
+# Conventional header: type(scope)?: subject (can start with upper or lower-case), optional "!" before colon.
+# Changed: [a-z0-9] to [a-zA-Z0-9] to allow uppercase letters at the start of the subject.
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|style|test|revert)(\([^)]+\))?(!)?:\ [a-zA-Z0-9].+'
+if [[ ! "$header" =~ $pattern ]]; then
+  echo "Conventional commit header required: <type>(<scope>)?: <subject starting with a letter or number>" >&2
+  echo "Types: build, chore, ci, docs, feat, fix, perf, refactor, style, test, revert." >&2
+  echo "Got: $header" >&2
+  exit 1
+fi
+
+# Header length limit (match CI commitlint: 72).
+max_header=72
+if (( ${#header} > max_header )); then
+  echo "Header too long (${#header} > $max_header): $header" >&2
+  exit 1
+fi
+
+# Enforce: if there is a body, line 2 must be blank; body/footer lines <= 100 chars.
+max_body=100
+lineno=0
+
+while IFS= read -r line || [ -n "${line-}" ]; do
+  lineno=$((lineno + 1))
+
+  # Skip header (line 1) — already validated.
+  if (( lineno == 1 )); then
+    continue
+  fi
+
+  # Require a blank line between header and body.
+  if (( lineno == 2 )); then
+    if [[ -n "$line" ]]; then
+      echo "Add a blank line between the header and body." >&2
+      exit 1
+    fi
+    continue
+  fi
+
+  # Enforce max length for body/footer (ignore empty lines).
+  if [[ -n "$line" ]] && (( ${#line} > max_body )); then
+    echo "Line $lineno exceeds $max_body characters:" >&2
+    echo "  $line" >&2
+    exit 1
+  fi
+done < "$msg_file"
+
+exit 0

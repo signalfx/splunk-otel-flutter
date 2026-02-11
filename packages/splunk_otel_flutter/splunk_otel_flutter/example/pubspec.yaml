@@ -1,0 +1,28 @@
+name: splunk_otel_flutter_example
+description: "Demonstrates how to use the splunk_otel_flutter plugin."
+
+environment:
+  sdk: ^3.8.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  splunk_otel_flutter:
+    path: ../
+
+  cupertino_icons: ^1.0.8
+  device_info_plus: ^11.0.0
+  webview_flutter: ^4.10.0
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
