@@ -16,13 +16,11 @@
 
 package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
 
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import org.mockito.Mockito
 import kotlin.test.Test
+import kotlin.test.assertNotNull
 
 /*
- * This demonstrates a simple unit test of the Kotlin portion of this plugin's implementation.
+ * Unit tests for the SplunkOtelFlutterSessionReplayPlugin.
  *
  * Once you have built the plugin's example app, you can run these tests from the command
  * line by running `./gradlew testDebugUnitTest` in the `example/android/` directory, or
@@ -31,13 +29,8 @@ import kotlin.test.Test
 
 internal class SplunkOtelFlutterSessionReplayPluginTest {
     @Test
-    fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
+    fun pluginCanBeInstantiated() {
         val plugin = SplunkOtelFlutterSessionReplayPlugin()
-
-        val call = MethodCall("getPlatformVersion", null)
-        val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
-        plugin.onMethodCall(call, mockResult)
-
-        Mockito.verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE)
+        assertNotNull(plugin)
     }
 }

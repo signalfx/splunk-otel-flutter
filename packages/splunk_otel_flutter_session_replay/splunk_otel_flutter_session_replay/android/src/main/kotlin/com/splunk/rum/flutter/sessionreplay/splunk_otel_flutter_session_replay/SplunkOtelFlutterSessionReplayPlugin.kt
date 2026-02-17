@@ -16,39 +16,35 @@
 
 package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
 
+import com.splunk.rum.flutter.sessionreplay.FlutterError
+import com.splunk.rum.flutter.sessionreplay.SplunkOtelFlutterSessionReplayHostApi
+import com.splunk.rum.integration.agent.api.SplunkRum
+import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 
 /** SplunkOtelFlutterSessionReplayPlugin */
 class SplunkOtelFlutterSessionReplayPlugin :
     FlutterPlugin,
-    MethodCallHandler {
-    // The MethodChannel that will the communication between Flutter and native Android
-    //
-    // This local reference serves to register the plugin with the Flutter Engine and unregister it
-    // when the Flutter Engine is detached from the Activity
-    private lateinit var channel: MethodChannel
+    SplunkOtelFlutterSessionReplayHostApi {
 
-    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "splunk_otel_flutter_session_replay")
-        channel.setMethodCallHandler(this)
-    }
-
-    override fun onMethodCall(
-        call: MethodCall,
-        result: Result
-    ) {
-        if (call.method == "getPlatformVersion") {
-            result.success("Android ${android.os.Build.VERSION.RELEASE}")
-        } else {
-            result.notImplemented()
-        }
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        SplunkOtelFlutterSessionReplayHostApi.setUp(binding.binaryMessenger, this)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
+        SplunkOtelFlutterSessionReplayHostApi.setUp(binding.binaryMessenger, null)
+    }
+
+    override fun startSessionReplay(callback: (Result<Unit>) -> Unit) {
+        try {
+            SplunkRum.instance.sessionReplay.start()
+            callback(Result.success(Unit))
+        } catch (e: Exception) {
+            callback(
+                Result.failure(
+                    FlutterError("START_SESSION_REPLAY_FAILED", e.message)
+                )
+            )
+        }
     }
 }

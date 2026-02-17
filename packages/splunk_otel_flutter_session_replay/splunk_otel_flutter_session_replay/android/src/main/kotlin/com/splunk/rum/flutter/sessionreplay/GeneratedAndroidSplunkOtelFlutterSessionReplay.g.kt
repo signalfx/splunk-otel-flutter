@@ -59,7 +59,13 @@ private open class GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonCodec : S
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterSessionReplayHostApi {
-  fun install(callback: (Result<Unit>) -> Unit)
+  /**
+   * Starts session replay recording.
+   *
+   * Delegates to the native SDK's SessionReplay.start() via the
+   * SplunkRum.instance.sessionReplay extension.
+   */
+  fun startSessionReplay(callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterSessionReplayHostApi. */
@@ -71,10 +77,10 @@ interface SplunkOtelFlutterSessionReplayHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: SplunkOtelFlutterSessionReplayHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.install$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.startSessionReplay$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.install{ result: Result<Unit> ->
+            api.startSessionReplay{ result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))

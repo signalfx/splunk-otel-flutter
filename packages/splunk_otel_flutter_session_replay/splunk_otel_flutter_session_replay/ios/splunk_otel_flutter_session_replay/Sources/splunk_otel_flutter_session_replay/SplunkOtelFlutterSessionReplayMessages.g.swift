@@ -88,7 +88,11 @@ class SplunkOtelFlutterSessionReplayMessagesPigeonCodec: FlutterStandardMessageC
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterSessionReplayHostApi {
-  func install(completion: @escaping (Result<Void, Error>) -> Void)
+  /// Starts session replay recording.
+  ///
+  /// Delegates to the native SDK's SessionReplay.start() via the
+  /// SplunkRum.instance.sessionReplay extension.
+  func startSessionReplay(completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -97,10 +101,14 @@ class SplunkOtelFlutterSessionReplayHostApiSetup {
   /// Sets up an instance of `SplunkOtelFlutterSessionReplayHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: SplunkOtelFlutterSessionReplayHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let installChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.install\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    /// Starts session replay recording.
+    ///
+    /// Delegates to the native SDK's SessionReplay.start() via the
+    /// SplunkRum.instance.sessionReplay extension.
+    let startSessionReplayChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.startSessionReplay\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      installChannel.setMessageHandler { _, reply in
-        api.install { result in
+      startSessionReplayChannel.setMessageHandler { _, reply in
+        api.startSessionReplay { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -110,7 +118,7 @@ class SplunkOtelFlutterSessionReplayHostApiSetup {
         }
       }
     } else {
-      installChannel.setMessageHandler(nil)
+      startSessionReplayChannel.setMessageHandler(nil)
     }
   }
 }
