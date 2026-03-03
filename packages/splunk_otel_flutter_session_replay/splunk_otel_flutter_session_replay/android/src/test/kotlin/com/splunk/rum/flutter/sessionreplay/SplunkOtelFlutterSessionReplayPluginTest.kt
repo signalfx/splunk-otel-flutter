@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
+package com.splunk.rum.flutter.sessionreplay
 
 import kotlin.test.Test
 import kotlin.test.assertNotNull

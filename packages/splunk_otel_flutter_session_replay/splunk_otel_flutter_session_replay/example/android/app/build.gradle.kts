@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay_example"
+    namespace = "com.splunk.rum.flutter.sessionreplay.example"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay_example"
+        applicationId = "com.splunk.rum.flutter.sessionreplay.example"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

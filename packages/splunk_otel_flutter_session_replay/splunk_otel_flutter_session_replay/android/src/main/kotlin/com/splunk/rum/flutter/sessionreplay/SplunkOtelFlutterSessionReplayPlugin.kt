@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
+package com.splunk.rum.flutter.sessionreplay
 
-import com.splunk.rum.flutter.sessionreplay.FlutterError
-import com.splunk.rum.flutter.sessionreplay.SplunkOtelFlutterSessionReplayHostApi
 import com.splunk.rum.integration.agent.api.SplunkRum
 import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import io.flutter.embedding.engine.plugins.FlutterPlugin
