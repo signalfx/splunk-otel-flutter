@@ -64,11 +64,237 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
+func deepEqualsSplunkOtelFlutterSessionReplayMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
+  let cleanLhs = nilOrValue(lhs) as Any?
+  let cleanRhs = nilOrValue(rhs) as Any?
+  switch (cleanLhs, cleanRhs) {
+  case (nil, nil):
+    return true
+
+  case (nil, _), (_, nil):
+    return false
+
+  case is (Void, Void):
+    return true
+
+  case let (cleanLhsHashable, cleanRhsHashable) as (AnyHashable, AnyHashable):
+    return cleanLhsHashable == cleanRhsHashable
+
+  case let (cleanLhsArray, cleanRhsArray) as ([Any?], [Any?]):
+    guard cleanLhsArray.count == cleanRhsArray.count else { return false }
+    for (index, element) in cleanLhsArray.enumerated() {
+      if !deepEqualsSplunkOtelFlutterSessionReplayMessages(element, cleanRhsArray[index]) {
+        return false
+      }
+    }
+    return true
+
+  case let (cleanLhsDictionary, cleanRhsDictionary) as ([AnyHashable: Any?], [AnyHashable: Any?]):
+    guard cleanLhsDictionary.count == cleanRhsDictionary.count else { return false }
+    for (key, cleanLhsValue) in cleanLhsDictionary {
+      guard cleanRhsDictionary.index(forKey: key) != nil else { return false }
+      if !deepEqualsSplunkOtelFlutterSessionReplayMessages(cleanLhsValue, cleanRhsDictionary[key]!) {
+        return false
+      }
+    }
+    return true
+
+  default:
+    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be untrue.
+    return false
+  }
+}
+
+func deepHashSplunkOtelFlutterSessionReplayMessages(value: Any?, hasher: inout Hasher) {
+  if let valueList = value as? [AnyHashable] {
+     for item in valueList { deepHashSplunkOtelFlutterSessionReplayMessages(value: item, hasher: &hasher) }
+     return
+  }
+
+  if let valueDict = value as? [AnyHashable: AnyHashable] {
+    for key in valueDict.keys { 
+      hasher.combine(key)
+      deepHashSplunkOtelFlutterSessionReplayMessages(value: valueDict[key]!, hasher: &hasher)
+    }
+    return
+  }
+
+  if let hashableValue = value as? AnyHashable {
+    hasher.combine(hashableValue.hashValue)
+  }
+
+  return hasher.combine(String(describing: value))
+}
+
+    
+
+enum GeneratedSessionReplayStatus: Int {
+  case isRecording = 0
+  case notStarted = 1
+  case stopped = 2
+  case belowMinSdkVersion = 3
+  case storageLimitReached = 4
+  case internalError = 5
+}
+
+enum GeneratedRenderingMode: Int {
+  case native = 0
+  case wireframeOnly = 1
+}
+
+enum GeneratedRecordingMaskType: Int {
+  case erasing = 0
+  case covering = 1
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedRecordingMaskList: Hashable {
+  var recordingMaskList: [GeneratedRecordingMaskElement]? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRecordingMaskList? {
+    let recordingMaskList: [GeneratedRecordingMaskElement]? = nilOrValue(pigeonVar_list[0])
+
+    return GeneratedRecordingMaskList(
+      recordingMaskList: recordingMaskList
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      recordingMaskList
+    ]
+  }
+  static func == (lhs: GeneratedRecordingMaskList, rhs: GeneratedRecordingMaskList) -> Bool {
+    return deepEqualsSplunkOtelFlutterSessionReplayMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterSessionReplayMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedRecordingMaskElement: Hashable {
+  var rect: GeneratedRect
+  var type: GeneratedRecordingMaskType
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRecordingMaskElement? {
+    let rect = pigeonVar_list[0] as! GeneratedRect
+    let type = pigeonVar_list[1] as! GeneratedRecordingMaskType
+
+    return GeneratedRecordingMaskElement(
+      rect: rect,
+      type: type
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      rect,
+      type,
+    ]
+  }
+  static func == (lhs: GeneratedRecordingMaskElement, rhs: GeneratedRecordingMaskElement) -> Bool {
+    return deepEqualsSplunkOtelFlutterSessionReplayMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterSessionReplayMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedRect: Hashable {
+  var left: Double
+  var top: Double
+  var width: Double
+  var height: Double
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedRect? {
+    let left = pigeonVar_list[0] as! Double
+    let top = pigeonVar_list[1] as! Double
+    let width = pigeonVar_list[2] as! Double
+    let height = pigeonVar_list[3] as! Double
+
+    return GeneratedRect(
+      left: left,
+      top: top,
+      width: width,
+      height: height
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      left,
+      top,
+      width,
+      height,
+    ]
+  }
+  static func == (lhs: GeneratedRect, rhs: GeneratedRect) -> Bool {
+    return deepEqualsSplunkOtelFlutterSessionReplayMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterSessionReplayMessages(value: toList(), hasher: &hasher)
+  }
+}
 
 private class SplunkOtelFlutterSessionReplayMessagesPigeonCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+    case 129:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return GeneratedSessionReplayStatus(rawValue: enumResultAsInt)
+      }
+      return nil
+    case 130:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return GeneratedRenderingMode(rawValue: enumResultAsInt)
+      }
+      return nil
+    case 131:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
+      }
+      return nil
+    case 132:
+      return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
+    case 133:
+      return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
+    case 134:
+      return GeneratedRect.fromList(self.readValue() as! [Any?])
+    default:
+      return super.readValue(ofType: type)
+    }
+  }
 }
 
 private class SplunkOtelFlutterSessionReplayMessagesPigeonCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? GeneratedSessionReplayStatus {
+      super.writeByte(129)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? GeneratedRenderingMode {
+      super.writeByte(130)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? GeneratedRecordingMaskType {
+      super.writeByte(131)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? GeneratedRecordingMaskList {
+      super.writeByte(132)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedRecordingMaskElement {
+      super.writeByte(133)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedRect {
+      super.writeByte(134)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
 }
 
 private class SplunkOtelFlutterSessionReplayMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
@@ -88,11 +314,14 @@ class SplunkOtelFlutterSessionReplayMessagesPigeonCodec: FlutterStandardMessageC
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterSessionReplayHostApi {
-  /// Starts session replay recording.
-  ///
-  /// Delegates to the native SDK's SessionReplay.start() via the
-  /// SplunkRum.instance.sessionReplay extension.
-  func startSessionReplay(completion: @escaping (Result<Void, Error>) -> Void)
+  func sessionReplayStart(completion: @escaping (Result<Void, Error>) -> Void)
+  func sessionReplayStop(completion: @escaping (Result<Void, Error>) -> Void)
+  func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, Error>) -> Void)
+  func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, Error>) -> Void)
+  func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, Error>) -> Void)
+  func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, Error>) -> Void)
+  func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void)
+  func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -101,14 +330,10 @@ class SplunkOtelFlutterSessionReplayHostApiSetup {
   /// Sets up an instance of `SplunkOtelFlutterSessionReplayHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: SplunkOtelFlutterSessionReplayHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    /// Starts session replay recording.
-    ///
-    /// Delegates to the native SDK's SessionReplay.start() via the
-    /// SplunkRum.instance.sessionReplay extension.
-    let startSessionReplayChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.startSessionReplay\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let sessionReplayStartChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStart\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      startSessionReplayChannel.setMessageHandler { _, reply in
-        api.startSessionReplay { result in
+      sessionReplayStartChannel.setMessageHandler { _, reply in
+        api.sessionReplayStart { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -118,7 +343,116 @@ class SplunkOtelFlutterSessionReplayHostApiSetup {
         }
       }
     } else {
-      startSessionReplayChannel.setMessageHandler(nil)
+      sessionReplayStartChannel.setMessageHandler(nil)
+    }
+    let sessionReplayStopChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStop\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayStopChannel.setMessageHandler { _, reply in
+        api.sessionReplayStop { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayStopChannel.setMessageHandler(nil)
+    }
+    let sessionReplayStateGetStatusChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetStatus\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayStateGetStatusChannel.setMessageHandler { _, reply in
+        api.sessionReplayStateGetStatus { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayStateGetStatusChannel.setMessageHandler(nil)
+    }
+    let sessionReplayStateGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayStateGetRenderingModeChannel.setMessageHandler { _, reply in
+        api.sessionReplayStateGetRenderingMode { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayStateGetRenderingModeChannel.setMessageHandler(nil)
+    }
+    let sessionReplayPreferencesGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler { _, reply in
+        api.sessionReplayPreferencesGetRenderingMode { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler(nil)
+    }
+    let sessionReplayPreferencesSetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesSetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let renderingModeArg: GeneratedRenderingMode? = nilOrValue(args[0])
+        api.sessionReplayPreferencesSetRenderingMode(renderingMode: renderingModeArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler(nil)
+    }
+    let sessionReplayGetRecordingMaskChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayGetRecordingMask\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplayGetRecordingMaskChannel.setMessageHandler { _, reply in
+        api.sessionReplayGetRecordingMask { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplayGetRecordingMaskChannel.setMessageHandler(nil)
+    }
+    let sessionReplaySetRecordingMaskChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplaySetRecordingMask\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      sessionReplaySetRecordingMaskChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let recordingMaskArg: GeneratedRecordingMaskList? = nilOrValue(args[0])
+        api.sessionReplaySetRecordingMask(recordingMask: recordingMaskArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      sessionReplaySetRecordingMaskChannel.setMessageHandler(nil)
     }
   }
 }

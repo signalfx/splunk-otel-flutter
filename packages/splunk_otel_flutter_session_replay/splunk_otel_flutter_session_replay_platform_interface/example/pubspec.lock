@@ -51,6 +51,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  splunk_otel_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: splunk_otel_flutter_platform_interface
+      sha256: ad8981a3815f8dbeea1065dbd1b5ffa837263224bf094d6bac50e093c78985cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0-dev.1"
   splunk_otel_flutter_session_replay_platform_interface:
     dependency: "direct main"
     description:

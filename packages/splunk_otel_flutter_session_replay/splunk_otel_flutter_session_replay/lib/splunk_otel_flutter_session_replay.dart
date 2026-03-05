@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,50 +14,77 @@
  * limitations under the License.
  */
 
-/// Splunk session replay module for Flutter applications.
-///
-/// This library provides session recording and replay capabilities, allowing you
-/// to capture and analyze user interactions for debugging and optimization.
 library splunk_otel_flutter_session_replay;
 
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
 
 /// Splunk Session Replay SDK entry point.
 ///
-/// Use `SplunkSessionReplay.instance.startSessionReplay()` to start recording
+/// Use `SplunkSessionReplay.instance` to access session replay functionality
 /// after the core Splunk RUM agent has been initialized.
 ///
 /// Example:
 /// ```dart
-/// // First, initialize the core RUM agent
 /// await SplunkRum.instance.install(
 ///   agentConfiguration: AgentConfiguration(...),
 ///   moduleConfigurations: [],
 /// );
 ///
-/// // Then start session replay
-/// await SplunkSessionReplay.instance.startSessionReplay();
+/// await SplunkSessionReplay.instance.start();
 /// ```
 class SplunkSessionReplay {
   static final SplunkSessionReplay _instance = SplunkSessionReplay._internal();
 
   SplunkSessionReplay._internal();
 
-  /// SDK singleton instance.
   static SplunkSessionReplay get instance => _instance;
 
   final _delegate =
       SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
 
-  /// Starts session replay recording.
-  ///
-  /// This delegates to the native SDK's session replay start mechanism.
-  /// The core Splunk RUM agent must be initialized first via
-  /// `SplunkRum.instance.install()` before calling this method.
-  ///
-  /// On Android, this calls `SplunkRum.instance.sessionReplay.start()`
-  /// which accesses the shared native singleton.
-  Future<void> startSessionReplay() async {
-    await _delegate.startSessionReplay();
-  }
+  final preferences = SessionReplayPreferences();
+  final state = SessionReplayState();
+  final recordingMask = SessionReplayRecordingMaskApi();
+
+  Future<void> start() async => await _delegate.sessionReplayStart();
+
+  Future<void> stop() async => await _delegate.sessionReplayStop();
+}
+
+class SessionReplayPreferences {
+  final _delegate =
+      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
+
+  Future<RenderingMode?> getRenderingMode() async =>
+      await _delegate.sessionReplayPreferencesGetRenderingMode();
+
+  Future<void> setRenderingMode({required RenderingMode? renderingMode}) async =>
+      await _delegate.sessionReplayPreferencesSetRenderingMode(
+        renderingMode: renderingMode,
+      );
+}
+
+class SessionReplayState {
+  final _delegate =
+      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
+
+  Future<RenderingMode> getRenderingMode() async =>
+      await _delegate.sessionReplayStateGetRenderingMode();
+
+  Future<SessionReplayStatus> getStatus() async =>
+      await _delegate.sessionReplayStateGetStatus();
+}
+
+class SessionReplayRecordingMaskApi {
+  final _delegate =
+      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
+
+  Future<RecordingMaskList?> getRecordingMask() async =>
+      await _delegate.sessionReplayGetRecordingMask();
+
+  Future<void> setRecordingMask({required RecordingMaskList recordingMask}) async =>
+      await _delegate.sessionReplaySetRecordingMask(
+        recordingMask: recordingMask,
+      );
 }

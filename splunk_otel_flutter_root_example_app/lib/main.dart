@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,8 +34,35 @@ void main() async {
   debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
   debugPrint('=============');
 
-  await SplunkSessionReplay.instance.startSessionReplay();
+  final sessionReplay = SplunkSessionReplay.instance;
+
+  await sessionReplay.start();
   debugPrint('Session replay started');
+
+  final status = await sessionReplay.state.getStatus();
+  debugPrint('Session replay status: $status');
+
+  final renderingMode = await sessionReplay.state.getRenderingMode();
+  debugPrint('Rendering mode: $renderingMode');
+
+  await sessionReplay.recordingMask.setRecordingMask(
+    recordingMask: RecordingMaskList(
+      elements: [
+        RecordingMaskElement(
+          rect: const Rect.fromLTWH(0, 0, 200, 100),
+          type: RecordingMaskType.covering,
+        ),
+        RecordingMaskElement(
+          rect: const Rect.fromLTWH(50, 50, 100, 50),
+          type: RecordingMaskType.erasing,
+        ),
+      ],
+    ),
+  );
+  debugPrint('Recording mask set');
+
+  final mask = await sessionReplay.recordingMask.getRecordingMask();
+  debugPrint('Recording mask elements: ${mask?.elements.length ?? 0}');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();
@@ -41,19 +71,22 @@ void main() async {
     debugPrint('Session id: $sessionId');
   });
 
-
   runApp(const DemoApp());
 }
+
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
 
 class DemoApp extends StatelessWidget {
   const DemoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Splunk Flutter demo app - SmartCinema',
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
+      navigatorObservers: [routeObserver],
     );
   }
 }

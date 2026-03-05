@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,17 @@ void main() {
       final second = SplunkSessionReplay.instance;
       expect(identical(first, second), isTrue);
     });
+
+    test('should expose preferences', () {
+      expect(SplunkSessionReplay.instance.preferences, isNotNull);
+    });
+
+    test('should expose state', () {
+      expect(SplunkSessionReplay.instance.state, isNotNull);
+    });
+
+    test('should expose recordingMask', () {
+      expect(SplunkSessionReplay.instance.recordingMask, isNotNull);
+    });
   });
 }
-
