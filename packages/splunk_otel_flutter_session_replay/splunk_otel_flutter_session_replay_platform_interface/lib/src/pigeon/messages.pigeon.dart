@@ -60,8 +60,12 @@ class SplunkOtelFlutterSessionReplayHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> install() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.install$pigeonVar_messageChannelSuffix';
+  /// Starts session replay recording.
+  ///
+  /// Delegates to the native SDK's SessionReplay.start() via the
+  /// SplunkRum.instance.sessionReplay extension.
+  Future<void> startSessionReplay() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.startSessionReplay$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

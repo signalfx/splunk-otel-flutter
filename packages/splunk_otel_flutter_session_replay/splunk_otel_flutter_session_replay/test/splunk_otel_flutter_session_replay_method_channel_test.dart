@@ -20,15 +20,15 @@ import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_r
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutterSessionReplay Method Channel', () {
-    test('should have a working class structure', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      expect(sessionReplay, isA<SplunkOtelFlutterSessionReplay>());
+  group('SplunkSessionReplay', () {
+    test('singleton instance should be accessible', () {
+      final sessionReplay = SplunkSessionReplay.instance;
+      expect(sessionReplay, isA<SplunkSessionReplay>());
     });
 
-    test('install method exists', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      expect(sessionReplay.install, isA<Function>());
+    test('startSessionReplay method exists', () {
+      final sessionReplay = SplunkSessionReplay.instance;
+      expect(sessionReplay.startSessionReplay, isA<Function>());
     });
   });
 }

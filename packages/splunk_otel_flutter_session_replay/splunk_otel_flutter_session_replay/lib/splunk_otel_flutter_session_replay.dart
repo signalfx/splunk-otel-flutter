@@ -18,19 +18,46 @@
 ///
 /// This library provides session recording and replay capabilities, allowing you
 /// to capture and analyze user interactions for debugging and optimization.
-///
-/// **Note:** This module is currently under development.
 library splunk_otel_flutter_session_replay;
 
-/// Main entry point for the Splunk session replay module.
+import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
+
+/// Splunk Session Replay SDK entry point.
 ///
-/// Provides methods to install and configure session replay functionality.
-class SplunkOtelFlutterSessionReplay {
-  /// Installs the session replay module.
+/// Use `SplunkSessionReplay.instance.startSessionReplay()` to start recording
+/// after the core Splunk RUM agent has been initialized.
+///
+/// Example:
+/// ```dart
+/// // First, initialize the core RUM agent
+/// await SplunkRum.instance.install(
+///   agentConfiguration: AgentConfiguration(...),
+///   moduleConfigurations: [],
+/// );
+///
+/// // Then start session replay
+/// await SplunkSessionReplay.instance.startSessionReplay();
+/// ```
+class SplunkSessionReplay {
+  static final SplunkSessionReplay _instance = SplunkSessionReplay._internal();
+
+  SplunkSessionReplay._internal();
+
+  /// SDK singleton instance.
+  static SplunkSessionReplay get instance => _instance;
+
+  final _delegate =
+      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
+
+  /// Starts session replay recording.
   ///
-  /// **Note:** This method is currently not implemented.
-  Future<void> install() {
-    // TODO: implement install
-    throw UnimplementedError();
+  /// This delegates to the native SDK's session replay start mechanism.
+  /// The core Splunk RUM agent must be initialized first via
+  /// `SplunkRum.instance.install()` before calling this method.
+  ///
+  /// On Android, this calls `SplunkRum.instance.sessionReplay.start()`
+  /// which accesses the shared native singleton.
+  Future<void> startSessionReplay() async {
+    await _delegate.startSessionReplay();
   }
 }

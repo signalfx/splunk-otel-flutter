@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,9 @@ void main() async {
   debugPrint('=============');
   debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
   debugPrint('=============');
+
+  await SplunkSessionReplay.instance.startSessionReplay();
+  debugPrint('Session replay started');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();
