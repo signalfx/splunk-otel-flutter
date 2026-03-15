@@ -45,7 +45,7 @@ fun RecordingMask.toGeneratedRecordingMaskList(): GeneratedRecordingMaskList {
 
 fun GeneratedRecordingMaskList.toRecordingMaskList(): RecordingMask {
     return RecordingMask(
-        this.recordingMaskList?.map { it.toRecordingMask() } as List<RecordingMask.Element>
+        this.recordingMaskList?.map { it.toRecordingMask() } ?: emptyList()
     )
 }
 

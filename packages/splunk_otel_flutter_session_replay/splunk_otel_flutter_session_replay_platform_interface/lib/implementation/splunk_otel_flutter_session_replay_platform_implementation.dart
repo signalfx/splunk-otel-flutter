@@ -75,9 +75,9 @@ class SplunkOtelFlutterSessionReplayPlatformImplementation
 
   @override
   Future<void> sessionReplaySetRecordingMask(
-          {required RecordingMaskList recordingMask}) async =>
+          {required RecordingMaskList? recordingMask}) async =>
       await _api.sessionReplaySetRecordingMask(
-        recordingMask: recordingMask._toGenerated(),
+        recordingMask: recordingMask?._toGenerated(),
       );
 }
 

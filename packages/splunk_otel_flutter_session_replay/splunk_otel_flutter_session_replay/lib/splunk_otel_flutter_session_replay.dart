@@ -83,7 +83,7 @@ class SessionReplayRecordingMaskApi {
   Future<RecordingMaskList?> getRecordingMask() async =>
       await _delegate.sessionReplayGetRecordingMask();
 
-  Future<void> setRecordingMask({required RecordingMaskList recordingMask}) async =>
+  Future<void> setRecordingMask({required RecordingMaskList? recordingMask}) async =>
       await _delegate.sessionReplaySetRecordingMask(
         recordingMask: recordingMask,
       );
