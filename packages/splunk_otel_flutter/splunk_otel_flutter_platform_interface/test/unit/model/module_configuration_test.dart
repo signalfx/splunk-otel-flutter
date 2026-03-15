@@ -383,6 +383,58 @@ void main() {
     });
   });
 
+  group('SessionReplayModuleConfiguration', () {
+    test('should create with default values', () {
+      final config = SessionReplayModuleConfiguration();
+
+      expect(config.isEnabled, true);
+      expect(config.samplingRate, 1.0);
+    });
+
+    test('should create with custom values', () {
+      final config = SessionReplayModuleConfiguration(
+        isEnabled: false,
+        samplingRate: 0.5,
+      );
+
+      expect(config.isEnabled, false);
+      expect(config.samplingRate, 0.5);
+    });
+
+    test('samplingRate of 0.0 should be valid', () {
+      final config = SessionReplayModuleConfiguration(samplingRate: 0.0);
+      expect(config.samplingRate, 0.0);
+    });
+
+    test('samplingRate of 1.0 should be valid', () {
+      final config = SessionReplayModuleConfiguration(samplingRate: 1.0);
+      expect(config.samplingRate, 1.0);
+    });
+
+    test('samplingRate less than 0.0 should throw ArgumentError', () {
+      expect(
+        () => SessionReplayModuleConfiguration(samplingRate: -0.1),
+        throwsArgumentError,
+      );
+    });
+
+    test('samplingRate greater than 1.0 should throw ArgumentError', () {
+      expect(
+        () => SessionReplayModuleConfiguration(samplingRate: 1.1),
+        throwsArgumentError,
+      );
+    });
+
+    test('samplingRate error message should include received value', () {
+      try {
+        SessionReplayModuleConfiguration(samplingRate: 1.5);
+        fail('Expected ArgumentError');
+      } on ArgumentError catch (e) {
+        expect(e.message, contains('1.5'));
+      }
+    });
+  });
+
   group('Module Configuration Hierarchy', () {
     test('all activable modules should extend ActivableModuleConfiguration', () {
       final configs = [
@@ -395,6 +447,7 @@ void main() {
         HttpUrlModuleConfiguration(),
         OkHttp3AutoModuleConfiguration(),
         NetworkInstrumentationModuleConfiguration(),
+        SessionReplayModuleConfiguration(),
       ];
 
       for (final config in configs) {

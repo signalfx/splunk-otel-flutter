@@ -56,7 +56,11 @@ abstract class SplunkOtelFlutterHostApi {
 
       // iOS-only configurations
       required GeneratedNetworkInstrumentationModuleConfiguration?
-          networkInstrumentationModuleConfiguration});
+          networkInstrumentationModuleConfiguration,
+
+      // Session replay configuration (requires splunk_otel_flutter_session_replay package)
+      required GeneratedSessionReplayModuleConfiguration?
+          sessionReplayModuleConfiguration});
 
   // State
 
@@ -291,6 +295,16 @@ class GeneratedRegularExpression {
   GeneratedRegularExpression({
     required this.pattern,
     required this.options,
+  });
+}
+
+class GeneratedSessionReplayModuleConfiguration {
+  final bool isEnabled;
+  final double samplingRate;
+
+  GeneratedSessionReplayModuleConfiguration({
+    required this.isEnabled,
+    required this.samplingRate,
   });
 }
 
