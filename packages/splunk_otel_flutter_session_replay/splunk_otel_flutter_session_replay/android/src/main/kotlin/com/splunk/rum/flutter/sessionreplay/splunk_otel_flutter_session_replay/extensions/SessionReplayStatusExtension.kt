@@ -29,6 +29,7 @@ fun Status.toGeneratedSessionReplayStatus(): GeneratedSessionReplayStatus {
                 Status.NotRecording.Cause.BELOW_MIN_SDK_VERSION -> GeneratedSessionReplayStatus.BELOW_MIN_SDK_VERSION
                 Status.NotRecording.Cause.STORAGE_LIMIT_REACHED -> GeneratedSessionReplayStatus.STORAGE_LIMIT_REACHED
                 Status.NotRecording.Cause.INTERNAL_ERROR -> GeneratedSessionReplayStatus.INTERNAL_ERROR
+                Status.NotRecording.Cause.DISABLED_BY_SAMPLING -> GeneratedSessionReplayStatus.DISABLED_BY_SAMPLING
             }
         }
     }

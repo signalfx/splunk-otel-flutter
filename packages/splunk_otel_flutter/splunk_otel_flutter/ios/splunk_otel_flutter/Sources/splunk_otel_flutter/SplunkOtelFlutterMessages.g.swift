@@ -150,6 +150,7 @@ enum GeneratedSessionReplayStatus: Int {
   case belowMinSdkVersion = 3
   case storageLimitReached = 4
   case internalError = 5
+  case disabledBySampling = 6
 }
 
 enum GeneratedRenderingMode: Int {

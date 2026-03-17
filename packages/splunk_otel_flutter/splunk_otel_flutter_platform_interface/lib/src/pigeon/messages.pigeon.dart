@@ -14,16 +14,6 @@ PlatformException _createConnectionError(String channelName) {
     message: 'Unable to establish connection on channel: "$channelName".',
   );
 }
-
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
-  if (empty) {
-    return <Object?>[];
-  }
-  if (error == null) {
-    return <Object?>[result];
-  }
-  return <Object?>[error.code, error.message, error.details];
-}
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
@@ -61,6 +51,7 @@ enum GeneratedSessionReplayStatus {
   belowMinSdkVersion,
   storageLimitReached,
   internalError,
+  disabledBySampling,
 }
 
 enum GeneratedRenderingMode {

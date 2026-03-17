@@ -46,6 +46,7 @@ enum GeneratedSessionReplayStatus {
   belowMinSdkVersion,
   storageLimitReached,
   internalError,
+  disabledBySampling,
 }
 
 enum GeneratedRenderingMode {

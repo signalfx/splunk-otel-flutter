@@ -84,7 +84,8 @@ enum class GeneratedSessionReplayStatus(val raw: Int) {
   STOPPED(2),
   BELOW_MIN_SDK_VERSION(3),
   STORAGE_LIMIT_REACHED(4),
-  INTERNAL_ERROR(5);
+  INTERNAL_ERROR(5),
+  DISABLED_BY_SAMPLING(6);
 
   companion object {
     fun ofRaw(raw: Int): GeneratedSessionReplayStatus? {

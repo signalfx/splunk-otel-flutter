@@ -40,6 +40,9 @@ enum SessionReplayStatus {
   /// This typically occurs when the internal database cannot be opened
   /// or another internal error occurred.
   internalError,
+
+  /// Recording is disabled because the session was not sampled.
+  disabledBySampling,
 }
 
 extension SessionReplayStatusExtension on SessionReplayStatus {
@@ -57,6 +60,8 @@ extension SessionReplayStatusExtension on SessionReplayStatus {
         return GeneratedSessionReplayStatus.storageLimitReached;
       case SessionReplayStatus.internalError:
         return GeneratedSessionReplayStatus.internalError;
+      case SessionReplayStatus.disabledBySampling:
+        return GeneratedSessionReplayStatus.disabledBySampling;
     }
   }
 }
@@ -77,6 +82,8 @@ extension GeneratedSessionReplayStatusExtension
         return SessionReplayStatus.storageLimitReached;
       case GeneratedSessionReplayStatus.internalError:
         return SessionReplayStatus.internalError;
+      case GeneratedSessionReplayStatus.disabledBySampling:
+        return SessionReplayStatus.disabledBySampling;
     }
   }
 }

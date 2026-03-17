@@ -100,6 +100,8 @@ extension on GeneratedSessionReplayStatus {
         return SessionReplayStatus.storageLimitReached;
       case GeneratedSessionReplayStatus.internalError:
         return SessionReplayStatus.internalError;
+      case GeneratedSessionReplayStatus.disabledBySampling:
+        return SessionReplayStatus.disabledBySampling;
     }
   }
 }
