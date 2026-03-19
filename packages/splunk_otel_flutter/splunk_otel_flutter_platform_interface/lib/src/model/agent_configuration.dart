@@ -35,7 +35,10 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 /// ```
 class AgentConfiguration {
   /// Backend endpoint configuration for sending telemetry data.
-  final EndpointConfiguration endpointConfiguration;
+  ///
+  /// When `null`, the SDK starts without sending data. Credentials can be
+  /// provided later via `SplunkRum.instance.state.setEndpointConfiguration`.
+  final EndpointConfiguration? endpointConfiguration;
   
   /// The name of your application.
   final String appName;
@@ -69,7 +72,7 @@ class AgentConfiguration {
 
   /// Creates an agent configuration.
   AgentConfiguration({
-    required this.endpointConfiguration,
+    this.endpointConfiguration,
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,

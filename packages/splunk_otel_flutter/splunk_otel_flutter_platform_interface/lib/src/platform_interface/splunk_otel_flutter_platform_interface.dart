@@ -64,7 +64,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<String> stateGetAppName();
   Future<String> stateGetAppVersion();
   Future<Status> stateGetStatus();
-  Future<EndpointConfiguration> stateGetEndpointConfiguration();
+  Future<EndpointConfiguration?> stateGetEndpointConfiguration();
+  Future<void> stateSetEndpointConfiguration({required EndpointConfiguration endpointConfiguration});
   Future<String> stateGetDeploymentEnvironment();
   Future<bool> stateGetIsDebugLoggingEnabled();
   Future<String?> stateGetInstrumentedProcessName();

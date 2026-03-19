@@ -480,9 +480,9 @@ struct GeneratedRegularExpression: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedAgentConfiguration: Hashable {
-  var endpoint: GeneratedEndpointConfiguration
   var appName: String
   var deploymentEnvironment: String
+  var endpoint: GeneratedEndpointConfiguration? = nil
   var appVersion: String? = nil
   var enableDebugLogging: Bool? = nil
   var globalAttributes: GeneratedMutableAttributes? = nil
@@ -494,9 +494,9 @@ struct GeneratedAgentConfiguration: Hashable {
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedAgentConfiguration? {
-    let endpoint = pigeonVar_list[0] as! GeneratedEndpointConfiguration
-    let appName = pigeonVar_list[1] as! String
-    let deploymentEnvironment = pigeonVar_list[2] as! String
+    let appName = pigeonVar_list[0] as! String
+    let deploymentEnvironment = pigeonVar_list[1] as! String
+    let endpoint: GeneratedEndpointConfiguration? = nilOrValue(pigeonVar_list[2])
     let appVersion: String? = nilOrValue(pigeonVar_list[3])
     let enableDebugLogging: Bool? = nilOrValue(pigeonVar_list[4])
     let globalAttributes: GeneratedMutableAttributes? = nilOrValue(pigeonVar_list[5])
@@ -506,9 +506,9 @@ struct GeneratedAgentConfiguration: Hashable {
     let deferredUntilForeground: Bool? = nilOrValue(pigeonVar_list[9])
 
     return GeneratedAgentConfiguration(
-      endpoint: endpoint,
       appName: appName,
       deploymentEnvironment: deploymentEnvironment,
+      endpoint: endpoint,
       appVersion: appVersion,
       enableDebugLogging: enableDebugLogging,
       globalAttributes: globalAttributes,
@@ -520,9 +520,9 @@ struct GeneratedAgentConfiguration: Hashable {
   }
   func toList() -> [Any?] {
     return [
-      endpoint,
       appName,
       deploymentEnvironment,
+      endpoint,
       appVersion,
       enableDebugLogging,
       globalAttributes,
@@ -1169,11 +1169,12 @@ protocol SplunkOtelFlutterHostApi {
   func stateGetAppName(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetAppVersion(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetStatus(completion: @escaping (Result<GeneratedStatus, Error>) -> Void)
-  func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration, Error>) -> Void)
+  func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
   func stateGetDeploymentEnvironment(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetIsDebugLoggingEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func stateGetInstrumentedProcessName(completion: @escaping (Result<String?, Error>) -> Void)
   func stateGetDeferredUntilForeground(completion: @escaping (Result<Bool, Error>) -> Void)
+  func stateSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, Error>) -> Void)
   func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
   func sessionStateGetId(completion: @escaping (Result<String, Error>) -> Void)
   func sessionStateGetSamplingRate(completion: @escaping (Result<Double, Error>) -> Void)
@@ -1352,6 +1353,23 @@ class SplunkOtelFlutterHostApiSetup {
       }
     } else {
       stateGetDeferredUntilForegroundChannel.setMessageHandler(nil)
+    }
+    let stateSetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      stateSetEndpointConfigurationChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let endpointConfigurationArg = args[0] as! GeneratedEndpointConfiguration
+        api.stateSetEndpointConfiguration(endpointConfiguration: endpointConfigurationArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      stateSetEndpointConfigurationChannel.setMessageHandler(nil)
     }
     let preferencesGetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

@@ -70,7 +70,7 @@ abstract class SplunkOtelFlutterHostApi {
   GeneratedStatus stateGetStatus();
 
   @async
-  GeneratedEndpointConfiguration stateGetEndpointConfiguration();
+  GeneratedEndpointConfiguration? stateGetEndpointConfiguration();
 
   @async
   String stateGetDeploymentEnvironment();
@@ -83,6 +83,11 @@ abstract class SplunkOtelFlutterHostApi {
 
   @async
   bool stateGetDeferredUntilForeground();
+
+  @async
+  void stateSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  });
 
   // Preferences
 
@@ -296,11 +301,12 @@ class GeneratedRegularExpression {
 
 class GeneratedAgentConfiguration {
   // Required properties (common to iOS and Android).
-  final GeneratedEndpointConfiguration endpoint;
   final String appName;
   final String deploymentEnvironment;
 
   // Optional properties (common to iOS and Android).
+  final GeneratedEndpointConfiguration? endpoint;
+
   // On iOS, this typically defaults to CFBundleShortVersionString.
   final String? appVersion;
 
@@ -320,13 +326,12 @@ class GeneratedAgentConfiguration {
   final bool? deferredUntilForeground; // Android-only.
 
   GeneratedAgentConfiguration({
-    required this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
+    this.endpoint,
     this.appVersion,
     this.enableDebugLogging,
     this.globalAttributes,
-    // this.spanInterceptor, // Removed for first release
     this.user,
     this.session,
     this.instrumentedProcessName, // Android-only.

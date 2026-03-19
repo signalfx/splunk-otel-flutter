@@ -11,24 +11,29 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
-  // Measure install duration
+  // Install without endpoint configuration (deferred credentials).
   final stopwatch = Stopwatch()..start();
-  
+
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
-        realm: realm,
-        rumAccessToken: rumAccessToken,
-      ),
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
     ),
   );
-  
+
   stopwatch.stop();
   debugPrint('=============');
   debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
   debugPrint('=============');
+
+  // Set endpoint configuration after install.
+  await SplunkRum.instance.state.setEndpointConfiguration(
+    endpointConfiguration: EndpointConfiguration.forRum(
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    ),
+  );
+  debugPrint('Endpoint configuration set after install.');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();

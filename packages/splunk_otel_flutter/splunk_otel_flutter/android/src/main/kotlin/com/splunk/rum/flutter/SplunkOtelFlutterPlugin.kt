@@ -111,7 +111,7 @@ class SplunkOtelFlutterPlugin :
 
         val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
 
-        val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
+        val endpointConfiguration = agentConfiguration.endpoint?.toEndpointConfiguration()
 
         val agentConfiguration = AgentConfiguration(
             endpoint = endpointConfiguration,
@@ -227,15 +227,10 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(status.toGeneratedStatus()))
     }
 
-    override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit) {
+    override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit) {
         val endpointConfiguration = SplunkRum.instance.state.endpointConfiguration
 
-        if (endpointConfiguration == null) {
-            callback(Result.failure(FlutterError("EMPTY_ENDPOINT_CONFIGURATION", "Endpoint configuration not set.")))
-            return
-        }
-
-        callback(Result.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
+        callback(Result.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
     }
 
     override fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit) {
@@ -260,6 +255,16 @@ class SplunkOtelFlutterPlugin :
         val deferredUntilForeground = SplunkRum.instance.state.deferredUntilForeground
 
         callback(Result.success(deferredUntilForeground))
+    }
+
+    override fun stateSetEndpointConfiguration(
+        endpointConfiguration: GeneratedEndpointConfiguration,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        val endpoint = endpointConfiguration.toEndpointConfiguration()
+        SplunkRum.instance.preferences.endpointConfiguration = endpoint
+
+        callback(Result.success(Unit))
     }
 
     // Preferences

@@ -76,6 +76,27 @@ void main() {
         expect(installCalled, true);
       });
 
+      test('should call install with null endpoint configuration', () async {
+        final agentConfig = AgentConfiguration(
+          appName: 'TestApp',
+          deploymentEnvironment: 'test',
+        );
+
+        bool installCalled = false;
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+          installCalled = true;
+          expect(genAgent.endpoint, isNull);
+          expect(genAgent.appName, 'TestApp');
+        };
+
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [],
+        );
+
+        expect(installCalled, true);
+      });
+
       test('should handle module configurations extraction', () async {
         final agentConfig = AgentConfiguration(
           endpointConfiguration: EndpointConfiguration.forRum(
@@ -187,8 +208,32 @@ void main() {
         };
 
         final endpoint = await implementation.stateGetEndpointConfiguration();
-        expect(endpoint.realm, 'eu0');
-        expect(endpoint.rumAccessToken, 'token123');
+        expect(endpoint?.realm, 'eu0');
+        expect(endpoint?.rumAccessToken, 'token123');
+      });
+
+      test('should return null endpoint configuration when not set', () async {
+        mockApi.stateGetEndpointConfigurationHandler = () async => null;
+
+        final endpoint = await implementation.stateGetEndpointConfiguration();
+        expect(endpoint, isNull);
+      });
+
+      test('should set endpoint configuration', () async {
+        GeneratedEndpointConfiguration? receivedConfig;
+        mockApi.stateSetEndpointConfigurationHandler = (config) async {
+          receivedConfig = config;
+        };
+
+        await implementation.stateSetEndpointConfiguration(
+          endpointConfiguration: EndpointConfiguration.forRum(
+            realm: 'us1',
+            rumAccessToken: 'new-token',
+          ),
+        );
+
+        expect(receivedConfig?.realm, 'us1');
+        expect(receivedConfig?.rumAccessToken, 'new-token');
       });
     });
 

@@ -225,7 +225,11 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<GeneratedStatus> stateGetStatus();
 
-  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration();
+  Future<GeneratedEndpointConfiguration?> stateGetEndpointConfiguration();
+
+  Future<void> stateSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  });
 
   Future<String> stateGetDeploymentEnvironment();
 
@@ -386,7 +390,7 @@ abstract class TestSplunkOtelFlutterHostApi {
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           try {
-            final GeneratedEndpointConfiguration output = await api.stateGetEndpointConfiguration();
+            final GeneratedEndpointConfiguration? output = await api.stateGetEndpointConfiguration();
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -464,6 +468,31 @@ abstract class TestSplunkOtelFlutterHostApi {
           try {
             final bool output = await api.stateGetDeferredUntilForeground();
             return <Object?>[output];
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final GeneratedEndpointConfiguration? arg_endpointConfiguration = (args[0] as GeneratedEndpointConfiguration?);
+          assert(arg_endpointConfiguration != null,
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration was null, expected non-null GeneratedEndpointConfiguration.');
+          try {
+            await api.stateSetEndpointConfiguration(endpointConfiguration: arg_endpointConfiguration!);
+            return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           }          catch (e) {

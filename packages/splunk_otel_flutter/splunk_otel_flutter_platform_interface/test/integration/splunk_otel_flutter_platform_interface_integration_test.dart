@@ -78,8 +78,8 @@ void main() {
           // Verify agent configuration
           expect(genAgent.appName, 'IntegrationTestApp');
           expect(genAgent.deploymentEnvironment, 'production');
-          expect(genAgent.endpoint.realm, 'us0');
-          expect(genAgent.endpoint.rumAccessToken, 'test-token-abc123');
+          expect(genAgent.endpoint?.realm, 'us0');
+          expect(genAgent.endpoint?.rumAccessToken, 'test-token-abc123');
           expect(genAgent.appVersion, '1.0.0');
           expect(genAgent.enableDebugLogging, true);
           expect(genAgent.user?.trackingMode,
@@ -140,6 +140,47 @@ void main() {
 
         // Assert
         expect(installCalled, true);
+      });
+
+      test('should handle installation without endpoint configuration', () async {
+        // Arrange
+        final agentConfig = AgentConfiguration(
+          appName: 'DeferredApp',
+          deploymentEnvironment: 'test',
+        );
+
+        bool installCalled = false;
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+          installCalled = true;
+          expect(genAgent.endpoint, isNull);
+          expect(genAgent.appName, 'DeferredApp');
+        };
+
+        // Act
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [],
+        );
+
+        // Assert
+        expect(installCalled, true);
+      });
+
+      test('should set endpoint configuration after install', () async {
+        GeneratedEndpointConfiguration? receivedConfig;
+        mockApi.stateSetEndpointConfigurationHandler = (config) async {
+          receivedConfig = config;
+        };
+
+        await implementation.stateSetEndpointConfiguration(
+          endpointConfiguration: EndpointConfiguration.forRum(
+            realm: 'us0',
+            rumAccessToken: 'deferred-token',
+          ),
+        );
+
+        expect(receivedConfig?.realm, 'us0');
+        expect(receivedConfig?.rumAccessToken, 'deferred-token');
       });
 
       test('should handle installation with only navigation module', () async {
@@ -675,8 +716,8 @@ void main() {
         expect(await implementation.stateGetStatus(), Status.running);
 
         final endpoint = await implementation.stateGetEndpointConfiguration();
-        expect(endpoint.realm, 'eu0');
-        expect(endpoint.rumAccessToken, 'token-xyz');
+        expect(endpoint?.realm, 'eu0');
+        expect(endpoint?.rumAccessToken, 'token-xyz');
       });
     });
 

@@ -30,7 +30,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.0.5")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.2.0")
     ],
     targets: [
         .target(
