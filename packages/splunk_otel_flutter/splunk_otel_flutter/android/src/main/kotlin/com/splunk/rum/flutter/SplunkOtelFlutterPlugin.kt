@@ -257,7 +257,7 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(deferredUntilForeground))
     }
 
-    override fun stateSetEndpointConfiguration(
+    override fun preferencesSetEndpointConfiguration(
         endpointConfiguration: GeneratedEndpointConfiguration,
         callback: (Result<Unit>) -> Unit
     ) {

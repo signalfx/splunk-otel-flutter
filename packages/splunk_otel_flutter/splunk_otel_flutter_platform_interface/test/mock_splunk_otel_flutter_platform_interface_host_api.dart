@@ -54,7 +54,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   Future<String> Function()? stateGetAppVersionHandler;
   Future<GeneratedStatus> Function()? stateGetStatusHandler;
   Future<GeneratedEndpointConfiguration?> Function()? stateGetEndpointConfigurationHandler;
-  Future<void> Function(GeneratedEndpointConfiguration)? stateSetEndpointConfigurationHandler;
+  Future<void> Function(GeneratedEndpointConfiguration)? preferencesSetEndpointConfigurationHandler;
   Future<String> Function()? stateGetDeploymentEnvironmentHandler;
   Future<bool> Function()? stateGetIsDebugLoggingEnabledHandler;
   Future<String?> Function()? stateGetInstrumentedProcessNameHandler;
@@ -160,11 +160,11 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> stateSetEndpointConfiguration({
+  Future<void> preferencesSetEndpointConfiguration({
     required GeneratedEndpointConfiguration endpointConfiguration,
   }) async {
-    if (stateSetEndpointConfigurationHandler != null) {
-      return stateSetEndpointConfigurationHandler!(endpointConfiguration);
+    if (preferencesSetEndpointConfigurationHandler != null) {
+      return preferencesSetEndpointConfigurationHandler!(endpointConfiguration);
     }
   }
 

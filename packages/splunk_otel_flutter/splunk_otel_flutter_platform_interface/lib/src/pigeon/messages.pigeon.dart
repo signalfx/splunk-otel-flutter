@@ -1742,29 +1742,6 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> stateSetEndpointConfiguration({required GeneratedEndpointConfiguration endpointConfiguration}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[endpointConfiguration]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
   Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration() async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1785,6 +1762,29 @@ class SplunkOtelFlutterHostApi {
       );
     } else {
       return (pigeonVar_replyList[0] as GeneratedEndpointConfiguration?);
+    }
+  }
+
+  Future<void> preferencesSetEndpointConfiguration({required GeneratedEndpointConfiguration endpointConfiguration}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[endpointConfiguration]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
     }
   }
 

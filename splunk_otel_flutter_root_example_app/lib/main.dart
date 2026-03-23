@@ -27,7 +27,7 @@ void main() async {
   debugPrint('=============');
 
   // Set endpoint configuration after install.
-  await SplunkRum.instance.state.setEndpointConfiguration(
+  await SplunkRum.instance.preferences.setEndpointConfiguration(
     endpointConfiguration: EndpointConfiguration.forRum(
       realm: realm,
       rumAccessToken: rumAccessToken,

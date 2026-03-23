@@ -206,16 +206,6 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
   @override
-  Future<void> stateSetEndpointConfiguration({
-    required EndpointConfiguration endpointConfiguration,
-  }) async {
-    await _api.stateSetEndpointConfiguration(
-      endpointConfiguration:
-          endpointConfiguration.toGeneratedEndpointConfiguration(),
-    );
-  }
-
-  @override
   Future<String?> stateGetInstrumentedProcessName() async =>
       await _api.stateGetInstrumentedProcessName();
 
@@ -239,6 +229,15 @@ class SplunkOtelFlutterPlatformImplementation
     return genEndpointConfig?.toEndpointConfiguration();
   }
 
+  @override
+  Future<void> preferencesSetEndpointConfiguration({
+    required EndpointConfiguration endpointConfiguration,
+  }) async {
+    await _api.preferencesSetEndpointConfiguration(
+      endpointConfiguration:
+          endpointConfiguration.toGeneratedEndpointConfiguration(),
+    );
+  }
 
   // Session
 

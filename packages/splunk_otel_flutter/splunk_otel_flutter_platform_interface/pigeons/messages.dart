@@ -84,15 +84,15 @@ abstract class SplunkOtelFlutterHostApi {
   @async
   bool stateGetDeferredUntilForeground();
 
-  @async
-  void stateSetEndpointConfiguration({
-    required GeneratedEndpointConfiguration endpointConfiguration,
-  });
-
   // Preferences
 
   @async
   GeneratedEndpointConfiguration? preferencesGetEndpointConfiguration();
+
+  @async
+  void preferencesSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  });
 
   // Session
 

@@ -168,11 +168,11 @@ void main() {
 
       test('should set endpoint configuration after install', () async {
         GeneratedEndpointConfiguration? receivedConfig;
-        mockApi.stateSetEndpointConfigurationHandler = (config) async {
+        mockApi.preferencesSetEndpointConfigurationHandler = (config) async {
           receivedConfig = config;
         };
 
-        await implementation.stateSetEndpointConfiguration(
+        await implementation.preferencesSetEndpointConfiguration(
           endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'deferred-token',

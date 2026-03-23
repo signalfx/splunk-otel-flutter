@@ -227,7 +227,7 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<GeneratedEndpointConfiguration?> stateGetEndpointConfiguration();
 
-  Future<void> stateSetEndpointConfiguration({
+  Future<void> preferencesSetEndpointConfiguration({
     required GeneratedEndpointConfiguration endpointConfiguration,
   });
 
@@ -478,20 +478,20 @@ abstract class TestSplunkOtelFlutterHostApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration was null.');
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final GeneratedEndpointConfiguration? arg_endpointConfiguration = (args[0] as GeneratedEndpointConfiguration?);
           assert(arg_endpointConfiguration != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration was null, expected non-null GeneratedEndpointConfiguration.');
+              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration was null, expected non-null GeneratedEndpointConfiguration.');
           try {
-            await api.stateSetEndpointConfiguration(endpointConfiguration: arg_endpointConfiguration!);
+            await api.preferencesSetEndpointConfiguration(endpointConfiguration: arg_endpointConfiguration!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

@@ -1174,8 +1174,8 @@ protocol SplunkOtelFlutterHostApi {
   func stateGetIsDebugLoggingEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func stateGetInstrumentedProcessName(completion: @escaping (Result<String?, Error>) -> Void)
   func stateGetDeferredUntilForeground(completion: @escaping (Result<Bool, Error>) -> Void)
-  func stateSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, Error>) -> Void)
   func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
+  func preferencesSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, Error>) -> Void)
   func sessionStateGetId(completion: @escaping (Result<String, Error>) -> Void)
   func sessionStateGetSamplingRate(completion: @escaping (Result<Double, Error>) -> Void)
   func userStateGetUserTrackingMode(completion: @escaping (Result<GeneratedUserTrackingMode, Error>) -> Void)
@@ -1354,23 +1354,6 @@ class SplunkOtelFlutterHostApiSetup {
     } else {
       stateGetDeferredUntilForegroundChannel.setMessageHandler(nil)
     }
-    let stateSetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateSetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      stateSetEndpointConfigurationChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let endpointConfigurationArg = args[0] as! GeneratedEndpointConfiguration
-        api.stateSetEndpointConfiguration(endpointConfiguration: endpointConfigurationArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      stateSetEndpointConfigurationChannel.setMessageHandler(nil)
-    }
     let preferencesGetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       preferencesGetEndpointConfigurationChannel.setMessageHandler { _, reply in
@@ -1385,6 +1368,23 @@ class SplunkOtelFlutterHostApiSetup {
       }
     } else {
       preferencesGetEndpointConfigurationChannel.setMessageHandler(nil)
+    }
+    let preferencesSetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      preferencesSetEndpointConfigurationChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let endpointConfigurationArg = args[0] as! GeneratedEndpointConfiguration
+        api.preferencesSetEndpointConfiguration(endpointConfiguration: endpointConfigurationArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      preferencesSetEndpointConfigurationChannel.setMessageHandler(nil)
     }
     let sessionStateGetIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

@@ -221,11 +221,11 @@ void main() {
 
       test('should set endpoint configuration', () async {
         GeneratedEndpointConfiguration? receivedConfig;
-        mockApi.stateSetEndpointConfigurationHandler = (config) async {
+        mockApi.preferencesSetEndpointConfigurationHandler = (config) async {
           receivedConfig = config;
         };
 
-        await implementation.stateSetEndpointConfiguration(
+        await implementation.preferencesSetEndpointConfiguration(
           endpointConfiguration: EndpointConfiguration.forRum(
             realm: 'us1',
             rumAccessToken: 'new-token',

@@ -239,7 +239,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(false))
     }
     
-    func stateSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, any Error>) -> Void) {
+    func preferencesSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, any Error>) -> Void) {
         guard let endpoint = endpointConfiguration.toEndpointConfiguration() else {
             completion(
                 .failure(
