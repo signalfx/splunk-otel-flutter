@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'dart:developer' as developer;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:splunk_otel_flutter/src/rum_sdk_version.dart';
@@ -55,14 +53,6 @@ AgentConfiguration applyRumTelemetryMetadata(
     _rumSdkFlutterVersionKey:
         MutableAttributeString(value: rumSdkFlutterVersion),
   };
-
-  // TODO(DEMRUM-4753): Remove debug logging before release.
-  developer.log(
-    'RUM telemetry metadata: '
-    '$_splunkAppFrameworkFlutterVersionKey=$frameworkVersion, '
-    '$_rumSdkFlutterVersionKey=$rumSdkFlutterVersion',
-    name: 'SplunkRum',
-  );
 
   return AgentConfiguration(
     endpointConfiguration: agentConfiguration.endpointConfiguration,

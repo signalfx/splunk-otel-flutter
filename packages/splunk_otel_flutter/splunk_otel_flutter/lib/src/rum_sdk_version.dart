@@ -19,5 +19,5 @@
 /// Must be kept in sync with:
 /// - `pubspec.yaml` (`version:`)
 /// - Android: `rumSdkFlutterVersion` in `android/build.gradle`
-/// - iOS: `sdk` variable in `ios/generate_splunk_flutter_versions.sh`
+/// - iOS: `rumSdkFlutterVersion` in `ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkRumFlutterVersions.generated.swift`
 const String rumSdkFlutterVersion = '1.0.0-alpha.1';
