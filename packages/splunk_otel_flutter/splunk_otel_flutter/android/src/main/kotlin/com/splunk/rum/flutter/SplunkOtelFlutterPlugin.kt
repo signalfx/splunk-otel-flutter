@@ -111,7 +111,14 @@ class SplunkOtelFlutterPlugin :
 
         val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
 
-        val endpointConfiguration = agentConfiguration.endpoint?.toEndpointConfiguration()
+        val endpointConfiguration = agentConfiguration.endpoint?.let {
+            try {
+                it.toEndpointConfiguration()
+            } catch (e: IllegalArgumentException) {
+                Log.w("SplunkRum", "Endpoint configuration provided but invalid. Installing without endpoint.", e)
+                null
+            }
+        }
 
         val agentConfiguration = AgentConfiguration(
             endpoint = endpointConfiguration,
@@ -261,8 +268,12 @@ class SplunkOtelFlutterPlugin :
         endpointConfiguration: GeneratedEndpointConfiguration,
         callback: (Result<Unit>) -> Unit
     ) {
-        val endpoint = endpointConfiguration.toEndpointConfiguration()
-        SplunkRum.instance.preferences.endpointConfiguration = endpoint
+        try {
+            val endpoint = endpointConfiguration.toEndpointConfiguration()
+            SplunkRum.instance.preferences.endpointConfiguration = endpoint
+        } catch (e: IllegalArgumentException) {
+            Log.w("SplunkRum", "Endpoint configuration provided but invalid. Endpoint not updated.", e)
+        }
 
         callback(Result.success(Unit))
     }

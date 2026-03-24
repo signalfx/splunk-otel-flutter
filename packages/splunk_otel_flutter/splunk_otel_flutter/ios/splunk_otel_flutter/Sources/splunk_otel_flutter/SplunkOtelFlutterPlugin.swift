@@ -128,7 +128,15 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
-        let endpointConfiguration = agentConfiguration.endpoint?.toEndpointConfiguration()
+        let endpointConfiguration: EndpointConfiguration?
+        if let generatedEndpoint = agentConfiguration.endpoint {
+            endpointConfiguration = generatedEndpoint.toEndpointConfiguration()
+            if endpointConfiguration == nil {
+                print("[SplunkRum] Warning: Endpoint configuration provided but invalid. Installing without endpoint.")
+            }
+        } else {
+            endpointConfiguration = nil
+        }
         
         let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
         
