@@ -128,6 +128,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
+        // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
         let endpointConfiguration: EndpointConfiguration?
         if let generatedEndpoint = agentConfiguration.endpoint {
             endpointConfiguration = generatedEndpoint.toEndpointConfiguration()

@@ -111,6 +111,7 @@ class SplunkOtelFlutterPlugin :
 
         val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
 
+        // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
         val endpointConfiguration = agentConfiguration.endpoint?.let {
             try {
                 it.toEndpointConfiguration()
