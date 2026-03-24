@@ -16,7 +16,6 @@
 
 package com.splunk.rum.flutter
 
-
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
@@ -56,6 +55,10 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.opentelemetry.api.trace.Span
 import java.time.Duration
+
+private const val SPLUNK_APP_FRAMEWORK_FLUTTER_VERSION_KEY = "splunk.app.framework.flutter.version"
+
+private const val RUM_SDK_FLUTTER_VERSION_KEY = "rum.sdk.flutter.version"
 
 /** SplunkOtelFlutterPlugin */
 class SplunkOtelFlutterPlugin :
@@ -109,7 +112,12 @@ class SplunkOtelFlutterPlugin :
         callback: (Result<Unit>) -> Unit
     ) {
 
-        val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
+        val mergedGlobalAttributes =
+            agentConfiguration.globalAttributes?.toMutableAttributes() ?: MutableAttributes()
+        //TODO move to Resources later
+        mergedGlobalAttributes[SPLUNK_APP_FRAMEWORK_FLUTTER_VERSION_KEY] =
+            BuildConfig.SPLUNK_FLUTTER_FRAMEWORK_VERSION
+        mergedGlobalAttributes[RUM_SDK_FLUTTER_VERSION_KEY] = BuildConfig.RUM_SDK_FLUTTER_VERSION
 
         val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
 
@@ -122,7 +130,7 @@ class SplunkOtelFlutterPlugin :
                 trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
             ),
             session = SessionConfiguration(agentConfiguration.session?.samplingRate ?: 1.0),
-            globalAttributes = globalAttributes ?: MutableAttributes(),
+            globalAttributes = mergedGlobalAttributes,
             instrumentedProcessName = agentConfiguration.instrumentedProcessName,
             deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
         )

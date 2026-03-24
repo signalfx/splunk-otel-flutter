@@ -143,8 +143,17 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             return
         }
         
-        let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
-        
+     
+        let mergedGlobalAttributes =
+            agentConfiguration.globalAttributes?.toMutableAttributes() ?? MutableAttributes()
+        //TODO move to Resources later
+        mergedGlobalAttributes.setString(
+            SplunkRumFlutterTelemetryVersions.splunkAppFrameworkFlutterVersion,
+            for: SplunkRumFlutterTelemetryAttributeKeys.splunkAppFrameworkFlutterVersion)
+        mergedGlobalAttributes.setString(
+            SplunkRumFlutterTelemetryVersions.rumSdkFlutterVersion,
+            for: SplunkRumFlutterTelemetryAttributeKeys.rumSdkFlutterVersion)
+
         let agentConfig = AgentConfiguration(
             endpoint: endpointConfiguration,
             appName: agentConfiguration.appName,
@@ -152,7 +161,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         )
             .appVersion(agentConfiguration.appVersion ?? "")
             .enableDebugLogging(agentConfiguration.enableDebugLogging ?? false)
-            .globalAttributes(mutableAttributes ?? MutableAttributes())
+            .globalAttributes(mergedGlobalAttributes)
             .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
