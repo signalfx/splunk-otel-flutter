@@ -34,14 +34,27 @@ void main() {
       // Assert
       expect(config.appName, 'TestApp');
       expect(config.deploymentEnvironment, 'production');
-      expect(config.endpointConfiguration.realm, 'us0');
-      expect(config.endpointConfiguration.rumAccessToken, 'token');
+      expect(config.endpointConfiguration?.realm, 'us0');
+      expect(config.endpointConfiguration?.rumAccessToken, 'token');
       expect(config.appVersion, isNull);
       expect(config.enableDebugLogging, false);
       expect(config.user.trackingMode, UserTrackingMode.noTracking);
       expect(config.session.samplingRate, 1.0);
       expect(config.instrumentedProcessName, isNull);
       expect(config.deferredUntilForeground, false);
+    });
+
+    test('should create without endpoint configuration', () {
+      // Act
+      final config = AgentConfiguration(
+        appName: 'TestApp',
+        deploymentEnvironment: 'production',
+      );
+
+      // Assert
+      expect(config.endpointConfiguration, isNull);
+      expect(config.appName, 'TestApp');
+      expect(config.deploymentEnvironment, 'production');
     });
 
     test('should create without user configuration (null)', () {

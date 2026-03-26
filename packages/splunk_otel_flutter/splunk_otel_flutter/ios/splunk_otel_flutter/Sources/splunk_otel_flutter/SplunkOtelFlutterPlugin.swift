@@ -128,19 +128,15 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
-        
-        // should be always not nil
-        guard let endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() else {
-            completion(
-                .failure(
-                    FlutterError(
-                        code: "INSTALL_FAILED",
-                        message: "Endpoint configuration - Invalid parameter combination",
-                        details: nil
-                    )
-                )
-            )
-            return
+        // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
+        let endpointConfiguration: EndpointConfiguration?
+        if let generatedEndpoint = agentConfiguration.endpoint {
+            endpointConfiguration = generatedEndpoint.toEndpointConfiguration()
+            if endpointConfiguration == nil {
+                print("[SplunkRum] Warning: Endpoint configuration provided but invalid. Installing without endpoint.")
+            }
+        } else {
+            endpointConfiguration = nil
         }
         
         let mutableAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
@@ -226,10 +222,10 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(status.toGeneratedStatus()))
     }
     
-    func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration, any Error>) -> Void) {
+    func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, any Error>) -> Void) {
         let endpointConfiguration = SplunkRum.shared.state.endpointConfiguration
         
-        completion(.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
+        completion(.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
     }
     
     func stateGetDeploymentEnvironment(completion: @escaping (Result<String, any Error>) -> Void) {
@@ -252,14 +248,31 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(false))
     }
     
+    func preferencesSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, any Error>) -> Void) {
+        guard let endpoint = endpointConfiguration.toEndpointConfiguration() else {
+            completion(
+                .failure(
+                    FlutterError(
+                        code: "SET_ENDPOINT_FAILED",
+                        message: "Endpoint configuration - Invalid parameter combination",
+                        details: nil
+                    )
+                )
+            )
+
+            return
+        }
+        SplunkRum.shared.preferences.endpointConfiguration = endpoint
+
+        completion(.success(()))
+    }
+    
     // MARK: - Preferences
     
     func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, any Error>) -> Void) {
-        //TODO
+        let endpointConfiguration = SplunkRum.shared.preferences.endpointConfiguration
         
-        //let endpointConfiguration = SplunkRum.shared.
-        
-        //completion(.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
+        completion(.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
     }
     
     // MARK: - Session

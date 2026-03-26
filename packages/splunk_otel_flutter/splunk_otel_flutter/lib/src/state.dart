@@ -41,8 +41,8 @@ class State {
   /// Gets configured endpoint.
   ///
   /// Returns the endpoint configuration (realm, rumAccessToken, etc.)
-  /// specified during SDK installation.
-  Future<EndpointConfiguration> getEndpointConfiguration() async => await _delegate.stateGetEndpointConfiguration();
+  /// specified during SDK installation, or `null` if not yet set.
+  Future<EndpointConfiguration?> getEndpointConfiguration() async => await _delegate.stateGetEndpointConfiguration();
 
   /// Gets configured deployment environment.
   ///
