@@ -1,36 +1,6 @@
 group = "com.splunk.rum.flutter"
 version = "1.0-SNAPSHOT"
 
-def splunkEscapeForBuildConfig(String value) {
-    return '"' + value.replace("\\", "\\\\").replace("\"", "\\\"") + '"'
-}
-
-def splunkReadFlutterFrameworkVersion() {
-    def props = new Properties()
-    def localFile = rootProject.file("local.properties")
-    if (localFile.exists()) {
-        localFile.withInputStream { props.load(it) }
-    }
-    def sdkPath = props.getProperty("flutter.sdk")
-    if (sdkPath == null) {
-        return "unknown"
-    }
-    def versionFile = new File(sdkPath, "bin/cache/flutter.version.json")
-    if (!versionFile.exists()) {
-        return "unknown"
-    }
-    try {
-        def json = new groovy.json.JsonSlurper().parse(versionFile)
-        def v = json.frameworkVersion != null ? json.frameworkVersion : json.flutterVersion
-        return v != null ? v.toString() : "unknown"
-    } catch (Throwable ignored) {
-        return "unknown"
-    }
-}
-
-def splunkFlutterFrameworkVersion = splunkReadFlutterFrameworkVersion()
-def rumSdkFlutterVersion = "1.0.0-alpha.1"
-
 buildscript {
     ext.kotlin_version = "2.1.0"
     repositories {
@@ -59,10 +29,6 @@ android {
 
     compileSdk = 36
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -80,14 +46,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        buildConfigField(
-                "String",
-                "SPLUNK_FLUTTER_FRAMEWORK_VERSION",
-                splunkEscapeForBuildConfig(splunkFlutterFrameworkVersion))
-        buildConfigField(
-                "String",
-                "RUM_SDK_FLUTTER_VERSION",
-                splunkEscapeForBuildConfig(rumSdkFlutterVersion))
     }
 
     testOptions {

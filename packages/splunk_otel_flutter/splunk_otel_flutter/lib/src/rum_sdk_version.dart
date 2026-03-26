@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-/// Dart-side copy of the SDK version.
+/// The Flutter agent layer version, used as the `rum.sdk.flutter.version`
+/// resource attribute.
 ///
-/// Must be kept in sync with:
-/// - `pubspec.yaml` (`version:`)
-/// - Android: `rumSdkFlutterVersion` in `android/build.gradle`
-/// - iOS: `rumSdkFlutterVersion` in `ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkRumFlutterVersions.generated.swift`
+/// Must be kept in sync with `pubspec.yaml` (`version:`).
 const String rumSdkFlutterVersion = '1.0.0-alpha.1';

@@ -146,10 +146,6 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
      
         let mergedGlobalAttributes =
             agentConfiguration.globalAttributes?.toMutableAttributes() ?? MutableAttributes()
-        //TODO move to Resources later
-        mergedGlobalAttributes.setString(
-            SplunkRumFlutterTelemetryVersions.rumSdkFlutterVersion,
-            for: SplunkRumFlutterTelemetryAttributeKeys.rumSdkFlutterVersion)
 
         let agentConfig = AgentConfiguration(
             endpoint: endpointConfiguration,

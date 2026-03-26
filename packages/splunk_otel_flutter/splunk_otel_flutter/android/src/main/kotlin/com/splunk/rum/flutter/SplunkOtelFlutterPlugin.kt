@@ -56,10 +56,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.opentelemetry.api.trace.Span
 import java.time.Duration
 
-private const val SPLUNK_APP_FRAMEWORK_FLUTTER_VERSION_KEY = "splunk.app.framework.flutter.version"
-
-private const val RUM_SDK_FLUTTER_VERSION_KEY = "rum.sdk.flutter.version"
-
 /** SplunkOtelFlutterPlugin */
 class SplunkOtelFlutterPlugin :
     FlutterPlugin,
@@ -114,10 +110,6 @@ class SplunkOtelFlutterPlugin :
 
         val mergedGlobalAttributes =
             agentConfiguration.globalAttributes?.toMutableAttributes() ?: MutableAttributes()
-        //TODO move to Resources later
-        mergedGlobalAttributes[SPLUNK_APP_FRAMEWORK_FLUTTER_VERSION_KEY] =
-            BuildConfig.SPLUNK_FLUTTER_FRAMEWORK_VERSION
-        mergedGlobalAttributes[RUM_SDK_FLUTTER_VERSION_KEY] = BuildConfig.RUM_SDK_FLUTTER_VERSION
 
         val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
 
