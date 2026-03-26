@@ -18,6 +18,7 @@ import 'package:splunk_otel_flutter/src/custom_tracking.dart';
 import 'package:splunk_otel_flutter/src/global_attributes.dart';
 import 'package:splunk_otel_flutter/src/navigation.dart';
 import 'package:splunk_otel_flutter/src/rum_telemetry_metadata.dart';
+import 'package:splunk_otel_flutter/src/preferences.dart';
 import 'package:splunk_otel_flutter/src/session.dart';
 import 'package:splunk_otel_flutter/src/state.dart';
 import 'package:splunk_otel_flutter/src/user.dart';
@@ -66,6 +67,11 @@ class SplunkRum {
   ///
   /// Reflects status, configuration, and endpoint settings.
   final state = State();
+
+  /// Agent preferences.
+  ///
+  /// Override configuration after installation (e.g., deferred endpoint credentials).
+  final preferences = AgentPreferences();
 
   /// User tracking management.
   ///

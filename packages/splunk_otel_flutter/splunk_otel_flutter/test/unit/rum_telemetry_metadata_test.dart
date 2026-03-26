@@ -182,9 +182,9 @@ void main() {
           equals(UserTrackingMode.anonymousTracking),
         );
         expect(enriched.session.samplingRate, equals(0.5));
-        expect(enriched.endpointConfiguration.realm, equals('eu0'));
+        expect(enriched.endpointConfiguration!.realm, equals('eu0'));
         expect(
-          enriched.endpointConfiguration.rumAccessToken,
+          enriched.endpointConfiguration!.rumAccessToken,
           equals('my-token'),
         );
       });

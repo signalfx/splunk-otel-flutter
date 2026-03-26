@@ -565,9 +565,9 @@ class GeneratedRegularExpression {
 
 class GeneratedAgentConfiguration {
   GeneratedAgentConfiguration({
-    required this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
+    this.endpoint,
     this.appVersion,
     this.enableDebugLogging,
     this.globalAttributes,
@@ -577,11 +577,11 @@ class GeneratedAgentConfiguration {
     this.deferredUntilForeground,
   });
 
-  GeneratedEndpointConfiguration endpoint;
-
   String appName;
 
   String deploymentEnvironment;
+
+  GeneratedEndpointConfiguration? endpoint;
 
   String? appVersion;
 
@@ -599,9 +599,9 @@ class GeneratedAgentConfiguration {
 
   List<Object?> _toList() {
     return <Object?>[
-      endpoint,
       appName,
       deploymentEnvironment,
+      endpoint,
       appVersion,
       enableDebugLogging,
       globalAttributes,
@@ -618,9 +618,9 @@ class GeneratedAgentConfiguration {
   static GeneratedAgentConfiguration decode(Object result) {
     result as List<Object?>;
     return GeneratedAgentConfiguration(
-      endpoint: result[0]! as GeneratedEndpointConfiguration,
-      appName: result[1]! as String,
-      deploymentEnvironment: result[2]! as String,
+      appName: result[0]! as String,
+      deploymentEnvironment: result[1]! as String,
+      endpoint: result[2] as GeneratedEndpointConfiguration?,
       appVersion: result[3] as String?,
       enableDebugLogging: result[4] as bool?,
       globalAttributes: result[5] as GeneratedMutableAttributes?,
@@ -1612,7 +1612,7 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration() async {
+  Future<GeneratedEndpointConfiguration?> stateGetEndpointConfiguration() async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1630,13 +1630,8 @@ class SplunkOtelFlutterHostApi {
         message: pigeonVar_replyList[1] as String?,
         details: pigeonVar_replyList[2],
       );
-    } else if (pigeonVar_replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
     } else {
-      return (pigeonVar_replyList[0] as GeneratedEndpointConfiguration?)!;
+      return (pigeonVar_replyList[0] as GeneratedEndpointConfiguration?);
     }
   }
 
@@ -1767,6 +1762,29 @@ class SplunkOtelFlutterHostApi {
       );
     } else {
       return (pigeonVar_replyList[0] as GeneratedEndpointConfiguration?);
+    }
+  }
+
+  Future<void> preferencesSetEndpointConfiguration({required GeneratedEndpointConfiguration endpointConfiguration}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[endpointConfiguration]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
     }
   }
 
