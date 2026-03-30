@@ -16,7 +16,6 @@
 
 package com.splunk.rum.flutter
 
-
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
@@ -109,7 +108,8 @@ class SplunkOtelFlutterPlugin :
         callback: (Result<Unit>) -> Unit
     ) {
 
-        val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
+        val mergedGlobalAttributes =
+            agentConfiguration.globalAttributes?.toMutableAttributes() ?: MutableAttributes()
 
         // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
         val endpointConfiguration = agentConfiguration.endpoint?.let {
@@ -130,7 +130,7 @@ class SplunkOtelFlutterPlugin :
                 trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
             ),
             session = SessionConfiguration(agentConfiguration.session?.samplingRate ?: 1.0),
-            globalAttributes = globalAttributes ?: MutableAttributes(),
+            globalAttributes = mergedGlobalAttributes,
             instrumentedProcessName = agentConfiguration.instrumentedProcessName,
             deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
         )

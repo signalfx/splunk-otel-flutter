@@ -74,6 +74,10 @@ Before releasing, update the version numbers in **both** package `pubspec.yaml` 
 - `packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml`
 - `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml`
 
+Also keep the `rum.sdk.flutter.version` telemetry value in sync with the package version:
+
+- `rumSdkFlutterVersion` constant in `packages/splunk_otel_flutter/splunk_otel_flutter/lib/src/rum_sdk_version.dart`
+
 **Important**: Both packages must have the same version number!
 
 Examples:
