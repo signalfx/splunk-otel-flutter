@@ -126,6 +126,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, 
                  // iOS-only
                  networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
+                 // Session replay
+                 sessionReplayModuleConfiguration: GeneratedSessionReplayModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
         
@@ -156,7 +158,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
-            let moduleConfigurations: [Any] = [
+            var moduleConfigurations: [Any] = [
                    slowRenderingModuleConfiguration.map {
                        SlowFrameDetectorConfiguration(isEnabled: $0.isEnabled)
                    },
@@ -188,7 +190,16 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                            isEnabled: $0.isEnabled,
                        )
                    },
-               ].compactMap { $0 }// removes nils automatically
+               ].compactMap { $0 }
+            
+            if let sessionReplayConfig = sessionReplayModuleConfiguration {
+                if let configClass = NSClassFromString("SplunkSessionReplay.SessionReplayConfiguration") as? NSObject.Type {
+                    let config = configClass.init()
+                    config.setValue(sessionReplayConfig.isEnabled, forKey: "isEnabled")
+                    config.setValue(sessionReplayConfig.samplingRate, forKey: "samplingRate")
+                    moduleConfigurations.append(config)
+                }
+            }
             
             let agent = try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
           

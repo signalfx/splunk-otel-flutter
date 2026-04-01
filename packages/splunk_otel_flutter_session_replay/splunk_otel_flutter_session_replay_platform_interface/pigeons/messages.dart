@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,80 @@ import 'package:pigeon/pigeon.dart';
 )
 @HostApi()
 abstract class SplunkOtelFlutterSessionReplayHostApi {
-  /// Starts session replay recording.
-  ///
-  /// Delegates to the native SDK's SessionReplay.start() via the
-  /// SplunkRum.instance.sessionReplay extension.
   @async
-  void startSessionReplay();
+  void sessionReplayStart();
+
+  @async
+  void sessionReplayStop();
+
+  @async
+  GeneratedSessionReplayStatus sessionReplayStateGetStatus();
+
+  @async
+  GeneratedRenderingMode sessionReplayStateGetRenderingMode();
+
+  @async
+  GeneratedRenderingMode? sessionReplayPreferencesGetRenderingMode();
+
+  @async
+  void sessionReplayPreferencesSetRenderingMode({
+    required GeneratedRenderingMode? renderingMode,
+  });
+
+  @async
+  GeneratedRecordingMaskList? sessionReplayGetRecordingMask();
+
+  @async
+  void sessionReplaySetRecordingMask({
+    required GeneratedRecordingMaskList? recordingMask,
+  });
+}
+
+enum GeneratedSessionReplayStatus {
+  isRecording,
+  notStarted,
+  stopped,
+  belowMinSdkVersion,
+  storageLimitReached,
+  internalError,
+  disabledBySampling,
+}
+
+enum GeneratedRenderingMode { native, wireframeOnly }
+
+class GeneratedRecordingMaskList {
+  final List<GeneratedRecordingMaskElement>? recordingMaskList;
+
+  GeneratedRecordingMaskList({
+    required this.recordingMaskList,
+  });
+}
+
+class GeneratedRecordingMaskElement {
+  final GeneratedRect rect;
+  final GeneratedRecordingMaskType type;
+
+  GeneratedRecordingMaskElement({
+    required this.rect,
+    required this.type,
+  });
+}
+
+class GeneratedRect {
+  final double left;
+  final double top;
+  final double width;
+  final double height;
+
+  GeneratedRect({
+    required this.left,
+    required this.top,
+    required this.width,
+    required this.height,
+  });
+}
+
+enum GeneratedRecordingMaskType {
+  erasing,
+  covering,
 }

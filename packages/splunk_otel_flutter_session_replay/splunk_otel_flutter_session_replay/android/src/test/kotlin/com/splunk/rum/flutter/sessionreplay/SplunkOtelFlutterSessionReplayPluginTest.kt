@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.splunk.rum.flutter.sessionreplay
 
+import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.SplunkOtelFlutterSessionReplayPlugin
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 

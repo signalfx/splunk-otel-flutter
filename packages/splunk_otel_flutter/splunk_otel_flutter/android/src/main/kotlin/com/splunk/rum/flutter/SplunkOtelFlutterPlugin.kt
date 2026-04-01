@@ -106,6 +106,9 @@ class SplunkOtelFlutterPlugin :
 
         // iOS-only
         networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
+
+        // Session replay
+        sessionReplayModuleConfiguration: GeneratedSessionReplayModuleConfiguration?,
         callback: (Result<Unit>) -> Unit
     ) {
 
@@ -181,6 +184,19 @@ class SplunkOtelFlutterPlugin :
                         capturedResponseHeaders = it.capturedResponseHeaders
                     )
                 )
+            }
+
+            sessionReplayModuleConfiguration?.let { config ->
+                try {
+                    add(
+                        com.splunk.rum.integration.sessionreplay.SessionReplayModuleConfiguration(
+                            isEnabled = config.isEnabled,
+                            samplingRate = config.samplingRate.toFloat(),
+                        )
+                    )
+                } catch (_: NoClassDefFoundError) {
+                    // splunk_otel_flutter_session_replay package not installed - just skip
+                }
             }
         }
 

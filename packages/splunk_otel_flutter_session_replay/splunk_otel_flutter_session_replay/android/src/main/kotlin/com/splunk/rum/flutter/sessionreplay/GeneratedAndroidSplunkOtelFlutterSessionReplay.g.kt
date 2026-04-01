@@ -34,6 +34,36 @@ private object GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils {
       )
     }
   }
+  fun deepEquals(a: Any?, b: Any?): Boolean {
+    if (a is ByteArray && b is ByteArray) {
+        return a.contentEquals(b)
+    }
+    if (a is IntArray && b is IntArray) {
+        return a.contentEquals(b)
+    }
+    if (a is LongArray && b is LongArray) {
+        return a.contentEquals(b)
+    }
+    if (a is DoubleArray && b is DoubleArray) {
+        return a.contentEquals(b)
+    }
+    if (a is Array<*> && b is Array<*>) {
+      return a.size == b.size &&
+          a.indices.all{ deepEquals(a[it], b[it]) }
+    }
+    if (a is List<*> && b is List<*>) {
+      return a.size == b.size &&
+          a.indices.all{ deepEquals(a[it], b[it]) }
+    }
+    if (a is Map<*, *> && b is Map<*, *>) {
+      return a.size == b.size && a.all {
+          (b as Map<Any?, Any?>).containsKey(it.key) &&
+          deepEquals(it.value, b[it.key])
+      }
+    }
+    return a == b
+  }
+      
 }
 
 /**
@@ -47,25 +77,218 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
+
+enum class GeneratedSessionReplayStatus(val raw: Int) {
+  IS_RECORDING(0),
+  NOT_STARTED(1),
+  STOPPED(2),
+  BELOW_MIN_SDK_VERSION(3),
+  STORAGE_LIMIT_REACHED(4),
+  INTERNAL_ERROR(5),
+  DISABLED_BY_SAMPLING(6);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedSessionReplayStatus? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class GeneratedRenderingMode(val raw: Int) {
+  NATIVE(0),
+  WIREFRAME_ONLY(1);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedRenderingMode? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class GeneratedRecordingMaskType(val raw: Int) {
+  ERASING(0),
+  COVERING(1);
+
+  companion object {
+    fun ofRaw(raw: Int): GeneratedRecordingMaskType? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRecordingMaskList (
+  val recordingMaskList: List<GeneratedRecordingMaskElement>? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMaskList {
+      val recordingMaskList = pigeonVar_list[0] as List<GeneratedRecordingMaskElement>?
+      return GeneratedRecordingMaskList(recordingMaskList)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      recordingMaskList,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRecordingMaskList) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRecordingMaskElement (
+  val rect: GeneratedRect,
+  val type: GeneratedRecordingMaskType
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRecordingMaskElement {
+      val rect = pigeonVar_list[0] as GeneratedRect
+      val type = pigeonVar_list[1] as GeneratedRecordingMaskType
+      return GeneratedRecordingMaskElement(rect, type)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      rect,
+      type,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRecordingMaskElement) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedRect (
+  val left: Double,
+  val top: Double,
+  val width: Double,
+  val height: Double
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedRect {
+      val left = pigeonVar_list[0] as Double
+      val top = pigeonVar_list[1] as Double
+      val width = pigeonVar_list[2] as Double
+      val height = pigeonVar_list[3] as Double
+      return GeneratedRect(left, top, width, height)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      left,
+      top,
+      width,
+      height,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedRect) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
 private open class GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return     super.readValueOfType(type, buffer)
+    return when (type) {
+      129.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedSessionReplayStatus.ofRaw(it.toInt())
+        }
+      }
+      130.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedRenderingMode.ofRaw(it.toInt())
+        }
+      }
+      131.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          GeneratedRecordingMaskType.ofRaw(it.toInt())
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedRecordingMaskList.fromList(it)
+        }
+      }
+      133.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedRecordingMaskElement.fromList(it)
+        }
+      }
+      134.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedRect.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
-    super.writeValue(stream, value)
+    when (value) {
+      is GeneratedSessionReplayStatus -> {
+        stream.write(129)
+        writeValue(stream, value.raw)
+      }
+      is GeneratedRenderingMode -> {
+        stream.write(130)
+        writeValue(stream, value.raw)
+      }
+      is GeneratedRecordingMaskType -> {
+        stream.write(131)
+        writeValue(stream, value.raw)
+      }
+      is GeneratedRecordingMaskList -> {
+        stream.write(132)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedRecordingMaskElement -> {
+        stream.write(133)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedRect -> {
+        stream.write(134)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
   }
 }
 
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SplunkOtelFlutterSessionReplayHostApi {
-  /**
-   * Starts session replay recording.
-   *
-   * Delegates to the native SDK's SessionReplay.start() via the
-   * SplunkRum.instance.sessionReplay extension.
-   */
-  fun startSessionReplay(callback: (Result<Unit>) -> Unit)
+  fun sessionReplayStart(callback: (Result<Unit>) -> Unit)
+  fun sessionReplayStop(callback: (Result<Unit>) -> Unit)
+  fun sessionReplayStateGetStatus(callback: (Result<GeneratedSessionReplayStatus>) -> Unit)
+  fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit)
+  fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit)
+  fun sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, callback: (Result<Unit>) -> Unit)
+  fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMaskList?>) -> Unit)
+  fun sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterSessionReplayHostApi. */
@@ -77,10 +300,137 @@ interface SplunkOtelFlutterSessionReplayHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: SplunkOtelFlutterSessionReplayHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.startSessionReplay$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStart$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.startSessionReplay{ result: Result<Unit> ->
+            api.sessionReplayStart{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStop$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStop{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetStatus$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStateGetStatus{ result: Result<GeneratedSessionReplayStatus> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayStateGetRenderingMode{ result: Result<GeneratedRenderingMode> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesGetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayPreferencesGetRenderingMode{ result: Result<GeneratedRenderingMode?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesSetRenderingMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val renderingModeArg = args[0] as GeneratedRenderingMode?
+            api.sessionReplayPreferencesSetRenderingMode(renderingModeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayGetRecordingMask$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.sessionReplayGetRecordingMask{ result: Result<GeneratedRecordingMaskList?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplaySetRecordingMask$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val recordingMaskArg = args[0] as GeneratedRecordingMaskList?
+            api.sessionReplaySetRecordingMask(recordingMaskArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterSessionReplayPigeonUtils.wrapError(error))

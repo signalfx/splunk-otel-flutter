@@ -2,7 +2,10 @@ group = "com.splunk.rum.flutter.sessionreplay"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "2.1.0"
+    ext.getExtOrDefault = {name ->
+        return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['SplunkSessionReplay_' + name]
+    }
+
     repositories {
         google()
         mavenCentral()
@@ -10,8 +13,12 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.9.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}")
     }
+}
+
+def getExtOrIntegerDefault(name) {
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["SplunkSessionReplay_" + name]).toInteger()
 }
 
 allprojects {
@@ -24,10 +31,12 @@ allprojects {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
+def splunkSdkVersion = getExtOrDefault("splunkSdkVersion")
+
 android {
     namespace = "com.splunk.rum.flutter.sessionreplay"
 
-    compileSdk = 36
+    compileSdk = getExtOrIntegerDefault("compileSdkVersion")
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -45,14 +54,12 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = getExtOrIntegerDefault("minSdkVersion")
     }
 
     dependencies {
-        // Session replay integration (provides SessionReplay singleton + SplunkRum.sessionReplay extension)
-        implementation("com.splunk:rum-integration-sessionreplay:2.1.4")
-        // Core agent API (provides SplunkRum singleton access - shared with splunk_otel_flutter)
-        implementation("com.splunk:rum-integration-agent-api:2.1.4")
+        implementation("com.splunk:rum-integration-sessionreplay:$splunkSdkVersion")
+        implementation("com.splunk:rum-integration-agent-api:$splunkSdkVersion")
 
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 

@@ -38,7 +38,10 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
       GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
 
       // iOS-only configurations
-      GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
+      GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration,
+
+      // Session replay configuration
+      GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration,
       )? installHandler;
 
   Future<void> Function()? sessionReplayStartHandler;
@@ -106,7 +109,10 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
     required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
 
     // iOS-only configurations
-    required GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
+    required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration,
+
+    // Session replay configuration
+    required GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration,
   }) async {
     if (installHandler != null) {
       return installHandler!(
@@ -121,6 +127,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
         httpUrlModuleConfiguration,
         okHttp3AutoModuleConfiguration,
         networkInstrumentationModuleConfiguration,
+        sessionReplayModuleConfiguration,
       );
     }
   }

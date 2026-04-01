@@ -56,7 +56,11 @@ abstract class SplunkOtelFlutterHostApi {
 
       // iOS-only configurations
       required GeneratedNetworkInstrumentationModuleConfiguration?
-          networkInstrumentationModuleConfiguration});
+          networkInstrumentationModuleConfiguration,
+
+      // Session replay configuration (requires splunk_otel_flutter_session_replay package)
+      required GeneratedSessionReplayModuleConfiguration?
+          sessionReplayModuleConfiguration});
 
   // State
 
@@ -294,6 +298,16 @@ class GeneratedRegularExpression {
   });
 }
 
+class GeneratedSessionReplayModuleConfiguration {
+  final bool isEnabled;
+  final double samplingRate;
+
+  GeneratedSessionReplayModuleConfiguration({
+    required this.isEnabled,
+    required this.samplingRate,
+  });
+}
+
 class GeneratedAgentConfiguration {
   // Required properties (common to iOS and Android).
   final GeneratedEndpointConfiguration endpoint;
@@ -374,6 +388,7 @@ enum GeneratedSessionReplayStatus {
   belowMinSdkVersion,
   storageLimitReached,
   internalError,
+  disabledBySampling,
 }
 
 enum GeneratedRenderingMode { native, wireframeOnly }

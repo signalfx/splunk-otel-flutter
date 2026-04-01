@@ -89,6 +89,11 @@ class SplunkOtelFlutterPlatformImplementation
         .cast<NetworkInstrumentationModuleConfiguration?>()
         .firstOrNull;
 
+    final sessionReplayModuleConfiguration = moduleConfigurations
+        .whereType<SessionReplayModuleConfiguration>()
+        .cast<SessionReplayModuleConfiguration?>()
+        .firstOrNull;
+
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
         endpoint: agentConfiguration.endpointConfiguration.toGeneratedEndpointConfiguration(),
@@ -179,6 +184,14 @@ class SplunkOtelFlutterPlatformImplementation
                       .ignoreURLs
                       .toGeneratedList(),
                 ),
+
+      // Session replay
+      sessionReplayModuleConfiguration: sessionReplayModuleConfiguration == null
+          ? null
+          : GeneratedSessionReplayModuleConfiguration(
+              isEnabled: sessionReplayModuleConfiguration.isEnabled,
+              samplingRate: sessionReplayModuleConfiguration.samplingRate,
+            ),
     );
   }
 

@@ -157,6 +157,29 @@ class OkHttp3AutoModuleConfiguration extends ActivableModuleConfiguration {
   });
 }
 
+/// Session replay module configuration.
+///
+/// Enables screen recording for session replay in Splunk Observability Cloud.
+/// Requires the `splunk_otel_flutter_session_replay` package to be installed.
+class SessionReplayModuleConfiguration extends ActivableModuleConfiguration {
+  /// Sampling rate for session replay recording (0.0 to 1.0).
+  ///
+  /// A value of 1.0 means all sessions are recorded (100%).
+  /// A value of 0.5 means half of sessions are recorded (50%).
+  /// Defaults to 1.0.
+  final double samplingRate;
+
+  SessionReplayModuleConfiguration({
+    super.isEnabled = true,
+    this.samplingRate = 1.0,
+  }) {
+    if (samplingRate < 0.0 || samplingRate > 1.0) {
+      throw ArgumentError(
+          "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate");
+    }
+  }
+}
+
 // only iOS
 
 /// **iOS only.** Network instrumentation configuration.

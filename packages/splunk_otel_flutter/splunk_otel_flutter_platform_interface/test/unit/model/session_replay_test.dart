@@ -25,13 +25,14 @@ void main() {
     test('should have all expected enum values', () {
       final allStatuses = SessionReplayStatus.values;
 
-      expect(allStatuses.length, 6);
+      expect(allStatuses.length, 7);
       expect(allStatuses, contains(SessionReplayStatus.isRecording));
       expect(allStatuses, contains(SessionReplayStatus.notStarted));
       expect(allStatuses, contains(SessionReplayStatus.stopped));
       expect(allStatuses, contains(SessionReplayStatus.belowMinSdkVersion));
       expect(allStatuses, contains(SessionReplayStatus.storageLimitReached));
       expect(allStatuses, contains(SessionReplayStatus.internalError));
+      expect(allStatuses, contains(SessionReplayStatus.disabledBySampling));
     });
 
     test('should convert to GeneratedSessionReplayStatus correctly', () {
@@ -42,6 +43,7 @@ void main() {
         SessionReplayStatus.belowMinSdkVersion: GeneratedSessionReplayStatus.belowMinSdkVersion,
         SessionReplayStatus.storageLimitReached: GeneratedSessionReplayStatus.storageLimitReached,
         SessionReplayStatus.internalError: GeneratedSessionReplayStatus.internalError,
+        SessionReplayStatus.disabledBySampling: GeneratedSessionReplayStatus.disabledBySampling,
       };
 
       for (final entry in mappings.entries) {
@@ -58,6 +60,7 @@ void main() {
         GeneratedSessionReplayStatus.belowMinSdkVersion: SessionReplayStatus.belowMinSdkVersion,
         GeneratedSessionReplayStatus.storageLimitReached: SessionReplayStatus.storageLimitReached,
         GeneratedSessionReplayStatus.internalError: SessionReplayStatus.internalError,
+        GeneratedSessionReplayStatus.disabledBySampling: SessionReplayStatus.disabledBySampling,
       };
 
       for (final entry in mappings.entries) {

@@ -72,7 +72,7 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst, genSessionReplay) async {
           installCalled = true;
 
           // Verify agent configuration
@@ -119,7 +119,7 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst, genSessionReplay) async {
           installCalled = true;
 
           // Verify minimal agent config
@@ -158,7 +158,7 @@ void main() {
           isAutomatedTrackingEnabled: false,
         );
 
-        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst, genSessionReplay) async {
           expect(genNav?.isEnabled, false);
           expect(genNav?.isAutomatedTrackingEnabled, false);
           // No slow rendering module provided
@@ -188,7 +188,7 @@ void main() {
           interval: const Duration(milliseconds: 250),
         );
 
-        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
+        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst, genSessionReplay) async {
           // No navigation module provided
           expect(genNav, isNull);
           expect(genSlow?.isEnabled, false);
@@ -232,7 +232,7 @@ void main() {
           session: SessionConfiguration(samplingRate: 0.0),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.session?.samplingRate, 0.0);
         };
 
@@ -252,7 +252,7 @@ void main() {
           session: SessionConfiguration(samplingRate: 1.0),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.session?.samplingRate, 1.0);
         };
 
@@ -278,7 +278,7 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.noTracking);
         };
@@ -301,7 +301,7 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.anonymousTracking);
         };
@@ -321,7 +321,7 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
               GeneratedUserTrackingMode.noTracking);
         };
@@ -356,7 +356,7 @@ void main() {
           isAutomatedTrackingEnabled: false,
         );
 
-        mockApi.installHandler = (_, genNav, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (_, genNav, _, _, _, _, _, _, _, _, _, _) async {
           // Should use first one (navConfig1)
           expect(genNav?.isEnabled, true);
           expect(genNav?.isAutomatedTrackingEnabled, true);
@@ -384,7 +384,7 @@ void main() {
           deferredUntilForeground: true,
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.instrumentedProcessName, 'com.example.android.app');
           expect(genAgent.deferredUntilForeground, true);
         };
@@ -409,7 +409,7 @@ void main() {
           deferredUntilForeground: false,
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.instrumentedProcessName, isNull);
           expect(genAgent.deferredUntilForeground, false);
         };
@@ -447,7 +447,7 @@ void main() {
             interval: duration,
           );
 
-          mockApi.installHandler = (_, _, genSlow, _, _, _, _, _, _, _, _) async {
+          mockApi.installHandler = (_, _, genSlow, _, _, _, _, _, _, _, _, _) async {
             expect(genSlow?.intervalMillis, expectedMillis);
           };
 
@@ -471,7 +471,7 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _, _, _) async {
           throw Exception('Platform installation failed');
         };
 
