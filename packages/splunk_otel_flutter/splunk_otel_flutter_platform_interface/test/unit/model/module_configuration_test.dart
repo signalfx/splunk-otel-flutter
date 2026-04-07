@@ -388,7 +388,7 @@ void main() {
       final config = SessionReplayModuleConfiguration();
 
       expect(config.isEnabled, true);
-      expect(config.samplingRate, 1.0);
+      expect(config.samplingRate, 0.2);
     });
 
     test('should create with custom values', () {

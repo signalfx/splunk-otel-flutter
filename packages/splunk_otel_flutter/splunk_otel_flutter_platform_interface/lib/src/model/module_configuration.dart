@@ -166,12 +166,12 @@ class SessionReplayModuleConfiguration extends ActivableModuleConfiguration {
   ///
   /// A value of 1.0 means all sessions are recorded (100%).
   /// A value of 0.5 means half of sessions are recorded (50%).
-  /// Defaults to 1.0.
+  /// Defaults to 0.2.
   final double samplingRate;
 
   SessionReplayModuleConfiguration({
     super.isEnabled = true,
-    this.samplingRate = 1.0,
+    this.samplingRate = 0.2,
   }) {
     if (samplingRate < 0.0 || samplingRate > 1.0) {
       throw ArgumentError(
