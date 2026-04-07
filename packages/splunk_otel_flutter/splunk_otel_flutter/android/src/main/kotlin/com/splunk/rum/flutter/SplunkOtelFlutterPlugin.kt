@@ -16,7 +16,6 @@
 
 package com.splunk.rum.flutter
 
-
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
@@ -112,9 +111,18 @@ class SplunkOtelFlutterPlugin :
         callback: (Result<Unit>) -> Unit
     ) {
 
-        val globalAttributes = agentConfiguration.globalAttributes?.toMutableAttributes()
+        val mergedGlobalAttributes =
+            agentConfiguration.globalAttributes?.toMutableAttributes() ?: MutableAttributes()
 
-        val endpointConfiguration = agentConfiguration.endpoint.toEndpointConfiguration() // should be always not null
+        // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
+        val endpointConfiguration = agentConfiguration.endpoint?.let {
+            try {
+                it.toEndpointConfiguration()
+            } catch (e: IllegalArgumentException) {
+                Log.w("SplunkRum", "Endpoint configuration provided but invalid. Installing without endpoint.", e)
+                null
+            }
+        }
 
         val agentConfiguration = AgentConfiguration(
             endpoint = endpointConfiguration,
@@ -125,7 +133,7 @@ class SplunkOtelFlutterPlugin :
                 trackingMode = agentConfiguration.user?.trackingMode?.toUserTrackingMode() ?: UserTrackingMode.NO_TRACKING
             ),
             session = SessionConfiguration(agentConfiguration.session?.samplingRate ?: 1.0),
-            globalAttributes = globalAttributes ?: MutableAttributes(),
+            globalAttributes = mergedGlobalAttributes,
             instrumentedProcessName = agentConfiguration.instrumentedProcessName,
             deferredUntilForeground = agentConfiguration.deferredUntilForeground ?: false,
         )
@@ -243,15 +251,10 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(status.toGeneratedStatus()))
     }
 
-    override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit) {
+    override fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit) {
         val endpointConfiguration = SplunkRum.instance.state.endpointConfiguration
 
-        if (endpointConfiguration == null) {
-            callback(Result.failure(FlutterError("EMPTY_ENDPOINT_CONFIGURATION", "Endpoint configuration not set.")))
-            return
-        }
-
-        callback(Result.success(endpointConfiguration.toGeneratedEndpointConfiguration()))
+        callback(Result.success(endpointConfiguration?.toGeneratedEndpointConfiguration()))
     }
 
     override fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit) {
@@ -276,6 +279,20 @@ class SplunkOtelFlutterPlugin :
         val deferredUntilForeground = SplunkRum.instance.state.deferredUntilForeground
 
         callback(Result.success(deferredUntilForeground))
+    }
+
+    override fun preferencesSetEndpointConfiguration(
+        endpointConfiguration: GeneratedEndpointConfiguration,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        try {
+            val endpoint = endpointConfiguration.toEndpointConfiguration()
+            SplunkRum.instance.preferences.endpointConfiguration = endpoint
+        } catch (e: IllegalArgumentException) {
+            Log.w("SplunkRum", "Endpoint configuration provided but invalid. Endpoint not updated.", e)
+        }
+
+        callback(Result.success(Unit))
     }
 
     // Preferences

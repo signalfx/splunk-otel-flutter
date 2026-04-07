@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
-import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
+import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
+import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,20 +13,16 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
-  // Measure install duration
+  // Install without endpoint configuration (deferred credentials).
   final stopwatch = Stopwatch()..start();
-  
+
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
-        realm: realm,
-        rumAccessToken: rumAccessToken,
-      ),
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
     ),
   );
-  
+
   stopwatch.stop();
   debugPrint('=============');
   debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
@@ -63,6 +57,15 @@ void main() async {
 
   final mask = await sessionReplay.recordingMask.getRecordingMask();
   debugPrint('Recording mask elements: ${mask?.elements.length ?? 0}');
+
+  // Set endpoint configuration after install.
+  await SplunkRum.instance.preferences.setEndpointConfiguration(
+    endpointConfiguration: EndpointConfiguration.forRum(
+      realm: realm,
+      rumAccessToken: rumAccessToken,
+    ),
+  );
+  debugPrint('Endpoint configuration set after install.');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();

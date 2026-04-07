@@ -523,9 +523,9 @@ data class GeneratedSessionReplayModuleConfiguration (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedAgentConfiguration (
-  val endpoint: GeneratedEndpointConfiguration,
   val appName: String,
   val deploymentEnvironment: String,
+  val endpoint: GeneratedEndpointConfiguration? = null,
   val appVersion: String? = null,
   val enableDebugLogging: Boolean? = null,
   val globalAttributes: GeneratedMutableAttributes? = null,
@@ -537,9 +537,9 @@ data class GeneratedAgentConfiguration (
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedAgentConfiguration {
-      val endpoint = pigeonVar_list[0] as GeneratedEndpointConfiguration
-      val appName = pigeonVar_list[1] as String
-      val deploymentEnvironment = pigeonVar_list[2] as String
+      val appName = pigeonVar_list[0] as String
+      val deploymentEnvironment = pigeonVar_list[1] as String
+      val endpoint = pigeonVar_list[2] as GeneratedEndpointConfiguration?
       val appVersion = pigeonVar_list[3] as String?
       val enableDebugLogging = pigeonVar_list[4] as Boolean?
       val globalAttributes = pigeonVar_list[5] as GeneratedMutableAttributes?
@@ -547,14 +547,14 @@ data class GeneratedAgentConfiguration (
       val session = pigeonVar_list[7] as GeneratedSessionConfiguration?
       val instrumentedProcessName = pigeonVar_list[8] as String?
       val deferredUntilForeground = pigeonVar_list[9] as Boolean?
-      return GeneratedAgentConfiguration(endpoint, appName, deploymentEnvironment, appVersion, enableDebugLogging, globalAttributes, user, session, instrumentedProcessName, deferredUntilForeground)
+      return GeneratedAgentConfiguration(appName, deploymentEnvironment, endpoint, appVersion, enableDebugLogging, globalAttributes, user, session, instrumentedProcessName, deferredUntilForeground)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      endpoint,
       appName,
       deploymentEnvironment,
+      endpoint,
       appVersion,
       enableDebugLogging,
       globalAttributes,
@@ -1342,12 +1342,13 @@ interface SplunkOtelFlutterHostApi {
   fun stateGetAppName(callback: (Result<String>) -> Unit)
   fun stateGetAppVersion(callback: (Result<String>) -> Unit)
   fun stateGetStatus(callback: (Result<GeneratedStatus>) -> Unit)
-  fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration>) -> Unit)
+  fun stateGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit)
   fun stateGetDeploymentEnvironment(callback: (Result<String>) -> Unit)
   fun stateGetIsDebugLoggingEnabled(callback: (Result<Boolean>) -> Unit)
   fun stateGetInstrumentedProcessName(callback: (Result<String?>) -> Unit)
   fun stateGetDeferredUntilForeground(callback: (Result<Boolean>) -> Unit)
   fun preferencesGetEndpointConfiguration(callback: (Result<GeneratedEndpointConfiguration?>) -> Unit)
+  fun preferencesSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, callback: (Result<Unit>) -> Unit)
   fun sessionStateGetId(callback: (Result<String>) -> Unit)
   fun sessionStateGetSamplingRate(callback: (Result<Double>) -> Unit)
   fun userStateGetUserTrackingMode(callback: (Result<GeneratedUserTrackingMode>) -> Unit)
@@ -1469,7 +1470,7 @@ interface SplunkOtelFlutterHostApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.stateGetEndpointConfiguration{ result: Result<GeneratedEndpointConfiguration> ->
+            api.stateGetEndpointConfiguration{ result: Result<GeneratedEndpointConfiguration?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
@@ -1566,6 +1567,25 @@ interface SplunkOtelFlutterHostApi {
               } else {
                 val data = result.getOrNull()
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val endpointConfigurationArg = args[0] as GeneratedEndpointConfiguration
+            api.preferencesSetEndpointConfiguration(endpointConfigurationArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
               }
             }
           }

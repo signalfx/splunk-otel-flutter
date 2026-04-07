@@ -22,9 +22,8 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 /// This abstract class defines the API contract that platform-specific implementations
 /// (iOS, Android) must fulfill to provide Splunk OpenTelemetry functionality.
 abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
-
   /// Creates a new instance with the verification token.
-  SplunkOtelFlutterPlatformInterface(): super(token: _token);
+  SplunkOtelFlutterPlatformInterface() : super(token: _token);
 
   static final Object _token = Object();
 
@@ -57,14 +56,17 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   ///   ],
   /// );
   /// ```
-  Future<void> install({required AgentConfiguration agentConfiguration, required List<ModuleConfiguration> moduleConfigurations});
+  Future<void> install({
+    required AgentConfiguration agentConfiguration,
+    required List<ModuleConfiguration> moduleConfigurations,
+  });
 
   // State
 
   Future<String> stateGetAppName();
   Future<String> stateGetAppVersion();
   Future<Status> stateGetStatus();
-  Future<EndpointConfiguration> stateGetEndpointConfiguration();
+  Future<EndpointConfiguration?> stateGetEndpointConfiguration();
   Future<String> stateGetDeploymentEnvironment();
   Future<bool> stateGetIsDebugLoggingEnabled();
   Future<String?> stateGetInstrumentedProcessName();
@@ -73,6 +75,9 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   // Preferences
 
   Future<EndpointConfiguration?> preferencesGetEndpointConfiguration();
+  Future<void> preferencesSetEndpointConfiguration({
+    required EndpointConfiguration endpointConfiguration,
+  });
 
   // Session
 
@@ -83,7 +88,9 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
   Future<UserTrackingMode> userStateGetUserTrackingMode();
   Future<UserTrackingMode?> userPreferencesGetUserTrackingMode();
-  Future<void> userPreferencesSetUserTrackingMode({required UserTrackingMode userTrackingMode});
+  Future<void> userPreferencesSetUserTrackingMode({
+    required UserTrackingMode userTrackingMode,
+  });
 
   // Global attributes
 
@@ -92,19 +99,46 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   Future<void> globalAttributesRemove({required String key});
   Future<void> globalAttributesRemoveAll();
   Future<bool> globalAttributesContains({required String key});
-  Future<void> globalAttributesSetString({required String key, required String value});
-  Future<void> globalAttributesSetInt({required String key, required int value});
-  Future<void> globalAttributesSetDouble({required String key, required double value});
-  Future<void> globalAttributesSetBool({required String key, required bool value});
-  Future<void> globalAttributesSetStringList({required String key, required List<String> value});
-  Future<void> globalAttributesSetIntList({required String key, required List<int> value});
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
+  Future<void> globalAttributesSetString({
+    required String key,
+    required String value,
+  });
+  Future<void> globalAttributesSetInt({
+    required String key,
+    required int value,
+  });
+  Future<void> globalAttributesSetDouble({
+    required String key,
+    required double value,
+  });
+  Future<void> globalAttributesSetBool({
+    required String key,
+    required bool value,
+  });
+  Future<void> globalAttributesSetStringList({
+    required String key,
+    required List<String> value,
+  });
+  Future<void> globalAttributesSetIntList({
+    required String key,
+    required List<int> value,
+  });
+  Future<void> globalAttributesSetDoubleList({
+    required String key,
+    required List<double> value,
+  });
+  Future<void> globalAttributesSetBoolList({
+    required String key,
+    required List<bool> value,
+  });
   Future<void> globalAttributesSetAll({required MutableAttributes attributes});
 
   // Custom tracking
 
-  Future<void> customTrackingTrackCustomEvent({required String name,required MutableAttributes attributes});
+  Future<void> customTrackingTrackCustomEvent({
+    required String name,
+    required MutableAttributes attributes,
+  });
   Future<int> customTrackingStartWorkflow({required String workflowName});
   Future<void> customTrackingEndWorkflow({required int handle});
 

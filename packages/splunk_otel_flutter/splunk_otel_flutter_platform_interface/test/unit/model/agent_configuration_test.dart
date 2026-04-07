@@ -34,14 +34,27 @@ void main() {
       // Assert
       expect(config.appName, 'TestApp');
       expect(config.deploymentEnvironment, 'production');
-      expect(config.endpointConfiguration.realm, 'us0');
-      expect(config.endpointConfiguration.rumAccessToken, 'token');
+      expect(config.endpointConfiguration?.realm, 'us0');
+      expect(config.endpointConfiguration?.rumAccessToken, 'token');
       expect(config.appVersion, isNull);
       expect(config.enableDebugLogging, false);
       expect(config.user.trackingMode, UserTrackingMode.noTracking);
       expect(config.session.samplingRate, 1.0);
       expect(config.instrumentedProcessName, isNull);
       expect(config.deferredUntilForeground, false);
+    });
+
+    test('should create without endpoint configuration', () {
+      // Act
+      final config = AgentConfiguration(
+        appName: 'TestApp',
+        deploymentEnvironment: 'production',
+      );
+
+      // Assert
+      expect(config.endpointConfiguration, isNull);
+      expect(config.appName, 'TestApp');
+      expect(config.deploymentEnvironment, 'production');
     });
 
     test('should create without user configuration (null)', () {
@@ -159,9 +172,18 @@ void main() {
 
     test('should handle different realms', () {
       // Act
-      final configUS = EndpointConfiguration.forRum(realm: 'us0', rumAccessToken: 'token');
-      final configEU = EndpointConfiguration.forRum(realm: 'eu0', rumAccessToken: 'token');
-      final configAP = EndpointConfiguration.forRum(realm: 'ap0', rumAccessToken: 'token');
+      final configUS = EndpointConfiguration.forRum(
+        realm: 'us0',
+        rumAccessToken: 'token',
+      );
+      final configEU = EndpointConfiguration.forRum(
+        realm: 'eu0',
+        rumAccessToken: 'token',
+      );
+      final configAP = EndpointConfiguration.forRum(
+        realm: 'ap0',
+        rumAccessToken: 'token',
+      );
 
       // Assert
       expect(configUS.realm, 'us0');
@@ -207,7 +229,10 @@ void main() {
 
     test('should have correct enum values', () {
       expect(UserTrackingMode.values, contains(UserTrackingMode.noTracking));
-      expect(UserTrackingMode.values, contains(UserTrackingMode.anonymousTracking));
+      expect(
+        UserTrackingMode.values,
+        contains(UserTrackingMode.anonymousTracking),
+      );
     });
   });
 
@@ -235,7 +260,10 @@ void main() {
       final generated = config.toGeneratedUserConfiguration();
 
       // Assert
-      expect(generated.trackingMode, GeneratedUserTrackingMode.anonymousTracking);
+      expect(
+        generated.trackingMode,
+        GeneratedUserTrackingMode.anonymousTracking,
+      );
     });
 
     test('should convert default UserConfiguration correctly', () {
@@ -278,7 +306,7 @@ void main() {
     test('samplingRate less than 0.0 should throw ArgumentError', () {
       // Act & Assert
       expect(
-            () => SessionConfiguration(samplingRate: -0.1),
+        () => SessionConfiguration(samplingRate: -0.1),
         throwsArgumentError,
       );
     });
@@ -286,7 +314,7 @@ void main() {
     test('samplingRate greater than 1.0 should throw ArgumentError', () {
       // Act & Assert
       expect(
-            () => SessionConfiguration(samplingRate: 1.1),
+        () => SessionConfiguration(samplingRate: 1.1),
         throwsArgumentError,
       );
     });

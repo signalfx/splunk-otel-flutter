@@ -11,7 +11,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -28,106 +32,106 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedRegexOption) {
+    } else if (value is GeneratedRegexOption) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedUserTrackingMode) {
+    } else if (value is GeneratedUserTrackingMode) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSessionReplayStatus) {
+    } else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRenderingMode) {
+    } else if (value is GeneratedRenderingMode) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    } else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedStatus) {
+    } else if (value is GeneratedStatus) {
       buffer.putUint8(134);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
+    } else if (value is GeneratedSlowRenderingModuleConfiguration) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNavigationModuleConfiguration) {
+    } else if (value is GeneratedNavigationModuleConfiguration) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedCrashReportsModuleConfiguration) {
+    } else if (value is GeneratedCrashReportsModuleConfiguration) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedInteractionsModuleConfiguration) {
+    } else if (value is GeneratedInteractionsModuleConfiguration) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNetworkMonitorModuleConfiguration) {
+    } else if (value is GeneratedNetworkMonitorModuleConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
+    } else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAnrModuleConfiguration) {
+    } else if (value is GeneratedAnrModuleConfiguration) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedHttpUrlModuleConfiguration) {
+    } else if (value is GeneratedHttpUrlModuleConfiguration) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
+    } else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
+    } else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRegularExpression) {
+    } else if (value is GeneratedRegularExpression) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionReplayModuleConfiguration) {
+    } else if (value is GeneratedSessionReplayModuleConfiguration) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    } else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    } else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    } else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    } else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(150);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskList) {
+    } else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(151);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    } else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(152);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    } else if (value is GeneratedRect) {
       buffer.putUint8(153);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    } else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(154);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    } else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(155);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    } else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(156);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    } else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(157);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    } else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(158);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    } else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(159);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    } else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(160);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    } else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(161);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    } else if (value is GeneratedMutableAttributeListBool) {
       buffer.putUint8(162);
       writeValue(buffer, value.encode());
     } else {
@@ -138,79 +142,99 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRegexOption.values[value];
-      case 130: 
+      case 130:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedUserTrackingMode.values[value];
-      case 131: 
+      case 131:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedSessionReplayStatus.values[value];
-      case 132: 
+        return value == null
+            ? null
+            : GeneratedSessionReplayStatus.values[value];
+      case 132:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRenderingMode.values[value];
-      case 133: 
+      case 133:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 134: 
+      case 134:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedStatus.values[value];
-      case 135: 
-        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
-      case 136: 
-        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
-      case 137: 
-        return GeneratedCrashReportsModuleConfiguration.decode(readValue(buffer)!);
-      case 138: 
-        return GeneratedInteractionsModuleConfiguration.decode(readValue(buffer)!);
-      case 139: 
-        return GeneratedNetworkMonitorModuleConfiguration.decode(readValue(buffer)!);
-      case 140: 
-        return GeneratedApplicationLifecycleModuleConfiguration.decode(readValue(buffer)!);
-      case 141: 
+      case 135:
+        return GeneratedSlowRenderingModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 136:
+        return GeneratedNavigationModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 137:
+        return GeneratedCrashReportsModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 138:
+        return GeneratedInteractionsModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 139:
+        return GeneratedNetworkMonitorModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 140:
+        return GeneratedApplicationLifecycleModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 141:
         return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
-      case 142: 
+      case 142:
         return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
-      case 143: 
-        return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
-      case 144: 
-        return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
-      case 145: 
+      case 143:
+        return GeneratedOkHttp3AutoModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 144:
+        return GeneratedNetworkInstrumentationModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 145:
         return GeneratedRegularExpression.decode(readValue(buffer)!);
-      case 146: 
-        return GeneratedSessionReplayModuleConfiguration.decode(readValue(buffer)!);
-      case 147: 
+      case 146:
+        return GeneratedSessionReplayModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 147:
         return GeneratedAgentConfiguration.decode(readValue(buffer)!);
-      case 148: 
+      case 148:
         return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
-      case 149: 
+      case 149:
         return GeneratedUserConfiguration.decode(readValue(buffer)!);
-      case 150: 
+      case 150:
         return GeneratedSessionConfiguration.decode(readValue(buffer)!);
-      case 151: 
+      case 151:
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 152: 
+      case 152:
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 153: 
+      case 153:
         return GeneratedRect.decode(readValue(buffer)!);
-      case 154: 
+      case 154:
         return GeneratedMutableAttributes.decode(readValue(buffer)!);
-      case 155: 
+      case 155:
         return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
-      case 156: 
+      case 156:
         return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
-      case 157: 
+      case 157:
         return GeneratedMutableAttributeString.decode(readValue(buffer)!);
-      case 158: 
+      case 158:
         return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
-      case 159: 
+      case 159:
         return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
-      case 160: 
+      case 160:
         return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
-      case 161: 
+      case 161:
         return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
-      case 162: 
+      case 162:
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -219,10 +243,33 @@ class _PigeonCodec extends StandardMessageCodec {
 }
 
 abstract class TestSplunkOtelFlutterHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, required GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration, });
+  Future<void> install({
+    required GeneratedAgentConfiguration agentConfiguration,
+    required GeneratedNavigationModuleConfiguration?
+    navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration?
+    slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration?
+    crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration?
+    interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration?
+    networkMonitorModuleConfiguration,
+    required GeneratedApplicationLifecycleModuleConfiguration?
+    applicationLifecycleModuleConfiguration,
+    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration?
+    okHttp3AutoModuleConfiguration,
+    required GeneratedNetworkInstrumentationModuleConfiguration?
+    networkInstrumentationModuleConfiguration,
+    required GeneratedSessionReplayModuleConfiguration?
+    sessionReplayModuleConfiguration,
+  });
 
   Future<String> stateGetAppName();
 
@@ -230,7 +277,11 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<GeneratedStatus> stateGetStatus();
 
-  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration();
+  Future<GeneratedEndpointConfiguration?> stateGetEndpointConfiguration();
+
+  Future<void> preferencesSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  });
 
   Future<String> stateGetDeploymentEnvironment();
 
@@ -250,7 +301,9 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode();
 
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode});
+  Future<void> userPreferencesSetUserTrackingMode({
+    required GeneratedUserTrackingMode trackingMode,
+  });
 
   Future<Object?> globalAttributesGet({required String key});
 
@@ -262,25 +315,54 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<bool> globalAttributesContains({required String key});
 
-  Future<void> globalAttributesSetString({required String key, required String value});
+  Future<void> globalAttributesSetString({
+    required String key,
+    required String value,
+  });
 
-  Future<void> globalAttributesSetInt({required String key, required int value});
+  Future<void> globalAttributesSetInt({
+    required String key,
+    required int value,
+  });
 
-  Future<void> globalAttributesSetDouble({required String key, required double value});
+  Future<void> globalAttributesSetDouble({
+    required String key,
+    required double value,
+  });
 
-  Future<void> globalAttributesSetBool({required String key, required bool value});
+  Future<void> globalAttributesSetBool({
+    required String key,
+    required bool value,
+  });
 
-  Future<void> globalAttributesSetStringList({required String key, required List<String> value});
+  Future<void> globalAttributesSetStringList({
+    required String key,
+    required List<String> value,
+  });
 
-  Future<void> globalAttributesSetIntList({required String key, required List<int> value});
+  Future<void> globalAttributesSetIntList({
+    required String key,
+    required List<int> value,
+  });
 
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value});
+  Future<void> globalAttributesSetDoubleList({
+    required String key,
+    required List<double> value,
+  });
 
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value});
+  Future<void> globalAttributesSetBoolList({
+    required String key,
+    required List<bool> value,
+  });
 
-  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value});
+  Future<void> globalAttributesSetAll({
+    required GeneratedMutableAttributes value,
+  });
 
-  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes});
+  Future<void> customTrackingTrackCustomEvent({
+    required String name,
+    required GeneratedMutableAttributes attributes,
+  });
 
   Future<int> customTrackingStartWorkflow({required String workflowName});
 
@@ -288,779 +370,1367 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> navigationTrack({required String screenName});
 
-  static void setUp(TestSplunkOtelFlutterHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestSplunkOtelFlutterHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final GeneratedAgentConfiguration? arg_agentConfiguration = (args[0] as GeneratedAgentConfiguration?);
-          assert(arg_agentConfiguration != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install was null, expected non-null GeneratedAgentConfiguration.');
-          final GeneratedNavigationModuleConfiguration? arg_navigationModuleConfiguration = (args[1] as GeneratedNavigationModuleConfiguration?);
-          final GeneratedSlowRenderingModuleConfiguration? arg_slowRenderingModuleConfiguration = (args[2] as GeneratedSlowRenderingModuleConfiguration?);
-          final GeneratedCrashReportsModuleConfiguration? arg_crashReportsModuleConfiguration = (args[3] as GeneratedCrashReportsModuleConfiguration?);
-          final GeneratedInteractionsModuleConfiguration? arg_interactionsModuleConfiguration = (args[4] as GeneratedInteractionsModuleConfiguration?);
-          final GeneratedNetworkMonitorModuleConfiguration? arg_networkMonitorModuleConfiguration = (args[5] as GeneratedNetworkMonitorModuleConfiguration?);
-          final GeneratedApplicationLifecycleModuleConfiguration? arg_applicationLifecycleModuleConfiguration = (args[6] as GeneratedApplicationLifecycleModuleConfiguration?);
-          final GeneratedAnrModuleConfiguration? arg_anrModuleConfiguration = (args[7] as GeneratedAnrModuleConfiguration?);
-          final GeneratedHttpUrlModuleConfiguration? arg_httpUrlModuleConfiguration = (args[8] as GeneratedHttpUrlModuleConfiguration?);
-          final GeneratedOkHttp3AutoModuleConfiguration? arg_okHttp3AutoModuleConfiguration = (args[9] as GeneratedOkHttp3AutoModuleConfiguration?);
-          final GeneratedNetworkInstrumentationModuleConfiguration? arg_networkInstrumentationModuleConfiguration = (args[10] as GeneratedNetworkInstrumentationModuleConfiguration?);
-          final GeneratedSessionReplayModuleConfiguration? arg_sessionReplayModuleConfiguration = (args[11] as GeneratedSessionReplayModuleConfiguration?);
-          try {
-            await api.install(agentConfiguration: arg_agentConfiguration!, navigationModuleConfiguration: arg_navigationModuleConfiguration, slowRenderingModuleConfiguration: arg_slowRenderingModuleConfiguration, crashReportsModuleConfiguration: arg_crashReportsModuleConfiguration, interactionsModuleConfiguration: arg_interactionsModuleConfiguration, networkMonitorModuleConfiguration: arg_networkMonitorModuleConfiguration, applicationLifecycleModuleConfiguration: arg_applicationLifecycleModuleConfiguration, anrModuleConfiguration: arg_anrModuleConfiguration, httpUrlModuleConfiguration: arg_httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration: arg_okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration: arg_networkInstrumentationModuleConfiguration, sessionReplayModuleConfiguration: arg_sessionReplayModuleConfiguration);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final GeneratedAgentConfiguration? arg_agentConfiguration =
+                  (args[0] as GeneratedAgentConfiguration?);
+              assert(
+                arg_agentConfiguration != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install was null, expected non-null GeneratedAgentConfiguration.',
+              );
+              final GeneratedNavigationModuleConfiguration?
+              arg_navigationModuleConfiguration =
+                  (args[1] as GeneratedNavigationModuleConfiguration?);
+              final GeneratedSlowRenderingModuleConfiguration?
+              arg_slowRenderingModuleConfiguration =
+                  (args[2] as GeneratedSlowRenderingModuleConfiguration?);
+              final GeneratedCrashReportsModuleConfiguration?
+              arg_crashReportsModuleConfiguration =
+                  (args[3] as GeneratedCrashReportsModuleConfiguration?);
+              final GeneratedInteractionsModuleConfiguration?
+              arg_interactionsModuleConfiguration =
+                  (args[4] as GeneratedInteractionsModuleConfiguration?);
+              final GeneratedNetworkMonitorModuleConfiguration?
+              arg_networkMonitorModuleConfiguration =
+                  (args[5] as GeneratedNetworkMonitorModuleConfiguration?);
+              final GeneratedApplicationLifecycleModuleConfiguration?
+              arg_applicationLifecycleModuleConfiguration =
+                  (args[6]
+                      as GeneratedApplicationLifecycleModuleConfiguration?);
+              final GeneratedAnrModuleConfiguration?
+              arg_anrModuleConfiguration =
+                  (args[7] as GeneratedAnrModuleConfiguration?);
+              final GeneratedHttpUrlModuleConfiguration?
+              arg_httpUrlModuleConfiguration =
+                  (args[8] as GeneratedHttpUrlModuleConfiguration?);
+              final GeneratedOkHttp3AutoModuleConfiguration?
+              arg_okHttp3AutoModuleConfiguration =
+                  (args[9] as GeneratedOkHttp3AutoModuleConfiguration?);
+              final GeneratedNetworkInstrumentationModuleConfiguration?
+              arg_networkInstrumentationModuleConfiguration =
+                  (args[10]
+                      as GeneratedNetworkInstrumentationModuleConfiguration?);
+              final GeneratedSessionReplayModuleConfiguration?
+              arg_sessionReplayModuleConfiguration =
+                  (args[11] as GeneratedSessionReplayModuleConfiguration?);
+              try {
+                await api.install(
+                  agentConfiguration: arg_agentConfiguration!,
+                  navigationModuleConfiguration:
+                      arg_navigationModuleConfiguration,
+                  slowRenderingModuleConfiguration:
+                      arg_slowRenderingModuleConfiguration,
+                  crashReportsModuleConfiguration:
+                      arg_crashReportsModuleConfiguration,
+                  interactionsModuleConfiguration:
+                      arg_interactionsModuleConfiguration,
+                  networkMonitorModuleConfiguration:
+                      arg_networkMonitorModuleConfiguration,
+                  applicationLifecycleModuleConfiguration:
+                      arg_applicationLifecycleModuleConfiguration,
+                  anrModuleConfiguration: arg_anrModuleConfiguration,
+                  httpUrlModuleConfiguration: arg_httpUrlModuleConfiguration,
+                  okHttp3AutoModuleConfiguration:
+                      arg_okHttp3AutoModuleConfiguration,
+                  networkInstrumentationModuleConfiguration:
+                      arg_networkInstrumentationModuleConfiguration,
+                  sessionReplayModuleConfiguration:
+                      arg_sessionReplayModuleConfiguration,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final String output = await api.stateGetAppName();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final String output = await api.stateGetAppName();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppVersion$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppVersion$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final String output = await api.stateGetAppVersion();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final String output = await api.stateGetAppVersion();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetStatus$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetStatus$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedStatus output = await api.stateGetStatus();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedStatus output = await api.stateGetStatus();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedEndpointConfiguration output = await api.stateGetEndpointConfiguration();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedEndpointConfiguration? output = await api
+                    .stateGetEndpointConfiguration();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeploymentEnvironment$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeploymentEnvironment$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final String output = await api.stateGetDeploymentEnvironment();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final String output = await api.stateGetDeploymentEnvironment();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetIsDebugLoggingEnabled$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetIsDebugLoggingEnabled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final bool output = await api.stateGetIsDebugLoggingEnabled();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final bool output = await api.stateGetIsDebugLoggingEnabled();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetInstrumentedProcessName$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetInstrumentedProcessName$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final String? output = await api.stateGetInstrumentedProcessName();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final String? output = await api
+                    .stateGetInstrumentedProcessName();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeferredUntilForeground$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeferredUntilForeground$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final bool output = await api.stateGetDeferredUntilForeground();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final bool output = await api.stateGetDeferredUntilForeground();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedEndpointConfiguration? output = await api.preferencesGetEndpointConfiguration();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final GeneratedEndpointConfiguration? arg_endpointConfiguration =
+                  (args[0] as GeneratedEndpointConfiguration?);
+              assert(
+                arg_endpointConfiguration != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration was null, expected non-null GeneratedEndpointConfiguration.',
+              );
+              try {
+                await api.preferencesSetEndpointConfiguration(
+                  endpointConfiguration: arg_endpointConfiguration!,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final String output = await api.sessionStateGetId();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedEndpointConfiguration? output = await api
+                    .preferencesGetEndpointConfiguration();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetSamplingRate$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final double output = await api.sessionStateGetSamplingRate();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final String output = await api.sessionStateGetId();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userStateGetUserTrackingMode$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetSamplingRate$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedUserTrackingMode output = await api.userStateGetUserTrackingMode();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final double output = await api.sessionStateGetSamplingRate();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesGetUserTrackingMode$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userStateGetUserTrackingMode$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedUserTrackingMode? output = await api.userPreferencesGetUserTrackingMode();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedUserTrackingMode output = await api
+                    .userStateGetUserTrackingMode();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesGetUserTrackingMode$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final GeneratedUserTrackingMode? arg_trackingMode = (args[0] as GeneratedUserTrackingMode?);
-          assert(arg_trackingMode != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null, expected non-null GeneratedUserTrackingMode.');
-          try {
-            await api.userPreferencesSetUserTrackingMode(trackingMode: arg_trackingMode!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedUserTrackingMode? output = await api
+                    .userPreferencesGetUserTrackingMode();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final GeneratedUserTrackingMode? arg_trackingMode =
+                  (args[0] as GeneratedUserTrackingMode?);
+              assert(
+                arg_trackingMode != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode was null, expected non-null GeneratedUserTrackingMode.',
+              );
+              try {
+                await api.userPreferencesSetUserTrackingMode(
+                  trackingMode: arg_trackingMode!,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final String? arg_key = (args[0] as String?);
+              assert(
+                arg_key != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet was null, expected non-null String.',
+              );
+              try {
+                final Object? output = await api.globalAttributesGet(
+                  key: arg_key!,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGetAll$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final GeneratedMutableAttributes? output = await api
+                    .globalAttributesGetAll();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final String? arg_key = (args[0] as String?);
+              assert(
+                arg_key != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove was null, expected non-null String.',
+              );
+              try {
+                await api.globalAttributesRemove(key: arg_key!);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemoveAll$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                await api.globalAttributesRemoveAll();
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final String? arg_key = (args[0] as String?);
+              assert(
+                arg_key != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains was null, expected non-null String.',
+              );
+              try {
+                final bool output = await api.globalAttributesContains(
+                  key: arg_key!,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet was null, expected non-null String.');
-          try {
-            final Object? output = await api.globalAttributesGet(key: arg_key!);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGetAll$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            final GeneratedMutableAttributes? output = await api.globalAttributesGetAll();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove was null, expected non-null String.');
-          try {
-            await api.globalAttributesRemove(key: arg_key!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemoveAll$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            await api.globalAttributesRemoveAll();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains was null, expected non-null String.');
-          try {
-            final bool output = await api.globalAttributesContains(key: arg_key!);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.',
+          );
           final String? arg_value = (args[1] as String?);
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.');
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString was null, expected non-null String.',
+          );
           try {
-            await api.globalAttributesSetString(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetString(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null String.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null String.',
+          );
           final int? arg_value = (args[1] as int?);
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null int.');
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt was null, expected non-null int.',
+          );
           try {
             await api.globalAttributesSetInt(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null String.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null String.',
+          );
           final double? arg_value = (args[1] as double?);
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null double.');
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble was null, expected non-null double.',
+          );
           try {
-            await api.globalAttributesSetDouble(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetDouble(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null String.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null String.',
+          );
           final bool? arg_value = (args[1] as bool?);
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null bool.');
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool was null, expected non-null bool.',
+          );
           try {
             await api.globalAttributesSetBool(key: arg_key!, value: arg_value!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null String.');
-          final List<String>? arg_value = (args[1] as List<Object?>?)?.cast<String>();
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null List<String>.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null String.',
+          );
+          final List<String>? arg_value = (args[1] as List<Object?>?)
+              ?.cast<String>();
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList was null, expected non-null List<String>.',
+          );
           try {
-            await api.globalAttributesSetStringList(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetStringList(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null String.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null String.',
+          );
           final List<int>? arg_value = (args[1] as List<Object?>?)?.cast<int>();
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null List<int>.');
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList was null, expected non-null List<int>.',
+          );
           try {
-            await api.globalAttributesSetIntList(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetIntList(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null String.');
-          final List<double>? arg_value = (args[1] as List<Object?>?)?.cast<double>();
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null List<double>.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null String.',
+          );
+          final List<double>? arg_value = (args[1] as List<Object?>?)
+              ?.cast<double>();
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList was null, expected non-null List<double>.',
+          );
           try {
-            await api.globalAttributesSetDoubleList(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetDoubleList(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_key = (args[0] as String?);
-          assert(arg_key != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null String.');
-          final List<bool>? arg_value = (args[1] as List<Object?>?)?.cast<bool>();
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null List<bool>.');
+          assert(
+            arg_key != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null String.',
+          );
+          final List<bool>? arg_value = (args[1] as List<Object?>?)
+              ?.cast<bool>();
+          assert(
+            arg_value != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList was null, expected non-null List<bool>.',
+          );
           try {
-            await api.globalAttributesSetBoolList(key: arg_key!, value: arg_value!);
+            await api.globalAttributesSetBoolList(
+              key: arg_key!,
+              value: arg_value!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final GeneratedMutableAttributes? arg_value = (args[0] as GeneratedMutableAttributes?);
-          assert(arg_value != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null, expected non-null GeneratedMutableAttributes.');
-          try {
-            await api.globalAttributesSetAll(value: arg_value!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final GeneratedMutableAttributes? arg_value =
+                  (args[0] as GeneratedMutableAttributes?);
+              assert(
+                arg_value != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll was null, expected non-null GeneratedMutableAttributes.',
+              );
+              try {
+                await api.globalAttributesSetAll(value: arg_value!);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null.');
+        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<
+          Object?
+        >(pigeonVar_channel, (Object? message) async {
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_name = (args[0] as String?);
-          assert(arg_name != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null, expected non-null String.');
-          final GeneratedMutableAttributes? arg_attributes = (args[1] as GeneratedMutableAttributes?);
-          assert(arg_attributes != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null, expected non-null GeneratedMutableAttributes.');
+          assert(
+            arg_name != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null, expected non-null String.',
+          );
+          final GeneratedMutableAttributes? arg_attributes =
+              (args[1] as GeneratedMutableAttributes?);
+          assert(
+            arg_attributes != null,
+            'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent was null, expected non-null GeneratedMutableAttributes.',
+          );
           try {
-            await api.customTrackingTrackCustomEvent(name: arg_name!, attributes: arg_attributes!);
+            await api.customTrackingTrackCustomEvent(
+              name: arg_name!,
+              attributes: arg_attributes!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_workflowName = (args[0] as String?);
-          assert(arg_workflowName != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null, expected non-null String.');
-          try {
-            final int output = await api.customTrackingStartWorkflow(workflowName: arg_workflowName!);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final String? arg_workflowName = (args[0] as String?);
+              assert(
+                arg_workflowName != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow was null, expected non-null String.',
+              );
+              try {
+                final int output = await api.customTrackingStartWorkflow(
+                  workflowName: arg_workflowName!,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_handle = (args[0] as int?);
-          assert(arg_handle != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null, expected non-null int.');
-          try {
-            await api.customTrackingEndWorkflow(handle: arg_handle!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final int? arg_handle = (args[0] as int?);
+              assert(
+                arg_handle != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null, expected non-null int.',
+              );
+              try {
+                await api.customTrackingEndWorkflow(handle: arg_handle!);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_screenName = (args[0] as String?);
-          assert(arg_screenName != null,
-              'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null, expected non-null String.');
-          try {
-            await api.navigationTrack(screenName: arg_screenName!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final String? arg_screenName = (args[0] as String?);
+              assert(
+                arg_screenName != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null, expected non-null String.',
+              );
+              try {
+                await api.navigationTrack(screenName: arg_screenName!);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
   }
