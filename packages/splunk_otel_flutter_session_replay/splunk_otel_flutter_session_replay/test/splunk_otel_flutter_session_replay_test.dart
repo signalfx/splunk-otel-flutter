@@ -32,16 +32,24 @@ void main() {
       expect(identical(first, second), isTrue);
     });
 
-    test('should expose preferences', () {
-      expect(SplunkSessionReplay.instance.preferences, isNotNull);
+    test('should expose start', () {
+      expect(SplunkSessionReplay.instance.start, isA<Function>());
     });
 
-    test('should expose state', () {
-      expect(SplunkSessionReplay.instance.state, isNotNull);
+    test('should expose stop', () {
+      expect(SplunkSessionReplay.instance.stop, isA<Function>());
     });
 
-    test('should expose recordingMask', () {
-      expect(SplunkSessionReplay.instance.recordingMask, isNotNull);
+    test('should expose getStatus', () {
+      expect(SplunkSessionReplay.instance.getStatus, isA<Function>());
+    });
+
+    test('should expose getRecordingMask', () {
+      expect(SplunkSessionReplay.instance.getRecordingMask, isA<Function>());
+    });
+
+    test('should expose setRecordingMask', () {
+      expect(SplunkSessionReplay.instance.setRecordingMask, isA<Function>());
     });
   });
 }

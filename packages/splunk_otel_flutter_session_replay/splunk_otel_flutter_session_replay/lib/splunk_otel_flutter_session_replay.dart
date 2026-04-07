@@ -38,36 +38,29 @@ class SplunkSessionReplay {
 
   SplunkSessionReplay._internal();
 
+  /// SDK singleton instance.
   static SplunkSessionReplay get instance => _instance;
 
   final _delegate =
       SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
 
-  final state = SessionReplayState();
-  final recordingMask = SessionReplayRecordingMaskApi();
+  /// Starts session replay recording.
+  Future<void> start() async => await _delegate.start();
 
-  Future<void> start() async => await _delegate.sessionReplayStart();
+  /// Stops session replay recording.
+  Future<void> stop() async => await _delegate.stop();
 
-  Future<void> stop() async => await _delegate.sessionReplayStop();
-}
+  /// Returns the current session replay recording status.
+  Future<SessionReplayStatus> getStatus() async => await _delegate.getStatus();
 
-class SessionReplayState {
-  final _delegate =
-      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
-
-  Future<SessionReplayStatus> getStatus() async =>
-      await _delegate.sessionReplayStateGetStatus();
-}
-
-class SessionReplayRecordingMaskApi {
-  final _delegate =
-      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
-
+  /// Returns the current recording mask, or `null` if none is set.
   Future<RecordingMaskList?> getRecordingMask() async =>
-      await _delegate.sessionReplayGetRecordingMask();
+      await _delegate.getRecordingMask();
 
-  Future<void> setRecordingMask({required RecordingMaskList? recordingMask}) async =>
-      await _delegate.sessionReplaySetRecordingMask(
-        recordingMask: recordingMask,
-      );
+  /// Sets the recording mask used to hide or obscure sensitive content.
+  ///
+  /// Pass `null` to clear the current mask.
+  Future<void> setRecordingMask(
+          {required RecordingMaskList? recordingMask}) async =>
+      await _delegate.setRecordingMask(recordingMask: recordingMask);
 }

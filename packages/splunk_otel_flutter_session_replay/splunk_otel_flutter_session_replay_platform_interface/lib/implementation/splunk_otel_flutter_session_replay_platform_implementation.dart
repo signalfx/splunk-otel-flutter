@@ -33,29 +33,31 @@ class SplunkOtelFlutterSessionReplayPlatformImplementation
   final _api = SplunkOtelFlutterSessionReplayHostApi();
 
   @override
-  Future<void> sessionReplayStart() async {
+  Future<void> start() async {
     await _api.sessionReplayStart();
   }
 
   @override
-  Future<void> sessionReplayStop() async {
+  Future<void> stop() async {
     await _api.sessionReplayStop();
   }
 
   @override
-  Future<SessionReplayStatus> sessionReplayStateGetStatus() async {
+  Future<SessionReplayStatus> getStatus() async {
     final generatedStatus = await _api.sessionReplayStateGetStatus();
+
     return generatedStatus._toSessionReplayStatus();
   }
 
   @override
-  Future<RecordingMaskList?> sessionReplayGetRecordingMask() async {
+  Future<RecordingMaskList?> getRecordingMask() async {
     final generatedMask = await _api.sessionReplayGetRecordingMask();
+
     return generatedMask?._toRecordingMaskList();
   }
 
   @override
-  Future<void> sessionReplaySetRecordingMask(
+  Future<void> setRecordingMask(
           {required RecordingMaskList? recordingMask}) async =>
       await _api.sessionReplaySetRecordingMask(
         recordingMask: recordingMask?._toGenerated(),

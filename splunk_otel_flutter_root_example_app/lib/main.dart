@@ -33,10 +33,10 @@ void main() async {
   await sessionReplay.start();
   debugPrint('Session replay started');
 
-  final status = await sessionReplay.state.getStatus();
+  final status = await sessionReplay.getStatus();
   debugPrint('Session replay status: $status');
 
-  await sessionReplay.recordingMask.setRecordingMask(
+  await sessionReplay.setRecordingMask(
     recordingMask: RecordingMaskList(
       elements: [
         RecordingMaskElement(
@@ -52,7 +52,7 @@ void main() async {
   );
   debugPrint('Recording mask set');
 
-  final mask = await sessionReplay.recordingMask.getRecordingMask();
+  final mask = await sessionReplay.getRecordingMask();
   debugPrint('Recording mask elements: ${mask?.elements.length ?? 0}');
 
   // Set endpoint configuration after install.
