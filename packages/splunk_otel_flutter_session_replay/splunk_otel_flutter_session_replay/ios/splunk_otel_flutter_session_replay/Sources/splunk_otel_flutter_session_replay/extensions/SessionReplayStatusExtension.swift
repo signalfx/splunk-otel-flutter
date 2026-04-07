@@ -34,6 +34,8 @@ extension SessionReplayStatus {
                 return .internalError
             case .storageLimitReached:
                 return .storageLimitReached
+            @unknown default:
+                return .internalError
             }
         }
     }
