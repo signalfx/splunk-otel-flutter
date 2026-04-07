@@ -88,37 +88,6 @@ extension GeneratedSessionReplayStatusExtension
   }
 }
 
-/// Rendering mode for session replay.
-enum RenderingMode {
-  /// Native rendering with actual UI content.
-  native,
-  
-  /// Wireframe-only rendering with layout structure but no actual content.
-  wireframeOnly,
-}
-
-extension RenderingModeExtension on RenderingMode {
-  GeneratedRenderingMode toGeneratedRenderingMode() {
-    switch (this) {
-      case RenderingMode.native:
-        return GeneratedRenderingMode.native;
-      case RenderingMode.wireframeOnly:
-        return GeneratedRenderingMode.wireframeOnly;
-    }
-  }
-}
-
-extension GeneratedRenderingModeExtension on GeneratedRenderingMode {
-  RenderingMode toRenderingMode() {
-    switch (this) {
-      case GeneratedRenderingMode.native:
-        return RenderingMode.native;
-      case GeneratedRenderingMode.wireframeOnly:
-        return RenderingMode.wireframeOnly;
-    }
-  }
-}
-
 /// A list of recording mask elements for session replay.
 ///
 /// Masks are used to hide or obscure sensitive content during session replay.

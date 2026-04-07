@@ -43,7 +43,7 @@ The app initializes both SDK packages sequentially at startup:
 
 1. **Core RUM agent** - `SplunkRum.instance.install(...)` initializes the native singleton with endpoint configuration, app name, and deployment environment.
 2. **Session replay start** - `SplunkSessionReplay.instance.start()` begins recording via the shared native singleton.
-3. **State verification** - Queries `state.getStatus()` and `state.getRenderingMode()` to confirm session replay is active.
+3. **State verification** - Queries `state.getStatus()` to confirm session replay is active.
 4. **Recording mask** - Sets a `RecordingMaskList` with two elements: a `covering` mask (200x100 at origin) and an `erasing` mask (100x50 at offset 50,50). Then reads it back to verify the round-trip through the Pigeon bridge.
 
 ### Sensitive Screen - Stop/Start Recording (`forgot_password.dart`)

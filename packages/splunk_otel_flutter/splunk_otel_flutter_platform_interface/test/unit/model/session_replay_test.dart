@@ -70,38 +70,6 @@ void main() {
     });
   });
 
-  group('RenderingMode', () {
-    test('should have all expected enum values', () {
-      final allModes = RenderingMode.values;
-
-      expect(allModes.length, 2);
-      expect(allModes, contains(RenderingMode.native));
-      expect(allModes, contains(RenderingMode.wireframeOnly));
-    });
-
-    test('should convert to GeneratedRenderingMode correctly', () {
-      expect(
-        RenderingMode.native.toGeneratedRenderingMode(),
-        GeneratedRenderingMode.native,
-      );
-      expect(
-        RenderingMode.wireframeOnly.toGeneratedRenderingMode(),
-        GeneratedRenderingMode.wireframeOnly,
-      );
-    });
-
-    test('should convert from GeneratedRenderingMode correctly', () {
-      expect(
-        GeneratedRenderingMode.native.toRenderingMode(),
-        RenderingMode.native,
-      );
-      expect(
-        GeneratedRenderingMode.wireframeOnly.toRenderingMode(),
-        RenderingMode.wireframeOnly,
-      );
-    });
-  });
-
   group('RecordingMaskType', () {
     test('should have all expected enum values', () {
       final allTypes = RecordingMaskType.values;

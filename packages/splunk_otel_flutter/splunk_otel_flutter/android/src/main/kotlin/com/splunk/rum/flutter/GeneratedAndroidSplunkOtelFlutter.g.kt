@@ -121,17 +121,6 @@ enum class GeneratedSessionReplayStatus(val raw: Int) {
   }
 }
 
-enum class GeneratedRenderingMode(val raw: Int) {
-  NATIVE(0),
-  WIREFRAME_ONLY(1);
-
-  companion object {
-    fun ofRaw(raw: Int): GeneratedRenderingMode? {
-      return values().firstOrNull { it.raw == raw }
-    }
-  }
-}
-
 enum class GeneratedRecordingMaskType(val raw: Int) {
   ERASING(0),
   COVERING(1);
@@ -1036,155 +1025,150 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
       }
       132.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedRenderingMode.ofRaw(it.toInt())
+          GeneratedRecordingMaskType.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          GeneratedRecordingMaskType.ofRaw(it.toInt())
-        }
-      }
-      134.toByte() -> {
-        return (readValue(buffer) as Long?)?.let {
           GeneratedStatus.ofRaw(it.toInt())
         }
       }
-      135.toByte() -> {
+      134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedSlowRenderingModuleConfiguration.fromList(it)
         }
       }
-      136.toByte() -> {
+      135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedNavigationModuleConfiguration.fromList(it)
         }
       }
-      137.toByte() -> {
+      136.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedCrashReportsModuleConfiguration.fromList(it)
         }
       }
-      138.toByte() -> {
+      137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedInteractionsModuleConfiguration.fromList(it)
         }
       }
-      139.toByte() -> {
+      138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedNetworkMonitorModuleConfiguration.fromList(it)
         }
       }
-      140.toByte() -> {
+      139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedApplicationLifecycleModuleConfiguration.fromList(it)
         }
       }
-      141.toByte() -> {
+      140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedAnrModuleConfiguration.fromList(it)
         }
       }
-      142.toByte() -> {
+      141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedHttpUrlModuleConfiguration.fromList(it)
         }
       }
-      143.toByte() -> {
+      142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedOkHttp3AutoModuleConfiguration.fromList(it)
         }
       }
-      144.toByte() -> {
+      143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedNetworkInstrumentationModuleConfiguration.fromList(it)
         }
       }
-      145.toByte() -> {
+      144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedRegularExpression.fromList(it)
         }
       }
-      146.toByte() -> {
+      145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedSessionReplayModuleConfiguration.fromList(it)
         }
       }
-      147.toByte() -> {
+      146.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedAgentConfiguration.fromList(it)
         }
       }
-      148.toByte() -> {
+      147.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedEndpointConfiguration.fromList(it)
         }
       }
-      149.toByte() -> {
+      148.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedUserConfiguration.fromList(it)
         }
       }
-      150.toByte() -> {
+      149.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedSessionConfiguration.fromList(it)
         }
       }
-      151.toByte() -> {
+      150.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedRecordingMaskList.fromList(it)
         }
       }
-      152.toByte() -> {
+      151.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedRecordingMaskElement.fromList(it)
         }
       }
-      153.toByte() -> {
+      152.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedRect.fromList(it)
         }
       }
-      154.toByte() -> {
+      153.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributes.fromList(it)
         }
       }
-      155.toByte() -> {
+      154.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeInt.fromList(it)
         }
       }
-      156.toByte() -> {
+      155.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeDouble.fromList(it)
         }
       }
-      157.toByte() -> {
+      156.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeString.fromList(it)
         }
       }
-      158.toByte() -> {
+      157.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeBool.fromList(it)
         }
       }
-      159.toByte() -> {
+      158.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListInt.fromList(it)
         }
       }
-      160.toByte() -> {
+      159.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListDouble.fromList(it)
         }
       }
-      161.toByte() -> {
+      160.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListString.fromList(it)
         }
       }
-      162.toByte() -> {
+      161.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListBool.fromList(it)
         }
@@ -1206,128 +1190,124 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         stream.write(131)
         writeValue(stream, value.raw)
       }
-      is GeneratedRenderingMode -> {
+      is GeneratedRecordingMaskType -> {
         stream.write(132)
         writeValue(stream, value.raw)
       }
-      is GeneratedRecordingMaskType -> {
+      is GeneratedStatus -> {
         stream.write(133)
         writeValue(stream, value.raw)
       }
-      is GeneratedStatus -> {
-        stream.write(134)
-        writeValue(stream, value.raw)
-      }
       is GeneratedSlowRenderingModuleConfiguration -> {
-        stream.write(135)
+        stream.write(134)
         writeValue(stream, value.toList())
       }
       is GeneratedNavigationModuleConfiguration -> {
-        stream.write(136)
+        stream.write(135)
         writeValue(stream, value.toList())
       }
       is GeneratedCrashReportsModuleConfiguration -> {
-        stream.write(137)
+        stream.write(136)
         writeValue(stream, value.toList())
       }
       is GeneratedInteractionsModuleConfiguration -> {
-        stream.write(138)
+        stream.write(137)
         writeValue(stream, value.toList())
       }
       is GeneratedNetworkMonitorModuleConfiguration -> {
-        stream.write(139)
+        stream.write(138)
         writeValue(stream, value.toList())
       }
       is GeneratedApplicationLifecycleModuleConfiguration -> {
-        stream.write(140)
+        stream.write(139)
         writeValue(stream, value.toList())
       }
       is GeneratedAnrModuleConfiguration -> {
-        stream.write(141)
+        stream.write(140)
         writeValue(stream, value.toList())
       }
       is GeneratedHttpUrlModuleConfiguration -> {
-        stream.write(142)
+        stream.write(141)
         writeValue(stream, value.toList())
       }
       is GeneratedOkHttp3AutoModuleConfiguration -> {
-        stream.write(143)
+        stream.write(142)
         writeValue(stream, value.toList())
       }
       is GeneratedNetworkInstrumentationModuleConfiguration -> {
-        stream.write(144)
+        stream.write(143)
         writeValue(stream, value.toList())
       }
       is GeneratedRegularExpression -> {
-        stream.write(145)
+        stream.write(144)
         writeValue(stream, value.toList())
       }
       is GeneratedSessionReplayModuleConfiguration -> {
-        stream.write(146)
+        stream.write(145)
         writeValue(stream, value.toList())
       }
       is GeneratedAgentConfiguration -> {
-        stream.write(147)
+        stream.write(146)
         writeValue(stream, value.toList())
       }
       is GeneratedEndpointConfiguration -> {
-        stream.write(148)
+        stream.write(147)
         writeValue(stream, value.toList())
       }
       is GeneratedUserConfiguration -> {
-        stream.write(149)
+        stream.write(148)
         writeValue(stream, value.toList())
       }
       is GeneratedSessionConfiguration -> {
-        stream.write(150)
+        stream.write(149)
         writeValue(stream, value.toList())
       }
       is GeneratedRecordingMaskList -> {
-        stream.write(151)
+        stream.write(150)
         writeValue(stream, value.toList())
       }
       is GeneratedRecordingMaskElement -> {
-        stream.write(152)
+        stream.write(151)
         writeValue(stream, value.toList())
       }
       is GeneratedRect -> {
-        stream.write(153)
+        stream.write(152)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributes -> {
-        stream.write(154)
+        stream.write(153)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeInt -> {
-        stream.write(155)
+        stream.write(154)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeDouble -> {
-        stream.write(156)
+        stream.write(155)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeString -> {
-        stream.write(157)
+        stream.write(156)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeBool -> {
-        stream.write(158)
+        stream.write(157)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeListInt -> {
-        stream.write(159)
+        stream.write(158)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeListDouble -> {
-        stream.write(160)
+        stream.write(159)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeListString -> {
-        stream.write(161)
+        stream.write(160)
         writeValue(stream, value.toList())
       }
       is GeneratedMutableAttributeListBool -> {
-        stream.write(162)
+        stream.write(161)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)

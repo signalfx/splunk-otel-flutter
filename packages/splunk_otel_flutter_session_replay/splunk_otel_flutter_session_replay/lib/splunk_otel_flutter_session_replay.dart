@@ -43,7 +43,6 @@ class SplunkSessionReplay {
   final _delegate =
       SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
 
-  final preferences = SessionReplayPreferences();
   final state = SessionReplayState();
   final recordingMask = SessionReplayRecordingMaskApi();
 
@@ -52,25 +51,9 @@ class SplunkSessionReplay {
   Future<void> stop() async => await _delegate.sessionReplayStop();
 }
 
-class SessionReplayPreferences {
-  final _delegate =
-      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
-
-  Future<RenderingMode?> getRenderingMode() async =>
-      await _delegate.sessionReplayPreferencesGetRenderingMode();
-
-  Future<void> setRenderingMode({required RenderingMode? renderingMode}) async =>
-      await _delegate.sessionReplayPreferencesSetRenderingMode(
-        renderingMode: renderingMode,
-      );
-}
-
 class SessionReplayState {
   final _delegate =
       SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
-
-  Future<RenderingMode> getRenderingMode() async =>
-      await _delegate.sessionReplayStateGetRenderingMode();
 
   Future<SessionReplayStatus> getStatus() async =>
       await _delegate.sessionReplayStateGetStatus();

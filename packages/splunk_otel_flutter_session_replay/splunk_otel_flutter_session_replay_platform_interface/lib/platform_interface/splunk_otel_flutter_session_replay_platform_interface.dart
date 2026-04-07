@@ -40,9 +40,6 @@ abstract class SplunkOtelFlutterSessionReplayPlatformInterface extends PlatformI
   Future<void> sessionReplayStart();
   Future<void> sessionReplayStop();
   Future<SessionReplayStatus> sessionReplayStateGetStatus();
-  Future<RenderingMode> sessionReplayStateGetRenderingMode();
-  Future<RenderingMode?> sessionReplayPreferencesGetRenderingMode();
-  Future<void> sessionReplayPreferencesSetRenderingMode({required RenderingMode? renderingMode});
   Future<RecordingMaskList?> sessionReplayGetRecordingMask();
   Future<void> sessionReplaySetRecordingMask({required RecordingMaskList? recordingMask});
 }

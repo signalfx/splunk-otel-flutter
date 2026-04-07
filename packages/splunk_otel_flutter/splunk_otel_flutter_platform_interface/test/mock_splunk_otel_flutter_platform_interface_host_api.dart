@@ -52,9 +52,6 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi
   Future<void> Function()? sessionReplayStopHandler;
   Future<GeneratedSessionReplayStatus> Function()?
   sessionReplayStateGetStatusHandler;
-  Future<GeneratedRenderingMode> Function()? sessionReplayStateGetRenderingModeHandler;
-  Future<GeneratedRenderingMode?> Function()? sessionReplayPreferencesGetRenderingModeHandler;
-  Future<void> Function(GeneratedRenderingMode?)? sessionReplayPreferencesSetRenderingModeHandler;
   Future<GeneratedRecordingMaskList?> Function()?
   sessionReplayGetRecordingMaskHandler;
   Future<void> Function(GeneratedRecordingMaskList?)?

@@ -390,8 +390,6 @@ enum GeneratedSessionReplayStatus {
   disabledBySampling,
 }
 
-enum GeneratedRenderingMode { native, wireframeOnly }
-
 class GeneratedRecordingMaskList {
   final List<GeneratedRecordingMaskElement>? recordingMaskList;
 

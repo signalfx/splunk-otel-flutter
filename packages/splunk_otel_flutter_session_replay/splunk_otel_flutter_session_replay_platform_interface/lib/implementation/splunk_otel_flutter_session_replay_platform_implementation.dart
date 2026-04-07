@@ -49,25 +49,6 @@ class SplunkOtelFlutterSessionReplayPlatformImplementation
   }
 
   @override
-  Future<RenderingMode> sessionReplayStateGetRenderingMode() async {
-    final generatedMode = await _api.sessionReplayStateGetRenderingMode();
-    return generatedMode._toRenderingMode();
-  }
-
-  @override
-  Future<RenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
-    final generatedMode =
-        await _api.sessionReplayPreferencesGetRenderingMode();
-    return generatedMode?._toRenderingMode();
-  }
-
-  @override
-  Future<void> sessionReplayPreferencesSetRenderingMode(
-          {required RenderingMode? renderingMode}) async =>
-      await _api.sessionReplayPreferencesSetRenderingMode(
-          renderingMode: renderingMode?._toGenerated());
-
-  @override
   Future<RecordingMaskList?> sessionReplayGetRecordingMask() async {
     final generatedMask = await _api.sessionReplayGetRecordingMask();
     return generatedMask?._toRecordingMaskList();
@@ -102,28 +83,6 @@ extension on GeneratedSessionReplayStatus {
         return SessionReplayStatus.internalError;
       case GeneratedSessionReplayStatus.disabledBySampling:
         return SessionReplayStatus.disabledBySampling;
-    }
-  }
-}
-
-extension on GeneratedRenderingMode {
-  RenderingMode _toRenderingMode() {
-    switch (this) {
-      case GeneratedRenderingMode.native:
-        return RenderingMode.native;
-      case GeneratedRenderingMode.wireframeOnly:
-        return RenderingMode.wireframeOnly;
-    }
-  }
-}
-
-extension on RenderingMode {
-  GeneratedRenderingMode _toGenerated() {
-    switch (this) {
-      case RenderingMode.native:
-        return GeneratedRenderingMode.native;
-      case RenderingMode.wireframeOnly:
-        return GeneratedRenderingMode.wireframeOnly;
     }
   }
 }

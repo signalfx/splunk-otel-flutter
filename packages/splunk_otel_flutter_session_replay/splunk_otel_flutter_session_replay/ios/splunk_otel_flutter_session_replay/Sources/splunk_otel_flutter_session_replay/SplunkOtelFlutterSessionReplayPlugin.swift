@@ -46,24 +46,6 @@ public class SplunkOtelFlutterSessionReplayPlugin: NSObject, FlutterPlugin, Splu
         completion(.success(status.toGeneratedSessionReplayStatus()))
     }
 
-    func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.state.renderingMode
-
-        completion(.success(renderingMode.toGeneratedRenderingMode()))
-    }
-
-    func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, Error>) -> Void) {
-        let renderingMode = SplunkRum.shared.sessionReplay.preferences.renderingMode
-
-        completion(.success(renderingMode?.toGeneratedRenderingMode()))
-    }
-
-    func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, Error>) -> Void) {
-        SplunkRum.shared.sessionReplay.preferences.renderingMode = renderingMode?.toRenderingMode()
-
-        completion(.success(()))
-    }
-
     func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void) {
         let recordingMask = SplunkRum.shared.sessionReplay.recordingMask
 

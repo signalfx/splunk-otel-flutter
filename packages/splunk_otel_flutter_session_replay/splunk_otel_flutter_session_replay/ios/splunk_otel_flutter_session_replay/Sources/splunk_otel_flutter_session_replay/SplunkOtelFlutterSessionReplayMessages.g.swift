@@ -138,11 +138,6 @@ enum GeneratedSessionReplayStatus: Int {
   case disabledBySampling = 6
 }
 
-enum GeneratedRenderingMode: Int {
-  case native = 0
-  case wireframeOnly = 1
-}
-
 enum GeneratedRecordingMaskType: Int {
   case erasing = 0
   case covering = 1
@@ -251,20 +246,14 @@ private class SplunkOtelFlutterSessionReplayMessagesPigeonCodecReader: FlutterSt
     case 130:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return GeneratedRenderingMode(rawValue: enumResultAsInt)
-      }
-      return nil
-    case 131:
-      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
-      if let enumResultAsInt = enumResultAsInt {
         return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
       }
       return nil
-    case 132:
+    case 131:
       return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
-    case 133:
+    case 132:
       return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
-    case 134:
+    case 133:
       return GeneratedRect.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -277,20 +266,17 @@ private class SplunkOtelFlutterSessionReplayMessagesPigeonCodecWriter: FlutterSt
     if let value = value as? GeneratedSessionReplayStatus {
       super.writeByte(129)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRenderingMode {
+    } else if let value = value as? GeneratedRecordingMaskType {
       super.writeByte(130)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRecordingMaskType {
-      super.writeByte(131)
-      super.writeValue(value.rawValue)
     } else if let value = value as? GeneratedRecordingMaskList {
-      super.writeByte(132)
+      super.writeByte(131)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRecordingMaskElement {
-      super.writeByte(133)
+      super.writeByte(132)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRect {
-      super.writeByte(134)
+      super.writeByte(133)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -318,9 +304,6 @@ protocol SplunkOtelFlutterSessionReplayHostApi {
   func sessionReplayStart(completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayStop(completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, Error>) -> Void)
-  func sessionReplayStateGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode, Error>) -> Void)
-  func sessionReplayPreferencesGetRenderingMode(completion: @escaping (Result<GeneratedRenderingMode?, Error>) -> Void)
-  func sessionReplayPreferencesSetRenderingMode(renderingMode: GeneratedRenderingMode?, completion: @escaping (Result<Void, Error>) -> Void)
   func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void)
   func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, Error>) -> Void)
 }
@@ -375,53 +358,6 @@ class SplunkOtelFlutterSessionReplayHostApiSetup {
       }
     } else {
       sessionReplayStateGetStatusChannel.setMessageHandler(nil)
-    }
-    let sessionReplayStateGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayStateGetRenderingModeChannel.setMessageHandler { _, reply in
-        api.sessionReplayStateGetRenderingMode { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayStateGetRenderingModeChannel.setMessageHandler(nil)
-    }
-    let sessionReplayPreferencesGetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesGetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler { _, reply in
-        api.sessionReplayPreferencesGetRenderingMode { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayPreferencesGetRenderingModeChannel.setMessageHandler(nil)
-    }
-    let sessionReplayPreferencesSetRenderingModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesSetRenderingMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let renderingModeArg: GeneratedRenderingMode? = nilOrValue(args[0])
-        api.sessionReplayPreferencesSetRenderingMode(renderingMode: renderingModeArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      sessionReplayPreferencesSetRenderingModeChannel.setMessageHandler(nil)
     }
     let sessionReplayGetRecordingMaskChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayGetRecordingMask\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

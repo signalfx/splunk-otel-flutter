@@ -36,9 +36,6 @@ void main() async {
   final status = await sessionReplay.state.getStatus();
   debugPrint('Session replay status: $status');
 
-  final renderingMode = await sessionReplay.state.getRenderingMode();
-  debugPrint('Rendering mode: $renderingMode');
-
   await sessionReplay.recordingMask.setRecordingMask(
     recordingMask: RecordingMaskList(
       elements: [

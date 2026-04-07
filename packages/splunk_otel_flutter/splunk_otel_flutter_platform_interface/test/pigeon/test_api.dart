@@ -41,98 +41,95 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    } else if (value is GeneratedRenderingMode) {
+    } else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    } else if (value is GeneratedRecordingMaskType) {
+    } else if (value is GeneratedStatus) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    } else if (value is GeneratedStatus) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.index);
     } else if (value is GeneratedSlowRenderingModuleConfiguration) {
-      buffer.putUint8(135);
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedNavigationModuleConfiguration) {
-      buffer.putUint8(136);
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedCrashReportsModuleConfiguration) {
-      buffer.putUint8(137);
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedInteractionsModuleConfiguration) {
-      buffer.putUint8(138);
+      buffer.putUint8(137);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedNetworkMonitorModuleConfiguration) {
-      buffer.putUint8(139);
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
-      buffer.putUint8(140);
+      buffer.putUint8(139);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedAnrModuleConfiguration) {
-      buffer.putUint8(141);
+      buffer.putUint8(140);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedHttpUrlModuleConfiguration) {
-      buffer.putUint8(142);
+      buffer.putUint8(141);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
-      buffer.putUint8(143);
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
-      buffer.putUint8(144);
+      buffer.putUint8(143);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedRegularExpression) {
-      buffer.putUint8(145);
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedSessionReplayModuleConfiguration) {
-      buffer.putUint8(146);
+      buffer.putUint8(145);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedAgentConfiguration) {
-      buffer.putUint8(147);
+      buffer.putUint8(146);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedEndpointConfiguration) {
-      buffer.putUint8(148);
+      buffer.putUint8(147);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedUserConfiguration) {
-      buffer.putUint8(149);
+      buffer.putUint8(148);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedSessionConfiguration) {
-      buffer.putUint8(150);
+      buffer.putUint8(149);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedRecordingMaskList) {
-      buffer.putUint8(151);
+      buffer.putUint8(150);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedRecordingMaskElement) {
-      buffer.putUint8(152);
+      buffer.putUint8(151);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedRect) {
-      buffer.putUint8(153);
+      buffer.putUint8(152);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributes) {
-      buffer.putUint8(154);
+      buffer.putUint8(153);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeInt) {
-      buffer.putUint8(155);
+      buffer.putUint8(154);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeDouble) {
-      buffer.putUint8(156);
+      buffer.putUint8(155);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeString) {
-      buffer.putUint8(157);
+      buffer.putUint8(156);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeBool) {
-      buffer.putUint8(158);
+      buffer.putUint8(157);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeListInt) {
-      buffer.putUint8(159);
+      buffer.putUint8(158);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeListDouble) {
-      buffer.putUint8(160);
+      buffer.putUint8(159);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeListString) {
-      buffer.putUint8(161);
+      buffer.putUint8(160);
       writeValue(buffer, value.encode());
     } else if (value is GeneratedMutableAttributeListBool) {
-      buffer.putUint8(162);
+      buffer.putUint8(161);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -155,86 +152,83 @@ class _PigeonCodec extends StandardMessageCodec {
             : GeneratedSessionReplayStatus.values[value];
       case 132:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRenderingMode.values[value];
+        return value == null ? null : GeneratedRecordingMaskType.values[value];
       case 133:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 134:
-        final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedStatus.values[value];
-      case 135:
+      case 134:
         return GeneratedSlowRenderingModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 136:
+      case 135:
         return GeneratedNavigationModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 137:
+      case 136:
         return GeneratedCrashReportsModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 138:
+      case 137:
         return GeneratedInteractionsModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 139:
+      case 138:
         return GeneratedNetworkMonitorModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 140:
+      case 139:
         return GeneratedApplicationLifecycleModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 141:
+      case 140:
         return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
-      case 142:
+      case 141:
         return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
-      case 143:
+      case 142:
         return GeneratedOkHttp3AutoModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 144:
+      case 143:
         return GeneratedNetworkInstrumentationModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 145:
+      case 144:
         return GeneratedRegularExpression.decode(readValue(buffer)!);
-      case 146:
+      case 145:
         return GeneratedSessionReplayModuleConfiguration.decode(
           readValue(buffer)!,
         );
-      case 147:
+      case 146:
         return GeneratedAgentConfiguration.decode(readValue(buffer)!);
-      case 148:
+      case 147:
         return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
-      case 149:
+      case 148:
         return GeneratedUserConfiguration.decode(readValue(buffer)!);
-      case 150:
+      case 149:
         return GeneratedSessionConfiguration.decode(readValue(buffer)!);
-      case 151:
+      case 150:
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 152:
+      case 151:
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 153:
+      case 152:
         return GeneratedRect.decode(readValue(buffer)!);
-      case 154:
+      case 153:
         return GeneratedMutableAttributes.decode(readValue(buffer)!);
-      case 155:
+      case 154:
         return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
-      case 156:
+      case 155:
         return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
-      case 157:
+      case 156:
         return GeneratedMutableAttributeString.decode(readValue(buffer)!);
-      case 158:
+      case 157:
         return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
-      case 159:
+      case 158:
         return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
-      case 160:
+      case 159:
         return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
-      case 161:
+      case 160:
         return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
-      case 162:
+      case 161:
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

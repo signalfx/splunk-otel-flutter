@@ -17,14 +17,11 @@
 package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay
 
 import com.splunk.rum.flutter.sessionreplay.GeneratedRecordingMaskList
-import com.splunk.rum.flutter.sessionreplay.GeneratedRenderingMode
 import com.splunk.rum.flutter.sessionreplay.GeneratedSessionReplayStatus
 import com.splunk.rum.flutter.sessionreplay.SplunkOtelFlutterSessionReplayHostApi
 import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.extensions.toGeneratedRecordingMaskList
-import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.extensions.toGeneratedRenderingMode
 import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.extensions.toGeneratedSessionReplayStatus
 import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.extensions.toRecordingMaskList
-import com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.extensions.toRenderingMode
 import com.splunk.rum.integration.agent.api.SplunkRum
 import com.splunk.rum.integration.sessionreplay.extension.sessionReplay
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -57,27 +54,6 @@ class SplunkOtelFlutterSessionReplayPlugin :
         val status = SplunkRum.instance.sessionReplay.state.status
 
         callback(Result.success(status.toGeneratedSessionReplayStatus()))
-    }
-
-    override fun sessionReplayStateGetRenderingMode(callback: (Result<GeneratedRenderingMode>) -> Unit) {
-        val renderingMode = SplunkRum.instance.sessionReplay.state.renderingMode
-
-        callback(Result.success(renderingMode.toGeneratedRenderingMode()))
-    }
-
-    override fun sessionReplayPreferencesGetRenderingMode(callback: (Result<GeneratedRenderingMode?>) -> Unit) {
-        val renderingMode = SplunkRum.instance.sessionReplay.preferences.renderingMode
-
-        callback(Result.success(renderingMode?.toGeneratedRenderingMode()))
-    }
-
-    override fun sessionReplayPreferencesSetRenderingMode(
-        renderingMode: GeneratedRenderingMode?,
-        callback: (Result<Unit>) -> Unit
-    ) {
-        SplunkRum.instance.sessionReplay.preferences.renderingMode = renderingMode?.toRenderingMode()
-
-        callback(Result.success(Unit))
     }
 
     override fun sessionReplayGetRecordingMask(callback: (Result<GeneratedRecordingMaskList?>) -> Unit) {

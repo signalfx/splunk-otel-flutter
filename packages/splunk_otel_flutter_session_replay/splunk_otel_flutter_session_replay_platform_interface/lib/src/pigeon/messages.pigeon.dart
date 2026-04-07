@@ -49,11 +49,6 @@ enum GeneratedSessionReplayStatus {
   disabledBySampling,
 }
 
-enum GeneratedRenderingMode {
-  native,
-  wireframeOnly,
-}
-
 enum GeneratedRecordingMaskType {
   erasing,
   covering,
@@ -213,20 +208,17 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRenderingMode) {
+    }    else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
-      buffer.putUint8(131);
-      writeValue(buffer, value.index);
     }    else if (value is GeneratedRecordingMaskList) {
-      buffer.putUint8(132);
+      buffer.putUint8(131);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedRecordingMaskElement) {
-      buffer.putUint8(133);
+      buffer.putUint8(132);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedRect) {
-      buffer.putUint8(134);
+      buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -241,15 +233,12 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : GeneratedSessionReplayStatus.values[value];
       case 130: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRenderingMode.values[value];
-      case 131: 
-        final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 132: 
+      case 131: 
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 133: 
+      case 132: 
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 134: 
+      case 133: 
         return GeneratedRect.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -341,80 +330,6 @@ class SplunkOtelFlutterSessionReplayHostApi {
       );
     } else {
       return (pigeonVar_replyList[0] as GeneratedSessionReplayStatus?)!;
-    }
-  }
-
-  Future<GeneratedRenderingMode> sessionReplayStateGetRenderingMode() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetRenderingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else if (pigeonVar_replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
-    } else {
-      return (pigeonVar_replyList[0] as GeneratedRenderingMode?)!;
-    }
-  }
-
-  Future<GeneratedRenderingMode?> sessionReplayPreferencesGetRenderingMode() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesGetRenderingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return (pigeonVar_replyList[0] as GeneratedRenderingMode?);
-    }
-  }
-
-  Future<void> sessionReplayPreferencesSetRenderingMode({required GeneratedRenderingMode? renderingMode}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayPreferencesSetRenderingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[renderingMode]);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
     }
   }
 

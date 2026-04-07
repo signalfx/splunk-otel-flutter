@@ -153,11 +153,6 @@ enum GeneratedSessionReplayStatus: Int {
   case disabledBySampling = 6
 }
 
-enum GeneratedRenderingMode: Int {
-  case native = 0
-  case wireframeOnly = 1
-}
-
 enum GeneratedRecordingMaskType: Int {
   case erasing = 0
   case covering = 1
@@ -996,76 +991,70 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 132:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return GeneratedRenderingMode(rawValue: enumResultAsInt)
+        return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
       }
       return nil
     case 133:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
-      }
-      return nil
-    case 134:
-      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
-      if let enumResultAsInt = enumResultAsInt {
         return GeneratedStatus(rawValue: enumResultAsInt)
       }
       return nil
-    case 135:
+    case 134:
       return GeneratedSlowRenderingModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 136:
+    case 135:
       return GeneratedNavigationModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 137:
+    case 136:
       return GeneratedCrashReportsModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 138:
+    case 137:
       return GeneratedInteractionsModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 139:
+    case 138:
       return GeneratedNetworkMonitorModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 140:
+    case 139:
       return GeneratedApplicationLifecycleModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 141:
+    case 140:
       return GeneratedAnrModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 142:
+    case 141:
       return GeneratedHttpUrlModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 143:
+    case 142:
       return GeneratedOkHttp3AutoModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 144:
+    case 143:
       return GeneratedNetworkInstrumentationModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 145:
+    case 144:
       return GeneratedRegularExpression.fromList(self.readValue() as! [Any?])
-    case 146:
+    case 145:
       return GeneratedSessionReplayModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 147:
+    case 146:
       return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
-    case 148:
+    case 147:
       return GeneratedEndpointConfiguration.fromList(self.readValue() as! [Any?])
-    case 149:
+    case 148:
       return GeneratedUserConfiguration.fromList(self.readValue() as! [Any?])
-    case 150:
+    case 149:
       return GeneratedSessionConfiguration.fromList(self.readValue() as! [Any?])
-    case 151:
+    case 150:
       return GeneratedRecordingMaskList.fromList(self.readValue() as! [Any?])
-    case 152:
+    case 151:
       return GeneratedRecordingMaskElement.fromList(self.readValue() as! [Any?])
-    case 153:
+    case 152:
       return GeneratedRect.fromList(self.readValue() as! [Any?])
-    case 154:
+    case 153:
       return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
-    case 155:
+    case 154:
       return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
-    case 156:
+    case 155:
       return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
-    case 157:
+    case 156:
       return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
-    case 158:
+    case 157:
       return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
-    case 159:
+    case 158:
       return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
-    case 160:
+    case 159:
       return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
-    case 161:
+    case 160:
       return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
-    case 162:
+    case 161:
       return GeneratedMutableAttributeListBool.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -1084,98 +1073,95 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedSessionReplayStatus {
       super.writeByte(131)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRenderingMode {
+    } else if let value = value as? GeneratedRecordingMaskType {
       super.writeByte(132)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRecordingMaskType {
+    } else if let value = value as? GeneratedStatus {
       super.writeByte(133)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedStatus {
-      super.writeByte(134)
-      super.writeValue(value.rawValue)
     } else if let value = value as? GeneratedSlowRenderingModuleConfiguration {
-      super.writeByte(135)
+      super.writeByte(134)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNavigationModuleConfiguration {
-      super.writeByte(136)
+      super.writeByte(135)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedCrashReportsModuleConfiguration {
-      super.writeByte(137)
+      super.writeByte(136)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedInteractionsModuleConfiguration {
-      super.writeByte(138)
+      super.writeByte(137)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNetworkMonitorModuleConfiguration {
-      super.writeByte(139)
+      super.writeByte(138)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedApplicationLifecycleModuleConfiguration {
-      super.writeByte(140)
+      super.writeByte(139)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedAnrModuleConfiguration {
-      super.writeByte(141)
+      super.writeByte(140)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedHttpUrlModuleConfiguration {
-      super.writeByte(142)
+      super.writeByte(141)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedOkHttp3AutoModuleConfiguration {
-      super.writeByte(143)
+      super.writeByte(142)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNetworkInstrumentationModuleConfiguration {
-      super.writeByte(144)
+      super.writeByte(143)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRegularExpression {
-      super.writeByte(145)
+      super.writeByte(144)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedSessionReplayModuleConfiguration {
-      super.writeByte(146)
+      super.writeByte(145)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedAgentConfiguration {
-      super.writeByte(147)
+      super.writeByte(146)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedEndpointConfiguration {
-      super.writeByte(148)
+      super.writeByte(147)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedUserConfiguration {
-      super.writeByte(149)
+      super.writeByte(148)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedSessionConfiguration {
-      super.writeByte(150)
+      super.writeByte(149)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRecordingMaskList {
-      super.writeByte(151)
+      super.writeByte(150)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRecordingMaskElement {
-      super.writeByte(152)
+      super.writeByte(151)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRect {
-      super.writeByte(153)
+      super.writeByte(152)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributes {
-      super.writeByte(154)
+      super.writeByte(153)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeInt {
-      super.writeByte(155)
+      super.writeByte(154)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeDouble {
-      super.writeByte(156)
+      super.writeByte(155)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeString {
-      super.writeByte(157)
+      super.writeByte(156)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeBool {
-      super.writeByte(158)
+      super.writeByte(157)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeListInt {
-      super.writeByte(159)
+      super.writeByte(158)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeListDouble {
-      super.writeByte(160)
+      super.writeByte(159)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeListString {
-      super.writeByte(161)
+      super.writeByte(160)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedMutableAttributeListBool {
-      super.writeByte(162)
+      super.writeByte(161)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)

@@ -42,17 +42,6 @@ abstract class SplunkOtelFlutterSessionReplayHostApi {
   GeneratedSessionReplayStatus sessionReplayStateGetStatus();
 
   @async
-  GeneratedRenderingMode sessionReplayStateGetRenderingMode();
-
-  @async
-  GeneratedRenderingMode? sessionReplayPreferencesGetRenderingMode();
-
-  @async
-  void sessionReplayPreferencesSetRenderingMode({
-    required GeneratedRenderingMode? renderingMode,
-  });
-
-  @async
   GeneratedRecordingMaskList? sessionReplayGetRecordingMask();
 
   @async
@@ -70,8 +59,6 @@ enum GeneratedSessionReplayStatus {
   internalError,
   disabledBySampling,
 }
-
-enum GeneratedRenderingMode { native, wireframeOnly }
 
 class GeneratedRecordingMaskList {
   final List<GeneratedRecordingMaskElement>? recordingMaskList;
