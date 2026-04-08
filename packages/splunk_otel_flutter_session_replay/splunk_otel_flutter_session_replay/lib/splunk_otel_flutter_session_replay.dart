@@ -19,6 +19,13 @@ library splunk_otel_flutter_session_replay;
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
 
+export 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart'
+    show
+        SessionReplayStatus,
+        RecordingMaskList,
+        RecordingMaskElement,
+        RecordingMaskType;
+
 /// Splunk Session Replay SDK entry point.
 ///
 /// Use `SplunkSessionReplay.instance` to access session replay functionality

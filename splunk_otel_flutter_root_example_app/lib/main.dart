@@ -21,6 +21,7 @@ void main() async {
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
     ),
+    moduleConfigurations: [SessionReplayModuleConfiguration(samplingRate: 1.0)],
   );
 
   stopwatch.stop();
@@ -35,25 +36,6 @@ void main() async {
 
   final status = await sessionReplay.getStatus();
   debugPrint('Session replay status: $status');
-
-  await sessionReplay.setRecordingMask(
-    recordingMask: RecordingMaskList(
-      elements: [
-        RecordingMaskElement(
-          rect: const Rect.fromLTWH(0, 0, 200, 100),
-          type: RecordingMaskType.covering,
-        ),
-        RecordingMaskElement(
-          rect: const Rect.fromLTWH(50, 50, 100, 50),
-          type: RecordingMaskType.erasing,
-        ),
-      ],
-    ),
-  );
-  debugPrint('Recording mask set');
-
-  final mask = await sessionReplay.getRecordingMask();
-  debugPrint('Recording mask elements: ${mask?.elements.length ?? 0}');
 
   // Set endpoint configuration after install.
   await SplunkRum.instance.preferences.setEndpointConfiguration(

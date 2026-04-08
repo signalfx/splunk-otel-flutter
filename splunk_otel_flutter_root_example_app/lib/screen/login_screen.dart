@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
+import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
+
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/bottom_bar_screen.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/forgot_password.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_scaffold.dart';
@@ -20,11 +24,71 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey _passwordFieldKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _applyRecordingMaskDelayed();
+    });
+  }
+
   @override
   void dispose() {
+    SplunkSessionReplay.instance.setRecordingMask(recordingMask: null);
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _applyRecordingMaskDelayed() async {
+    await Future<void>.delayed(const Duration(seconds: 10));
+    if (!mounted) {
+      return;
+    }
+
+    _applyRecordingMask();
+  }
+
+  void _applyRecordingMask() {
+    final renderBox =
+        _passwordFieldKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) {
+      debugPrint('[LoginScreen] RenderBox is null, cannot apply mask');
+
+      return;
+    }
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+    debugPrint('[LoginScreen] Password field logical position: $position, '
+        'size: $size, devicePixelRatio: $pixelRatio');
+
+    // Android native RecordingMask uses physical pixels while Flutter
+    // reports layout in logical pixels. iOS CGRect uses points (== logical).
+    final scale = Platform.isAndroid ? pixelRatio : 1.0;
+
+    final maskRect = Rect.fromLTWH(
+      position.dx * scale,
+      position.dy * scale,
+      size.width * scale,
+      size.height * scale,
+    );
+
+    SplunkSessionReplay.instance.setRecordingMask(
+      recordingMask: RecordingMaskList(
+        elements: [
+          RecordingMaskElement(
+            rect: maskRect,
+            type: RecordingMaskType.covering,
+          ),
+        ],
+      ),
+    );
+    debugPrint('[LoginScreen] Recording mask applied: $maskRect');
   }
 
   @override
@@ -45,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: screenHeight * 0.05),
         CustomTextField(
+          key: _passwordFieldKey,
           controller: _passwordController,
           labelText: "Password",
         ),
