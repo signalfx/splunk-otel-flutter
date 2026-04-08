@@ -28,12 +28,14 @@ extension SessionReplayStatus {
                 return .notStarted
             case .stopped:
                 return .stopped
+            case .disabledBySampling:
+                return .disabledBySampling
+            case .storageLimitReached:
+                return .storageLimitReached
             case .internalError:
                 return .internalError
             case .swiftUIPreviewContext, .unsupportedPlatform:
                 return .internalError
-            case .storageLimitReached:
-                return .storageLimitReached
             @unknown default:
                 return .internalError
             }

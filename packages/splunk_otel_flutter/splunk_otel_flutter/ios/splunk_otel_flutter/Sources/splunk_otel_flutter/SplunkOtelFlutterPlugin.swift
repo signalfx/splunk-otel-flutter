@@ -196,6 +196,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                     config.setValue(sessionReplayConfig.isEnabled, forKey: "isEnabled")
                     config.setValue(sessionReplayConfig.samplingRate, forKey: "samplingRate")
                     moduleConfigurations.append(config)
+                } else {
+                    print("[SplunkRum] Warning: SessionReplayModuleConfiguration was provided but the SplunkSessionReplay framework is not available. Session replay configuration will be ignored. Ensure the splunk_otel_flutter_session_replay plugin is added to your project.")
                 }
             }
             
