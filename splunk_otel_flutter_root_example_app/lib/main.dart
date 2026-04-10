@@ -37,6 +37,7 @@ void main() async {
   final status = await sessionReplay.getStatus();
   debugPrint('Session replay status: $status');
 
+
   // Set endpoint configuration after install.
   await SplunkRum.instance.preferences.setEndpointConfiguration(
     endpointConfiguration: EndpointConfiguration.forRum(

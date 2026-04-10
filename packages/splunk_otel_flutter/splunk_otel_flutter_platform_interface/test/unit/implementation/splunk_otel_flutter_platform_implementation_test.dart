@@ -99,6 +99,27 @@ void main() {
         expect(installCalled, true);
       });
 
+      test('should call install with null endpoint configuration', () async {
+        final agentConfig = AgentConfiguration(
+          appName: 'TestApp',
+          deploymentEnvironment: 'test',
+        );
+
+        bool installCalled = false;
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+          installCalled = true;
+          expect(genAgent.endpoint, isNull);
+          expect(genAgent.appName, 'TestApp');
+        };
+
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [],
+        );
+
+        expect(installCalled, true);
+      });
+
       test('should handle module configurations extraction', () async {
         final agentConfig = AgentConfiguration(
           endpointConfiguration: EndpointConfiguration.forRum(
