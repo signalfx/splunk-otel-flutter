@@ -55,6 +55,7 @@ android {
 
     defaultConfig {
         minSdk = getExtOrIntegerDefault("minSdkVersion")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     testOptions {

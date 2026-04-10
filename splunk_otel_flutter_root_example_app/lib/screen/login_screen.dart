@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _applyRecordingMaskDelayed();
+      _applyRecordingMask();
     });
   }
 
@@ -40,15 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _applyRecordingMaskDelayed() async {
-    await Future<void>.delayed(const Duration(seconds: 10));
-    if (!mounted) {
-      return;
-    }
-
-    _applyRecordingMask();
   }
 
   void _applyRecordingMask() {
