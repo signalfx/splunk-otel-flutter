@@ -1,6 +1,6 @@
 name: splunk_otel_flutter_session_replay_platform_interface
 description: "Platform interface for Splunk session replay. Defines the API contract for session recording and playback functionality."
-version: 0.0.1
+version: 1.0.0
 publish_to: none # remove when session replay is ready
 #TODO add repository and homepage before release
 
