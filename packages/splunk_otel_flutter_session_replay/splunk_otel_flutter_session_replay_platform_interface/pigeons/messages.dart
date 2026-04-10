@@ -16,23 +16,26 @@
 
 import 'package:pigeon/pigeon.dart';
 
-
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'splunk_otel_flutter_session_replay_platform_interface',
     kotlinOut:
-    '../splunk_otel_flutter_session_replay/android/src/main/kotlin/com/splunk/rum/flutter/GeneratedAndroidSplunkOtelFlutterSessionReplay.g.kt',
+        '../splunk_otel_flutter_session_replay/android/src/main/kotlin/com/splunk/rum/flutter/sessionreplay/GeneratedAndroidSplunkOtelFlutterSessionReplay.g.kt',
     kotlinOptions: KotlinOptions(
       package: 'com.splunk.rum.flutter.sessionreplay',
     ),
     swiftOut:
-    '../splunk_otel_flutter_session_replay/ios/splunk_otel_flutter_session_replay/Sources/splunk_otel_flutter_session_replay/SplunkOtelFlutterSessionReplayMessages.g.swift',
+        '../splunk_otel_flutter_session_replay/ios/splunk_otel_flutter_session_replay/Sources/splunk_otel_flutter_session_replay/SplunkOtelFlutterSessionReplayMessages.g.swift',
   ),
 )
-
 @HostApi()
 abstract class SplunkOtelFlutterSessionReplayHostApi {
+  /// Starts session replay recording.
+  ///
+  /// Delegates to the native SDK's SessionReplay.start() via the
+  /// SplunkRum.instance.sessionReplay extension.
   @async
-  void install();
+  void startSessionReplay();
 }

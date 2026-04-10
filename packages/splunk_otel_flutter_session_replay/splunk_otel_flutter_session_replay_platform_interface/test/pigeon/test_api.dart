@@ -31,33 +31,3 @@ class _PigeonCodec extends StandardMessageCodec {
     }
   }
 }
-
-abstract class TestSplunkOtelFlutterSessionReplayHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
-
-  Future<void> install();
-
-  static void setUp(TestSplunkOtelFlutterSessionReplayHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.install$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            await api.install();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-  }
-}

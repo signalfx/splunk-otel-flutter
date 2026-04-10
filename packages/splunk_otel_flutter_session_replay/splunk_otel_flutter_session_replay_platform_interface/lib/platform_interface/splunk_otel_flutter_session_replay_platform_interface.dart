@@ -47,4 +47,11 @@ abstract class SplunkOtelFlutterSessionReplayPlatformInterface extends PlatformI
     PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
+
+  /// Starts session replay recording.
+  ///
+  /// Delegates to the native SDK's session replay start mechanism.
+  /// Requires that the core Splunk RUM agent has been initialized first
+  /// via [SplunkRum.instance.install()].
+  Future<void> startSessionReplay();
 }

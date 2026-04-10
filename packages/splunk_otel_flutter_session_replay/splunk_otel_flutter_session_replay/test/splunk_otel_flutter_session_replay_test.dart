@@ -20,19 +20,16 @@ import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_r
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutterSessionReplay', () {
-    test('should be instantiable', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
+  group('SplunkSessionReplay', () {
+    test('should be accessible via singleton', () {
+      final sessionReplay = SplunkSessionReplay.instance;
       expect(sessionReplay, isNotNull);
     });
 
-    test('install method should throw UnimplementedError', () async {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      
-      expect(
-        () => sessionReplay.install(),
-        throwsA(isA<UnimplementedError>()),
-      );
+    test('singleton should always return the same instance', () {
+      final first = SplunkSessionReplay.instance;
+      final second = SplunkSessionReplay.instance;
+      expect(identical(first, second), isTrue);
     });
   });
 }

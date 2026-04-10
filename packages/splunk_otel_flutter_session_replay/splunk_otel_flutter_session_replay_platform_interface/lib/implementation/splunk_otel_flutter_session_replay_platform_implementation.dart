@@ -15,13 +15,22 @@
  */
 
 import 'package:splunk_otel_flutter_session_replay_platform_interface/platform_interface/splunk_otel_flutter_session_replay_platform_interface.dart';
+import 'package:splunk_otel_flutter_session_replay_platform_interface/src/pigeon/messages.pigeon.dart';
 
-class SplunkOtelFlutterSessionReplayPlatformImplementation extends SplunkOtelFlutterSessionReplayPlatformInterface{
-
+class SplunkOtelFlutterSessionReplayPlatformImplementation
+    extends SplunkOtelFlutterSessionReplayPlatformInterface {
   SplunkOtelFlutterSessionReplayPlatformImplementation._internal();
 
   static final SplunkOtelFlutterSessionReplayPlatformImplementation _instance =
-  SplunkOtelFlutterSessionReplayPlatformImplementation._internal();
+      SplunkOtelFlutterSessionReplayPlatformImplementation._internal();
 
-  static SplunkOtelFlutterSessionReplayPlatformImplementation get instance => _instance;
+  static SplunkOtelFlutterSessionReplayPlatformImplementation get instance =>
+      _instance;
+
+  final _api = SplunkOtelFlutterSessionReplayHostApi();
+
+  @override
+  Future<void> startSessionReplay() async {
+    await _api.startSessionReplay();
+  }
 }
