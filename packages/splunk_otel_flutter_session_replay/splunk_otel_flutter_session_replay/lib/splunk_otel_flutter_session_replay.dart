@@ -22,9 +22,9 @@ import 'package:splunk_otel_flutter_session_replay_platform_interface/implementa
 export 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart'
     show
         SessionReplayStatus,
-        RecordingMaskList,
-        RecordingMaskElement,
-        RecordingMaskType;
+        RecordingMask,
+        MaskElement,
+        MaskType;
 
 /// Splunk Session Replay SDK entry point.
 ///
@@ -61,13 +61,12 @@ class SplunkSessionReplay {
   Future<SessionReplayStatus> getStatus() async => await _delegate.getStatus();
 
   /// Returns the current recording mask, or `null` if none is set.
-  Future<RecordingMaskList?> getRecordingMask() async =>
+  Future<RecordingMask?> getRecordingMask() async =>
       await _delegate.getRecordingMask();
 
   /// Sets the recording mask used to hide or obscure sensitive content.
   ///
   /// Pass `null` to clear the current mask.
-  Future<void> setRecordingMask(
-          {required RecordingMaskList? recordingMask}) async =>
-      await _delegate.setRecordingMask(recordingMask: recordingMask);
+  Future<void> setRecordingMask({required RecordingMask? mask}) async =>
+      await _delegate.setRecordingMask(mask: mask);
 }

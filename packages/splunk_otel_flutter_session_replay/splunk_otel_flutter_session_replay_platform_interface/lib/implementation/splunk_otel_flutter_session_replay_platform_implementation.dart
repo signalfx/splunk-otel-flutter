@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
@@ -50,18 +51,27 @@ class SplunkOtelFlutterSessionReplayPlatformImplementation
   }
 
   @override
-  Future<RecordingMaskList?> getRecordingMask() async {
+  Future<RecordingMask?> getRecordingMask() async {
     final generatedMask = await _api.sessionReplayGetRecordingMask();
 
-    return generatedMask?._toRecordingMaskList();
+    return generatedMask?._toRecordingMask();
   }
 
   @override
-  Future<void> setRecordingMask(
-          {required RecordingMaskList? recordingMask}) async =>
+  Future<void> setRecordingMask({required RecordingMask? mask}) async =>
       await _api.sessionReplaySetRecordingMask(
-        recordingMask: recordingMask?._toGenerated(),
+        recordingMask: mask?._toGenerated(),
       );
+}
+
+// Android's android.graphics.Rect consumes physical pixels whereas Flutter
+// layouts use logical pixels. iOS CGRect uses points that match logical pixels.
+double get _nativeCoordinateScale {
+  if (!Platform.isAndroid) {
+    return 1.0;
+  }
+
+  return PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0;
 }
 
 // Private extensions to convert between Pigeon-generated types and domain models.
@@ -90,33 +100,41 @@ extension on GeneratedSessionReplayStatus {
 }
 
 extension on GeneratedRecordingMaskList {
-  RecordingMaskList _toRecordingMaskList() {
-    return RecordingMaskList(
+  RecordingMask _toRecordingMask() {
+    final scale = _nativeCoordinateScale;
+
+    return RecordingMask(
         elements: recordingMaskList
-                ?.map((e) => RecordingMaskElement(
+                ?.map((e) => MaskElement(
                       rect: Rect.fromLTWH(
-                          e.rect.left, e.rect.top, e.rect.width, e.rect.height),
+                        e.rect.left / scale,
+                        e.rect.top / scale,
+                        e.rect.width / scale,
+                        e.rect.height / scale,
+                      ),
                       type: e.type == GeneratedRecordingMaskType.erasing
-                          ? RecordingMaskType.erasing
-                          : RecordingMaskType.covering,
+                          ? MaskType.erasing
+                          : MaskType.covering,
                     ))
                 .toList() ??
             []);
   }
 }
 
-extension on RecordingMaskList {
+extension on RecordingMask {
   GeneratedRecordingMaskList _toGenerated() {
+    final scale = _nativeCoordinateScale;
+
     return GeneratedRecordingMaskList(
         recordingMaskList: elements
             .map((e) => GeneratedRecordingMaskElement(
                   rect: GeneratedRect(
-                    left: e.rect.left,
-                    top: e.rect.top,
-                    width: e.rect.width,
-                    height: e.rect.height,
+                    left: e.rect.left * scale,
+                    top: e.rect.top * scale,
+                    width: e.rect.width * scale,
+                    height: e.rect.height * scale,
                   ),
-                  type: e.type == RecordingMaskType.erasing
+                  type: e.type == MaskType.erasing
                       ? GeneratedRecordingMaskType.erasing
                       : GeneratedRecordingMaskType.covering,
                 ))

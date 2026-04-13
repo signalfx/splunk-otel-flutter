@@ -30,28 +30,31 @@ void main() async {
   debugPrint('=============');
 
   final sessionReplay = SplunkSessionReplay.instance;
-
   await sessionReplay.start();
   debugPrint('Session replay started');
 
+  final coreStateStatus = await SplunkRum.instance.state.getStatus();
+  debugPrint('Core status: $coreStateStatus');
+
   final status = await sessionReplay.getStatus();
   debugPrint('Session replay status: $status');
-
-
-  // Set endpoint configuration after install.
-  await SplunkRum.instance.preferences.setEndpointConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
-      realm: realm,
-      rumAccessToken: rumAccessToken,
-    ),
-  );
-  debugPrint('Endpoint configuration set after install.');
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();
 
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');
+  });
+
+  Future<void>.delayed(const Duration(seconds: 60)).then((_) async {
+    // Set endpoint configuration after install.
+    await SplunkRum.instance.preferences.setEndpointConfiguration(
+      endpointConfiguration: EndpointConfiguration.forRum(
+        realm: realm,
+        rumAccessToken: rumAccessToken,
+      ),
+    );
+    debugPrint('Endpoint configuration set after install.');
   });
 
   runApp(const DemoApp());

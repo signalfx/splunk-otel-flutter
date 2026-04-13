@@ -88,31 +88,31 @@ extension GeneratedSessionReplayStatusExtension
   }
 }
 
-/// A list of recording mask elements for session replay.
+/// A recording mask for session replay.
 ///
 /// Masks are used to hide or obscure sensitive content during session replay.
-class RecordingMaskList {
+class RecordingMask {
   /// The list of mask elements.
-  final List<RecordingMaskElement> elements;
+  final List<MaskElement> elements;
 
-  /// Creates a recording mask list.
-  RecordingMaskList({required this.elements});
+  /// Creates a recording mask.
+  RecordingMask({required this.elements});
 }
 
 /// A single mask element that defines an area to mask in session replay.
-class RecordingMaskElement {
+class MaskElement {
   /// The rectangular area to mask.
   final Rect rect;
   
   /// The type of masking to apply.
-  final RecordingMaskType type;
+  final MaskType type;
 
-  /// Creates a recording mask element.
-  RecordingMaskElement({required this.rect, required this.type});
+  /// Creates a mask element.
+  MaskElement({required this.rect, required this.type});
 }
 
 /// Type of recording mask to apply.
-enum RecordingMaskType {
+enum MaskType {
   /// Erase the content in the masked area.
   erasing,
   
@@ -137,29 +137,29 @@ extension GeneratedRectExtension on GeneratedRect {
   }
 }
 
-extension RecordingMaskTypeExtension on RecordingMaskType {
+extension MaskTypeExtension on MaskType {
   GeneratedRecordingMaskType toGeneratedRecordingMaskType() {
     switch (this) {
-      case RecordingMaskType.erasing:
+      case MaskType.erasing:
         return GeneratedRecordingMaskType.erasing;
-      case RecordingMaskType.covering:
+      case MaskType.covering:
         return GeneratedRecordingMaskType.covering;
     }
   }
 }
 
 extension GeneratedRecordingMaskTypeExtension on GeneratedRecordingMaskType {
-  RecordingMaskType toRecordingMaskType() {
+  MaskType toMaskType() {
     switch (this) {
       case GeneratedRecordingMaskType.erasing:
-        return RecordingMaskType.erasing;
+        return MaskType.erasing;
       case GeneratedRecordingMaskType.covering:
-        return RecordingMaskType.covering;
+        return MaskType.covering;
     }
   }
 }
 
-extension RecordingMaskExtension on RecordingMaskElement {
+extension MaskElementExtension on MaskElement {
   GeneratedRecordingMaskElement toGeneratedRecordingMaskElement() {
     return GeneratedRecordingMaskElement(
       rect: rect.toGeneratedRect(),
@@ -168,16 +168,17 @@ extension RecordingMaskExtension on RecordingMaskElement {
   }
 }
 
-extension GeneratedRecordingMaskExtension on GeneratedRecordingMaskElement {
-  RecordingMaskElement toRecordingMask() {
-    return RecordingMaskElement(
+extension GeneratedRecordingMaskElementExtension
+    on GeneratedRecordingMaskElement {
+  MaskElement toMaskElement() {
+    return MaskElement(
       rect: rect.toRect(),
-      type: type.toRecordingMaskType(),
+      type: type.toMaskType(),
     );
   }
 }
 
-extension RecordingMaskListExtension on RecordingMaskList {
+extension RecordingMaskExtension on RecordingMask {
   GeneratedRecordingMaskList toGeneratedRecordingMaskList() {
     return GeneratedRecordingMaskList(
         recordingMaskList: elements
@@ -187,10 +188,10 @@ extension RecordingMaskListExtension on RecordingMaskList {
 }
 
 extension GeneratedRecordingMaskListExtension on GeneratedRecordingMaskList {
-  RecordingMaskList toRecordingMaskList() {
-    return RecordingMaskList(
+  RecordingMask toRecordingMask() {
+    return RecordingMask(
         elements: recordingMaskList
-                ?.map((element) => element.toRecordingMask())
+                ?.map((element) => element.toMaskElement())
                 .toList() ??
             []);
   }

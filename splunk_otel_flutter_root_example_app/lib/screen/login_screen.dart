@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    SplunkSessionReplay.instance.setRecordingMask(recordingMask: null);
+    SplunkSessionReplay.instance.setRecordingMask(mask: null);
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -53,28 +53,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final position = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
-    debugPrint('[LoginScreen] Password field logical position: $position, '
-        'size: $size, devicePixelRatio: $pixelRatio');
-
-    // Android native RecordingMask uses physical pixels while Flutter
-    // reports layout in logical pixels. iOS CGRect uses points (== logical).
-    final scale = Platform.isAndroid ? pixelRatio : 1.0;
+    debugPrint('[LoginScreen] Password field position: $position, size: $size');
 
     final maskRect = Rect.fromLTWH(
-      position.dx * scale,
-      position.dy * scale,
-      size.width * scale,
-      size.height * scale,
+      position.dx,
+      position.dy,
+      size.width,
+      size.height,
     );
 
     SplunkSessionReplay.instance.setRecordingMask(
-      recordingMask: RecordingMaskList(
+      mask: RecordingMask(
         elements: [
-          RecordingMaskElement(
+          MaskElement(
             rect: maskRect,
-            type: RecordingMaskType.covering,
+            type: MaskType.covering,
           ),
         ],
       ),
