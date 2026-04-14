@@ -25,7 +25,7 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 /// Example:
 /// ```dart
 /// final config = AgentConfiguration(
-///   endpointConfiguration: EndpointConfiguration.forRum(
+///   endpoint: EndpointConfiguration.forRum(
 ///     realm: 'us0',
 ///     rumAccessToken: 'your-token',
 ///   ),
@@ -37,8 +37,8 @@ class AgentConfiguration {
   /// Backend endpoint configuration for sending telemetry data.
   ///
   /// When `null`, the SDK starts without sending data. Credentials can be
-  /// provided later via `SplunkRum.instance.state.setEndpointConfiguration`.
-  final EndpointConfiguration? endpointConfiguration;
+  /// provided later via `SplunkRum.instance.preferences.setEndpointConfiguration`.
+  final EndpointConfiguration? endpoint;
 
 
   /// The name of your application.
@@ -73,7 +73,7 @@ class AgentConfiguration {
 
   /// Creates an agent configuration.
   AgentConfiguration({
-    this.endpointConfiguration,
+    this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,
@@ -85,7 +85,7 @@ class AgentConfiguration {
     this.instrumentedProcessName, // Android-only.
     this.deferredUntilForeground = false, // Android-only.
   }) : user = user ?? const UserConfiguration(),
-       session = session ?? SessionConfiguration();
+       session = session ?? const SessionConfiguration();
 }
 
 /// Configuration for telemetry data endpoints.
@@ -134,14 +134,14 @@ class EndpointConfiguration {
     );
   }
 
-  /// Creates endpoint configuration with a custom traces endpoint.
+  /// Creates endpoint configuration with a custom trace endpoint.
   ///
   /// Use this for self-hosted or custom backend deployments.
-  factory EndpointConfiguration.forTraces({required Uri tracesEndpoint}) {
-    return EndpointConfiguration._internal(traceEndpoint: tracesEndpoint);
+  factory EndpointConfiguration.forTraces({required Uri traceEndpoint}) {
+    return EndpointConfiguration._internal(traceEndpoint: traceEndpoint);
   }
 
-  /// Creates endpoint configuration with custom traces and session replay endpoints.
+  /// Creates endpoint configuration with custom trace and session replay endpoints.
   ///
   /// Use this for self-hosted or custom backend deployments with session replay support.
   factory EndpointConfiguration.forTracesAndSessionReplay({
@@ -187,8 +187,10 @@ class UserConfiguration {
 
   /// Creates a user configuration with the specified tracking mode.
   ///
-  /// Defaults to [UserTrackingMode.noTracking].
-  const UserConfiguration({this.trackingMode = UserTrackingMode.noTracking});
+  /// Defaults to [UserTrackingMode.anonymousTracking].
+  const UserConfiguration({
+    this.trackingMode = UserTrackingMode.anonymousTracking,
+  });
 }
 
 extension UserConfigurationExtension on UserConfiguration {
@@ -239,14 +241,12 @@ class SessionConfiguration {
 
   /// Creates a session configuration with the specified sampling rate.
   ///
-  /// Throws [ArgumentError] if [samplingRate] is not between 0.0 and 1.0.
-  SessionConfiguration({this.samplingRate = 1.0}) {
-    if (samplingRate < 0.0 || samplingRate > 1.0) {
-      throw ArgumentError(
-        "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate",
+  /// [samplingRate] must be between 0.0 and 1.0 (inclusive).
+  const SessionConfiguration({this.samplingRate = 1.0})
+    : assert(
+        samplingRate >= 0.0 && samplingRate <= 1.0,
+        'samplingRate must be between 0.0 and 1.0 (inclusive).',
       );
-    }
-  }
 }
 
 /// Exception thrown when endpoint configuration is invalid.

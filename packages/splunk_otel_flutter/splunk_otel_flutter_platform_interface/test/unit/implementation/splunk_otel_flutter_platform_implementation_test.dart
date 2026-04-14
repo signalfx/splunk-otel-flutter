@@ -53,7 +53,7 @@ void main() {
     group('Install', () {
       test('should call install with correct agent configuration', () async {
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -99,7 +99,7 @@ void main() {
 
       test('should handle module configurations extraction', () async {
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -124,7 +124,7 @@ void main() {
 
       test('should handle all module types', () async {
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),

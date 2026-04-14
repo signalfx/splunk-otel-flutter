@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
+import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +44,16 @@ void main() async {
     debugPrint('Session id: $sessionId');
   });
 
+  Future<void>.delayed(const Duration(seconds: 60)).then((_) async {
+    // Set endpoint configuration after install.
+    await SplunkRum.instance.preferences.setEndpointConfiguration(
+      endpoint: EndpointConfiguration.forRum(
+        realm: realm,
+        rumAccessToken: rumAccessToken,
+      ),
+    );
+    debugPrint('Endpoint configuration set after install.');
+  });
 
   runApp(const DemoApp());
 }

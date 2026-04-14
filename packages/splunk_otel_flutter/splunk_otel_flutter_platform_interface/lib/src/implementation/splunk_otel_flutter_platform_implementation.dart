@@ -91,7 +91,8 @@ class SplunkOtelFlutterPlatformImplementation
 
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
-        endpoint: agentConfiguration.endpointConfiguration?.toGeneratedEndpointConfiguration(),
+        endpoint: agentConfiguration.endpoint
+            ?.toGeneratedEndpointConfiguration(),
         appName: agentConfiguration.appName,
         deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         appVersion: agentConfiguration.appVersion,

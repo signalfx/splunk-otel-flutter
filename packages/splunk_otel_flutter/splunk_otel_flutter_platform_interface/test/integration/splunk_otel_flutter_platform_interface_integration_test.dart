@@ -45,7 +45,7 @@ void main() {
       test('should complete full installation with all configurations', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'test-token-abc123',
           ),
@@ -56,7 +56,7 @@ void main() {
           user: const UserConfiguration(
             trackingMode: UserTrackingMode.anonymousTracking,
           ),
-          session: SessionConfiguration(samplingRate: 0.75),
+          session: const SessionConfiguration(samplingRate: 0.75),
           instrumentedProcessName: 'com.example.integration.test',
           deferredUntilForeground: true,
         );
@@ -110,7 +110,7 @@ void main() {
       test('should handle minimal configuration installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'eu0',
             rumAccessToken: 'minimal-token',
           ),
@@ -186,7 +186,7 @@ void main() {
       test('should handle installation with only navigation module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -216,7 +216,7 @@ void main() {
       test('should handle installation with only slow rendering module', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -248,8 +248,8 @@ void main() {
       test('should reject invalid sampling rate during installation', () async {
         // Arrange & Assert
         expect(
-              () => AgentConfiguration(
-            endpointConfiguration: EndpointConfiguration.forRum(
+          () => AgentConfiguration(
+            endpoint: EndpointConfiguration.forRum(
               realm: 'us0',
               rumAccessToken: 'token',
             ),
@@ -257,20 +257,20 @@ void main() {
             deploymentEnvironment: 'test',
             session: SessionConfiguration(samplingRate: 1.5),
           ),
-          throwsArgumentError,
+          throwsA(isA<AssertionError>()),
         );
       });
 
       test('should handle edge case sampling rates correctly', () async {
         // Test 0.0
         final config0 = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
           appName: 'App',
           deploymentEnvironment: 'test',
-          session: SessionConfiguration(samplingRate: 0.0),
+          session: const SessionConfiguration(samplingRate: 0.0),
         );
 
         mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
@@ -284,13 +284,13 @@ void main() {
 
         // Test 1.0
         final config1 = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
           appName: 'App',
           deploymentEnvironment: 'test',
-          session: SessionConfiguration(samplingRate: 1.0),
+          session: const SessionConfiguration(samplingRate: 1.0),
         );
 
         mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
@@ -308,7 +308,7 @@ void main() {
       test('should handle user tracking mode transitions', () async {
         // Test noTracking
         final configNoTracking = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -331,7 +331,7 @@ void main() {
 
         // Test anonymousTracking
         final configAnonymous = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -354,7 +354,7 @@ void main() {
 
         // Test defaultTracking
         final configDefault = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -364,7 +364,7 @@ void main() {
 
         mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
           expect(genAgent.user?.trackingMode,
-              GeneratedUserTrackingMode.noTracking);
+              GeneratedUserTrackingMode.anonymousTracking);
         };
 
         await implementation.install(
@@ -379,7 +379,7 @@ void main() {
       test('should use first module configuration when duplicates exist', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -415,7 +415,7 @@ void main() {
       test('should handle Android-specific options correctly', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'android-token',
           ),
@@ -440,7 +440,7 @@ void main() {
       test('should handle null Android-specific options', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -475,7 +475,7 @@ void main() {
         ];
 
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),
@@ -504,7 +504,7 @@ void main() {
       test('should propagate platform errors during installation', () async {
         // Arrange
         final agentConfig = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'token',
           ),

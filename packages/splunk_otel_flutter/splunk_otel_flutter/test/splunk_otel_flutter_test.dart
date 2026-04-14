@@ -33,7 +33,7 @@ void main() {
       );
 
       final config = AgentConfiguration(
-        endpointConfiguration: endpointConfig,
+        endpoint: endpointConfig,
         appName: 'TestApp',
         deploymentEnvironment: 'test',
       );

@@ -425,7 +425,7 @@ enum GeneratedRecordingMaskType {
 enum GeneratedStatus {
   running,
   notInstalled,
-  subProcess,
+  subprocess,
   sampledOut,
   unsupportedPlatform,
   unsupportedOsVersion,

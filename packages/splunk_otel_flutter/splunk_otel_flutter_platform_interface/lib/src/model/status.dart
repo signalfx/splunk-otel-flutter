@@ -25,7 +25,7 @@ enum Status {
   notInstalled,
 
   /// **Android only.** The agent is in a subprocess.
-  subProcess,
+  subprocess,
 
   /// The agent is not running because it was sampled out locally.
   sampledOut,
@@ -44,8 +44,8 @@ extension StatusExtension on Status {
         return GeneratedStatus.running;
       case Status.notInstalled:
         return GeneratedStatus.notInstalled;
-      case Status.subProcess:
-        return GeneratedStatus.subProcess;
+      case Status.subprocess:
+        return GeneratedStatus.subprocess;
       case Status.sampledOut:
         return GeneratedStatus.sampledOut;
       case Status.unsupportedPlatform:
@@ -63,8 +63,8 @@ extension GeneratedStatusExtension on GeneratedStatus {
         return Status.running;
       case GeneratedStatus.notInstalled:
         return Status.notInstalled;
-      case GeneratedStatus.subProcess:
-        return Status.subProcess;
+      case GeneratedStatus.subprocess:
+        return Status.subprocess;
       case GeneratedStatus.sampledOut:
         return Status.sampledOut;
       case GeneratedStatus.unsupportedPlatform:

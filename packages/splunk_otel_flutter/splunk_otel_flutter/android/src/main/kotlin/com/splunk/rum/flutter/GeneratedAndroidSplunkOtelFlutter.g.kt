@@ -145,7 +145,7 @@ enum class GeneratedRecordingMaskType(val raw: Int) {
 enum class GeneratedStatus(val raw: Int) {
   RUNNING(0),
   NOT_INSTALLED(1),
-  SUB_PROCESS(2),
+  SUBPROCESS(2),
   SAMPLED_OUT(3),
   UNSUPPORTED_PLATFORM(4),
   UNSUPPORTED_OS_VERSION(5);

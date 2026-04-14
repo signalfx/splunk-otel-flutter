@@ -165,7 +165,7 @@ enum GeneratedRecordingMaskType: Int {
 enum GeneratedStatus: Int {
   case running = 0
   case notInstalled = 1
-  case subProcess = 2
+  case subprocess = 2
   case sampledOut = 3
   case unsupportedPlatform = 4
   case unsupportedOsVersion = 5

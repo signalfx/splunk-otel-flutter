@@ -22,7 +22,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 
 AgentConfiguration _baseConfig({MutableAttributes? globalAttributes}) {
   return AgentConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
+    endpoint: EndpointConfiguration.forRum(
       realm: 'us0',
       rumAccessToken: 'test-token',
     ),
@@ -153,7 +153,7 @@ void main() {
     group('agent configuration passthrough', () {
       test('should preserve all other configuration fields', () {
         final config = AgentConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'eu0',
             rumAccessToken: 'my-token',
           ),
@@ -166,7 +166,7 @@ void main() {
           user: const UserConfiguration(
             trackingMode: UserTrackingMode.anonymousTracking,
           ),
-          session: SessionConfiguration(samplingRate: 0.5),
+          session: const SessionConfiguration(samplingRate: 0.5),
         );
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);
@@ -182,11 +182,8 @@ void main() {
           equals(UserTrackingMode.anonymousTracking),
         );
         expect(enriched.session.samplingRate, equals(0.5));
-        expect(enriched.endpointConfiguration!.realm, equals('eu0'));
-        expect(
-          enriched.endpointConfiguration!.rumAccessToken,
-          equals('my-token'),
-        );
+        expect(enriched.endpoint!.realm, equals('eu0'));
+        expect(enriched.endpoint!.rumAccessToken, equals('my-token'));
       });
     });
   });

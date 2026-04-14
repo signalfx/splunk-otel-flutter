@@ -38,7 +38,7 @@ void main() async {
 
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
+      endpoint: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),
@@ -404,7 +404,7 @@ class _MyAppState extends State<MyApp> {
       final trackingFromPrefs = await sdk.user.preferences.getTrackingMode();
       final trackingModeToSet = trackingFromPrefs ?? trackingFromState;
       await sdk.user.preferences.setTrackingMode(
-        userTrackingMode: trackingModeToSet,
+        trackingMode: trackingModeToSet,
       );
       final trackingAfter = await sdk.user.preferences.getTrackingMode();
       assert(

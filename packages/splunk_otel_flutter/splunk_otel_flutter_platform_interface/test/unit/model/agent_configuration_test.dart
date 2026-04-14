@@ -23,7 +23,7 @@ void main() {
     test('should create with minimal required fields and defaults', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -34,11 +34,11 @@ void main() {
       // Assert
       expect(config.appName, 'TestApp');
       expect(config.deploymentEnvironment, 'production');
-      expect(config.endpointConfiguration?.realm, 'us0');
-      expect(config.endpointConfiguration?.rumAccessToken, 'token');
+      expect(config.endpoint?.realm, 'us0');
+      expect(config.endpoint?.rumAccessToken, 'token');
       expect(config.appVersion, isNull);
       expect(config.enableDebugLogging, false);
-      expect(config.user.trackingMode, UserTrackingMode.noTracking);
+      expect(config.user.trackingMode, UserTrackingMode.anonymousTracking);
       expect(config.session.samplingRate, 1.0);
       expect(config.instrumentedProcessName, isNull);
       expect(config.deferredUntilForeground, false);
@@ -52,7 +52,7 @@ void main() {
       );
 
       // Assert
-      expect(config.endpointConfiguration, isNull);
+      expect(config.endpoint, isNull);
       expect(config.appName, 'TestApp');
       expect(config.deploymentEnvironment, 'production');
     });
@@ -60,7 +60,7 @@ void main() {
     test('should create without user configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -71,13 +71,13 @@ void main() {
 
       // Assert - should use default UserConfiguration
       expect(config.user, isNotNull);
-      expect(config.user.trackingMode, UserTrackingMode.noTracking);
+      expect(config.user.trackingMode, UserTrackingMode.anonymousTracking);
     });
 
     test('should create without session configuration (null)', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -94,7 +94,7 @@ void main() {
     test('should create with custom user configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
@@ -112,13 +112,13 @@ void main() {
     test('should create with custom session configuration', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'us0',
           rumAccessToken: 'token',
         ),
         appName: 'TestApp',
         deploymentEnvironment: 'production',
-        session: SessionConfiguration(samplingRate: 0.75),
+        session: const SessionConfiguration(samplingRate: 0.75),
       );
 
       // Assert
@@ -128,7 +128,7 @@ void main() {
     test('should create with all optional fields', () {
       // Act
       final config = AgentConfiguration(
-        endpointConfiguration: EndpointConfiguration.forRum(
+        endpoint: EndpointConfiguration.forRum(
           realm: 'eu0',
           rumAccessToken: 'token-123',
         ),
@@ -140,7 +140,7 @@ void main() {
         user: const UserConfiguration(
           trackingMode: UserTrackingMode.anonymousTracking,
         ),
-        session: SessionConfiguration(samplingRate: 0.5),
+        session: const SessionConfiguration(samplingRate: 0.5),
         instrumentedProcessName: 'com.test.app',
         deferredUntilForeground: true,
       );
@@ -184,12 +184,12 @@ void main() {
   });
 
   group('UserConfiguration', () {
-    test('should default to noTracking', () {
+    test('should default to anonymousTracking', () {
       // Act
       const config = UserConfiguration();
 
       // Assert
-      expect(config.trackingMode, UserTrackingMode.noTracking);
+      expect(config.trackingMode, UserTrackingMode.anonymousTracking);
     });
 
     test('should accept anonymousTracking', () {
@@ -259,14 +259,17 @@ void main() {
       final generated = config.toGeneratedUserConfiguration();
 
       // Assert
-      expect(generated.trackingMode, GeneratedUserTrackingMode.noTracking);
+      expect(
+        generated.trackingMode,
+        GeneratedUserTrackingMode.anonymousTracking,
+      );
     });
   });
 
   group('SessionConfiguration Validation', () {
     test('samplingRate of 0.0 should be valid', () {
       // Act
-      final config = SessionConfiguration(samplingRate: 0.0);
+      final config = const SessionConfiguration(samplingRate: 0.0);
 
       // Assert
       expect(config.samplingRate, 0.0);
@@ -274,7 +277,7 @@ void main() {
 
     test('samplingRate of 1.0 should be valid', () {
       // Act
-      final config = SessionConfiguration(samplingRate: 1.0);
+      final config = const SessionConfiguration(samplingRate: 1.0);
 
       // Assert
       expect(config.samplingRate, 1.0);
@@ -282,51 +285,48 @@ void main() {
 
     test('samplingRate of 0.5 should be valid', () {
       // Act
-      final config = SessionConfiguration(samplingRate: 0.5);
+      final config = const SessionConfiguration(samplingRate: 0.5);
 
       // Assert
       expect(config.samplingRate, 0.5);
     });
 
-    test('samplingRate less than 0.0 should throw ArgumentError', () {
+    test('samplingRate less than 0.0 should throw AssertionError', () {
       // Act & Assert
       expect(
-            () => SessionConfiguration(samplingRate: -0.1),
-        throwsArgumentError,
+        () => SessionConfiguration(samplingRate: -0.1),
+        throwsA(isA<AssertionError>()),
       );
     });
 
-    test('samplingRate greater than 1.0 should throw ArgumentError', () {
+    test('samplingRate greater than 1.0 should throw AssertionError', () {
       // Act & Assert
       expect(
-            () => SessionConfiguration(samplingRate: 1.1),
-        throwsArgumentError,
+        () => SessionConfiguration(samplingRate: 1.1),
+        throwsA(isA<AssertionError>()),
       );
     });
 
     test('default samplingRate should be 1.0', () {
       // Act
-      final config = SessionConfiguration();
+      const config = SessionConfiguration();
 
       // Assert
       expect(config.samplingRate, 1.0);
     });
 
-    test('samplingRate error message should include received value', () {
+    test('samplingRate out of range should throw AssertionError', () {
       // Act & Assert
-      try {
-        SessionConfiguration(samplingRate: 1.5);
-        fail('Should have thrown ArgumentError');
-      } catch (e) {
-        expect(e, isA<ArgumentError>());
-        expect(e.toString(), contains('1.5'));
-      }
+      expect(
+        () => SessionConfiguration(samplingRate: 1.5),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test('samplingRate boundary values should work', () {
       // Act
-      final config0 = SessionConfiguration(samplingRate: 0.0);
-      final config1 = SessionConfiguration(samplingRate: 1.0);
+      final config0 = const SessionConfiguration(samplingRate: 0.0);
+      final config1 = const SessionConfiguration(samplingRate: 1.0);
 
       // Assert
       expect(config0.samplingRate, 0.0);
