@@ -39,5 +39,6 @@ class SessionState {
   ///
   /// Returns a value between 0.0 and 1.0 indicating the sampling rate
   /// for the current session.
-  Future<double> getSamplingRate() async => await _delegate.sessionStateGetSamplingRate();
+  Future<double> getSamplingRate() async =>
+      await _delegate.sessionStateGetSamplingRate();
 }

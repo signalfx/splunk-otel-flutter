@@ -20,19 +20,19 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 enum Status {
   /// The agent is running and collecting telemetry data.
   running,
-  
+
   /// The agent has not been installed.
   notInstalled,
-  
+
   /// **Android only.** The agent is in a subprocess.
   subProcess,
-  
+
   /// The agent is not running because it was sampled out locally.
   sampledOut,
-  
+
   /// The platform is not supported by the agent.
   unsupportedPlatform,
-  
+
   /// The operating system version is not supported.
   unsupportedOsVersion,
 }
@@ -74,4 +74,3 @@ extension GeneratedStatusExtension on GeneratedStatus {
     }
   }
 }
-

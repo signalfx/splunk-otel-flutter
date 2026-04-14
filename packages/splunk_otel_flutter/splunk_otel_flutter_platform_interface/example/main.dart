@@ -17,7 +17,7 @@
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 /// Example demonstrating the Splunk OpenTelemetry platform interface API.
-/// 
+///
 /// This example shows how to configure the agent. Note that this is a platform
 /// interface package - actual functionality requires platform implementations.
 void main() {
@@ -40,9 +40,7 @@ void main() {
     user: const UserConfiguration(
       trackingMode: UserTrackingMode.anonymousTracking,
     ),
-    session: SessionConfiguration(
-      samplingRate: 1.0,
-    ),
+    session: SessionConfiguration(samplingRate: 1.0),
   );
 
   // Example 2: Create module configurations

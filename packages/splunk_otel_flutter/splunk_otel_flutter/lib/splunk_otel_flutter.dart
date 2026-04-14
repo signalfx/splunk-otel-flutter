@@ -91,4 +91,5 @@ export 'package:splunk_otel_flutter_platform_interface/src/model/module_configur
 export 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
 export 'package:splunk_otel_flutter/src/splunk_otel_flutter.dart';
 export 'package:splunk_otel_flutter/src/global_attributes.dart';
-export 'package:splunk_otel_flutter/src/custom_tracking.dart' show WorkflowHandle;
+export 'package:splunk_otel_flutter/src/custom_tracking.dart'
+    show WorkflowHandle;

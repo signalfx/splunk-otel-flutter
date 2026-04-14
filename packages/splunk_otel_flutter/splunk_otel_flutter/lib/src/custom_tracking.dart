@@ -85,11 +85,10 @@ class CustomTracking {
   Future<void> trackCustomEvent({
     required String name,
     MutableAttributes attributes = const MutableAttributes(),
-  }) async =>
-      await _delegate.customTrackingTrackCustomEvent(
-        name: name,
-        attributes: attributes,
-      );
+  }) async => await _delegate.customTrackingTrackCustomEvent(
+    name: name,
+    attributes: attributes,
+  );
 
   /// Starts a workflow span for duration measurement.
   ///

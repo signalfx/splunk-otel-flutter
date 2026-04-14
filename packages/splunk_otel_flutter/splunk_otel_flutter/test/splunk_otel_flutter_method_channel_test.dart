@@ -65,7 +65,7 @@ void main() {
         realm: 'us0',
         rumAccessToken: 'test-token',
       );
-      
+
       final config = AgentConfiguration(
         endpointConfiguration: endpointConfig,
         appName: 'TestApp',
@@ -82,7 +82,7 @@ void main() {
         realm: 'us0',
         rumAccessToken: 'test-token',
       );
-      
+
       final config = AgentConfiguration(
         endpointConfiguration: endpointConfig,
         appName: 'TestApp',
@@ -111,9 +111,7 @@ void main() {
 
     test('should create endpoint configuration for traces', () {
       final tracesUri = Uri.parse('https://traces.example.com');
-      final config = EndpointConfiguration.forTraces(
-        tracesEndpoint: tracesUri,
-      );
+      final config = EndpointConfiguration.forTraces(tracesEndpoint: tracesUri);
 
       expect(config.traceEndpoint, equals(tracesUri));
       expect(config.realm, isNull);
@@ -175,14 +173,22 @@ void main() {
     });
 
     test('should create attributes from map', () {
-      final attributes = MutableAttributes(attributes: {
-        'key1': MutableAttributeString(value: 'value1'),
-        'key2': MutableAttributeInt(value: 42),
-      });
-      
+      final attributes = MutableAttributes(
+        attributes: {
+          'key1': MutableAttributeString(value: 'value1'),
+          'key2': MutableAttributeInt(value: 42),
+        },
+      );
+
       expect(attributes.attributes.length, equals(2));
-      expect((attributes.attributes['key1'] as MutableAttributeString).value, equals('value1'));
-      expect((attributes.attributes['key2'] as MutableAttributeInt).value, equals(42));
+      expect(
+        (attributes.attributes['key1'] as MutableAttributeString).value,
+        equals('value1'),
+      );
+      expect(
+        (attributes.attributes['key2'] as MutableAttributeInt).value,
+        equals(42),
+      );
     });
   });
 
@@ -198,4 +204,3 @@ void main() {
     });
   });
 }
-
