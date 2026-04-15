@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
 /// Base class for module configurations.
@@ -166,16 +167,19 @@ class SessionReplayModuleConfiguration extends ActivableModuleConfiguration {
   ///
   /// A value of 1.0 means all sessions are recorded (100%).
   /// A value of 0.5 means half of sessions are recorded (50%).
+  /// Values outside the valid range are clamped to [0.0, 1.0].
   /// Defaults to 0.2.
   final double samplingRate;
 
   SessionReplayModuleConfiguration({
     super.isEnabled = true,
-    this.samplingRate = 0.2,
-  }) {
+    double samplingRate = 0.2,
+  }) : samplingRate = samplingRate.clamp(0.0, 1.0) {
     if (samplingRate < 0.0 || samplingRate > 1.0) {
-      throw ArgumentError(
-          "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate");
+      debugPrint(
+        'SplunkRum: samplingRate must be between 0.0 and 1.0 (inclusive). '
+        'Received: $samplingRate. Clamped to ${samplingRate.clamp(0.0, 1.0)}.',
+      );
     }
   }
 }
