@@ -26,6 +26,9 @@ import SplunkNetwork
 import SplunkInteractions
 import SplunkNetworkMonitor
 import SplunkCrashReports
+#if canImport(SplunkSessionReplayProxy)
+import SplunkSessionReplayProxy
+#endif
 
 extension FlutterError: Error {}
 
@@ -190,16 +193,15 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                    },
                ].compactMap { $0 }
             
+            #if canImport(SplunkSessionReplayProxy)
             if let sessionReplayConfig = sessionReplayModuleConfiguration {
-                if let configClass = NSClassFromString("SplunkSessionReplay.SessionReplayConfiguration") as? NSObject.Type {
-                    let config = configClass.init()
-                    config.setValue(sessionReplayConfig.isEnabled, forKey: "isEnabled")
-                    config.setValue(sessionReplayConfig.samplingRate, forKey: "samplingRate")
-                    moduleConfigurations.append(config)
-                } else {
-                    print("[SplunkRum] Warning: SessionReplayModuleConfiguration was provided but the SplunkSessionReplay framework is not available. Session replay configuration will be ignored. Ensure the splunk_otel_flutter_session_replay plugin is added to your project.")
-                }
+                let config = SessionReplayConfiguration(
+                    enabled: sessionReplayConfig.isEnabled,
+                    samplingRate: sessionReplayConfig.samplingRate
+                )
+                moduleConfigurations.append(config)
             }
+            #endif
             
             let agent = try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
           
