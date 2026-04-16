@@ -1,6 +1,6 @@
 name: splunk_otel_flutter_session_replay
 description: "Session replay module for Splunk OpenTelemetry Flutter. Captures and replays user sessions for debugging and analytics."
-version: 0.0.1
+version: 1.0.0
 publish_to: none # remove when session replay is ready
 #TODO add repository and homepage before release
 
@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   splunk_otel_flutter_platform_interface: ^1.0.0-alpha.1
-  splunk_otel_flutter_session_replay_platform_interface: ^0.0.1
+  splunk_otel_flutter_session_replay_platform_interface: ^1.0.0
 
 dev_dependencies:
   flutter_test:

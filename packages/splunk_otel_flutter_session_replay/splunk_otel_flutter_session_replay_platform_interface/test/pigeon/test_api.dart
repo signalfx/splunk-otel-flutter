@@ -18,6 +18,21 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    }    else if (value is GeneratedSessionReplayStatus) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.index);
+    }    else if (value is GeneratedRecordingMaskType) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.index);
+    }    else if (value is GeneratedRecordingMaskList) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedRecordingMaskElement) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedRect) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -26,38 +41,20 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129: 
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : GeneratedSessionReplayStatus.values[value];
+      case 130: 
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : GeneratedRecordingMaskType.values[value];
+      case 131: 
+        return GeneratedRecordingMaskList.decode(readValue(buffer)!);
+      case 132: 
+        return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
+      case 133: 
+        return GeneratedRect.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
-    }
-  }
-}
-
-abstract class TestSplunkOtelFlutterSessionReplayHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
-
-  Future<void> install();
-
-  static void setUp(TestSplunkOtelFlutterSessionReplayHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.install$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
-      } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
-          try {
-            await api.install();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
     }
   }
 }

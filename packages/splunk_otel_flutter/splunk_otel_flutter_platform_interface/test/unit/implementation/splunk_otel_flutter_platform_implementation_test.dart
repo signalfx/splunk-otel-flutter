@@ -62,11 +62,12 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          installCalled = true;
-          expect(genAgent.appName, 'TestApp');
-          expect(genAgent.deploymentEnvironment, 'test');
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              installCalled = true;
+              expect(genAgent.appName, 'TestApp');
+              expect(genAgent.deploymentEnvironment, 'test');
+            };
 
         await implementation.install(
           agentConfiguration: agentConfig,
@@ -83,7 +84,29 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              installCalled = true;
+              expect(genAgent.endpoint, isNull);
+              expect(genAgent.appName, 'TestApp');
+            };
+
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [],
+        );
+
+        expect(installCalled, true);
+      });
+
+      test('should call install with null endpoint configuration', () async {
+        final agentConfig = AgentConfiguration(
+          appName: 'TestApp',
+          deploymentEnvironment: 'test',
+        );
+
+        bool installCalled = false;
+        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
           installCalled = true;
           expect(genAgent.endpoint, isNull);
           expect(genAgent.appName, 'TestApp');
@@ -110,11 +133,25 @@ void main() {
         final navConfig = NavigationModuleConfiguration(isEnabled: true);
         final slowConfig = SlowRenderingModuleConfiguration(isEnabled: false);
 
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          expect(genNav?.isEnabled, true);
-          expect(genSlow?.isEnabled, false);
-          expect(genCrash, isNull);
-        };
+        mockApi.installHandler =
+            (
+              genAgent,
+              genNav,
+              genSlow,
+              genCrash,
+              genInteractions,
+              genNetwork,
+              genAppLifecycle,
+              genAnr,
+              genHttpUrl,
+              genOkHttp3,
+              genNetworkInst,
+              genSessionReplay,
+            ) async {
+              expect(genNav?.isEnabled, true);
+              expect(genSlow?.isEnabled, false);
+              expect(genCrash, isNull);
+            };
 
         await implementation.install(
           agentConfiguration: agentConfig,
@@ -144,17 +181,31 @@ void main() {
           NetworkInstrumentationModuleConfiguration(),
         ];
 
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          expect(genNav, isNotNull);
-          expect(genSlow, isNotNull);
-          expect(genCrash, isNotNull);
-          expect(genInteractions, isNotNull);
-          expect(genNetwork, isNotNull);
-          expect(genAnr, isNotNull);
-          expect(genHttpUrl, isNotNull);
-          expect(genOkHttp3, isNotNull);
-          expect(genNetworkInst, isNotNull);
-        };
+        mockApi.installHandler =
+            (
+              genAgent,
+              genNav,
+              genSlow,
+              genCrash,
+              genInteractions,
+              genNetwork,
+              genAppLifecycle,
+              genAnr,
+              genHttpUrl,
+              genOkHttp3,
+              genNetworkInst,
+              genSessionReplay,
+            ) async {
+              expect(genNav, isNotNull);
+              expect(genSlow, isNotNull);
+              expect(genCrash, isNotNull);
+              expect(genInteractions, isNotNull);
+              expect(genNetwork, isNotNull);
+              expect(genAnr, isNotNull);
+              expect(genHttpUrl, isNotNull);
+              expect(genOkHttp3, isNotNull);
+              expect(genNetworkInst, isNotNull);
+            };
 
         await implementation.install(
           agentConfiguration: agentConfig,
@@ -176,7 +227,10 @@ void main() {
 
       test('should get deployment environment', () async {
         mockApi.stateGetDeploymentEnvironmentHandler = () async => 'production';
-        expect(await implementation.stateGetDeploymentEnvironment(), 'production');
+        expect(
+          await implementation.stateGetDeploymentEnvironment(),
+          'production',
+        );
       });
 
       test('should get debug logging enabled', () async {
@@ -185,8 +239,12 @@ void main() {
       });
 
       test('should get instrumented process name', () async {
-        mockApi.stateGetInstrumentedProcessNameHandler = () async => 'com.example.app';
-        expect(await implementation.stateGetInstrumentedProcessName(), 'com.example.app');
+        mockApi.stateGetInstrumentedProcessNameHandler = () async =>
+            'com.example.app';
+        expect(
+          await implementation.stateGetInstrumentedProcessName(),
+          'com.example.app',
+        );
       });
 
       test('should get deferred until foreground', () async {
@@ -246,7 +304,8 @@ void main() {
           );
         };
 
-        final endpoint = await implementation.preferencesGetEndpointConfiguration();
+        final endpoint = await implementation
+            .preferencesGetEndpointConfiguration();
         expect(endpoint?.realm, 'ap0');
         expect(endpoint?.rumAccessToken, 'pref-token-456');
       });
@@ -254,7 +313,8 @@ void main() {
       test('should handle null preferences endpoint configuration', () async {
         mockApi.preferencesGetEndpointConfigurationHandler = () async => null;
 
-        final endpoint = await implementation.preferencesGetEndpointConfiguration();
+        final endpoint = await implementation
+            .preferencesGetEndpointConfiguration();
         expect(endpoint, isNull);
       });
     });
@@ -323,9 +383,11 @@ void main() {
 
       test('should get all attributes', () async {
         mockApi.globalAttributesGetAllHandler = () async {
-          return GeneratedMutableAttributes(attributes: {
-            'key1': GeneratedMutableAttributeString(value: 'value1'),
-          });
+          return GeneratedMutableAttributes(
+            attributes: {
+              'key1': GeneratedMutableAttributeString(value: 'value1'),
+            },
+          );
         };
 
         final result = await implementation.globalAttributesGetAll();
@@ -372,7 +434,10 @@ void main() {
           receivedValue = value;
         };
 
-        await implementation.globalAttributesSetString(key: 'key', value: 'value');
+        await implementation.globalAttributesSetString(
+          key: 'key',
+          value: 'value',
+        );
         expect(receivedKey, 'key');
         expect(receivedValue, 'value');
       });
@@ -424,7 +489,10 @@ void main() {
           receivedValue = value;
         };
 
-        await implementation.globalAttributesSetStringList(key: 'key', value: ['a', 'b']);
+        await implementation.globalAttributesSetStringList(
+          key: 'key',
+          value: ['a', 'b'],
+        );
         expect(receivedKey, 'key');
         expect(receivedValue, ['a', 'b']);
       });
@@ -437,7 +505,10 @@ void main() {
           receivedValue = value;
         };
 
-        await implementation.globalAttributesSetIntList(key: 'key', value: [1, 2, 3]);
+        await implementation.globalAttributesSetIntList(
+          key: 'key',
+          value: [1, 2, 3],
+        );
         expect(receivedKey, 'key');
         expect(receivedValue, [1, 2, 3]);
       });
@@ -450,7 +521,10 @@ void main() {
           receivedValue = value;
         };
 
-        await implementation.globalAttributesSetDoubleList(key: 'key', value: [1.1, 2.2]);
+        await implementation.globalAttributesSetDoubleList(
+          key: 'key',
+          value: [1.1, 2.2],
+        );
         expect(receivedKey, 'key');
         expect(receivedValue, [1.1, 2.2]);
       });
@@ -463,7 +537,10 @@ void main() {
           receivedValue = value;
         };
 
-        await implementation.globalAttributesSetBoolList(key: 'key', value: [true, false]);
+        await implementation.globalAttributesSetBoolList(
+          key: 'key',
+          value: [true, false],
+        );
         expect(receivedKey, 'key');
         expect(receivedValue, [true, false]);
       });
@@ -474,9 +551,9 @@ void main() {
           receivedAttributes = value;
         };
 
-        final attributes = MutableAttributes(attributes: {
-          'key': MutableAttributeString(value: 'value'),
-        });
+        final attributes = MutableAttributes(
+          attributes: {'key': MutableAttributeString(value: 'value')},
+        );
 
         await implementation.globalAttributesSetAll(attributes: attributes);
         expect(receivedAttributes?.attributes.length, 1);
@@ -487,14 +564,15 @@ void main() {
       test('should track custom event', () async {
         String? receivedName;
         GeneratedMutableAttributes? receivedAttributes;
-        mockApi.customTrackingTrackCustomEventHandler = (name, attributes) async {
-          receivedName = name;
-          receivedAttributes = attributes;
-        };
+        mockApi.customTrackingTrackCustomEventHandler =
+            (name, attributes) async {
+              receivedName = name;
+              receivedAttributes = attributes;
+            };
 
-        final attributes = MutableAttributes(attributes: {
-          'key': MutableAttributeString(value: 'value'),
-        });
+        final attributes = MutableAttributes(
+          attributes: {'key': MutableAttributeString(value: 'value')},
+        );
 
         await implementation.customTrackingTrackCustomEvent(
           name: 'event_name',
@@ -512,7 +590,9 @@ void main() {
           return 123; // Return a mock handle
         };
 
-        final handle = await implementation.customTrackingStartWorkflow(workflowName: 'checkout');
+        final handle = await implementation.customTrackingStartWorkflow(
+          workflowName: 'checkout',
+        );
         expect(receivedWorkflowName, 'checkout');
         expect(handle, 123);
       });
@@ -541,4 +621,3 @@ void main() {
     });
   });
 }
-

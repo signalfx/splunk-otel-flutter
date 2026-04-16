@@ -42,29 +42,33 @@ class State {
   ///
   /// Returns the endpoint configuration (realm, rumAccessToken, etc.)
   /// specified during SDK installation, or `null` if not yet set.
-  Future<EndpointConfiguration?> getEndpointConfiguration() async => await _delegate.stateGetEndpointConfiguration();
+  Future<EndpointConfiguration?> getEndpointConfiguration() async =>
+      await _delegate.stateGetEndpointConfiguration();
 
   /// Gets configured deployment environment.
   ///
   /// Returns the deployment environment (e.g., 'production', 'staging')
   /// specified during SDK installation.
-  Future<String> getDeploymentEnvironment() async => await _delegate.stateGetDeploymentEnvironment();
+  Future<String> getDeploymentEnvironment() async =>
+      await _delegate.stateGetDeploymentEnvironment();
 
   /// Gets whether debug logging is enabled.
   ///
   /// Returns `true` if debug logging was enabled during SDK installation.
-  Future<bool> getIsDebugLoggingEnabled() async => await _delegate.stateGetIsDebugLoggingEnabled();
+  Future<bool> getIsDebugLoggingEnabled() async =>
+      await _delegate.stateGetIsDebugLoggingEnabled();
 
   /// Gets instrumented process name.
   ///
   /// **Android only.** Returns the name of the instrumented process,
   /// or `null` if not available or on iOS.
-  Future<String?> getInstrumentedProcessName() async => await _delegate.stateGetInstrumentedProcessName();
+  Future<String?> getInstrumentedProcessName() async =>
+      await _delegate.stateGetInstrumentedProcessName();
 
   /// Gets whether initialization was deferred.
   ///
   /// **Android only.** Returns `true` if SDK initialization was deferred
   /// until the app came to the foreground.
-  Future<bool> getDeferredUntilForeground() async => await _delegate.stateGetDeferredUntilForeground();
+  Future<bool> getDeferredUntilForeground() async =>
+      await _delegate.stateGetDeferredUntilForeground();
 }
-

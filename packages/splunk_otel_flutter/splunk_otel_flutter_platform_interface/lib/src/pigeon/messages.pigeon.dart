@@ -51,11 +51,7 @@ enum GeneratedSessionReplayStatus {
   belowMinSdkVersion,
   storageLimitReached,
   internalError,
-}
-
-enum GeneratedRenderingMode {
-  native,
-  wireframeOnly,
+  disabledBySampling,
 }
 
 enum GeneratedRecordingMaskType {
@@ -549,6 +545,52 @@ class GeneratedRegularExpression {
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
     if (other is! GeneratedRegularExpression || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
+class GeneratedSessionReplayModuleConfiguration {
+  GeneratedSessionReplayModuleConfiguration({
+    required this.isEnabled,
+    required this.samplingRate,
+  });
+
+  bool isEnabled;
+
+  double samplingRate;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      isEnabled,
+      samplingRate,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GeneratedSessionReplayModuleConfiguration decode(Object result) {
+    result as List<Object?>;
+    return GeneratedSessionReplayModuleConfiguration(
+      isEnabled: result[0]! as bool,
+      samplingRate: result[1]! as double,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedSessionReplayModuleConfiguration || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1316,46 +1358,46 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRenderingMode) {
+    }    else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    }    else if (value is GeneratedStatus) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedStatus) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.index);
     }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
-      buffer.putUint8(135);
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedNavigationModuleConfiguration) {
-      buffer.putUint8(136);
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedCrashReportsModuleConfiguration) {
-      buffer.putUint8(137);
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedInteractionsModuleConfiguration) {
-      buffer.putUint8(138);
+      buffer.putUint8(137);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedNetworkMonitorModuleConfiguration) {
-      buffer.putUint8(139);
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
-      buffer.putUint8(140);
+      buffer.putUint8(139);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedAnrModuleConfiguration) {
-      buffer.putUint8(141);
+      buffer.putUint8(140);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedHttpUrlModuleConfiguration) {
-      buffer.putUint8(142);
+      buffer.putUint8(141);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
-      buffer.putUint8(143);
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
-      buffer.putUint8(144);
+      buffer.putUint8(143);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedRegularExpression) {
+      buffer.putUint8(144);
+      writeValue(buffer, value.encode());
+    }    else if (value is GeneratedSessionReplayModuleConfiguration) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
     }    else if (value is GeneratedAgentConfiguration) {
@@ -1425,35 +1467,34 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : GeneratedSessionReplayStatus.values[value];
       case 132: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRenderingMode.values[value];
+        return value == null ? null : GeneratedRecordingMaskType.values[value];
       case 133: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 134: 
-        final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedStatus.values[value];
-      case 135: 
+      case 134: 
         return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
-      case 136: 
+      case 135: 
         return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
-      case 137: 
+      case 136: 
         return GeneratedCrashReportsModuleConfiguration.decode(readValue(buffer)!);
-      case 138: 
+      case 137: 
         return GeneratedInteractionsModuleConfiguration.decode(readValue(buffer)!);
-      case 139: 
+      case 138: 
         return GeneratedNetworkMonitorModuleConfiguration.decode(readValue(buffer)!);
-      case 140: 
+      case 139: 
         return GeneratedApplicationLifecycleModuleConfiguration.decode(readValue(buffer)!);
-      case 141: 
+      case 140: 
         return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
-      case 142: 
+      case 141: 
         return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
-      case 143: 
+      case 142: 
         return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
-      case 144: 
+      case 143: 
         return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
-      case 145: 
+      case 144: 
         return GeneratedRegularExpression.decode(readValue(buffer)!);
+      case 145: 
+        return GeneratedSessionReplayModuleConfiguration.decode(readValue(buffer)!);
       case 146: 
         return GeneratedAgentConfiguration.decode(readValue(buffer)!);
       case 147: 
@@ -1505,14 +1546,14 @@ class SplunkOtelFlutterHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, }) async {
+  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, required GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration, }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[agentConfiguration, navigationModuleConfiguration, slowRenderingModuleConfiguration, crashReportsModuleConfiguration, interactionsModuleConfiguration, networkMonitorModuleConfiguration, applicationLifecycleModuleConfiguration, anrModuleConfiguration, httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[agentConfiguration, navigationModuleConfiguration, slowRenderingModuleConfiguration, crashReportsModuleConfiguration, interactionsModuleConfiguration, networkMonitorModuleConfiguration, applicationLifecycleModuleConfiguration, anrModuleConfiguration, httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration, sessionReplayModuleConfiguration]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

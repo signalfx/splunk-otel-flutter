@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,59 @@
  * limitations under the License.
  */
 
-/// Splunk session replay module for Flutter applications.
-///
-/// This library provides session recording and replay capabilities, allowing you
-/// to capture and analyze user interactions for debugging and optimization.
-///
-/// **Note:** This module is currently under development.
 library splunk_otel_flutter_session_replay;
 
-/// Main entry point for the Splunk session replay module.
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
+import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
+
+export 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart'
+    show
+        SessionReplayStatus,
+        RecordingMask,
+        MaskElement,
+        MaskType;
+
+/// Splunk Session Replay SDK entry point.
 ///
-/// Provides methods to install and configure session replay functionality.
-class SplunkOtelFlutterSessionReplay {
-  /// Installs the session replay module.
+/// Use `SplunkSessionReplay.instance` to access session replay functionality
+/// after the core Splunk RUM agent has been initialized.
+///
+/// Example:
+/// ```dart
+/// await SplunkRum.instance.install(
+///   agentConfiguration: AgentConfiguration(...),
+///   moduleConfigurations: [],
+/// );
+///
+/// await SplunkSessionReplay.instance.start();
+/// ```
+class SplunkSessionReplay {
+  static final SplunkSessionReplay _instance = SplunkSessionReplay._internal();
+
+  SplunkSessionReplay._internal();
+
+  /// SDK singleton instance.
+  static SplunkSessionReplay get instance => _instance;
+
+  final _delegate =
+      SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
+
+  /// Starts session replay recording.
+  Future<void> start() async => await _delegate.start();
+
+  /// Stops session replay recording.
+  Future<void> stop() async => await _delegate.stop();
+
+  /// Returns the current session replay recording status.
+  Future<SessionReplayStatus> getStatus() async => await _delegate.getStatus();
+
+  /// Returns the current recording mask, or `null` if none is set.
+  Future<RecordingMask?> getRecordingMask() async =>
+      await _delegate.getRecordingMask();
+
+  /// Sets the recording mask used to hide or obscure sensitive content.
   ///
-  /// **Note:** This method is currently not implemented.
-  Future<void> install() {
-    // TODO: implement install
-    throw UnimplementedError();
-  }
+  /// Pass `null` to clear the current mask.
+  Future<void> setRecordingMask({required RecordingMask? mask}) async =>
+      await _delegate.setRecordingMask(mask: mask);
 }

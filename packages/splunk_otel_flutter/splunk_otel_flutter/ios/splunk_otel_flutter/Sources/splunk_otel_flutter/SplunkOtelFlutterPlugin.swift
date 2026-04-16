@@ -26,6 +26,9 @@ import SplunkNetwork
 import SplunkInteractions
 import SplunkNetworkMonitor
 import SplunkCrashReports
+#if canImport(SplunkSessionReplayProxy)
+import SplunkSessionReplayProxy
+#endif
 
 extension FlutterError: Error {}
 
@@ -126,6 +129,8 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                  okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, 
                  // iOS-only
                  networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?,
+                 // Session replay
+                 sessionReplayModuleConfiguration: GeneratedSessionReplayModuleConfiguration?,
                  completion: @escaping (Result<Void, any Error>) -> Void) {
         
         // TODO: Propagate endpoint validation errors to Dart (currently only logged on native side)
@@ -154,7 +159,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             .sessionConfiguration(SessionConfiguration(samplingRate: agentConfiguration.session?.samplingRate ?? 1.0))
             .userConfiguration(UserConfiguration(trackingMode: agentConfiguration.user?.trackingMode == .anonymousTracking ? .anonymousTracking : .noTracking))
         do {
-            let moduleConfigurations: [Any] = [
+            var moduleConfigurations: [Any] = [
                    slowRenderingModuleConfiguration.map {
                        SlowFrameDetectorConfiguration(isEnabled: $0.isEnabled)
                    },
@@ -186,7 +191,17 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                            isEnabled: $0.isEnabled,
                        )
                    },
-               ].compactMap { $0 }// removes nils automatically
+               ].compactMap { $0 }
+            
+            #if canImport(SplunkSessionReplayProxy)
+            if let sessionReplayConfig = sessionReplayModuleConfiguration {
+                let config = SessionReplayConfiguration(
+                    enabled: sessionReplayConfig.isEnabled,
+                    samplingRate: sessionReplayConfig.samplingRate
+                )
+                moduleConfigurations.append(config)
+            }
+            #endif
             
             let agent = try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
           

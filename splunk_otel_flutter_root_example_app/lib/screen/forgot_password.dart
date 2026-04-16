@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
+import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
+import 'package:splunk_otel_flutter_root_example_app/main.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_textfield.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_button.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_text.dart';
@@ -16,12 +18,53 @@ class ForgotPasswordScreen extends StatefulWidget {
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
+    with RouteAware {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
   @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didPush() {
+    _stopRecording();
+  }
+
+  @override
+  void didPopNext() {
+    // User came back to this screen from a pushed route - stop again
+    _stopRecording();
+  }
+
+  @override
+  void didPop() {
+    _startRecording();
+  }
+
+  @override
+  void didPushNext() {
+    // Another screen was pushed on top - resume recording
+    _startRecording();
+  }
+
+  void _stopRecording() {
+    SplunkSessionReplay.instance.stop();
+    debugPrint('[ForgotPassword] Session replay STOPPED (sensitive screen)');
+  }
+
+  void _startRecording() {
+    SplunkSessionReplay.instance.start();
+    debugPrint('[ForgotPassword] Session replay RESUMED');
   }
 
   @override
