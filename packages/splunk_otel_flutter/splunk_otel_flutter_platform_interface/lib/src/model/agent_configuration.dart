@@ -40,7 +40,6 @@ class AgentConfiguration {
   /// provided later via `SplunkRum.instance.state.setEndpointConfiguration`.
   final EndpointConfiguration? endpointConfiguration;
 
-
   /// The name of your application.
   final String appName;
 

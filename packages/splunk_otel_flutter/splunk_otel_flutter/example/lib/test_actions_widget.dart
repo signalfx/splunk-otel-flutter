@@ -4,7 +4,8 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-enum TestCategory { crashes,navigation, customTracking, performance, network }
+enum TestCategory { crashes, navigation, customTracking, performance, network }
+
 enum MobilePlatform { android, ios }
 
 extension on Set<MobilePlatform> {
@@ -51,9 +52,10 @@ class TestActionsWidget extends StatefulWidget {
 }
 
 class _TestActionsWidgetState extends State<TestActionsWidget> {
-  late final Stream<DateTime> _clock =
-  Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
-      .asBroadcastStream();
+  late final Stream<DateTime> _clock = Stream.periodic(
+    const Duration(seconds: 1),
+    (_) => DateTime.now(),
+  ).asBroadcastStream();
 
   String _platformText = '—';
   String _deviceText = '—';
@@ -80,7 +82,10 @@ class _TestActionsWidgetState extends State<TestActionsWidget> {
         final release = info.version.release.trim();
 
         _platformText = 'Android';
-        _deviceText = [manufacturer, model].where((e) => e.isNotEmpty).join(' ');
+        _deviceText = [
+          manufacturer,
+          model,
+        ].where((e) => e.isNotEmpty).join(' ');
         _systemText = 'API $sdk / $release';
       } else if (Platform.isIOS) {
         final info = await deviceInfo.iosInfo;
@@ -163,43 +168,43 @@ class _TestActionsWidgetState extends State<TestActionsWidget> {
           child: widget.actions.isEmpty
               ? const _EmptyState()
               : ListView(
-            padding: const EdgeInsets.all(10),
-            children: TestCategory.values
-                .where((c) => (grouped[c] ?? const []).isNotEmpty)
-                .expand((category) sync* {
-              yield Padding(
-                padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
-                child: Text(
-                  _labelForCategory(category),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.primary,
-                  ),
+                  padding: const EdgeInsets.all(10),
+                  children: TestCategory.values
+                      .where((c) => (grouped[c] ?? const []).isNotEmpty)
+                      .expand((category) sync* {
+                        yield Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
+                          child: Text(
+                            _labelForCategory(category),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        );
+                        for (final a in grouped[category]!) {
+                          yield _ActionCard(
+                            action: a,
+                            lastPressed:
+                                _lastPressedByTitle[a.title], // may be null
+                            onPressed: (BuildContext ctx) async {
+                              // update timestamp immediately; then run the action
+                              setState(() {
+                                _lastPressedByTitle[a.title] = DateTime.now();
+                              });
+                              if (a.onTapWithContext != null) {
+                                await a.onTapWithContext!(ctx);
+                              } else {
+                                await a.onTap();
+                              }
+                            },
+                            formatHms: _hms,
+                          );
+                          yield const SizedBox(height: 8);
+                        }
+                      })
+                      .toList(),
                 ),
-              );
-              for (final a in grouped[category]!) {
-                yield _ActionCard(
-                  action: a,
-                  lastPressed:
-                  _lastPressedByTitle[a.title], // may be null
-                  onPressed: (BuildContext ctx) async {
-                    // update timestamp immediately; then run the action
-                    setState(() {
-                      _lastPressedByTitle[a.title] = DateTime.now();
-                    });
-                    if (a.onTapWithContext != null) {
-                      await a.onTapWithContext!(ctx);
-                    } else {
-                      await a.onTap();
-                    }
-                  },
-                  formatHms: _hms,
-                );
-                yield const SizedBox(height: 8);
-              }
-            })
-                .toList(),
-          ),
         ),
       ],
     );
@@ -316,8 +321,10 @@ class _ActionCard extends StatelessWidget {
                   style: FilledButton.styleFrom(
                     backgroundColor: _platformColor(action.platforms),
                     foregroundColor: Colors.white,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 8,
+                    ),
                     minimumSize: const Size(0, 34),
                   ),
                   onPressed: () => onPressed(context),

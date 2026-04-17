@@ -37,13 +37,18 @@ void main() {
 
     test('should convert to GeneratedSessionReplayStatus correctly', () {
       final mappings = {
-        SessionReplayStatus.isRecording: GeneratedSessionReplayStatus.isRecording,
+        SessionReplayStatus.isRecording:
+            GeneratedSessionReplayStatus.isRecording,
         SessionReplayStatus.notStarted: GeneratedSessionReplayStatus.notStarted,
         SessionReplayStatus.stopped: GeneratedSessionReplayStatus.stopped,
-        SessionReplayStatus.belowMinSdkVersion: GeneratedSessionReplayStatus.belowMinSdkVersion,
-        SessionReplayStatus.storageLimitReached: GeneratedSessionReplayStatus.storageLimitReached,
-        SessionReplayStatus.internalError: GeneratedSessionReplayStatus.internalError,
-        SessionReplayStatus.disabledBySampling: GeneratedSessionReplayStatus.disabledBySampling,
+        SessionReplayStatus.belowMinSdkVersion:
+            GeneratedSessionReplayStatus.belowMinSdkVersion,
+        SessionReplayStatus.storageLimitReached:
+            GeneratedSessionReplayStatus.storageLimitReached,
+        SessionReplayStatus.internalError:
+            GeneratedSessionReplayStatus.internalError,
+        SessionReplayStatus.disabledBySampling:
+            GeneratedSessionReplayStatus.disabledBySampling,
       };
 
       for (final entry in mappings.entries) {
@@ -54,13 +59,18 @@ void main() {
 
     test('should convert from GeneratedSessionReplayStatus correctly', () {
       final mappings = {
-        GeneratedSessionReplayStatus.isRecording: SessionReplayStatus.isRecording,
+        GeneratedSessionReplayStatus.isRecording:
+            SessionReplayStatus.isRecording,
         GeneratedSessionReplayStatus.notStarted: SessionReplayStatus.notStarted,
         GeneratedSessionReplayStatus.stopped: SessionReplayStatus.stopped,
-        GeneratedSessionReplayStatus.belowMinSdkVersion: SessionReplayStatus.belowMinSdkVersion,
-        GeneratedSessionReplayStatus.storageLimitReached: SessionReplayStatus.storageLimitReached,
-        GeneratedSessionReplayStatus.internalError: SessionReplayStatus.internalError,
-        GeneratedSessionReplayStatus.disabledBySampling: SessionReplayStatus.disabledBySampling,
+        GeneratedSessionReplayStatus.belowMinSdkVersion:
+            SessionReplayStatus.belowMinSdkVersion,
+        GeneratedSessionReplayStatus.storageLimitReached:
+            SessionReplayStatus.storageLimitReached,
+        GeneratedSessionReplayStatus.internalError:
+            SessionReplayStatus.internalError,
+        GeneratedSessionReplayStatus.disabledBySampling:
+            SessionReplayStatus.disabledBySampling,
       };
 
       for (final entry in mappings.entries) {
@@ -91,10 +101,7 @@ void main() {
     });
 
     test('should convert from GeneratedRecordingMaskType correctly', () {
-      expect(
-        GeneratedRecordingMaskType.erasing.toMaskType(),
-        MaskType.erasing,
-      );
+      expect(GeneratedRecordingMaskType.erasing.toMaskType(), MaskType.erasing);
       expect(
         GeneratedRecordingMaskType.covering.toMaskType(),
         MaskType.covering,
@@ -114,7 +121,12 @@ void main() {
     });
 
     test('should convert GeneratedRect to Rect', () {
-      final generated = GeneratedRect(left: 10.0, top: 20.0, width: 100.0, height: 200.0);
+      final generated = GeneratedRect(
+        left: 10.0,
+        top: 20.0,
+        width: 100.0,
+        height: 200.0,
+      );
       final rect = generated.toRect();
 
       expect(rect.left, 10.0);
@@ -205,28 +217,32 @@ void main() {
     });
 
     test('should create with single element', () {
-      final list = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 100, 100),
-          type: MaskType.erasing,
-        ),
-      ]);
+      final list = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: MaskType.erasing,
+          ),
+        ],
+      );
 
       expect(list.elements.length, 1);
       expect(list.elements[0].type, MaskType.erasing);
     });
 
     test('should create with multiple elements', () {
-      final list = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 100, 100),
-          type: MaskType.erasing,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(100, 100, 200, 200),
-          type: MaskType.covering,
-        ),
-      ]);
+      final list = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: MaskType.erasing,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(100, 100, 200, 200),
+            type: MaskType.covering,
+          ),
+        ],
+      );
 
       expect(list.elements.length, 2);
       expect(list.elements[0].type, MaskType.erasing);
@@ -234,35 +250,45 @@ void main() {
     });
 
     test('should convert to GeneratedRecordingMaskList', () {
-      final list = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 100, 100),
-          type: MaskType.erasing,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(100, 100, 200, 200),
-          type: MaskType.covering,
-        ),
-      ]);
+      final list = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: MaskType.erasing,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(100, 100, 200, 200),
+            type: MaskType.covering,
+          ),
+        ],
+      );
 
       final generated = list.toGeneratedRecordingMaskList();
 
       expect(generated.recordingMaskList?.length, 2);
-      expect(generated.recordingMaskList?[0].type, GeneratedRecordingMaskType.erasing);
-      expect(generated.recordingMaskList?[1].type, GeneratedRecordingMaskType.covering);
+      expect(
+        generated.recordingMaskList?[0].type,
+        GeneratedRecordingMaskType.erasing,
+      );
+      expect(
+        generated.recordingMaskList?[1].type,
+        GeneratedRecordingMaskType.covering,
+      );
     });
 
     test('should convert from GeneratedRecordingMaskList', () {
-      final generated = GeneratedRecordingMaskList(recordingMaskList: [
-        GeneratedRecordingMaskElement(
-          rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
-          type: GeneratedRecordingMaskType.erasing,
-        ),
-        GeneratedRecordingMaskElement(
-          rect: GeneratedRect(left: 100, top: 100, width: 200, height: 200),
-          type: GeneratedRecordingMaskType.covering,
-        ),
-      ]);
+      final generated = GeneratedRecordingMaskList(
+        recordingMaskList: [
+          GeneratedRecordingMaskElement(
+            rect: GeneratedRect(left: 0, top: 0, width: 100, height: 100),
+            type: GeneratedRecordingMaskType.erasing,
+          ),
+          GeneratedRecordingMaskElement(
+            rect: GeneratedRect(left: 100, top: 100, width: 200, height: 200),
+            type: GeneratedRecordingMaskType.covering,
+          ),
+        ],
+      );
 
       final list = generated.toRecordingMask();
 
@@ -271,12 +297,15 @@ void main() {
       expect(list.elements[1].type, MaskType.covering);
     });
 
-    test('should handle null recordingMaskList in GeneratedRecordingMaskList', () {
-      final generated = GeneratedRecordingMaskList(recordingMaskList: null);
-      final list = generated.toRecordingMask();
+    test(
+      'should handle null recordingMaskList in GeneratedRecordingMaskList',
+      () {
+        final generated = GeneratedRecordingMaskList(recordingMaskList: null);
+        final list = generated.toRecordingMask();
 
-      expect(list.elements, isEmpty);
-    });
+        expect(list.elements, isEmpty);
+      },
+    );
 
     test('should handle empty list conversion', () {
       final list = RecordingMask(elements: []);
@@ -302,16 +331,18 @@ void main() {
     });
 
     test('should handle round-trip conversion for RecordingMask', () {
-      final original = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 100, 100),
-          type: MaskType.erasing,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(100, 100, 200, 200),
-          type: MaskType.covering,
-        ),
-      ]);
+      final original = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: MaskType.erasing,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(100, 100, 200, 200),
+            type: MaskType.covering,
+          ),
+        ],
+      );
 
       final generated = original.toGeneratedRecordingMaskList();
       final converted = generated.toRecordingMask();
@@ -326,20 +357,22 @@ void main() {
 
   group('Complex Scenarios', () {
     test('should handle mixed masking types', () {
-      final list = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 50, 50),
-          type: MaskType.erasing,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(60, 60, 50, 50),
-          type: MaskType.covering,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(120, 120, 50, 50),
-          type: MaskType.erasing,
-        ),
-      ]);
+      final list = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 50, 50),
+            type: MaskType.erasing,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(60, 60, 50, 50),
+            type: MaskType.covering,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(120, 120, 50, 50),
+            type: MaskType.erasing,
+          ),
+        ],
+      );
 
       final generated = list.toGeneratedRecordingMaskList();
       final converted = generated.toRecordingMask();
@@ -350,16 +383,18 @@ void main() {
     });
 
     test('should handle overlapping masks', () {
-      final list = RecordingMask(elements: [
-        MaskElement(
-          rect: const Rect.fromLTWH(0, 0, 100, 100),
-          type: MaskType.erasing,
-        ),
-        MaskElement(
-          rect: const Rect.fromLTWH(50, 50, 100, 100),
-          type: MaskType.covering,
-        ),
-      ]);
+      final list = RecordingMask(
+        elements: [
+          MaskElement(
+            rect: const Rect.fromLTWH(0, 0, 100, 100),
+            type: MaskType.erasing,
+          ),
+          MaskElement(
+            rect: const Rect.fromLTWH(50, 50, 100, 100),
+            type: MaskType.covering,
+          ),
+        ],
+      );
 
       final generated = list.toGeneratedRecordingMaskList();
       final converted = generated.toRecordingMask();
@@ -369,6 +404,3 @@ void main() {
     });
   });
 }
-
-
-

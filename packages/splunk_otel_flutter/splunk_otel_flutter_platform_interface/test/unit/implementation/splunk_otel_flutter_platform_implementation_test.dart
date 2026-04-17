@@ -106,11 +106,12 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
-          installCalled = true;
-          expect(genAgent.endpoint, isNull);
-          expect(genAgent.appName, 'TestApp');
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              installCalled = true;
+              expect(genAgent.endpoint, isNull);
+              expect(genAgent.appName, 'TestApp');
+            };
 
         await implementation.install(
           agentConfiguration: agentConfig,

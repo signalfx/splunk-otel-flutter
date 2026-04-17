@@ -103,7 +103,7 @@ class RecordingMask {
 class MaskElement {
   /// The rectangular area to mask.
   final Rect rect;
-  
+
   /// The type of masking to apply.
   final MaskType type;
 
@@ -115,19 +115,14 @@ class MaskElement {
 enum MaskType {
   /// Erase the content in the masked area.
   erasing,
-  
+
   /// Cover the content with a solid overlay.
   covering,
 }
 
 extension RectExtension on Rect {
   GeneratedRect toGeneratedRect() {
-    return GeneratedRect(
-      left: left,
-      top: top,
-      width: width,
-      height: height,
-    );
+    return GeneratedRect(left: left, top: top, width: width, height: height);
   }
 }
 
@@ -171,28 +166,28 @@ extension MaskElementExtension on MaskElement {
 extension GeneratedRecordingMaskElementExtension
     on GeneratedRecordingMaskElement {
   MaskElement toMaskElement() {
-    return MaskElement(
-      rect: rect.toRect(),
-      type: type.toMaskType(),
-    );
+    return MaskElement(rect: rect.toRect(), type: type.toMaskType());
   }
 }
 
 extension RecordingMaskExtension on RecordingMask {
   GeneratedRecordingMaskList toGeneratedRecordingMaskList() {
     return GeneratedRecordingMaskList(
-        recordingMaskList: elements
-            .map((element) => element.toGeneratedRecordingMaskElement())
-            .toList());
+      recordingMaskList: elements
+          .map((element) => element.toGeneratedRecordingMaskElement())
+          .toList(),
+    );
   }
 }
 
 extension GeneratedRecordingMaskListExtension on GeneratedRecordingMaskList {
   RecordingMask toRecordingMask() {
     return RecordingMask(
-        elements: recordingMaskList
-                ?.map((element) => element.toMaskElement())
-                .toList() ??
-            []);
+      elements:
+          recordingMaskList
+              ?.map((element) => element.toMaskElement())
+              .toList() ??
+          [],
+    );
   }
 }

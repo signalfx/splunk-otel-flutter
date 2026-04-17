@@ -74,9 +74,7 @@ void main() async {
 
   stopwatch.stop();
   debugPrint('=============');
-  debugPrint(
-    'SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms',
-  );
+  debugPrint('SplunkRum.install() took: ${stopwatch.elapsedMilliseconds} ms');
   debugPrint('=============');
 
   final sessionId = await SplunkRum.instance.session.state.getId();
@@ -244,9 +242,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> openWebView(BuildContext context) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => const WebViewScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (context) => const WebViewScreen()),
     );
   }
 
@@ -262,10 +258,7 @@ class _MyAppState extends State<MyApp> {
     final url = Uri.parse('https://www.splunk.com');
     try {
       // Uses Custom Tabs on Android and SFSafariViewController on iOS
-      await launchUrl(
-        url,
-        mode: LaunchMode.inAppWebView,
-      );
+      await launchUrl(url, mode: LaunchMode.inAppWebView);
       debugPrint('Launched in-app browser for: $url');
     } catch (e) {
       debugPrint('Failed to launch in-app browser: $e');
@@ -276,10 +269,7 @@ class _MyAppState extends State<MyApp> {
     final url = Uri.parse('https://www.splunk.com');
     try {
       // Opens in external browser app
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
+      await launchUrl(url, mode: LaunchMode.externalApplication);
       debugPrint('Launched external browser for: $url');
     } catch (e) {
       debugPrint('Failed to launch external browser: $e');

@@ -40,9 +40,7 @@ class GlobalAttributes {
   /// [key] - Attribute key.
   ///
   /// Returns the value or `null` if not set.
-  Future<MutableAttributeValue?> get({
-    required String key,
-  }) async =>
+  Future<MutableAttributeValue?> get({required String key}) async =>
       _delegate.globalAttributesGet(key: key);
 
   /// Gets all attributes.
@@ -54,67 +52,50 @@ class GlobalAttributes {
   /// Removes an attribute.
   ///
   /// [key] - Attribute key.
-  Future<void> remove({
-    required String key,
-  }) async =>
+  Future<void> remove({required String key}) async =>
       await _delegate.globalAttributesRemove(key: key);
 
   /// Removes all attributes.
-  Future<void> removeAll() async =>
-      await _delegate.globalAttributesRemoveAll();
+  Future<void> removeAll() async => await _delegate.globalAttributesRemoveAll();
 
   /// Checks if an attribute exists.
   ///
   /// [key] - Attribute key.
   ///
   /// Returns `true` if attribute is set.
-  Future<bool> contains({
-    required String key,
-  }) async =>
+  Future<bool> contains({required String key}) async =>
       await _delegate.globalAttributesContains(key: key);
 
   /// Sets a string attribute.
   ///
   /// [key] - Attribute key.
   /// [value] - String value.
-  Future<void> setString({
-    required String key,
-    required String value,
-  }) async =>
+  Future<void> setString({required String key, required String value}) async =>
       await _delegate.globalAttributesSetString(key: key, value: value);
 
   /// Sets an integer attribute.
   ///
   /// [key] - Attribute key.
   /// [value] - Integer value.
-  Future<void> setInt({
-    required String key,
-    required int value,
-  }) async =>
+  Future<void> setInt({required String key, required int value}) async =>
       await _delegate.globalAttributesSetInt(key: key, value: value);
 
   /// Sets a double attribute.
   ///
   /// [key] - Attribute key.
   /// [value] - Double value.
-  Future<void> setDouble({
-    required String key,
-    required double value,
-  }) async =>
+  Future<void> setDouble({required String key, required double value}) async =>
       await _delegate.globalAttributesSetDouble(key: key, value: value);
 
   /// Sets a boolean attribute.
   ///
   /// [key] - Attribute key.
   /// [value] - Boolean value.
-  Future<void> setBool({
-    required String key,
-    required bool value,
-  }) async =>
+  Future<void> setBool({required String key, required bool value}) async =>
       await _delegate.globalAttributesSetBool(key: key, value: value);
 
   // Lists are currently set to private will be handled after first release
-/*
+  /*
   Future<void> setStringList({
     required String key,
     required List<String> value,
@@ -153,7 +134,6 @@ class GlobalAttributes {
   ///   }),
   /// );
   /// ```
-  Future<void> setAll(
-          {required MutableAttributes attributes}) async =>
+  Future<void> setAll({required MutableAttributes attributes}) async =>
       await _delegate.globalAttributesSetAll(attributes: attributes);
 }
