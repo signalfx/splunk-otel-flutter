@@ -24,9 +24,7 @@ class BrowserLauncherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Browser Launch Options'),
-      ),
+      appBar: AppBar(title: const Text('Browser Launch Options')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -35,17 +33,18 @@ class BrowserLauncherScreen extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          
+
           // Custom Tabs (Android) / SFSafariViewController (iOS)
           _LaunchCard(
             title: 'In-App Browser',
-            description: 'Opens in Custom Tabs (Android) or Safari View Controller (iOS)',
+            description:
+                'Opens in Custom Tabs (Android) or Safari View Controller (iOS)',
             icon: Icons.web,
             color: Colors.blue,
             onTap: () => _launchInAppBrowser(context),
           ),
           const SizedBox(height: 12),
-          
+
           // External Browser
           _LaunchCard(
             title: 'External Browser',
@@ -55,7 +54,7 @@ class BrowserLauncherScreen extends StatelessWidget {
             onTap: () => _launchExternalBrowser(context),
           ),
           const SizedBox(height: 12),
-          
+
           // WebView (already implemented)
           _LaunchCard(
             title: 'Embedded WebView',
@@ -66,7 +65,9 @@ class BrowserLauncherScreen extends StatelessWidget {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Use "Open WebView" button for embedded WebView'),
+                  content: Text(
+                    'Use "Open WebView" button for embedded WebView',
+                  ),
                 ),
               );
             },
@@ -80,15 +81,12 @@ class BrowserLauncherScreen extends StatelessWidget {
     final url = Uri.parse('https://www.splunk.com');
     try {
       // This uses Custom Tabs on Android and SFSafariViewController on iOS
-      await launchUrl(
-        url,
-        mode: LaunchMode.inAppWebView,
-      );
+      await launchUrl(url, mode: LaunchMode.inAppWebView);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to launch: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to launch: $e')));
       }
     }
   }
@@ -97,15 +95,12 @@ class BrowserLauncherScreen extends StatelessWidget {
     final url = Uri.parse('https://www.splunk.com');
     try {
       // This opens in the external browser app
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to launch: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to launch: $e')));
       }
     }
   }
@@ -160,10 +155,7 @@ class _LaunchCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],
                 ),

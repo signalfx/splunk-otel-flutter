@@ -155,18 +155,25 @@ void main() {
   });
 
   group('Bidirectional Mapping Consistency', () {
-    test('should have one-to-one mapping between Status and GeneratedStatus', () {
-      // Check that Status and GeneratedStatus have the same number of values
-      expect(Status.values.length, GeneratedStatus.values.length);
+    test(
+      'should have one-to-one mapping between Status and GeneratedStatus',
+      () {
+        // Check that Status and GeneratedStatus have the same number of values
+        expect(Status.values.length, GeneratedStatus.values.length);
 
-      // Check that each Status maps to a unique GeneratedStatus
-      final generatedStatuses = Status.values.map((s) => s.toGeneratedStatus()).toSet();
-      expect(generatedStatuses.length, Status.values.length);
+        // Check that each Status maps to a unique GeneratedStatus
+        final generatedStatuses = Status.values
+            .map((s) => s.toGeneratedStatus())
+            .toSet();
+        expect(generatedStatuses.length, Status.values.length);
 
-      // Check that each GeneratedStatus maps to a unique Status
-      final statuses = GeneratedStatus.values.map((g) => g.toStatus()).toSet();
-      expect(statuses.length, GeneratedStatus.values.length);
-    });
+        // Check that each GeneratedStatus maps to a unique Status
+        final statuses = GeneratedStatus.values
+            .map((g) => g.toStatus())
+            .toSet();
+        expect(statuses.length, GeneratedStatus.values.length);
+      },
+    );
   });
 
   group('Status Semantics', () {
@@ -207,6 +214,3 @@ void main() {
     });
   });
 }
-
-
-

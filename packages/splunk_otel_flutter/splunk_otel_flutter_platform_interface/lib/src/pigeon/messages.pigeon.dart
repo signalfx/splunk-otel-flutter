@@ -14,20 +14,24 @@ PlatformException _createConnectionError(String channelName) {
     message: 'Unable to establish connection on channel: "$channelName".',
   );
 }
+
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-        .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
-    return a.length == b.length && a.entries.every((MapEntry<Object?, Object?> entry) =>
-        (b as Map<Object?, Object?>).containsKey(entry.key) &&
-        _deepEquals(entry.value, b[entry.key]));
+    return a.length == b.length &&
+        a.entries.every(
+          (MapEntry<Object?, Object?> entry) =>
+              (b as Map<Object?, Object?>).containsKey(entry.key) &&
+              _deepEquals(entry.value, b[entry.key]),
+        );
   }
   return a == b;
 }
-
 
 enum GeneratedRegexOption {
   caseInsensitive,
@@ -39,10 +43,7 @@ enum GeneratedRegexOption {
   useUnicodeWordBoundaries,
 }
 
-enum GeneratedUserTrackingMode {
-  noTracking,
-  anonymousTracking,
-}
+enum GeneratedUserTrackingMode { noTracking, anonymousTracking }
 
 enum GeneratedSessionReplayStatus {
   isRecording,
@@ -54,10 +55,7 @@ enum GeneratedSessionReplayStatus {
   disabledBySampling,
 }
 
-enum GeneratedRecordingMaskType {
-  erasing,
-  covering,
-}
+enum GeneratedRecordingMaskType { erasing, covering }
 
 enum GeneratedStatus {
   running,
@@ -79,14 +77,12 @@ class GeneratedSlowRenderingModuleConfiguration {
   int intervalMillis;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-      intervalMillis,
-    ];
+    return <Object?>[isEnabled, intervalMillis];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedSlowRenderingModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -99,7 +95,8 @@ class GeneratedSlowRenderingModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedSlowRenderingModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedSlowRenderingModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -110,8 +107,7 @@ class GeneratedSlowRenderingModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedNavigationModuleConfiguration {
@@ -125,14 +121,12 @@ class GeneratedNavigationModuleConfiguration {
   bool isAutomatedTrackingEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-      isAutomatedTrackingEnabled,
-    ];
+    return <Object?>[isEnabled, isAutomatedTrackingEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedNavigationModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -145,7 +139,8 @@ class GeneratedNavigationModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedNavigationModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedNavigationModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -156,25 +151,21 @@ class GeneratedNavigationModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedCrashReportsModuleConfiguration {
-  GeneratedCrashReportsModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedCrashReportsModuleConfiguration({required this.isEnabled});
 
   bool isEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-    ];
+    return <Object?>[isEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedCrashReportsModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -186,7 +177,8 @@ class GeneratedCrashReportsModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedCrashReportsModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedCrashReportsModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -197,25 +189,21 @@ class GeneratedCrashReportsModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedInteractionsModuleConfiguration {
-  GeneratedInteractionsModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedInteractionsModuleConfiguration({required this.isEnabled});
 
   bool isEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-    ];
+    return <Object?>[isEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedInteractionsModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -227,7 +215,8 @@ class GeneratedInteractionsModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedInteractionsModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedInteractionsModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -238,25 +227,21 @@ class GeneratedInteractionsModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedNetworkMonitorModuleConfiguration {
-  GeneratedNetworkMonitorModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedNetworkMonitorModuleConfiguration({required this.isEnabled});
 
   bool isEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-    ];
+    return <Object?>[isEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedNetworkMonitorModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -268,7 +253,8 @@ class GeneratedNetworkMonitorModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedNetworkMonitorModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedNetworkMonitorModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -279,27 +265,25 @@ class GeneratedNetworkMonitorModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedApplicationLifecycleModuleConfiguration {
-  GeneratedApplicationLifecycleModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedApplicationLifecycleModuleConfiguration({required this.isEnabled});
 
   bool isEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-    ];
+    return <Object?>[isEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
-  static GeneratedApplicationLifecycleModuleConfiguration decode(Object result) {
+  static GeneratedApplicationLifecycleModuleConfiguration decode(
+    Object result,
+  ) {
     result as List<Object?>;
     return GeneratedApplicationLifecycleModuleConfiguration(
       isEnabled: result[0]! as bool,
@@ -309,7 +293,8 @@ class GeneratedApplicationLifecycleModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedApplicationLifecycleModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedApplicationLifecycleModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -320,37 +305,32 @@ class GeneratedApplicationLifecycleModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedAnrModuleConfiguration {
-  GeneratedAnrModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedAnrModuleConfiguration({required this.isEnabled});
 
   bool isEnabled;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-    ];
+    return <Object?>[isEnabled];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedAnrModuleConfiguration decode(Object result) {
     result as List<Object?>;
-    return GeneratedAnrModuleConfiguration(
-      isEnabled: result[0]! as bool,
-    );
+    return GeneratedAnrModuleConfiguration(isEnabled: result[0]! as bool);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedAnrModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedAnrModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -361,8 +341,7 @@ class GeneratedAnrModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedHttpUrlModuleConfiguration {
@@ -387,7 +366,8 @@ class GeneratedHttpUrlModuleConfiguration {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedHttpUrlModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -401,7 +381,8 @@ class GeneratedHttpUrlModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedHttpUrlModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedHttpUrlModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -412,8 +393,7 @@ class GeneratedHttpUrlModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedOkHttp3AutoModuleConfiguration {
@@ -438,7 +418,8 @@ class GeneratedOkHttp3AutoModuleConfiguration {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedOkHttp3AutoModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -452,7 +433,8 @@ class GeneratedOkHttp3AutoModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedOkHttp3AutoModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedOkHttp3AutoModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -463,8 +445,7 @@ class GeneratedOkHttp3AutoModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedNetworkInstrumentationModuleConfiguration {
@@ -478,27 +459,29 @@ class GeneratedNetworkInstrumentationModuleConfiguration {
   List<GeneratedRegularExpression> ignoreURLs;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-      ignoreURLs,
-    ];
+    return <Object?>[isEnabled, ignoreURLs];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
-  static GeneratedNetworkInstrumentationModuleConfiguration decode(Object result) {
+  static GeneratedNetworkInstrumentationModuleConfiguration decode(
+    Object result,
+  ) {
     result as List<Object?>;
     return GeneratedNetworkInstrumentationModuleConfiguration(
       isEnabled: result[0]! as bool,
-      ignoreURLs: (result[1] as List<Object?>?)!.cast<GeneratedRegularExpression>(),
+      ignoreURLs: (result[1] as List<Object?>?)!
+          .cast<GeneratedRegularExpression>(),
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedNetworkInstrumentationModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedNetworkInstrumentationModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -509,29 +492,23 @@ class GeneratedNetworkInstrumentationModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRegularExpression {
-  GeneratedRegularExpression({
-    required this.pattern,
-    this.options,
-  });
+  GeneratedRegularExpression({required this.pattern, this.options});
 
   String pattern;
 
   List<GeneratedRegexOption?>? options;
 
   List<Object?> _toList() {
-    return <Object?>[
-      pattern,
-      options,
-    ];
+    return <Object?>[pattern, options];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRegularExpression decode(Object result) {
     result as List<Object?>;
@@ -544,7 +521,8 @@ class GeneratedRegularExpression {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRegularExpression || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRegularExpression ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -555,8 +533,7 @@ class GeneratedRegularExpression {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedSessionReplayModuleConfiguration {
@@ -570,14 +547,12 @@ class GeneratedSessionReplayModuleConfiguration {
   double samplingRate;
 
   List<Object?> _toList() {
-    return <Object?>[
-      isEnabled,
-      samplingRate,
-    ];
+    return <Object?>[isEnabled, samplingRate];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedSessionReplayModuleConfiguration decode(Object result) {
     result as List<Object?>;
@@ -590,7 +565,8 @@ class GeneratedSessionReplayModuleConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedSessionReplayModuleConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedSessionReplayModuleConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -601,8 +577,7 @@ class GeneratedSessionReplayModuleConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedAgentConfiguration {
@@ -655,7 +630,8 @@ class GeneratedAgentConfiguration {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedAgentConfiguration decode(Object result) {
     result as List<Object?>;
@@ -676,7 +652,8 @@ class GeneratedAgentConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedAgentConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedAgentConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -687,8 +664,7 @@ class GeneratedAgentConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedEndpointConfiguration {
@@ -717,7 +693,8 @@ class GeneratedEndpointConfiguration {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedEndpointConfiguration decode(Object result) {
     result as List<Object?>;
@@ -732,7 +709,8 @@ class GeneratedEndpointConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedEndpointConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedEndpointConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -743,25 +721,21 @@ class GeneratedEndpointConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedUserConfiguration {
-  GeneratedUserConfiguration({
-    required this.trackingMode,
-  });
+  GeneratedUserConfiguration({required this.trackingMode});
 
   GeneratedUserTrackingMode trackingMode;
 
   List<Object?> _toList() {
-    return <Object?>[
-      trackingMode,
-    ];
+    return <Object?>[trackingMode];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedUserConfiguration decode(Object result) {
     result as List<Object?>;
@@ -773,7 +747,8 @@ class GeneratedUserConfiguration {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedUserConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedUserConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -784,37 +759,32 @@ class GeneratedUserConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedSessionConfiguration {
-  GeneratedSessionConfiguration({
-    required this.samplingRate,
-  });
+  GeneratedSessionConfiguration({required this.samplingRate});
 
   double samplingRate;
 
   List<Object?> _toList() {
-    return <Object?>[
-      samplingRate,
-    ];
+    return <Object?>[samplingRate];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedSessionConfiguration decode(Object result) {
     result as List<Object?>;
-    return GeneratedSessionConfiguration(
-      samplingRate: result[0]! as double,
-    );
+    return GeneratedSessionConfiguration(samplingRate: result[0]! as double);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedSessionConfiguration || other.runtimeType != runtimeType) {
+    if (other is! GeneratedSessionConfiguration ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -825,37 +795,35 @@ class GeneratedSessionConfiguration {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRecordingMaskList {
-  GeneratedRecordingMaskList({
-    this.recordingMaskList,
-  });
+  GeneratedRecordingMaskList({this.recordingMaskList});
 
   List<GeneratedRecordingMaskElement>? recordingMaskList;
 
   List<Object?> _toList() {
-    return <Object?>[
-      recordingMaskList,
-    ];
+    return <Object?>[recordingMaskList];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRecordingMaskList decode(Object result) {
     result as List<Object?>;
     return GeneratedRecordingMaskList(
-      recordingMaskList: (result[0] as List<Object?>?)?.cast<GeneratedRecordingMaskElement>(),
+      recordingMaskList: (result[0] as List<Object?>?)
+          ?.cast<GeneratedRecordingMaskElement>(),
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRecordingMaskList || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRecordingMaskList ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -866,29 +834,23 @@ class GeneratedRecordingMaskList {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRecordingMaskElement {
-  GeneratedRecordingMaskElement({
-    required this.rect,
-    required this.type,
-  });
+  GeneratedRecordingMaskElement({required this.rect, required this.type});
 
   GeneratedRect rect;
 
   GeneratedRecordingMaskType type;
 
   List<Object?> _toList() {
-    return <Object?>[
-      rect,
-      type,
-    ];
+    return <Object?>[rect, type];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRecordingMaskElement decode(Object result) {
     result as List<Object?>;
@@ -901,7 +863,8 @@ class GeneratedRecordingMaskElement {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRecordingMaskElement || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRecordingMaskElement ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -912,8 +875,7 @@ class GeneratedRecordingMaskElement {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRect {
@@ -933,16 +895,12 @@ class GeneratedRect {
   double height;
 
   List<Object?> _toList() {
-    return <Object?>[
-      left,
-      top,
-      width,
-      height,
-    ];
+    return <Object?>[left, top, width, height];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRect decode(Object result) {
     result as List<Object?>;
@@ -968,37 +926,35 @@ class GeneratedRect {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributes {
-  GeneratedMutableAttributes({
-    required this.attributes,
-  });
+  GeneratedMutableAttributes({required this.attributes});
 
   Map<String, Object?> attributes;
 
   List<Object?> _toList() {
-    return <Object?>[
-      attributes,
-    ];
+    return <Object?>[attributes];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributes decode(Object result) {
     result as List<Object?>;
     return GeneratedMutableAttributes(
-      attributes: (result[0] as Map<Object?, Object?>?)!.cast<String, Object?>(),
+      attributes: (result[0] as Map<Object?, Object?>?)!
+          .cast<String, Object?>(),
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributes || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributes ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1009,37 +965,32 @@ class GeneratedMutableAttributes {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeInt {
-  GeneratedMutableAttributeInt({
-    required this.value,
-  });
+  GeneratedMutableAttributeInt({required this.value});
 
   int value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeInt decode(Object result) {
     result as List<Object?>;
-    return GeneratedMutableAttributeInt(
-      value: result[0]! as int,
-    );
+    return GeneratedMutableAttributeInt(value: result[0]! as int);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeInt || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeInt ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1050,37 +1001,32 @@ class GeneratedMutableAttributeInt {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeDouble {
-  GeneratedMutableAttributeDouble({
-    required this.value,
-  });
+  GeneratedMutableAttributeDouble({required this.value});
 
   double value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeDouble decode(Object result) {
     result as List<Object?>;
-    return GeneratedMutableAttributeDouble(
-      value: result[0]! as double,
-    );
+    return GeneratedMutableAttributeDouble(value: result[0]! as double);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeDouble || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeDouble ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1091,37 +1037,32 @@ class GeneratedMutableAttributeDouble {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeString {
-  GeneratedMutableAttributeString({
-    required this.value,
-  });
+  GeneratedMutableAttributeString({required this.value});
 
   String value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeString decode(Object result) {
     result as List<Object?>;
-    return GeneratedMutableAttributeString(
-      value: result[0]! as String,
-    );
+    return GeneratedMutableAttributeString(value: result[0]! as String);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeString || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeString ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1132,37 +1073,32 @@ class GeneratedMutableAttributeString {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeBool {
-  GeneratedMutableAttributeBool({
-    required this.value,
-  });
+  GeneratedMutableAttributeBool({required this.value});
 
   bool value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeBool decode(Object result) {
     result as List<Object?>;
-    return GeneratedMutableAttributeBool(
-      value: result[0]! as bool,
-    );
+    return GeneratedMutableAttributeBool(value: result[0]! as bool);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeBool || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeBool ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1173,25 +1109,21 @@ class GeneratedMutableAttributeBool {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeListInt {
-  GeneratedMutableAttributeListInt({
-    required this.value,
-  });
+  GeneratedMutableAttributeListInt({required this.value});
 
   List<int> value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeListInt decode(Object result) {
     result as List<Object?>;
@@ -1203,7 +1135,8 @@ class GeneratedMutableAttributeListInt {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeListInt || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeListInt ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1214,25 +1147,21 @@ class GeneratedMutableAttributeListInt {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeListDouble {
-  GeneratedMutableAttributeListDouble({
-    required this.value,
-  });
+  GeneratedMutableAttributeListDouble({required this.value});
 
   List<double> value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeListDouble decode(Object result) {
     result as List<Object?>;
@@ -1244,7 +1173,8 @@ class GeneratedMutableAttributeListDouble {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeListDouble || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeListDouble ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1255,25 +1185,21 @@ class GeneratedMutableAttributeListDouble {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeListString {
-  GeneratedMutableAttributeListString({
-    required this.value,
-  });
+  GeneratedMutableAttributeListString({required this.value});
 
   List<String> value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeListString decode(Object result) {
     result as List<Object?>;
@@ -1285,7 +1211,8 @@ class GeneratedMutableAttributeListString {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeListString || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeListString ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1296,25 +1223,21 @@ class GeneratedMutableAttributeListString {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedMutableAttributeListBool {
-  GeneratedMutableAttributeListBool({
-    required this.value,
-  });
+  GeneratedMutableAttributeListBool({required this.value});
 
   List<bool> value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-    ];
+    return <Object?>[value];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedMutableAttributeListBool decode(Object result) {
     result as List<Object?>;
@@ -1326,7 +1249,8 @@ class GeneratedMutableAttributeListBool {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedMutableAttributeListBool || other.runtimeType != runtimeType) {
+    if (other is! GeneratedMutableAttributeListBool ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -1337,10 +1261,8 @@ class GeneratedMutableAttributeListBool {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -1349,103 +1271,103 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedRegexOption) {
+    } else if (value is GeneratedRegexOption) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedUserTrackingMode) {
+    } else if (value is GeneratedUserTrackingMode) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSessionReplayStatus) {
+    } else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    } else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedStatus) {
+    } else if (value is GeneratedStatus) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedSlowRenderingModuleConfiguration) {
+    } else if (value is GeneratedSlowRenderingModuleConfiguration) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNavigationModuleConfiguration) {
+    } else if (value is GeneratedNavigationModuleConfiguration) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedCrashReportsModuleConfiguration) {
+    } else if (value is GeneratedCrashReportsModuleConfiguration) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedInteractionsModuleConfiguration) {
+    } else if (value is GeneratedInteractionsModuleConfiguration) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNetworkMonitorModuleConfiguration) {
+    } else if (value is GeneratedNetworkMonitorModuleConfiguration) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
+    } else if (value is GeneratedApplicationLifecycleModuleConfiguration) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAnrModuleConfiguration) {
+    } else if (value is GeneratedAnrModuleConfiguration) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedHttpUrlModuleConfiguration) {
+    } else if (value is GeneratedHttpUrlModuleConfiguration) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
+    } else if (value is GeneratedOkHttp3AutoModuleConfiguration) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
+    } else if (value is GeneratedNetworkInstrumentationModuleConfiguration) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRegularExpression) {
+    } else if (value is GeneratedRegularExpression) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionReplayModuleConfiguration) {
+    } else if (value is GeneratedSessionReplayModuleConfiguration) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedAgentConfiguration) {
+    } else if (value is GeneratedAgentConfiguration) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedEndpointConfiguration) {
+    } else if (value is GeneratedEndpointConfiguration) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedUserConfiguration) {
+    } else if (value is GeneratedUserConfiguration) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedSessionConfiguration) {
+    } else if (value is GeneratedSessionConfiguration) {
       buffer.putUint8(149);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskList) {
+    } else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(150);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    } else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(151);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    } else if (value is GeneratedRect) {
       buffer.putUint8(152);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributes) {
+    } else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(153);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeInt) {
+    } else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(154);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeDouble) {
+    } else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(155);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeString) {
+    } else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(156);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeBool) {
+    } else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(157);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListInt) {
+    } else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(158);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListDouble) {
+    } else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(159);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListString) {
+    } else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(160);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedMutableAttributeListBool) {
+    } else if (value is GeneratedMutableAttributeListBool) {
       buffer.putUint8(161);
       writeValue(buffer, value.encode());
     } else {
@@ -1456,76 +1378,96 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRegexOption.values[value];
-      case 130: 
+      case 130:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedUserTrackingMode.values[value];
-      case 131: 
+      case 131:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedSessionReplayStatus.values[value];
-      case 132: 
+        return value == null
+            ? null
+            : GeneratedSessionReplayStatus.values[value];
+      case 132:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 133: 
+      case 133:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedStatus.values[value];
-      case 134: 
-        return GeneratedSlowRenderingModuleConfiguration.decode(readValue(buffer)!);
-      case 135: 
-        return GeneratedNavigationModuleConfiguration.decode(readValue(buffer)!);
-      case 136: 
-        return GeneratedCrashReportsModuleConfiguration.decode(readValue(buffer)!);
-      case 137: 
-        return GeneratedInteractionsModuleConfiguration.decode(readValue(buffer)!);
-      case 138: 
-        return GeneratedNetworkMonitorModuleConfiguration.decode(readValue(buffer)!);
-      case 139: 
-        return GeneratedApplicationLifecycleModuleConfiguration.decode(readValue(buffer)!);
-      case 140: 
+      case 134:
+        return GeneratedSlowRenderingModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 135:
+        return GeneratedNavigationModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 136:
+        return GeneratedCrashReportsModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 137:
+        return GeneratedInteractionsModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 138:
+        return GeneratedNetworkMonitorModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 139:
+        return GeneratedApplicationLifecycleModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 140:
         return GeneratedAnrModuleConfiguration.decode(readValue(buffer)!);
-      case 141: 
+      case 141:
         return GeneratedHttpUrlModuleConfiguration.decode(readValue(buffer)!);
-      case 142: 
-        return GeneratedOkHttp3AutoModuleConfiguration.decode(readValue(buffer)!);
-      case 143: 
-        return GeneratedNetworkInstrumentationModuleConfiguration.decode(readValue(buffer)!);
-      case 144: 
+      case 142:
+        return GeneratedOkHttp3AutoModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 143:
+        return GeneratedNetworkInstrumentationModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 144:
         return GeneratedRegularExpression.decode(readValue(buffer)!);
-      case 145: 
-        return GeneratedSessionReplayModuleConfiguration.decode(readValue(buffer)!);
-      case 146: 
+      case 145:
+        return GeneratedSessionReplayModuleConfiguration.decode(
+          readValue(buffer)!,
+        );
+      case 146:
         return GeneratedAgentConfiguration.decode(readValue(buffer)!);
-      case 147: 
+      case 147:
         return GeneratedEndpointConfiguration.decode(readValue(buffer)!);
-      case 148: 
+      case 148:
         return GeneratedUserConfiguration.decode(readValue(buffer)!);
-      case 149: 
+      case 149:
         return GeneratedSessionConfiguration.decode(readValue(buffer)!);
-      case 150: 
+      case 150:
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 151: 
+      case 151:
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 152: 
+      case 152:
         return GeneratedRect.decode(readValue(buffer)!);
-      case 153: 
+      case 153:
         return GeneratedMutableAttributes.decode(readValue(buffer)!);
-      case 154: 
+      case 154:
         return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
-      case 155: 
+      case 155:
         return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
-      case 156: 
+      case 156:
         return GeneratedMutableAttributeString.decode(readValue(buffer)!);
-      case 157: 
+      case 157:
         return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
-      case 158: 
+      case 158:
         return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
-      case 159: 
+      case 159:
         return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
-      case 160: 
+      case 160:
         return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
-      case 161: 
+      case 161:
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1537,23 +1479,65 @@ class SplunkOtelFlutterHostApi {
   /// Constructor for [SplunkOtelFlutterHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  SplunkOtelFlutterHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  SplunkOtelFlutterHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> install({required GeneratedAgentConfiguration agentConfiguration, required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration, required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration, required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration, required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration, required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration, required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration, required GeneratedAnrModuleConfiguration? anrModuleConfiguration, required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration, required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration, required GeneratedNetworkInstrumentationModuleConfiguration? networkInstrumentationModuleConfiguration, required GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration, }) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[agentConfiguration, navigationModuleConfiguration, slowRenderingModuleConfiguration, crashReportsModuleConfiguration, interactionsModuleConfiguration, networkMonitorModuleConfiguration, applicationLifecycleModuleConfiguration, anrModuleConfiguration, httpUrlModuleConfiguration, okHttp3AutoModuleConfiguration, networkInstrumentationModuleConfiguration, sessionReplayModuleConfiguration]);
+  Future<void> install({
+    required GeneratedAgentConfiguration agentConfiguration,
+    required GeneratedNavigationModuleConfiguration?
+    navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration?
+    slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration?
+    crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration?
+    interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration?
+    networkMonitorModuleConfiguration,
+    required GeneratedApplicationLifecycleModuleConfiguration?
+    applicationLifecycleModuleConfiguration,
+    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration?
+    okHttp3AutoModuleConfiguration,
+    required GeneratedNetworkInstrumentationModuleConfiguration?
+    networkInstrumentationModuleConfiguration,
+    required GeneratedSessionReplayModuleConfiguration?
+    sessionReplayModuleConfiguration,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.install$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
+        .send(<Object?>[
+          agentConfiguration,
+          navigationModuleConfiguration,
+          slowRenderingModuleConfiguration,
+          crashReportsModuleConfiguration,
+          interactionsModuleConfiguration,
+          networkMonitorModuleConfiguration,
+          applicationLifecycleModuleConfiguration,
+          anrModuleConfiguration,
+          httpUrlModuleConfiguration,
+          okHttp3AutoModuleConfiguration,
+          networkInstrumentationModuleConfiguration,
+          sessionReplayModuleConfiguration,
+        ]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1570,12 +1554,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<String> stateGetAppName() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppName$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1598,12 +1584,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<String> stateGetAppVersion() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppVersion$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetAppVersion$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1626,12 +1614,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<GeneratedStatus> stateGetStatus() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetStatus$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetStatus$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1653,13 +1643,16 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<GeneratedEndpointConfiguration?> stateGetEndpointConfiguration() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+  Future<GeneratedEndpointConfiguration?>
+  stateGetEndpointConfiguration() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1677,12 +1670,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<String> stateGetDeploymentEnvironment() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeploymentEnvironment$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeploymentEnvironment$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1705,12 +1700,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<bool> stateGetIsDebugLoggingEnabled() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetIsDebugLoggingEnabled$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetIsDebugLoggingEnabled$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1733,12 +1730,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<String?> stateGetInstrumentedProcessName() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetInstrumentedProcessName$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetInstrumentedProcessName$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1756,12 +1755,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<bool> stateGetDeferredUntilForeground() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeferredUntilForeground$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.stateGetDeferredUntilForeground$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1783,13 +1784,16 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+  Future<GeneratedEndpointConfiguration?>
+  preferencesGetEndpointConfiguration() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesGetEndpointConfiguration$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1806,14 +1810,20 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> preferencesSetEndpointConfiguration({required GeneratedEndpointConfiguration endpointConfiguration}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> preferencesSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[endpointConfiguration],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[endpointConfiguration]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1830,12 +1840,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<String> sessionStateGetId() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1858,12 +1870,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<double> sessionStateGetSamplingRate() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetSamplingRate$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetSamplingRate$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1886,12 +1900,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<GeneratedUserTrackingMode> userStateGetUserTrackingMode() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userStateGetUserTrackingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userStateGetUserTrackingMode$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1913,13 +1929,16 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesGetUserTrackingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+  Future<GeneratedUserTrackingMode?>
+  userPreferencesGetUserTrackingMode() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesGetUserTrackingMode$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -1936,14 +1955,20 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> userPreferencesSetUserTrackingMode({
+    required GeneratedUserTrackingMode trackingMode,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.userPreferencesSetUserTrackingMode$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[trackingMode],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[trackingMode]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1960,13 +1985,17 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<Object?> globalAttributesGet({required String key}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGet$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1983,12 +2012,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<GeneratedMutableAttributes?> globalAttributesGetAll() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGetAll$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesGetAll$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -2006,13 +2037,17 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<void> globalAttributesRemove({required String key}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemove$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2029,12 +2064,14 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<void> globalAttributesRemoveAll() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemoveAll$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesRemoveAll$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -2052,13 +2089,17 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<bool> globalAttributesContains({required String key}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesContains$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2079,14 +2120,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetString({required String key, required String value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetString({
+    required String key,
+    required String value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetString$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2102,14 +2150,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetInt({required String key, required int value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetInt({
+    required String key,
+    required int value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetInt$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2125,14 +2180,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetDouble({required String key, required double value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetDouble({
+    required String key,
+    required double value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDouble$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2148,14 +2210,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetBool({required String key, required bool value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetBool({
+    required String key,
+    required bool value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBool$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2171,14 +2240,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetStringList({required String key, required List<String> value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetStringList({
+    required String key,
+    required List<String> value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetStringList$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2194,14 +2270,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetIntList({required String key, required List<int> value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetIntList({
+    required String key,
+    required List<int> value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetIntList$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2217,14 +2300,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetDoubleList({
+    required String key,
+    required List<double> value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetDoubleList$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2240,14 +2330,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetBoolList({
+    required String key,
+    required List<bool> value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetBoolList$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[key, value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2263,14 +2360,20 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> globalAttributesSetAll({
+    required GeneratedMutableAttributes value,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.globalAttributesSetAll$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[value],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2286,14 +2389,21 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> customTrackingTrackCustomEvent({
+    required String name,
+    required GeneratedMutableAttributes attributes,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackCustomEvent$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[name, attributes],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[name, attributes]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2309,14 +2419,20 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<int> customTrackingStartWorkflow({required String workflowName}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<int> customTrackingStartWorkflow({
+    required String workflowName,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingStartWorkflow$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[workflowName],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[workflowName]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2338,13 +2454,17 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<void> customTrackingEndWorkflow({required int handle}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[handle],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[handle]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -2361,13 +2481,17 @@ class SplunkOtelFlutterHostApi {
   }
 
   Future<void> navigationTrack({required String screenName}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[screenName],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[screenName]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

@@ -35,11 +35,6 @@ class Navigation {
   ///   screenName: 'HomeScreen',
   /// );
   /// ```
-  Future<void> track({
-    required String screenName,
-  }) async =>
-      await _delegate.navigationTrack(
-        screenName: screenName,
-      );
+  Future<void> track({required String screenName}) async =>
+      await _delegate.navigationTrack(screenName: screenName);
 }
-
