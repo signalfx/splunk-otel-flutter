@@ -27,7 +27,7 @@ let package = Package(
     products: [
         .library(name: "splunk-otel-flutter-session-replay", targets: ["splunk_otel_flutter_session_replay"])
     ],
-  dependencies: [
+    dependencies: [
         .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.2.0")
     ],
     targets: [

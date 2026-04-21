@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay_example
+package com.splunk.rum.flutter.sessionreplay.example
 
 import io.flutter.embedding.android.FlutterActivity
 

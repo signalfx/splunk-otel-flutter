@@ -1,8 +1,11 @@
-group = "com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.dart"
+group = "com.splunk.rum.flutter.sessionreplay"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "2.1.0"
+    ext.getExtOrDefault = {name ->
+        return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['SplunkSessionReplay_' + name]
+    }
+
     repositories {
         google()
         mavenCentral()
@@ -10,8 +13,12 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.9.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}")
     }
+}
+
+def getExtOrIntegerDefault(name) {
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["SplunkSessionReplay_" + name]).toInteger()
 }
 
 allprojects {
@@ -24,14 +31,17 @@ allprojects {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-android {
-    namespace = "com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay.dart"
+def splunkSdkVersion = getExtOrDefault("splunkSdkVersion")
 
-    compileSdk = 36
+android {
+    namespace = "com.splunk.rum.flutter.sessionreplay"
+
+    compileSdk = getExtOrIntegerDefault("compileSdkVersion")
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        coreLibraryDesugaringEnabled(true)
     }
 
     kotlinOptions {
@@ -44,10 +54,15 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = getExtOrIntegerDefault("minSdkVersion")
     }
 
     dependencies {
+        implementation("com.splunk:rum-integration-sessionreplay:$splunkSdkVersion")
+        implementation("com.splunk:rum-integration-agent-api:$splunkSdkVersion")
+
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
     }

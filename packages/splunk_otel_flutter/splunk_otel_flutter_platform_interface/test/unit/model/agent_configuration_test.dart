@@ -38,7 +38,7 @@ void main() {
       expect(config.endpoint?.rumAccessToken, 'token');
       expect(config.appVersion, isNull);
       expect(config.enableDebugLogging, false);
-      expect(config.user.trackingMode, UserTrackingMode.anonymousTracking);
+      expect(config.user.trackingMode, UserTrackingMode.noTracking);
       expect(config.session.samplingRate, 1.0);
       expect(config.instrumentedProcessName, isNull);
       expect(config.deferredUntilForeground, false);
@@ -71,7 +71,7 @@ void main() {
 
       // Assert - should use default UserConfiguration
       expect(config.user, isNotNull);
-      expect(config.user.trackingMode, UserTrackingMode.anonymousTracking);
+      expect(config.user.trackingMode, UserTrackingMode.noTracking);
     });
 
     test('should create without session configuration (null)', () {
@@ -172,9 +172,18 @@ void main() {
 
     test('should handle different realms', () {
       // Act
-      final configUS = EndpointConfiguration.forRum(realm: 'us0', rumAccessToken: 'token');
-      final configEU = EndpointConfiguration.forRum(realm: 'eu0', rumAccessToken: 'token');
-      final configAP = EndpointConfiguration.forRum(realm: 'ap0', rumAccessToken: 'token');
+      final configUS = EndpointConfiguration.forRum(
+        realm: 'us0',
+        rumAccessToken: 'token',
+      );
+      final configEU = EndpointConfiguration.forRum(
+        realm: 'eu0',
+        rumAccessToken: 'token',
+      );
+      final configAP = EndpointConfiguration.forRum(
+        realm: 'ap0',
+        rumAccessToken: 'token',
+      );
 
       // Assert
       expect(configUS.realm, 'us0');
@@ -184,12 +193,12 @@ void main() {
   });
 
   group('UserConfiguration', () {
-    test('should default to anonymousTracking', () {
+    test('should default to noTracking', () {
       // Act
       const config = UserConfiguration();
 
       // Assert
-      expect(config.trackingMode, UserTrackingMode.anonymousTracking);
+      expect(config.trackingMode, UserTrackingMode.noTracking);
     });
 
     test('should accept anonymousTracking', () {
@@ -220,7 +229,10 @@ void main() {
 
     test('should have correct enum values', () {
       expect(UserTrackingMode.values, contains(UserTrackingMode.noTracking));
-      expect(UserTrackingMode.values, contains(UserTrackingMode.anonymousTracking));
+      expect(
+        UserTrackingMode.values,
+        contains(UserTrackingMode.anonymousTracking),
+      );
     });
   });
 
@@ -248,7 +260,10 @@ void main() {
       final generated = config.toGeneratedUserConfiguration();
 
       // Assert
-      expect(generated.trackingMode, GeneratedUserTrackingMode.anonymousTracking);
+      expect(
+        generated.trackingMode,
+        GeneratedUserTrackingMode.anonymousTracking,
+      );
     });
 
     test('should convert default UserConfiguration correctly', () {
@@ -259,10 +274,7 @@ void main() {
       final generated = config.toGeneratedUserConfiguration();
 
       // Assert
-      expect(
-        generated.trackingMode,
-        GeneratedUserTrackingMode.anonymousTracking,
-      );
+      expect(generated.trackingMode, GeneratedUserTrackingMode.noTracking);
     });
   });
 
@@ -291,36 +303,39 @@ void main() {
       expect(config.samplingRate, 0.5);
     });
 
-    test('samplingRate less than 0.0 should throw AssertionError', () {
+    test('samplingRate less than 0.0 should throw ArgumentError', () {
       // Act & Assert
       expect(
         () => SessionConfiguration(samplingRate: -0.1),
-        throwsA(isA<AssertionError>()),
+        throwsArgumentError,
       );
     });
 
-    test('samplingRate greater than 1.0 should throw AssertionError', () {
+    test('samplingRate greater than 1.0 should throw ArgumentError', () {
       // Act & Assert
       expect(
         () => SessionConfiguration(samplingRate: 1.1),
-        throwsA(isA<AssertionError>()),
+        throwsArgumentError,
       );
     });
 
     test('default samplingRate should be 1.0', () {
       // Act
-      const config = SessionConfiguration();
+      final config = const SessionConfiguration();
 
       // Assert
       expect(config.samplingRate, 1.0);
     });
 
-    test('samplingRate out of range should throw AssertionError', () {
+    test('samplingRate error message should include received value', () {
       // Act & Assert
-      expect(
-        () => SessionConfiguration(samplingRate: 1.5),
-        throwsA(isA<AssertionError>()),
-      );
+      try {
+        SessionConfiguration(samplingRate: 1.5);
+        fail('Should have thrown ArgumentError');
+      } catch (e) {
+        expect(e, isA<ArgumentError>());
+        expect(e.toString(), contains('1.5'));
+      }
     });
 
     test('samplingRate boundary values should work', () {

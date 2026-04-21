@@ -49,7 +49,7 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
     SplunkRum.instance.user.state.getTrackingMode();
     SplunkRum.instance.user.preferences.getTrackingMode();
     SplunkRum.instance.user.preferences.setTrackingMode(
-      trackingMode: UserTrackingMode.noTracking,
+      userTrackingMode: UserTrackingMode.noTracking,
     );
 
     // global attributes
@@ -172,7 +172,7 @@ class _BasicTestRunWidgetState extends State<BasicTestRunWidget> {
       final trackingFromPrefs = await sdk.user.preferences.getTrackingMode();
       final trackingModeToSet = trackingFromPrefs ?? trackingFromState;
       await sdk.user.preferences.setTrackingMode(
-        trackingMode: trackingModeToSet,
+        userTrackingMode: trackingModeToSet,
       );
       final trackingAfter = await sdk.user.preferences.getTrackingMode();
       assert(

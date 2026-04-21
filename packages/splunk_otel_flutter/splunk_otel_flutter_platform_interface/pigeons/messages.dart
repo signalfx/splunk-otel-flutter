@@ -22,9 +22,7 @@ import 'package:pigeon/pigeon.dart';
     dartPackageName: 'splunk_otel_flutter_platform_interface',
     kotlinOut:
         '../splunk_otel_flutter/android/src/main/kotlin/com/splunk/rum/flutter/GeneratedAndroidSplunkOtelFlutter.g.kt',
-    kotlinOptions: KotlinOptions(
-      package: 'com.splunk.rum.flutter',
-    ),
+    kotlinOptions: KotlinOptions(package: 'com.splunk.rum.flutter'),
     swiftOut:
         '../splunk_otel_flutter/ios/splunk_otel_flutter/Sources/splunk_otel_flutter/SplunkOtelFlutterMessages.g.swift',
   ),
@@ -32,31 +30,36 @@ import 'package:pigeon/pigeon.dart';
 @HostApi()
 abstract class SplunkOtelFlutterHostApi {
   @async
-  void install(
-      {required GeneratedAgentConfiguration agentConfiguration,
-      // Core configurations
-      required GeneratedNavigationModuleConfiguration?
-          navigationModuleConfiguration,
-      required GeneratedSlowRenderingModuleConfiguration?
-          slowRenderingModuleConfiguration,
-      required GeneratedCrashReportsModuleConfiguration?
-          crashReportsModuleConfiguration,
-      required GeneratedInteractionsModuleConfiguration?
-          interactionsModuleConfiguration,
-      required GeneratedNetworkMonitorModuleConfiguration?
-          networkMonitorModuleConfiguration,
-      required GeneratedApplicationLifecycleModuleConfiguration?
-          applicationLifecycleModuleConfiguration,
+  void install({
+    required GeneratedAgentConfiguration agentConfiguration,
+    // Core configurations
+    required GeneratedNavigationModuleConfiguration?
+    navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration?
+    slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration?
+    crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration?
+    interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration?
+    networkMonitorModuleConfiguration,
+    required GeneratedApplicationLifecycleModuleConfiguration?
+    applicationLifecycleModuleConfiguration,
 
-      // Android-only configurations
-      required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
-      required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
-      required GeneratedOkHttp3AutoModuleConfiguration?
-          okHttp3AutoModuleConfiguration,
+    // Android-only configurations
+    required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration?
+    okHttp3AutoModuleConfiguration,
 
-      // iOS-only configurations
-      required GeneratedNetworkInstrumentationModuleConfiguration?
-          networkInstrumentationModuleConfiguration});
+    // iOS-only configurations
+    required GeneratedNetworkInstrumentationModuleConfiguration?
+    networkInstrumentationModuleConfiguration,
+
+    // Session replay configuration (requires splunk_otel_flutter_session_replay package)
+    required GeneratedSessionReplayModuleConfiguration?
+    sessionReplayModuleConfiguration,
+  });
 
   // State
 
@@ -145,20 +148,28 @@ abstract class SplunkOtelFlutterHostApi {
   void globalAttributesSetBool({required String key, required bool value});
 
   @async
-  void globalAttributesSetStringList(
-      {required String key, required List<String> value});
+  void globalAttributesSetStringList({
+    required String key,
+    required List<String> value,
+  });
 
   @async
-  void globalAttributesSetIntList(
-      {required String key, required List<int> value});
+  void globalAttributesSetIntList({
+    required String key,
+    required List<int> value,
+  });
 
   @async
-  void globalAttributesSetDoubleList(
-      {required String key, required List<double> value});
+  void globalAttributesSetDoubleList({
+    required String key,
+    required List<double> value,
+  });
 
   @async
-  void globalAttributesSetBoolList(
-      {required String key, required List<bool> value});
+  void globalAttributesSetBoolList({
+    required String key,
+    required List<bool> value,
+  });
 
   @async
   void globalAttributesSetAll({required GeneratedMutableAttributes value});
@@ -166,7 +177,10 @@ abstract class SplunkOtelFlutterHostApi {
   // Custom tracking
 
   @async
-  void customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes});
+  void customTrackingTrackCustomEvent({
+    required String name,
+    required GeneratedMutableAttributes attributes,
+  });
 
   @async
   int customTrackingStartWorkflow({required String workflowName});
@@ -205,33 +219,25 @@ class GeneratedNavigationModuleConfiguration {
 class GeneratedCrashReportsModuleConfiguration {
   final bool isEnabled;
 
-  GeneratedCrashReportsModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedCrashReportsModuleConfiguration({required this.isEnabled});
 }
 
 class GeneratedInteractionsModuleConfiguration {
   final bool isEnabled;
 
-  GeneratedInteractionsModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedInteractionsModuleConfiguration({required this.isEnabled});
 }
 
 class GeneratedNetworkMonitorModuleConfiguration {
   final bool isEnabled;
 
-  GeneratedNetworkMonitorModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedNetworkMonitorModuleConfiguration({required this.isEnabled});
 }
 
 class GeneratedApplicationLifecycleModuleConfiguration {
   final bool isEnabled;
 
-  GeneratedApplicationLifecycleModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedApplicationLifecycleModuleConfiguration({required this.isEnabled});
 }
 
 // ANDROID ONLY
@@ -239,9 +245,7 @@ class GeneratedApplicationLifecycleModuleConfiguration {
 class GeneratedAnrModuleConfiguration {
   final bool isEnabled;
 
-  GeneratedAnrModuleConfiguration({
-    required this.isEnabled,
-  });
+  GeneratedAnrModuleConfiguration({required this.isEnabled});
 }
 
 class GeneratedHttpUrlModuleConfiguration {
@@ -293,9 +297,16 @@ class GeneratedRegularExpression {
   final String pattern;
   final List<GeneratedRegexOption?>? options;
 
-  GeneratedRegularExpression({
-    required this.pattern,
-    required this.options,
+  GeneratedRegularExpression({required this.pattern, required this.options});
+}
+
+class GeneratedSessionReplayModuleConfiguration {
+  final bool isEnabled;
+  final double samplingRate;
+
+  GeneratedSessionReplayModuleConfiguration({
+    required this.isEnabled,
+    required this.samplingRate,
   });
 }
 
@@ -359,10 +370,7 @@ class GeneratedUserConfiguration {
   GeneratedUserConfiguration({required this.trackingMode});
 }
 
-enum GeneratedUserTrackingMode {
-  noTracking,
-  anonymousTracking,
-}
+enum GeneratedUserTrackingMode { noTracking, anonymousTracking }
 
 class GeneratedSessionConfiguration {
   final double samplingRate;
@@ -379,26 +387,20 @@ enum GeneratedSessionReplayStatus {
   belowMinSdkVersion,
   storageLimitReached,
   internalError,
+  disabledBySampling,
 }
-
-enum GeneratedRenderingMode { native, wireframeOnly }
 
 class GeneratedRecordingMaskList {
   final List<GeneratedRecordingMaskElement>? recordingMaskList;
 
-  GeneratedRecordingMaskList({
-    required this.recordingMaskList,
-  });
+  GeneratedRecordingMaskList({required this.recordingMaskList});
 }
 
 class GeneratedRecordingMaskElement {
   final GeneratedRect rect;
   final GeneratedRecordingMaskType type;
 
-  GeneratedRecordingMaskElement({
-    required this.rect,
-    required this.type,
-  });
+  GeneratedRecordingMaskElement({required this.rect, required this.type});
 }
 
 class GeneratedRect {
@@ -415,10 +417,7 @@ class GeneratedRect {
   });
 }
 
-enum GeneratedRecordingMaskType {
-  erasing,
-  covering,
-}
+enum GeneratedRecordingMaskType { erasing, covering }
 
 // Status
 

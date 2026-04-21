@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,20 @@ import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_r
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutterSessionReplay Method Channel', () {
-    test('should have a working class structure', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      expect(sessionReplay, isA<SplunkOtelFlutterSessionReplay>());
+  group('SplunkSessionReplay', () {
+    test('singleton instance should be accessible', () {
+      final sessionReplay = SplunkSessionReplay.instance;
+      expect(sessionReplay, isA<SplunkSessionReplay>());
     });
 
-    test('install method exists', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      expect(sessionReplay.install, isA<Function>());
+    test('start method exists', () {
+      final sessionReplay = SplunkSessionReplay.instance;
+      expect(sessionReplay.start, isA<Function>());
+    });
+
+    test('stop method exists', () {
+      final sessionReplay = SplunkSessionReplay.instance;
+      expect(sessionReplay.stop, isA<Function>());
     });
   });
 }
-

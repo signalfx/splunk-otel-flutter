@@ -38,9 +38,7 @@ void main() {
     });
 
     test('should handle zero duration', () {
-      final config = SlowRenderingModuleConfiguration(
-        interval: Duration.zero,
-      );
+      final config = SlowRenderingModuleConfiguration(interval: Duration.zero);
 
       expect(config.interval, Duration.zero);
     });
@@ -240,7 +238,10 @@ void main() {
     test('should create with options', () {
       final regex = RegularExpression(
         pattern: r'[a-z]+',
-        options: [RegexOption.caseInsensitive, RegexOption.dotMatchesLineSeparators],
+        options: [
+          RegexOption.caseInsensitive,
+          RegexOption.dotMatchesLineSeparators,
+        ],
       );
 
       expect(regex.pattern, r'[a-z]+');
@@ -289,25 +290,30 @@ void main() {
       expect(generated.pattern, r'test');
       expect(generated.options?.length, 2);
       expect(generated.options, contains(GeneratedRegexOption.caseInsensitive));
-      expect(generated.options, contains(GeneratedRegexOption.dotMatchesLineSeparators));
+      expect(
+        generated.options,
+        contains(GeneratedRegexOption.dotMatchesLineSeparators),
+      );
     });
 
     test('should convert all RegexOption values correctly', () {
       final mappings = {
         RegexOption.caseInsensitive: GeneratedRegexOption.caseInsensitive,
-        RegexOption.allowCommentsAndWhitespace: GeneratedRegexOption.allowCommentsAndWhitespace,
-        RegexOption.ignoreMetacharacters: GeneratedRegexOption.ignoreMetacharacters,
-        RegexOption.dotMatchesLineSeparators: GeneratedRegexOption.dotMatchesLineSeparators,
+        RegexOption.allowCommentsAndWhitespace:
+            GeneratedRegexOption.allowCommentsAndWhitespace,
+        RegexOption.ignoreMetacharacters:
+            GeneratedRegexOption.ignoreMetacharacters,
+        RegexOption.dotMatchesLineSeparators:
+            GeneratedRegexOption.dotMatchesLineSeparators,
         RegexOption.anchorsMatchLines: GeneratedRegexOption.anchorsMatchLines,
-        RegexOption.useUnixLineSeparators: GeneratedRegexOption.useUnixLineSeparators,
-        RegexOption.useUnicodeWordBoundaries: GeneratedRegexOption.useUnicodeWordBoundaries,
+        RegexOption.useUnixLineSeparators:
+            GeneratedRegexOption.useUnixLineSeparators,
+        RegexOption.useUnicodeWordBoundaries:
+            GeneratedRegexOption.useUnicodeWordBoundaries,
       };
 
       for (final entry in mappings.entries) {
-        final regex = RegularExpression(
-          pattern: 'test',
-          options: [entry.key],
-        );
+        final regex = RegularExpression(pattern: 'test', options: [entry.key]);
         final generated = regex.toGeneratedRegularExpression();
         expect(generated.options, contains(entry.value));
       }
@@ -342,7 +348,10 @@ void main() {
     test('should convert list to generated list', () {
       final regexList = [
         RegularExpression(pattern: r'pattern1'),
-        RegularExpression(pattern: r'pattern2', options: [RegexOption.caseInsensitive]),
+        RegularExpression(
+          pattern: r'pattern2',
+          options: [RegexOption.caseInsensitive],
+        ),
       ];
 
       final generatedList = regexList.toGeneratedList();
@@ -350,7 +359,10 @@ void main() {
       expect(generatedList.length, 2);
       expect(generatedList[0].pattern, r'pattern1');
       expect(generatedList[1].pattern, r'pattern2');
-      expect(generatedList[1].options, contains(GeneratedRegexOption.caseInsensitive));
+      expect(
+        generatedList[1].options,
+        contains(GeneratedRegexOption.caseInsensitive),
+      );
     });
 
     test('should convert generated list to list', () {
@@ -367,7 +379,10 @@ void main() {
       expect(regexList.length, 2);
       expect(regexList[0].pattern, r'pattern1');
       expect(regexList[1].pattern, r'pattern2');
-      expect(regexList[1].options, contains(RegexOption.dotMatchesLineSeparators));
+      expect(
+        regexList[1].options,
+        contains(RegexOption.dotMatchesLineSeparators),
+      );
     });
 
     test('should handle empty list conversion', () {
@@ -423,25 +438,28 @@ void main() {
   });
 
   group('Module Configuration Hierarchy', () {
-    test('all activable modules should extend ActivableModuleConfiguration', () {
-      final configs = [
-        SlowRenderingModuleConfiguration(),
-        NavigationModuleConfiguration(),
-        CrashReportsModuleConfiguration(),
-        InteractionsModuleConfiguration(),
-        NetworkMonitorModuleConfiguration(),
-        AnrModuleConfiguration(),
-        HttpUrlModuleConfiguration(),
-        OkHttp3AutoModuleConfiguration(),
-        NetworkInstrumentationModuleConfiguration(),
-        SessionReplayModuleConfiguration(),
-      ];
+    test(
+      'all activable modules should extend ActivableModuleConfiguration',
+      () {
+        final configs = [
+          SlowRenderingModuleConfiguration(),
+          NavigationModuleConfiguration(),
+          CrashReportsModuleConfiguration(),
+          InteractionsModuleConfiguration(),
+          NetworkMonitorModuleConfiguration(),
+          AnrModuleConfiguration(),
+          HttpUrlModuleConfiguration(),
+          OkHttp3AutoModuleConfiguration(),
+          NetworkInstrumentationModuleConfiguration(),
+          SessionReplayModuleConfiguration(),
+        ];
 
-      for (final config in configs) {
-        expect(config, isA<ActivableModuleConfiguration>());
-        expect(config, isA<ModuleConfiguration>());
-      }
-    });
+        for (final config in configs) {
+          expect(config, isA<ActivableModuleConfiguration>());
+          expect(config, isA<ModuleConfiguration>());
+        }
+      },
+    );
   });
 
   group('RegexOption Enum', () {
@@ -459,6 +477,3 @@ void main() {
     });
   });
 }
-
-
-

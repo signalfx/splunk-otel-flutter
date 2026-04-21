@@ -121,8 +121,7 @@ class SplunkRum {
     List<ModuleConfiguration> moduleConfigurations = const [],
   }) async {
     // Enriched here because platform_interface is shared across platforms.
-    final enrichedConfiguration =
-        applyRumTelemetryMetadata(agentConfiguration);
+    final enrichedConfiguration = applyRumTelemetryMetadata(agentConfiguration);
 
     await _delegate.install(
       agentConfiguration: enrichedConfiguration,

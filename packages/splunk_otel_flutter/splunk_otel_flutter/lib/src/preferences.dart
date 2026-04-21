@@ -36,9 +36,7 @@ class AgentPreferences {
   /// without an [EndpointConfiguration], or to update credentials at runtime.
   Future<void> setEndpointConfiguration({
     required EndpointConfiguration endpoint,
-  }) async =>
-      await _delegate.preferencesSetEndpointConfiguration(
-        endpointConfiguration: endpoint,
-      );
+  }) async => await _delegate.preferencesSetEndpointConfiguration(
+    endpoint: endpoint,
+  );
 }
-

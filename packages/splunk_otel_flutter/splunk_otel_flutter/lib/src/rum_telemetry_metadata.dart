@@ -48,10 +48,12 @@ AgentConfiguration applyRumTelemetryMetadata(
 
   final mergedAttributes = <String, MutableAttributeValue>{
     ...existingAttributes,
-    _splunkAppFrameworkFlutterVersionKey:
-        MutableAttributeString(value: frameworkVersion),
-    _rumSdkFlutterVersionKey:
-        MutableAttributeString(value: rumSdkFlutterVersion),
+    _splunkAppFrameworkFlutterVersionKey: MutableAttributeString(
+      value: frameworkVersion,
+    ),
+    _rumSdkFlutterVersionKey: MutableAttributeString(
+      value: rumSdkFlutterVersion,
+    ),
   };
 
   return AgentConfiguration(

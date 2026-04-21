@@ -37,9 +37,8 @@ class AgentConfiguration {
   /// Backend endpoint configuration for sending telemetry data.
   ///
   /// When `null`, the SDK starts without sending data. Credentials can be
-  /// provided later via `SplunkRum.instance.preferences.setEndpointConfiguration`.
+  /// provided later via `SplunkRum.instance.state.setEndpointConfiguration`.
   final EndpointConfiguration? endpoint;
-
 
   /// The name of your application.
   final String appName;
@@ -134,14 +133,14 @@ class EndpointConfiguration {
     );
   }
 
-  /// Creates endpoint configuration with a custom trace endpoint.
+  /// Creates endpoint configuration with a custom traces endpoint.
   ///
   /// Use this for self-hosted or custom backend deployments.
   factory EndpointConfiguration.forTraces({required Uri traceEndpoint}) {
     return EndpointConfiguration._internal(traceEndpoint: traceEndpoint);
   }
 
-  /// Creates endpoint configuration with custom trace and session replay endpoints.
+  /// Creates endpoint configuration with custom traces and session replay endpoints.
   ///
   /// Use this for self-hosted or custom backend deployments with session replay support.
   factory EndpointConfiguration.forTracesAndSessionReplay({

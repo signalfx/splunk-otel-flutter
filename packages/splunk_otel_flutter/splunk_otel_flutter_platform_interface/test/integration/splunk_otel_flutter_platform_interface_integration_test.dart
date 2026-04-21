@@ -42,70 +42,92 @@ void main() {
     });
 
     group('Full Installation Flow', () {
-      test('should complete full installation with all configurations', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'test-token-abc123',
-          ),
-          appName: 'IntegrationTestApp',
-          deploymentEnvironment: 'production',
-          appVersion: '1.0.0',
-          enableDebugLogging: true,
-          user: const UserConfiguration(
-            trackingMode: UserTrackingMode.anonymousTracking,
-          ),
-          session: const SessionConfiguration(samplingRate: 0.75),
-          instrumentedProcessName: 'com.example.integration.test',
-          deferredUntilForeground: true,
-        );
+      test(
+        'should complete full installation with all configurations',
+        () async {
+          // Arrange
+          final agentConfig = AgentConfiguration(
+            endpoint: EndpointConfiguration.forRum(
+              realm: 'us0',
+              rumAccessToken: 'test-token-abc123',
+            ),
+            appName: 'IntegrationTestApp',
+            deploymentEnvironment: 'production',
+            appVersion: '1.0.0',
+            enableDebugLogging: true,
+            user: const UserConfiguration(
+              trackingMode: UserTrackingMode.anonymousTracking,
+            ),
+            session: const SessionConfiguration(samplingRate: 0.75),
+            instrumentedProcessName: 'com.example.integration.test',
+            deferredUntilForeground: true,
+          );
 
-        final navConfig = NavigationModuleConfiguration(
-          isEnabled: true,
-          isAutomatedTrackingEnabled: true,
-        );
+          final navConfig = NavigationModuleConfiguration(
+            isEnabled: true,
+            isAutomatedTrackingEnabled: true,
+          );
 
-        final slowRenderingConfig = SlowRenderingModuleConfiguration(
-          isEnabled: true,
-          interval: const Duration(milliseconds: 1500),
-        );
+          final slowRenderingConfig = SlowRenderingModuleConfiguration(
+            isEnabled: true,
+            interval: const Duration(milliseconds: 1500),
+          );
 
-        bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          installCalled = true;
+          bool installCalled = false;
+          mockApi.installHandler =
+              (
+                genAgent,
+                genNav,
+                genSlow,
+                genCrash,
+                genInteractions,
+                genNetwork,
+                genAppLifecycle,
+                genAnr,
+                genHttpUrl,
+                genOkHttp3,
+                genNetworkInst,
+                genSessionReplay,
+              ) async {
+                installCalled = true;
 
-          // Verify agent configuration
-          expect(genAgent.appName, 'IntegrationTestApp');
-          expect(genAgent.deploymentEnvironment, 'production');
-          expect(genAgent.endpoint?.realm, 'us0');
-          expect(genAgent.endpoint?.rumAccessToken, 'test-token-abc123');
-          expect(genAgent.appVersion, '1.0.0');
-          expect(genAgent.enableDebugLogging, true);
-          expect(genAgent.user?.trackingMode,
-              GeneratedUserTrackingMode.anonymousTracking);
-          expect(genAgent.session?.samplingRate, 0.75);
-          expect(genAgent.instrumentedProcessName, 'com.example.integration.test');
-          expect(genAgent.deferredUntilForeground, true);
+                // Verify agent configuration
+                expect(genAgent.appName, 'IntegrationTestApp');
+                expect(genAgent.deploymentEnvironment, 'production');
+                expect(genAgent.endpoint?.realm, 'us0');
+                expect(genAgent.endpoint?.rumAccessToken, 'test-token-abc123');
+                expect(genAgent.appVersion, '1.0.0');
+                expect(genAgent.enableDebugLogging, true);
+                expect(
+                  genAgent.user?.trackingMode,
+                  GeneratedUserTrackingMode.anonymousTracking,
+                );
+                expect(genAgent.session?.samplingRate, 0.75);
+                expect(
+                  genAgent.instrumentedProcessName,
+                  'com.example.integration.test',
+                );
+                expect(genAgent.deferredUntilForeground, true);
 
-          // Verify navigation configuration
-          expect(genNav?.isEnabled, true);
-          expect(genNav?.isAutomatedTrackingEnabled, true);
+                // Verify navigation configuration
+                expect(genNav?.isEnabled, true);
+                expect(genNav?.isAutomatedTrackingEnabled, true);
 
-          // Verify slow rendering configuration
-          expect(genSlow?.isEnabled, true);
-          expect(genSlow?.intervalMillis, 1500);
-        };
+                // Verify slow rendering configuration
+                expect(genSlow?.isEnabled, true);
+                expect(genSlow?.intervalMillis, 1500);
+              };
 
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [navConfig, slowRenderingConfig],
-        );
+          // Act
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [navConfig, slowRenderingConfig],
+          );
 
-        // Assert
-        expect(installCalled, true);
-      });
+          // Assert
+          expect(installCalled, true);
+        },
+      );
 
       test('should handle minimal configuration installation', () async {
         // Arrange
@@ -119,42 +141,32 @@ void main() {
         );
 
         bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          installCalled = true;
+        mockApi.installHandler =
+            (
+              genAgent,
+              genNav,
+              genSlow,
+              genCrash,
+              genInteractions,
+              genNetwork,
+              genAppLifecycle,
+              genAnr,
+              genHttpUrl,
+              genOkHttp3,
+              genNetworkInst,
+              genSessionReplay,
+            ) async {
+              installCalled = true;
 
-          // Verify minimal agent config
-          expect(genAgent.appName, 'MinimalApp');
-          expect(genAgent.appVersion, isNull);
-          expect(genAgent.enableDebugLogging, false);
+              // Verify minimal agent config
+              expect(genAgent.appName, 'MinimalApp');
+              expect(genAgent.appVersion, isNull);
+              expect(genAgent.enableDebugLogging, false);
 
-          // Verify no module configs provided (should be null)
-          expect(genNav, isNull);
-          expect(genSlow, isNull);
-        };
-
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [],
-        );
-
-        // Assert
-        expect(installCalled, true);
-      });
-
-      test('should handle installation without endpoint configuration', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          appName: 'DeferredApp',
-          deploymentEnvironment: 'test',
-        );
-
-        bool installCalled = false;
-        mockApi.installHandler = (genAgent, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          installCalled = true;
-          expect(genAgent.endpoint, isNull);
-          expect(genAgent.appName, 'DeferredApp');
-        };
+              // Verify no module configs provided (should be null)
+              expect(genNav, isNull);
+              expect(genSlow, isNull);
+            };
 
         // Act
         await implementation.install(
@@ -165,6 +177,47 @@ void main() {
         // Assert
         expect(installCalled, true);
       });
+
+      test(
+        'should handle installation without endpoint configuration',
+        () async {
+          // Arrange
+          final agentConfig = AgentConfiguration(
+            appName: 'DeferredApp',
+            deploymentEnvironment: 'test',
+          );
+
+          bool installCalled = false;
+          mockApi.installHandler =
+              (
+                genAgent,
+                genNav,
+                genSlow,
+                genCrash,
+                genInteractions,
+                genNetwork,
+                genAppLifecycle,
+                genAnr,
+                genHttpUrl,
+                genOkHttp3,
+                genNetworkInst,
+                genSessionReplay,
+              ) async {
+                installCalled = true;
+                expect(genAgent.endpoint, isNull);
+                expect(genAgent.appName, 'DeferredApp');
+              };
+
+          // Act
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [],
+          );
+
+          // Assert
+          expect(installCalled, true);
+        },
+      );
 
       test('should set endpoint configuration after install', () async {
         GeneratedEndpointConfiguration? receivedConfig;
@@ -173,7 +226,7 @@ void main() {
         };
 
         await implementation.preferencesSetEndpointConfiguration(
-          endpointConfiguration: EndpointConfiguration.forRum(
+          endpoint: EndpointConfiguration.forRum(
             realm: 'us0',
             rumAccessToken: 'deferred-token',
           ),
@@ -199,12 +252,26 @@ void main() {
           isAutomatedTrackingEnabled: false,
         );
 
-        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          expect(genNav?.isEnabled, false);
-          expect(genNav?.isAutomatedTrackingEnabled, false);
-          // No slow rendering module provided
-          expect(genSlow, isNull);
-        };
+        mockApi.installHandler =
+            (
+              _,
+              genNav,
+              genSlow,
+              genCrash,
+              genInteractions,
+              genNetwork,
+              genAppLifecycle,
+              genAnr,
+              genHttpUrl,
+              genOkHttp3,
+              genNetworkInst,
+              genSessionReplay,
+            ) async {
+              expect(genNav?.isEnabled, false);
+              expect(genNav?.isAutomatedTrackingEnabled, false);
+              // No slow rendering module provided
+              expect(genSlow, isNull);
+            };
 
         // Act
         await implementation.install(
@@ -213,35 +280,52 @@ void main() {
         );
       });
 
-      test('should handle installation with only slow rendering module', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'token',
-          ),
-          appName: 'SlowRenderApp',
-          deploymentEnvironment: 'production',
-        );
+      test(
+        'should handle installation with only slow rendering module',
+        () async {
+          // Arrange
+          final agentConfig = AgentConfiguration(
+            endpoint: EndpointConfiguration.forRum(
+              realm: 'us0',
+              rumAccessToken: 'token',
+            ),
+            appName: 'SlowRenderApp',
+            deploymentEnvironment: 'production',
+          );
 
-        final slowConfig = SlowRenderingModuleConfiguration(
-          isEnabled: false,
-          interval: const Duration(milliseconds: 250),
-        );
+          final slowConfig = SlowRenderingModuleConfiguration(
+            isEnabled: false,
+            interval: const Duration(milliseconds: 250),
+          );
 
-        mockApi.installHandler = (_, genNav, genSlow, genCrash, genInteractions, genNetwork, genAppLifecycle, genAnr, genHttpUrl, genOkHttp3, genNetworkInst) async {
-          // No navigation module provided
-          expect(genNav, isNull);
-          expect(genSlow?.isEnabled, false);
-          expect(genSlow?.intervalMillis, 250);
-        };
+          mockApi.installHandler =
+              (
+                _,
+                genNav,
+                genSlow,
+                genCrash,
+                genInteractions,
+                genNetwork,
+                genAppLifecycle,
+                genAnr,
+                genHttpUrl,
+                genOkHttp3,
+                genNetworkInst,
+                genSessionReplay,
+              ) async {
+                // No navigation module provided
+                expect(genNav, isNull);
+                expect(genSlow?.isEnabled, false);
+                expect(genSlow?.intervalMillis, 250);
+              };
 
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [slowConfig],
-        );
-      });
+          // Act
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [slowConfig],
+          );
+        },
+      );
     });
 
     group('Configuration Validation Integration', () {
@@ -257,7 +341,7 @@ void main() {
             deploymentEnvironment: 'test',
             session: SessionConfiguration(samplingRate: 1.5),
           ),
-          throwsA(isA<AssertionError>()),
+          throwsArgumentError,
         );
       });
 
@@ -273,9 +357,10 @@ void main() {
           session: const SessionConfiguration(samplingRate: 0.0),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.session?.samplingRate, 0.0);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(genAgent.session?.samplingRate, 0.0);
+            };
 
         await implementation.install(
           agentConfiguration: config0,
@@ -293,9 +378,10 @@ void main() {
           session: const SessionConfiguration(samplingRate: 1.0),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.session?.samplingRate, 1.0);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(genAgent.session?.samplingRate, 1.0);
+            };
 
         await implementation.install(
           agentConfiguration: config1,
@@ -319,10 +405,13 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.user?.trackingMode,
-              GeneratedUserTrackingMode.noTracking);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(
+                genAgent.user?.trackingMode,
+                GeneratedUserTrackingMode.noTracking,
+              );
+            };
 
         await implementation.install(
           agentConfiguration: configNoTracking,
@@ -342,10 +431,13 @@ void main() {
           ),
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.user?.trackingMode,
-              GeneratedUserTrackingMode.anonymousTracking);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(
+                genAgent.user?.trackingMode,
+                GeneratedUserTrackingMode.anonymousTracking,
+              );
+            };
 
         await implementation.install(
           agentConfiguration: configAnonymous,
@@ -362,10 +454,13 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.user?.trackingMode,
-              GeneratedUserTrackingMode.anonymousTracking);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(
+                genAgent.user?.trackingMode,
+                GeneratedUserTrackingMode.noTracking,
+              );
+            };
 
         await implementation.install(
           agentConfiguration: configDefault,
@@ -374,41 +469,44 @@ void main() {
       });
     });
 
-
     group('Module Configuration Priority', () {
-      test('should use first module configuration when duplicates exist', () async {
-        // Arrange
-        final agentConfig = AgentConfiguration(
-          endpoint: EndpointConfiguration.forRum(
-            realm: 'us0',
-            rumAccessToken: 'token',
-          ),
-          appName: 'DuplicateModulesApp',
-          deploymentEnvironment: 'test',
-        );
+      test(
+        'should use first module configuration when duplicates exist',
+        () async {
+          // Arrange
+          final agentConfig = AgentConfiguration(
+            endpoint: EndpointConfiguration.forRum(
+              realm: 'us0',
+              rumAccessToken: 'token',
+            ),
+            appName: 'DuplicateModulesApp',
+            deploymentEnvironment: 'test',
+          );
 
-        final navConfig1 = NavigationModuleConfiguration(
-          isEnabled: true,
-          isAutomatedTrackingEnabled: true,
-        );
+          final navConfig1 = NavigationModuleConfiguration(
+            isEnabled: true,
+            isAutomatedTrackingEnabled: true,
+          );
 
-        final navConfig2 = NavigationModuleConfiguration(
-          isEnabled: false,
-          isAutomatedTrackingEnabled: false,
-        );
+          final navConfig2 = NavigationModuleConfiguration(
+            isEnabled: false,
+            isAutomatedTrackingEnabled: false,
+          );
 
-        mockApi.installHandler = (_, genNav, _, _, _, _, _, _, _, _, _) async {
-          // Should use first one (navConfig1)
-          expect(genNav?.isEnabled, true);
-          expect(genNav?.isAutomatedTrackingEnabled, true);
-        };
+          mockApi.installHandler =
+              (_, genNav, _, _, _, _, _, _, _, _, _, _) async {
+                // Should use first one (navConfig1)
+                expect(genNav?.isEnabled, true);
+                expect(genNav?.isAutomatedTrackingEnabled, true);
+              };
 
-        // Act
-        await implementation.install(
-          agentConfiguration: agentConfig,
-          moduleConfigurations: [navConfig1, navConfig2],
-        );
-      });
+          // Act
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [navConfig1, navConfig2],
+          );
+        },
+      );
     });
 
     group('Android-Specific Configuration', () {
@@ -425,10 +523,14 @@ void main() {
           deferredUntilForeground: true,
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.instrumentedProcessName, 'com.example.android.app');
-          expect(genAgent.deferredUntilForeground, true);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(
+                genAgent.instrumentedProcessName,
+                'com.example.android.app',
+              );
+              expect(genAgent.deferredUntilForeground, true);
+            };
 
         // Act
         await implementation.install(
@@ -450,10 +552,11 @@ void main() {
           deferredUntilForeground: false,
         );
 
-        mockApi.installHandler = (genAgent, _, _, _, _, _, _, _, _, _, _) async {
-          expect(genAgent.instrumentedProcessName, isNull);
-          expect(genAgent.deferredUntilForeground, false);
-        };
+        mockApi.installHandler =
+            (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
+              expect(genAgent.instrumentedProcessName, isNull);
+              expect(genAgent.deferredUntilForeground, false);
+            };
 
         // Act
         await implementation.install(
@@ -488,9 +591,10 @@ void main() {
             interval: duration,
           );
 
-          mockApi.installHandler = (_, _, genSlow, _, _, _, _, _, _, _, _) async {
-            expect(genSlow?.intervalMillis, expectedMillis);
-          };
+          mockApi.installHandler =
+              (_, _, genSlow, _, _, _, _, _, _, _, _, _) async {
+                expect(genSlow?.intervalMillis, expectedMillis);
+              };
 
           await implementation.install(
             agentConfiguration: agentConfig,
@@ -512,13 +616,13 @@ void main() {
           deploymentEnvironment: 'test',
         );
 
-        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _, _) async {
+        mockApi.installHandler = (_, _, _, _, _, _, _, _, _, _, _, _) async {
           throw Exception('Platform installation failed');
         };
 
         // Act & Assert
         expect(
-              () => implementation.install(
+          () => implementation.install(
             agentConfiguration: agentConfig,
             moduleConfigurations: [],
           ),
@@ -533,10 +637,7 @@ void main() {
         };
 
         // Act & Assert
-        expect(
-              () => implementation.sessionStateGetId(),
-          throwsException,
-        );
+        expect(() => implementation.sessionStateGetId(), throwsException);
       });
     });
 
@@ -660,30 +761,40 @@ void main() {
 
       test('should get all attributes', () async {
         mockApi.globalAttributesGetAllHandler = () async {
-          return GeneratedMutableAttributes(attributes: {
-            'key1': GeneratedMutableAttributeString(value: 'value1'),
-            'key2': GeneratedMutableAttributeInt(value: 42),
-          });
+          return GeneratedMutableAttributes(
+            attributes: {
+              'key1': GeneratedMutableAttributeString(value: 'value1'),
+              'key2': GeneratedMutableAttributeInt(value: 42),
+            },
+          );
         };
 
         final result = await implementation.globalAttributesGetAll();
-        
+
         expect(result.attributes.length, 2);
         expect(result.attributes['key1'], isA<MutableAttributeString>());
-        expect((result.attributes['key1'] as MutableAttributeString).value, 'value1');
+        expect(
+          (result.attributes['key1'] as MutableAttributeString).value,
+          'value1',
+        );
         expect(result.attributes['key2'], isA<MutableAttributeInt>());
         expect((result.attributes['key2'] as MutableAttributeInt).value, 42);
       });
 
       test('should set all attributes', () async {
-        final attributes = MutableAttributes(attributes: {
-          'key1': MutableAttributeString(value: 'value1'),
-          'key2': MutableAttributeInt(value: 42),
-        });
+        final attributes = MutableAttributes(
+          attributes: {
+            'key1': MutableAttributeString(value: 'value1'),
+            'key2': MutableAttributeInt(value: 42),
+          },
+        );
 
         mockApi.globalAttributesSetAllHandler = (value) async {
           expect(value.attributes.length, 2);
-          expect(value.attributes['key1'], isA<GeneratedMutableAttributeString>());
+          expect(
+            value.attributes['key1'],
+            isA<GeneratedMutableAttributeString>(),
+          );
           expect(value.attributes['key2'], isA<GeneratedMutableAttributeInt>());
         };
 
@@ -697,7 +808,8 @@ void main() {
         mockApi.stateGetAppVersionHandler = () async => '2.0.0';
         mockApi.stateGetDeploymentEnvironmentHandler = () async => 'staging';
         mockApi.stateGetIsDebugLoggingEnabledHandler = () async => true;
-        mockApi.stateGetInstrumentedProcessNameHandler = () async => 'com.test.app';
+        mockApi.stateGetInstrumentedProcessNameHandler = () async =>
+            'com.test.app';
         mockApi.stateGetDeferredUntilForegroundHandler = () async => true;
         mockApi.stateGetStatusHandler = () async => GeneratedStatus.running;
         mockApi.stateGetEndpointConfigurationHandler = () async {
@@ -711,7 +823,10 @@ void main() {
         expect(await implementation.stateGetAppVersion(), '2.0.0');
         expect(await implementation.stateGetDeploymentEnvironment(), 'staging');
         expect(await implementation.stateGetIsDebugLoggingEnabled(), true);
-        expect(await implementation.stateGetInstrumentedProcessName(), 'com.test.app');
+        expect(
+          await implementation.stateGetInstrumentedProcessName(),
+          'com.test.app',
+        );
         expect(await implementation.stateGetDeferredUntilForeground(), true);
         expect(await implementation.stateGetStatus(), Status.running);
 
@@ -762,10 +877,12 @@ void main() {
     group('Custom Tracking Integration', () {
       test('should track custom event', () async {
         const eventName = 'button_clicked';
-        final attributes = MutableAttributes(attributes: {
-          'button_id': MutableAttributeString(value: 'submit_btn'),
-          'click_count': MutableAttributeInt(value: 5),
-        });
+        final attributes = MutableAttributes(
+          attributes: {
+            'button_id': MutableAttributeString(value: 'submit_btn'),
+            'click_count': MutableAttributeInt(value: 5),
+          },
+        );
 
         mockApi.customTrackingTrackCustomEventHandler = (name, attrs) async {
           expect(name, eventName);
@@ -791,7 +908,9 @@ void main() {
           receivedHandle = handle;
         };
 
-        final handle = await implementation.customTrackingStartWorkflow(workflowName: workflowName);
+        final handle = await implementation.customTrackingStartWorkflow(
+          workflowName: workflowName,
+        );
         expect(handle, 789);
 
         await implementation.customTrackingEndWorkflow(handle: handle);

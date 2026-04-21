@@ -404,7 +404,7 @@ class _MyAppState extends State<MyApp> {
       final trackingFromPrefs = await sdk.user.preferences.getTrackingMode();
       final trackingModeToSet = trackingFromPrefs ?? trackingFromState;
       await sdk.user.preferences.setTrackingMode(
-        trackingMode: trackingModeToSet,
+        userTrackingMode: trackingModeToSet,
       );
       final trackingAfter = await sdk.user.preferences.getTrackingMode();
       assert(

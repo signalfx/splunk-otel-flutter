@@ -56,12 +56,12 @@ class UserPreferences {
 
   /// Sets user tracking mode.
   ///
-  /// [trackingMode] - Tracking mode to set:
+  /// [userTrackingMode] - Tracking mode to set:
   ///   - `UserTrackingMode.noTracking`: No user identifier generated.
   ///   - `UserTrackingMode.anonymousTracking`: Generates anonymous user ID per session.
   Future<void> setTrackingMode({
-    required UserTrackingMode trackingMode,
+    required UserTrackingMode userTrackingMode,
   }) async => await _delegate.userPreferencesSetUserTrackingMode(
-    userTrackingMode: trackingMode,
+    userTrackingMode: userTrackingMode,
   );
 }

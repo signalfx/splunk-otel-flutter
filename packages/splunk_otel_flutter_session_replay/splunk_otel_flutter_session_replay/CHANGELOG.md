@@ -1,3 +1,6 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* Initial release of the session replay module for Splunk OpenTelemetry Flutter
+* Android and iOS platform support
+* Session recording and playback functionality
+* Integration with Splunk Flutter SDK core

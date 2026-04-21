@@ -22,11 +22,56 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey _passwordFieldKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _applyRecordingMask();
+    });
+  }
+
   @override
   void dispose() {
+    SplunkSessionReplay.instance.setRecordingMask(mask: null);
     _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _applyRecordingMask() {
+    final renderBox =
+        _passwordFieldKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) {
+      debugPrint('[LoginScreen] RenderBox is null, cannot apply mask');
+
+      return;
+    }
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    debugPrint('[LoginScreen] Password field position: $position, size: $size');
+
+    final maskRect = Rect.fromLTWH(
+      position.dx,
+      position.dy,
+      size.width,
+      size.height,
+    );
+
+    SplunkSessionReplay.instance.setRecordingMask(
+      mask: RecordingMask(
+        elements: [
+          MaskElement(
+            rect: maskRect,
+            type: MaskType.covering,
+          ),
+        ],
+      ),
+    );
+    debugPrint('[LoginScreen] Recording mask applied: $maskRect');
   }
 
   @override
@@ -47,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: screenHeight * 0.05),
         CustomTextField(
+          key: _passwordFieldKey,
           controller: _passwordController,
           labelText: "Password",
         ),

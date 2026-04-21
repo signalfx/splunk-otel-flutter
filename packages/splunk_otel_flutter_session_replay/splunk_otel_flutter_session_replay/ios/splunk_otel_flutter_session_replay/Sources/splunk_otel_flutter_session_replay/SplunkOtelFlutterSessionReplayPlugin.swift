@@ -1,5 +1,5 @@
 /*
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,20 +16,45 @@ limitations under the License.
 
 import Flutter
 import UIKit
+import SplunkAgent
 
-public class SplunkOtelFlutterSessionReplayPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "splunk_otel_flutter_session_replay", binaryMessenger: registrar.messenger())
-    let instance = SplunkOtelFlutterSessionReplayPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
+public class SplunkOtelFlutterSessionReplayPlugin: NSObject, FlutterPlugin, SplunkOtelFlutterSessionReplayHostApi {
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    default:
-      result(FlutterMethodNotImplemented)
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let instance = SplunkOtelFlutterSessionReplayPlugin()
+        SplunkOtelFlutterSessionReplayHostApiSetup.setUp(
+            binaryMessenger: registrar.messenger(),
+            api: instance
+        )
     }
-  }
+
+    func sessionReplayStart(completion: @escaping (Result<Void, Error>) -> Void) {
+        SplunkRum.shared.sessionReplay.start()
+
+        completion(.success(()))
+    }
+
+    func sessionReplayStop(completion: @escaping (Result<Void, Error>) -> Void) {
+        SplunkRum.shared.sessionReplay.stop()
+
+        completion(.success(()))
+    }
+
+    func sessionReplayStateGetStatus(completion: @escaping (Result<GeneratedSessionReplayStatus, Error>) -> Void) {
+        let status = SplunkRum.shared.sessionReplay.state.status
+
+        completion(.success(status.toGeneratedSessionReplayStatus()))
+    }
+
+    func sessionReplayGetRecordingMask(completion: @escaping (Result<GeneratedRecordingMaskList?, Error>) -> Void) {
+        let recordingMask = SplunkRum.shared.sessionReplay.recordingMask
+
+        completion(.success(recordingMask?.toGeneratedRecordingMaskList()))
+    }
+
+    func sessionReplaySetRecordingMask(recordingMask: GeneratedRecordingMaskList?, completion: @escaping (Result<Void, Error>) -> Void) {
+        SplunkRum.shared.sessionReplay.recordingMask = recordingMask?.toRecordingMask()
+
+        completion(.success(()))
+    }
 }

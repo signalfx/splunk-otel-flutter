@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,32 @@
  * limitations under the License.
  */
 
-/// Platform interface for Splunk session replay functionality.
-///
-/// This library defines the API contract that platform-specific implementations
-/// (iOS, Android) must fulfill to provide session recording and replay capabilities.
 library splunk_otel_flutter_session_replay_platform_interface;
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
 
-/// The interface that platform implementations of splunk_otel_flutter_session_replay must extend.
-///
-/// Defines the API contract for session replay functionality across different platforms.
 abstract class SplunkOtelFlutterSessionReplayPlatformInterface extends PlatformInterface {
 
-  /// Creates a new instance with the verification token.
   SplunkOtelFlutterSessionReplayPlatformInterface(): super(token: _token);
 
   static final Object _token = Object();
 
   static SplunkOtelFlutterSessionReplayPlatformInterface? _instance;
 
-  /// The default instance of [SplunkOtelFlutterSessionReplayPlatformInterface].
   static SplunkOtelFlutterSessionReplayPlatformInterface get instance {
     return _instance ??= SplunkOtelFlutterSessionReplayPlatformImplementation.instance;
   }
 
-  /// Sets the default instance of [SplunkOtelFlutterSessionReplayPlatformInterface].
-  ///
-  /// This should only be used for testing or providing a custom implementation.
   static set instance(SplunkOtelFlutterSessionReplayPlatformInterface instance) {
     PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
+
+  Future<void> start();
+  Future<void> stop();
+  Future<SessionReplayStatus> getStatus();
+  Future<RecordingMask?> getRecordingMask();
+  Future<void> setRecordingMask({required RecordingMask? mask});
 }

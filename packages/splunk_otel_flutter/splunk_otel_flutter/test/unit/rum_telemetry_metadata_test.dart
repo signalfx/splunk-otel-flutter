@@ -42,23 +42,28 @@ void main() {
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);
 
-        final sdkVersion = enriched.globalAttributes?.attributes[
-            'rum.sdk.flutter.version'] as MutableAttributeString;
+        final sdkVersion =
+            enriched.globalAttributes?.attributes['rum.sdk.flutter.version']
+                as MutableAttributeString;
         expect(sdkVersion.value, equals(rumSdkFlutterVersion));
       });
 
       test('should override user-provided rum.sdk.flutter.version', () {
         final config = _baseConfig(
-          globalAttributes: MutableAttributes(attributes: {
-            'rum.sdk.flutter.version':
-                MutableAttributeString(value: 'user-override'),
-          }),
+          globalAttributes: MutableAttributes(
+            attributes: {
+              'rum.sdk.flutter.version': MutableAttributeString(
+                value: 'user-override',
+              ),
+            },
+          ),
         );
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);
 
-        final sdkVersion = enriched.globalAttributes?.attributes[
-            'rum.sdk.flutter.version'] as MutableAttributeString;
+        final sdkVersion =
+            enriched.globalAttributes?.attributes['rum.sdk.flutter.version']
+                as MutableAttributeString;
         expect(sdkVersion.value, equals(rumSdkFlutterVersion));
       });
     });
@@ -69,9 +74,11 @@ void main() {
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);
 
-        final frameworkVersion = enriched.globalAttributes?.attributes[
-                'splunk.app.framework.flutter.version']
-            as MutableAttributeString;
+        final frameworkVersion =
+            enriched
+                    .globalAttributes
+                    ?.attributes['splunk.app.framework.flutter.version']
+                as MutableAttributeString;
         final expected = FlutterVersion.version ?? 'unknown';
         expect(frameworkVersion.value, equals(expected));
       });
@@ -84,39 +91,49 @@ void main() {
           flutterFrameworkVersion: '3.32.0',
         );
 
-        final frameworkVersion = enriched.globalAttributes?.attributes[
-                'splunk.app.framework.flutter.version']
-            as MutableAttributeString;
+        final frameworkVersion =
+            enriched
+                    .globalAttributes
+                    ?.attributes['splunk.app.framework.flutter.version']
+                as MutableAttributeString;
         expect(frameworkVersion.value, equals('3.32.0'));
       });
 
       test(
-          'should override user-provided splunk.app.framework.flutter.version',
-          () {
-        final config = _baseConfig(
-          globalAttributes: MutableAttributes(attributes: {
-            'splunk.app.framework.flutter.version':
-                MutableAttributeString(value: 'user-override'),
-          }),
-        );
+        'should override user-provided splunk.app.framework.flutter.version',
+        () {
+          final config = _baseConfig(
+            globalAttributes: MutableAttributes(
+              attributes: {
+                'splunk.app.framework.flutter.version': MutableAttributeString(
+                  value: 'user-override',
+                ),
+              },
+            ),
+          );
 
-        final enriched = mergeRumTelemetryMetadataForTesting(config);
+          final enriched = mergeRumTelemetryMetadataForTesting(config);
 
-        final frameworkVersion = enriched.globalAttributes?.attributes[
-                'splunk.app.framework.flutter.version']
-            as MutableAttributeString;
-        final expected = FlutterVersion.version ?? 'unknown';
-        expect(frameworkVersion.value, equals(expected));
-      });
+          final frameworkVersion =
+              enriched
+                      .globalAttributes
+                      ?.attributes['splunk.app.framework.flutter.version']
+                  as MutableAttributeString;
+          final expected = FlutterVersion.version ?? 'unknown';
+          expect(frameworkVersion.value, equals(expected));
+        },
+      );
     });
 
     group('existing global attributes', () {
       test('should preserve user-provided global attributes', () {
         final config = _baseConfig(
-          globalAttributes: MutableAttributes(attributes: {
-            'user.tier': MutableAttributeString(value: 'premium'),
-            'app.build': MutableAttributeInt(value: 42),
-          }),
+          globalAttributes: MutableAttributes(
+            attributes: {
+              'user.tier': MutableAttributeString(value: 'premium'),
+              'app.build': MutableAttributeInt(value: 42),
+            },
+          ),
         );
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);
@@ -124,8 +141,7 @@ void main() {
         final attributes = enriched.globalAttributes!.attributes;
         expect(attributes.length, equals(4));
 
-        final userTier =
-            attributes['user.tier'] as MutableAttributeString;
+        final userTier = attributes['user.tier'] as MutableAttributeString;
         expect(userTier.value, equals('premium'));
 
         final appBuild = attributes['app.build'] as MutableAttributeInt;
@@ -143,10 +159,7 @@ void main() {
           attributes.containsKey('splunk.app.framework.flutter.version'),
           isTrue,
         );
-        expect(
-          attributes.containsKey('rum.sdk.flutter.version'),
-          isTrue,
-        );
+        expect(attributes.containsKey('rum.sdk.flutter.version'), isTrue);
       });
     });
 
@@ -191,10 +204,7 @@ void main() {
   group('rumSdkFlutterVersion', () {
     test('should be a non-empty semver string', () {
       expect(rumSdkFlutterVersion, isNotEmpty);
-      expect(
-        RegExp(r'^\d+\.\d+\.\d+').hasMatch(rumSdkFlutterVersion),
-        isTrue,
-      );
+      expect(RegExp(r'^\d+\.\d+\.\d+').hasMatch(rumSdkFlutterVersion), isTrue);
     });
   });
 }
