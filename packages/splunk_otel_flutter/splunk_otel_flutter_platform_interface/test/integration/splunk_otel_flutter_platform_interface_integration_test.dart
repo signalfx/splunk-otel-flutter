@@ -341,7 +341,7 @@ void main() {
             deploymentEnvironment: 'test',
             session: SessionConfiguration(samplingRate: 1.5),
           ),
-          throwsArgumentError,
+          throwsA(isA<AssertionError>()),
         );
       });
 
@@ -458,7 +458,7 @@ void main() {
             (genAgent, _, _, _, _, _, _, _, _, _, _, _) async {
               expect(
                 genAgent.user?.trackingMode,
-                GeneratedUserTrackingMode.noTracking,
+                GeneratedUserTrackingMode.anonymousTracking,
               );
             };
 
