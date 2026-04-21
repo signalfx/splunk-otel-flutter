@@ -38,7 +38,7 @@ void main() async {
 
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
+      endpoint: EndpointConfiguration.forRum(
         realm: realm,
         rumAccessToken: rumAccessToken,
       ),

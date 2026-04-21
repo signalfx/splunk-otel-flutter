@@ -96,7 +96,7 @@ class SplunkOtelFlutterPlatformImplementation
 
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
-        endpoint: agentConfiguration.endpointConfiguration
+        endpoint: agentConfiguration.endpoint
             ?.toGeneratedEndpointConfiguration(),
         appName: agentConfiguration.appName,
         deploymentEnvironment: agentConfiguration.deploymentEnvironment,
@@ -243,10 +243,10 @@ class SplunkOtelFlutterPlatformImplementation
 
   @override
   Future<void> preferencesSetEndpointConfiguration({
-    required EndpointConfiguration endpointConfiguration,
+    required EndpointConfiguration endpoint,
   }) async {
     await _api.preferencesSetEndpointConfiguration(
-      endpointConfiguration: endpointConfiguration
+      endpointConfiguration: endpoint
           .toGeneratedEndpointConfiguration(),
     );
   }

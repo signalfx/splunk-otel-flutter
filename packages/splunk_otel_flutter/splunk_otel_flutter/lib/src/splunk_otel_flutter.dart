@@ -33,7 +33,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 /// ```dart
 /// await SplunkRum.instance.install(
 ///   agentConfiguration: AgentConfiguration(
-///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
+///     endpoint: EndpointConfiguration.forRum(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
 ///     appName: 'MyApp',
 ///     deploymentEnvironment: 'production',
 ///   ),
@@ -104,7 +104,7 @@ class SplunkRum {
   /// ```dart
   /// await SplunkRum.instance.install(
   ///   agentConfiguration: AgentConfiguration(
-  ///     endpointConfiguration: EndpointConfiguration(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
+  ///     endpoint: EndpointConfiguration.forRum(realm: 'us0', rumAccessToken: 'YOUR_TOKEN'),
   ///     appName: 'MyApp',
   ///     deploymentEnvironment: 'production',
   ///   ),

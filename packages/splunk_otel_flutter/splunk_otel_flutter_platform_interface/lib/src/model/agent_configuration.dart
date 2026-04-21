@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
@@ -25,7 +26,7 @@ import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeo
 /// Example:
 /// ```dart
 /// final config = AgentConfiguration(
-///   endpointConfiguration: EndpointConfiguration.forRum(
+///   endpoint: EndpointConfiguration.forRum(
 ///     realm: 'us0',
 ///     rumAccessToken: 'your-token',
 ///   ),
@@ -38,7 +39,7 @@ class AgentConfiguration {
   ///
   /// When `null`, the SDK starts without sending data. Credentials can be
   /// provided later via `SplunkRum.instance.state.setEndpointConfiguration`.
-  final EndpointConfiguration? endpointConfiguration;
+  final EndpointConfiguration? endpoint;
 
   /// The name of your application.
   final String appName;
@@ -72,7 +73,7 @@ class AgentConfiguration {
 
   /// Creates an agent configuration.
   AgentConfiguration({
-    this.endpointConfiguration,
+    this.endpoint,
     required this.appName,
     required this.deploymentEnvironment,
     this.appVersion,
@@ -136,8 +137,8 @@ class EndpointConfiguration {
   /// Creates endpoint configuration with a custom traces endpoint.
   ///
   /// Use this for self-hosted or custom backend deployments.
-  factory EndpointConfiguration.forTraces({required Uri tracesEndpoint}) {
-    return EndpointConfiguration._internal(traceEndpoint: tracesEndpoint);
+  factory EndpointConfiguration.forTraces({required Uri traceEndpoint}) {
+    return EndpointConfiguration._internal(traceEndpoint: traceEndpoint);
   }
 
   /// Creates endpoint configuration with custom traces and session replay endpoints.
@@ -186,8 +187,10 @@ class UserConfiguration {
 
   /// Creates a user configuration with the specified tracking mode.
   ///
-  /// Defaults to [UserTrackingMode.noTracking].
-  const UserConfiguration({this.trackingMode = UserTrackingMode.noTracking});
+  /// Defaults to [UserTrackingMode.anonymousTracking].
+  const UserConfiguration({
+    this.trackingMode = UserTrackingMode.anonymousTracking,
+  });
 }
 
 extension UserConfigurationExtension on UserConfiguration {
@@ -233,16 +236,19 @@ class SessionConfiguration {
   ///
   /// A value of 1.0 means all sessions are sampled (100%).
   /// A value of 0.5 means half of sessions are sampled (50%).
+  /// Values outside the valid range are clamped to [0.0, 1.0].
   /// Defaults to 1.0.
   final double samplingRate;
 
   /// Creates a session configuration with the specified sampling rate.
   ///
-  /// Throws [ArgumentError] if [samplingRate] is not between 0.0 and 1.0.
-  SessionConfiguration({this.samplingRate = 1.0}) {
+  /// [samplingRate] must be between 0.0 and 1.0 (inclusive).
+  SessionConfiguration({double samplingRate = 1.0})
+    : samplingRate = samplingRate.clamp(0.0, 1.0) {
     if (samplingRate < 0.0 || samplingRate > 1.0) {
-      throw ArgumentError(
-        "samplingRate must be between 0.0 and 1.0 (inclusive). Received: $samplingRate",
+      debugPrint(
+        'SplunkRum: samplingRate must be between 0.0 and 1.0 (inclusive). '
+        'Received: $samplingRate. Clamped to ${samplingRate.clamp(0.0, 1.0)}.',
       );
     }
   }

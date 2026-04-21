@@ -32,8 +32,8 @@ extension GeneratedStatus {
             return .notRunning(.sampledOut)
         case .unsupportedOsVersion:
             return .notRunning(.unsupportedPlatform)
-        case .subProcess:
-            throw StatusConversionError.invalidStatus("invalid status subProcess")
+        case .subprocess:
+            throw StatusConversionError.invalidStatus("invalid status subprocess")
         case .unsupportedPlatform:
             throw StatusConversionError.invalidStatus("invalid status unsupportedPlatform")
         }

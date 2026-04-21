@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
-import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/bottom_bar_screen.dart';

@@ -23,7 +23,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 void main() {
   // Example 1: Create agent configuration with RUM endpoint
   final agentConfig = AgentConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
+    endpoint: EndpointConfiguration.forRum(
       realm: 'us0',
       rumAccessToken: 'your-rum-access-token',
     ),
@@ -60,7 +60,7 @@ void main() {
 
   // Example 3: Create custom endpoint configuration
   final customEndpointConfig = EndpointConfiguration.forTraces(
-    tracesEndpoint: Uri.parse('https://custom-endpoint.example.com/v1/traces'),
+    traceEndpoint: Uri.parse('https://custom-endpoint.example.com/v1/traces'),
   );
 
   // Example 4: Create mutable attributes for custom events

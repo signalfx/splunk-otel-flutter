@@ -26,7 +26,7 @@ void main() {
       expect(allStatuses.length, 6);
       expect(allStatuses, contains(Status.running));
       expect(allStatuses, contains(Status.notInstalled));
-      expect(allStatuses, contains(Status.subProcess));
+      expect(allStatuses, contains(Status.subprocess));
       expect(allStatuses, contains(Status.sampledOut));
       expect(allStatuses, contains(Status.unsupportedPlatform));
       expect(allStatuses, contains(Status.unsupportedOsVersion));
@@ -35,7 +35,7 @@ void main() {
     test('should have correct enum names', () {
       expect(Status.running.name, 'running');
       expect(Status.notInstalled.name, 'notInstalled');
-      expect(Status.subProcess.name, 'subProcess');
+      expect(Status.subprocess.name, 'subprocess');
       expect(Status.sampledOut.name, 'sampledOut');
       expect(Status.unsupportedPlatform.name, 'unsupportedPlatform');
       expect(Status.unsupportedOsVersion.name, 'unsupportedOsVersion');
@@ -54,8 +54,8 @@ void main() {
     });
 
     test('should convert subProcess correctly', () {
-      final generated = Status.subProcess.toGeneratedStatus();
-      expect(generated, GeneratedStatus.subProcess);
+      final generated = Status.subprocess.toGeneratedStatus();
+      expect(generated, GeneratedStatus.subprocess);
     });
 
     test('should convert sampledOut correctly', () {
@@ -77,7 +77,7 @@ void main() {
       final mappings = {
         Status.running: GeneratedStatus.running,
         Status.notInstalled: GeneratedStatus.notInstalled,
-        Status.subProcess: GeneratedStatus.subProcess,
+        Status.subprocess: GeneratedStatus.subprocess,
         Status.sampledOut: GeneratedStatus.sampledOut,
         Status.unsupportedPlatform: GeneratedStatus.unsupportedPlatform,
         Status.unsupportedOsVersion: GeneratedStatus.unsupportedOsVersion,
@@ -101,8 +101,8 @@ void main() {
     });
 
     test('should convert subProcess correctly', () {
-      final status = GeneratedStatus.subProcess.toStatus();
-      expect(status, Status.subProcess);
+      final status = GeneratedStatus.subprocess.toStatus();
+      expect(status, Status.subprocess);
     });
 
     test('should convert sampledOut correctly', () {
@@ -124,7 +124,7 @@ void main() {
       final mappings = {
         GeneratedStatus.running: Status.running,
         GeneratedStatus.notInstalled: Status.notInstalled,
-        GeneratedStatus.subProcess: Status.subProcess,
+        GeneratedStatus.subprocess: Status.subprocess,
         GeneratedStatus.sampledOut: Status.sampledOut,
         GeneratedStatus.unsupportedPlatform: Status.unsupportedPlatform,
         GeneratedStatus.unsupportedOsVersion: Status.unsupportedOsVersion,
@@ -186,7 +186,7 @@ void main() {
     });
 
     test('subProcess should be Android-only status', () {
-      expect(Status.subProcess, isA<Status>());
+      expect(Status.subprocess, isA<Status>());
     });
 
     test('sampledOut should represent locally sampled out agent', () {
@@ -207,7 +207,7 @@ void main() {
       final statusList = Status.values.toList();
       expect(statusList[0], Status.running);
       expect(statusList[1], Status.notInstalled);
-      expect(statusList[2], Status.subProcess);
+      expect(statusList[2], Status.subprocess);
       expect(statusList[3], Status.sampledOut);
       expect(statusList[4], Status.unsupportedPlatform);
       expect(statusList[5], Status.unsupportedOsVersion);

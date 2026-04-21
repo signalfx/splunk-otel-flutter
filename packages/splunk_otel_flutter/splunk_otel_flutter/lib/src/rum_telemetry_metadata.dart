@@ -57,7 +57,7 @@ AgentConfiguration applyRumTelemetryMetadata(
   };
 
   return AgentConfiguration(
-    endpointConfiguration: agentConfiguration.endpointConfiguration,
+    endpoint: agentConfiguration.endpoint,
     appName: agentConfiguration.appName,
     deploymentEnvironment: agentConfiguration.deploymentEnvironment,
     appVersion: agentConfiguration.appVersion,

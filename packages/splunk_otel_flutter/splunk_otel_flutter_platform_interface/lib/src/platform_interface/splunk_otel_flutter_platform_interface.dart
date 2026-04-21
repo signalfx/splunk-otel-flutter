@@ -76,7 +76,7 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
   Future<EndpointConfiguration?> preferencesGetEndpointConfiguration();
   Future<void> preferencesSetEndpointConfiguration({
-    required EndpointConfiguration endpointConfiguration,
+    required EndpointConfiguration endpoint,
   });
 
   // Session

@@ -114,7 +114,7 @@ void main() async {
 
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
+      endpoint: EndpointConfiguration.forRum(
         realm: 'us0',
         rumAccessToken: 'YOUR_RUM_ACCESS_TOKEN',
       ),
@@ -136,7 +136,7 @@ Control which features are enabled by passing module configurations:
 ```dart
 await SplunkRum.instance.install(
   agentConfiguration: AgentConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
+    endpoint: EndpointConfiguration.forRum(
       realm: 'us0',
       rumAccessToken: 'YOUR_RUM_ACCESS_TOKEN',
     ),
@@ -188,7 +188,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 
 // Set tracking mode
 await SplunkRum.instance.user.preferences.setTrackingMode(
-  userTrackingMode: UserTrackingMode.anonymousTracking,
+  trackingMode: UserTrackingMode.anonymousTracking,
 );
 ```
 
