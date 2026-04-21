@@ -179,7 +179,7 @@ void main() {
           user: const UserConfiguration(
             trackingMode: UserTrackingMode.anonymousTracking,
           ),
-          session: const SessionConfiguration(samplingRate: 0.5),
+          session: SessionConfiguration(samplingRate: 0.5),
         );
 
         final enriched = mergeRumTelemetryMetadataForTesting(config);

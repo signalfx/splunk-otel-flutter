@@ -118,7 +118,7 @@ void main() {
         ),
         appName: 'TestApp',
         deploymentEnvironment: 'production',
-        session: const SessionConfiguration(samplingRate: 0.75),
+        session: SessionConfiguration(samplingRate: 0.75),
       );
 
       // Assert
@@ -140,7 +140,7 @@ void main() {
         user: const UserConfiguration(
           trackingMode: UserTrackingMode.anonymousTracking,
         ),
-        session: const SessionConfiguration(samplingRate: 0.5),
+        session: SessionConfiguration(samplingRate: 0.5),
         instrumentedProcessName: 'com.test.app',
         deferredUntilForeground: true,
       );
@@ -281,7 +281,7 @@ void main() {
   group('SessionConfiguration Validation', () {
     test('samplingRate of 0.0 should be valid', () {
       // Act
-      final config = const SessionConfiguration(samplingRate: 0.0);
+      final config = SessionConfiguration(samplingRate: 0.0);
 
       // Assert
       expect(config.samplingRate, 0.0);
@@ -289,7 +289,7 @@ void main() {
 
     test('samplingRate of 1.0 should be valid', () {
       // Act
-      final config = const SessionConfiguration(samplingRate: 1.0);
+      final config = SessionConfiguration(samplingRate: 1.0);
 
       // Assert
       expect(config.samplingRate, 1.0);
@@ -297,48 +297,39 @@ void main() {
 
     test('samplingRate of 0.5 should be valid', () {
       // Act
-      final config = const SessionConfiguration(samplingRate: 0.5);
+      final config = SessionConfiguration(samplingRate: 0.5);
 
       // Assert
       expect(config.samplingRate, 0.5);
     });
 
-    test('samplingRate less than 0.0 should throw ArgumentError', () {
-      // Act & Assert
-      expect(
-        () => SessionConfiguration(samplingRate: -0.1),
-        throwsA(isA<AssertionError>()),
-      );
+    test('samplingRate less than 0.0 should be clamped to 0.0', () {
+      final config = SessionConfiguration(samplingRate: -0.1);
+      expect(config.samplingRate, 0.0);
     });
 
-    test('samplingRate greater than 1.0 should throw ArgumentError', () {
-      // Act & Assert
-      expect(
-        () => SessionConfiguration(samplingRate: 1.1),
-        throwsA(isA<AssertionError>()),
-      );
+    test('samplingRate greater than 1.0 should be clamped to 1.0', () {
+      final config = SessionConfiguration(samplingRate: 1.1);
+      expect(config.samplingRate, 1.0);
     });
 
     test('default samplingRate should be 1.0', () {
       // Act
-      final config = const SessionConfiguration();
+      final config = SessionConfiguration();
 
       // Assert
       expect(config.samplingRate, 1.0);
     });
 
-    test('samplingRate error message should include received value', () {
-      // Act & Assert
-      expect(
-        () => SessionConfiguration(samplingRate: 1.5),
-        throwsA(isA<AssertionError>()),
-      );
+    test('samplingRate out of range should be clamped', () {
+      final config = SessionConfiguration(samplingRate: 1.5);
+      expect(config.samplingRate, 1.0);
     });
 
     test('samplingRate boundary values should work', () {
       // Act
-      final config0 = const SessionConfiguration(samplingRate: 0.0);
-      final config1 = const SessionConfiguration(samplingRate: 1.0);
+      final config0 = SessionConfiguration(samplingRate: 0.0);
+      final config1 = SessionConfiguration(samplingRate: 1.0);
 
       // Assert
       expect(config0.samplingRate, 0.0);

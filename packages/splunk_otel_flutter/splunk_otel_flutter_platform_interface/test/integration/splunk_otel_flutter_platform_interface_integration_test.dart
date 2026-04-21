@@ -58,7 +58,7 @@ void main() {
             user: const UserConfiguration(
               trackingMode: UserTrackingMode.anonymousTracking,
             ),
-            session: const SessionConfiguration(samplingRate: 0.75),
+            session: SessionConfiguration(samplingRate: 0.75),
             instrumentedProcessName: 'com.example.integration.test',
             deferredUntilForeground: true,
           );
@@ -329,20 +329,17 @@ void main() {
     });
 
     group('Configuration Validation Integration', () {
-      test('should reject invalid sampling rate during installation', () async {
-        // Arrange & Assert
-        expect(
-          () => AgentConfiguration(
-            endpoint: EndpointConfiguration.forRum(
-              realm: 'us0',
-              rumAccessToken: 'token',
-            ),
-            appName: 'InvalidApp',
-            deploymentEnvironment: 'test',
-            session: SessionConfiguration(samplingRate: 1.5),
+      test('should clamp invalid sampling rate during installation', () async {
+        final config = AgentConfiguration(
+          endpoint: EndpointConfiguration.forRum(
+            realm: 'us0',
+            rumAccessToken: 'token',
           ),
-          throwsA(isA<AssertionError>()),
+          appName: 'InvalidApp',
+          deploymentEnvironment: 'test',
+          session: SessionConfiguration(samplingRate: 1.5),
         );
+        expect(config.session.samplingRate, 1.0);
       });
 
       test('should handle edge case sampling rates correctly', () async {
@@ -354,7 +351,7 @@ void main() {
           ),
           appName: 'App',
           deploymentEnvironment: 'test',
-          session: const SessionConfiguration(samplingRate: 0.0),
+          session: SessionConfiguration(samplingRate: 0.0),
         );
 
         mockApi.installHandler =
@@ -375,7 +372,7 @@ void main() {
           ),
           appName: 'App',
           deploymentEnvironment: 'test',
-          session: const SessionConfiguration(samplingRate: 1.0),
+          session: SessionConfiguration(samplingRate: 1.0),
         );
 
         mockApi.installHandler =

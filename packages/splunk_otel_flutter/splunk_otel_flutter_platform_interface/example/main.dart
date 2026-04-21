@@ -40,7 +40,7 @@ void main() {
     user: const UserConfiguration(
       trackingMode: UserTrackingMode.anonymousTracking,
     ),
-    session: const SessionConfiguration(samplingRate: 1.0),
+    session: SessionConfiguration(samplingRate: 1.0),
   );
 
   // Example 2: Create module configurations

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
@@ -84,7 +85,7 @@ class AgentConfiguration {
     this.instrumentedProcessName, // Android-only.
     this.deferredUntilForeground = false, // Android-only.
   }) : user = user ?? const UserConfiguration(),
-       session = session ?? const SessionConfiguration();
+       session = session ?? SessionConfiguration();
 }
 
 /// Configuration for telemetry data endpoints.
@@ -235,17 +236,22 @@ class SessionConfiguration {
   ///
   /// A value of 1.0 means all sessions are sampled (100%).
   /// A value of 0.5 means half of sessions are sampled (50%).
+  /// Values outside the valid range are clamped to [0.0, 1.0].
   /// Defaults to 1.0.
   final double samplingRate;
 
   /// Creates a session configuration with the specified sampling rate.
   ///
   /// [samplingRate] must be between 0.0 and 1.0 (inclusive).
-  const SessionConfiguration({this.samplingRate = 1.0})
-    : assert(
-        samplingRate >= 0.0 && samplingRate <= 1.0,
-        'samplingRate must be between 0.0 and 1.0 (inclusive).',
+  SessionConfiguration({double samplingRate = 1.0})
+    : samplingRate = samplingRate.clamp(0.0, 1.0) {
+    if (samplingRate < 0.0 || samplingRate > 1.0) {
+      debugPrint(
+        'SplunkRum: samplingRate must be between 0.0 and 1.0 (inclusive). '
+        'Received: $samplingRate. Clamped to ${samplingRate.clamp(0.0, 1.0)}.',
       );
+    }
+  }
 }
 
 /// Exception thrown when endpoint configuration is invalid.
