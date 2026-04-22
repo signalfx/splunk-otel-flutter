@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-library splunk_otel_flutter_session_replay;
+library;
 
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';

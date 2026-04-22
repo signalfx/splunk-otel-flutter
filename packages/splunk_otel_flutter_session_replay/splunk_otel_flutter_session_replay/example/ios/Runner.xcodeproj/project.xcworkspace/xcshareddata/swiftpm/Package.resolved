@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "opentelemetry-swift-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/open-telemetry/opentelemetry-swift-core",
+      "state" : {
+        "revision" : "240c8d5e36c3c7b774ed961325369f0b1f2c965f",
+        "version" : "2.3.0"
+      }
+    },
+    {
+      "identity" : "plcrashreporter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/microsoft/plcrashreporter",
+      "state" : {
+        "revision" : "8c61e5e38e9f737dd68512ed1ea5ab081244ad65",
+        "version" : "1.12.0"
+      }
+    },
+    {
+      "identity" : "splunk-otel-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/signalfx/splunk-otel-ios",
+      "state" : {
+        "revision" : "47a2ed12bdbf60a689aab37762a455f0f5365cfb",
+        "version" : "2.2.2"
+      }
+    },
+    {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "b601256eab081c0f92f059e12818ac1d4f178ff7",
+        "version" : "1.3.0"
+      }
+    }
+  ],
+  "version" : 2
+}

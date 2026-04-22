@@ -246,8 +246,7 @@ class SplunkOtelFlutterPlatformImplementation
     required EndpointConfiguration endpoint,
   }) async {
     await _api.preferencesSetEndpointConfiguration(
-      endpointConfiguration: endpoint
-          .toGeneratedEndpointConfiguration(),
+      endpointConfiguration: endpoint.toGeneratedEndpointConfiguration(),
     );
   }
 

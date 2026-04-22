@@ -25,7 +25,7 @@
 /// - Module-based instrumentation (network, crashes, navigation, etc.)
 /// - Global attributes and custom tracking
 /// - Session and user tracking
-library splunk_otel_flutter_platform_interface;
+library;
 
 export 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 export 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
