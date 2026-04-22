@@ -89,15 +89,21 @@ class SplunkOtelFlutterPlatformImplementation
         .cast<NetworkInstrumentationModuleConfiguration?>()
         .firstOrNull;
 
+    final sessionReplayModuleConfiguration = moduleConfigurations
+        .whereType<SessionReplayModuleConfiguration>()
+        .cast<SessionReplayModuleConfiguration?>()
+        .firstOrNull;
+
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
-        endpoint: agentConfiguration.endpointConfiguration.toGeneratedEndpointConfiguration(),
+        endpoint: agentConfiguration.endpoint
+            ?.toGeneratedEndpointConfiguration(),
         appName: agentConfiguration.appName,
         deploymentEnvironment: agentConfiguration.deploymentEnvironment,
         appVersion: agentConfiguration.appVersion,
         enableDebugLogging: agentConfiguration.enableDebugLogging,
-        globalAttributes:
-            agentConfiguration.globalAttributes?.toGeneratedMutableAttributes(),
+        globalAttributes: agentConfiguration.globalAttributes
+            ?.toGeneratedMutableAttributes(),
         user: agentConfiguration.user.toGeneratedUserConfiguration(),
         session: GeneratedSessionConfiguration(
           samplingRate: agentConfiguration.session.samplingRate,
@@ -133,16 +139,16 @@ class SplunkOtelFlutterPlatformImplementation
             ),
       networkMonitorModuleConfiguration:
           networkMonitorModuleConfiguration == null
-              ? null
-              : GeneratedNetworkMonitorModuleConfiguration(
-                  isEnabled: networkMonitorModuleConfiguration.isEnabled,
-                ),
+          ? null
+          : GeneratedNetworkMonitorModuleConfiguration(
+              isEnabled: networkMonitorModuleConfiguration.isEnabled,
+            ),
       applicationLifecycleModuleConfiguration:
           applicationLifecycleModuleConfiguration == null
-              ? null
-              : GeneratedApplicationLifecycleModuleConfiguration(
-                  isEnabled: applicationLifecycleModuleConfiguration.isEnabled,
-                ),
+          ? null
+          : GeneratedApplicationLifecycleModuleConfiguration(
+              isEnabled: applicationLifecycleModuleConfiguration.isEnabled,
+            ),
 
       // Android-only modules
       anrModuleConfiguration: anrModuleConfiguration == null
@@ -171,14 +177,20 @@ class SplunkOtelFlutterPlatformImplementation
       // iOS only modules
       networkInstrumentationModuleConfiguration:
           networkInstrumentationModuleConfiguration == null
-              ? null
-              : GeneratedNetworkInstrumentationModuleConfiguration(
-                  isEnabled:
-                      networkInstrumentationModuleConfiguration.isEnabled,
-                  ignoreURLs: networkInstrumentationModuleConfiguration
-                      .ignoreURLs
-                      .toGeneratedList(),
-                ),
+          ? null
+          : GeneratedNetworkInstrumentationModuleConfiguration(
+              isEnabled: networkInstrumentationModuleConfiguration.isEnabled,
+              ignoreURLs: networkInstrumentationModuleConfiguration.ignoreURLs
+                  .toGeneratedList(),
+            ),
+
+      // Session replay
+      sessionReplayModuleConfiguration: sessionReplayModuleConfiguration == null
+          ? null
+          : GeneratedSessionReplayModuleConfiguration(
+              isEnabled: sessionReplayModuleConfiguration.isEnabled,
+              samplingRate: sessionReplayModuleConfiguration.samplingRate,
+            ),
     );
   }
 
@@ -199,10 +211,10 @@ class SplunkOtelFlutterPlatformImplementation
       await _api.stateGetDeploymentEnvironment();
 
   @override
-  Future<EndpointConfiguration> stateGetEndpointConfiguration() async {
+  Future<EndpointConfiguration?> stateGetEndpointConfiguration() async {
     final generatedConfiguration = await _api.stateGetEndpointConfiguration();
 
-    return generatedConfiguration.toEndpointConfiguration();
+    return generatedConfiguration?.toEndpointConfiguration();
   }
 
   @override
@@ -229,6 +241,14 @@ class SplunkOtelFlutterPlatformImplementation
     return genEndpointConfig?.toEndpointConfiguration();
   }
 
+  @override
+  Future<void> preferencesSetEndpointConfiguration({
+    required EndpointConfiguration endpoint,
+  }) async {
+    await _api.preferencesSetEndpointConfiguration(
+      endpointConfiguration: endpoint.toGeneratedEndpointConfiguration(),
+    );
+  }
 
   // Session
 
@@ -243,8 +263,8 @@ class SplunkOtelFlutterPlatformImplementation
 
   @override
   Future<UserTrackingMode?> userPreferencesGetUserTrackingMode() async {
-    final generatedUserTrackingMode =
-        await _api.userPreferencesGetUserTrackingMode();
+    final generatedUserTrackingMode = await _api
+        .userPreferencesGetUserTrackingMode();
 
     if (generatedUserTrackingMode == null) {
       return null;
@@ -252,8 +272,8 @@ class SplunkOtelFlutterPlatformImplementation
 
     final userTrackingMode =
         generatedUserTrackingMode == GeneratedUserTrackingMode.noTracking
-            ? UserTrackingMode.noTracking
-            : UserTrackingMode.anonymousTracking;
+        ? UserTrackingMode.noTracking
+        : UserTrackingMode.anonymousTracking;
 
     return userTrackingMode;
   }
@@ -273,8 +293,8 @@ class SplunkOtelFlutterPlatformImplementation
 
     final userTrackingMode =
         generatedUserTrackingMode == GeneratedUserTrackingMode.noTracking
-            ? UserTrackingMode.noTracking
-            : UserTrackingMode.anonymousTracking;
+        ? UserTrackingMode.noTracking
+        : UserTrackingMode.anonymousTracking;
 
     return userTrackingMode;
   }
@@ -294,13 +314,12 @@ class SplunkOtelFlutterPlatformImplementation
   Future<MutableAttributes> globalAttributesGetAll() async {
     final generatedAttributes = await _api.globalAttributesGetAll();
 
-    return generatedAttributes?.toMutableAttributes() ?? const MutableAttributes();
+    return generatedAttributes?.toMutableAttributes() ??
+        const MutableAttributes();
   }
 
   @override
-  Future<void> globalAttributesRemove({
-    required String key,
-  }) async {
+  Future<void> globalAttributesRemove({required String key}) async {
     await _api.globalAttributesRemove(key: key);
   }
 
@@ -310,9 +329,7 @@ class SplunkOtelFlutterPlatformImplementation
   }
 
   @override
-  Future<bool> globalAttributesContains({
-    required String key,
-  }) async =>
+  Future<bool> globalAttributesContains({required String key}) async =>
       await _api.globalAttributesContains(key: key);
 
   @override
@@ -405,26 +422,18 @@ class SplunkOtelFlutterPlatformImplementation
   Future<int> customTrackingStartWorkflow({
     required String workflowName,
   }) async {
-    return await _api.customTrackingStartWorkflow(
-      workflowName: workflowName,
-    );
+    return await _api.customTrackingStartWorkflow(workflowName: workflowName);
   }
 
   @override
-  Future<void> customTrackingEndWorkflow({
-    required int handle,
-  }) async {
-    await _api.customTrackingEndWorkflow(
-      handle: handle,
-    );
+  Future<void> customTrackingEndWorkflow({required int handle}) async {
+    await _api.customTrackingEndWorkflow(handle: handle);
   }
 
   // Navigation
 
   @override
   Future<void> navigationTrack({required String screenName}) async {
-    await _api.navigationTrack(
-      screenName: screenName,
-    );
+    await _api.navigationTrack(screenName: screenName);
   }
 }

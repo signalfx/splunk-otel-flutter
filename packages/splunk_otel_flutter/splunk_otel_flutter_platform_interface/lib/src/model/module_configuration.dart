@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 
 /// Base class for module configurations.
@@ -39,7 +40,7 @@ abstract class ModuleConfiguration {
 }
 
 /// Base class for module configurations that can be enabled or disabled.
-abstract class ActivableModuleConfiguration extends ModuleConfiguration{
+abstract class ActivableModuleConfiguration extends ModuleConfiguration {
   /// Whether this module is enabled. Defaults to `true` for all modules.
   final bool isEnabled;
 
@@ -78,18 +79,14 @@ class NavigationModuleConfiguration extends ActivableModuleConfiguration {
 ///
 /// Captures unhandled exceptions and crashes.
 class CrashReportsModuleConfiguration extends ActivableModuleConfiguration {
-  CrashReportsModuleConfiguration({
-    super.isEnabled = true,
-  });
+  CrashReportsModuleConfiguration({super.isEnabled = true});
 }
 
 /// User interactions tracking configuration.
 ///
 /// Tracks user taps/clicks on UI elements, creating spans with element details.
 class InteractionsModuleConfiguration extends ActivableModuleConfiguration {
-  InteractionsModuleConfiguration({
-    super.isEnabled = true,
-  });
+  InteractionsModuleConfiguration({super.isEnabled = true});
 }
 
 /// Network connectivity monitoring configuration.
@@ -97,19 +94,16 @@ class InteractionsModuleConfiguration extends ActivableModuleConfiguration {
 /// Tracks network type changes (WiFi, cellular, offline, etc.).
 /// Adds `network.connection.type` attribute to spans.
 class NetworkMonitorModuleConfiguration extends ActivableModuleConfiguration {
-  NetworkMonitorModuleConfiguration({
-    super.isEnabled = true,
-  });
+  NetworkMonitorModuleConfiguration({super.isEnabled = true});
 }
 
 /// Application lifecycle events configuration.
 ///
 /// Tracks app foreground/background transitions.
 /// **Note:** This configuration can only be disabled on Android. On iOS, the configuration is ignored and lifecycle tracking behavior is not controlled by this setting.
-class ApplicationLifecycleModuleConfiguration extends ActivableModuleConfiguration {
-  ApplicationLifecycleModuleConfiguration({
-    super.isEnabled = true,
-  });
+class ApplicationLifecycleModuleConfiguration
+    extends ActivableModuleConfiguration {
+  ApplicationLifecycleModuleConfiguration({super.isEnabled = true});
 }
 
 // only Android
@@ -118,9 +112,7 @@ class ApplicationLifecycleModuleConfiguration extends ActivableModuleConfigurati
 ///
 /// **Android only.** Detects when the main thread is blocked.
 class AnrModuleConfiguration extends ActivableModuleConfiguration {
-  AnrModuleConfiguration({
-    super.isEnabled = true,
-  });
+  AnrModuleConfiguration({super.isEnabled = true});
 }
 
 /// **Android only.** HttpURLConnection instrumentation configuration.
@@ -129,7 +121,7 @@ class AnrModuleConfiguration extends ActivableModuleConfiguration {
 class HttpUrlModuleConfiguration extends ActivableModuleConfiguration {
   /// Request header names to capture in spans.
   final List<String> capturedRequestHeaders;
-  
+
   /// Response header names to capture in spans.
   final List<String> capturedResponseHeaders;
 
@@ -146,7 +138,7 @@ class HttpUrlModuleConfiguration extends ActivableModuleConfiguration {
 class OkHttp3AutoModuleConfiguration extends ActivableModuleConfiguration {
   /// Request header names to capture in spans.
   final List<String> capturedRequestHeaders;
-  
+
   /// Response header names to capture in spans.
   final List<String> capturedResponseHeaders;
 
@@ -157,16 +149,43 @@ class OkHttp3AutoModuleConfiguration extends ActivableModuleConfiguration {
   });
 }
 
+/// Session replay module configuration.
+///
+/// Enables screen recording for session replay in Splunk Observability Cloud.
+/// Requires the `splunk_otel_flutter_session_replay` package to be installed.
+class SessionReplayModuleConfiguration extends ActivableModuleConfiguration {
+  /// Sampling rate for session replay recording (0.0 to 1.0).
+  ///
+  /// A value of 1.0 means all sessions are recorded (100%).
+  /// A value of 0.5 means half of sessions are recorded (50%).
+  /// Values outside the valid range are clamped to [0.0, 1.0].
+  /// Defaults to 0.2.
+  final double samplingRate;
+
+  SessionReplayModuleConfiguration({
+    super.isEnabled = true,
+    double samplingRate = 0.2,
+  }) : samplingRate = samplingRate.clamp(0.0, 1.0) {
+    if (samplingRate < 0.0 || samplingRate > 1.0) {
+      debugPrint(
+        'SplunkRum: samplingRate must be between 0.0 and 1.0 (inclusive). '
+        'Received: $samplingRate. Clamped to ${samplingRate.clamp(0.0, 1.0)}.',
+      );
+    }
+  }
+}
+
 // only iOS
 
 /// **iOS only.** Network instrumentation configuration.
 ///
 /// Instruments `URLSession` requests for distributed tracing.
-class NetworkInstrumentationModuleConfiguration extends ActivableModuleConfiguration {
+class NetworkInstrumentationModuleConfiguration
+    extends ActivableModuleConfiguration {
   /// Regular expression patterns for URLs to exclude from tracing.
   /// Multiple patterns are combined with OR logic.
   final List<RegularExpression> ignoreURLs;
-  
+
   NetworkInstrumentationModuleConfiguration({
     super.isEnabled = true,
     this.ignoreURLs = const [],
@@ -180,22 +199,22 @@ class NetworkInstrumentationModuleConfiguration extends ActivableModuleConfigura
 enum RegexOption {
   /// Case-insensitive matching.
   caseInsensitive,
-  
+
   /// Allow comments and whitespace in the pattern.
   allowCommentsAndWhitespace,
-  
+
   /// Ignore metacharacters, treating them as literals.
   ignoreMetacharacters,
-  
+
   /// Dot (.) matches line separators.
   dotMatchesLineSeparators,
-  
+
   /// Anchors (^ and $) match at line boundaries.
   anchorsMatchLines,
-  
+
   /// Use Unix line separators.
   useUnixLineSeparators,
-  
+
   /// Use Unicode word boundaries.
   useUnicodeWordBoundaries,
 }
@@ -207,14 +226,11 @@ enum RegexOption {
 class RegularExpression {
   /// The regex pattern string.
   final String pattern;
-  
+
   /// Optional regex options to modify pattern behavior.
   final List<RegexOption?>? options;
 
-  RegularExpression({
-    required this.pattern,
-    this.options,
-  });
+  RegularExpression({required this.pattern, this.options});
 }
 
 extension RegexSpecMapper on RegularExpression {
@@ -279,7 +295,7 @@ extension RegularExpressionListMapper on List<RegularExpression> {
 }
 
 extension GeneratedRegularExpressionListMapper
-on List<GeneratedRegularExpression> {
+    on List<GeneratedRegularExpression> {
   List<RegularExpression> toRegularExpressionList() =>
       map((e) => e.toRegularExpression()).toList();
 }

@@ -34,7 +34,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
     _urlController.text = _currentUrl;
-    
+
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -133,10 +133,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     onSubmitted: (_) => _loadUrl(),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _loadUrl,
-                ),
+                IconButton(icon: const Icon(Icons.search), onPressed: _loadUrl),
               ],
             ),
           ),
@@ -146,9 +143,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           else
             const SizedBox(height: 4),
           // WebView
-          Expanded(
-            child: WebViewWidget(controller: _controller),
-          ),
+          Expanded(child: WebViewWidget(controller: _controller)),
         ],
       ),
     );

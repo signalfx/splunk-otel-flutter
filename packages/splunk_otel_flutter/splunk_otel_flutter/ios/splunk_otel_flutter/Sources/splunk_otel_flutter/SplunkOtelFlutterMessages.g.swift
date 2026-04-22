@@ -150,11 +150,7 @@ enum GeneratedSessionReplayStatus: Int {
   case belowMinSdkVersion = 3
   case storageLimitReached = 4
   case internalError = 5
-}
-
-enum GeneratedRenderingMode: Int {
-  case native = 0
-  case wireframeOnly = 1
+  case disabledBySampling = 6
 }
 
 enum GeneratedRecordingMaskType: Int {
@@ -165,7 +161,7 @@ enum GeneratedRecordingMaskType: Int {
 enum GeneratedStatus: Int {
   case running = 0
   case notInstalled = 1
-  case subProcess = 2
+  case subprocess = 2
   case sampledOut = 3
   case unsupportedPlatform = 4
   case unsupportedOsVersion = 5
@@ -479,10 +475,39 @@ struct GeneratedRegularExpression: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedSessionReplayModuleConfiguration: Hashable {
+  var isEnabled: Bool
+  var samplingRate: Double
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedSessionReplayModuleConfiguration? {
+    let isEnabled = pigeonVar_list[0] as! Bool
+    let samplingRate = pigeonVar_list[1] as! Double
+
+    return GeneratedSessionReplayModuleConfiguration(
+      isEnabled: isEnabled,
+      samplingRate: samplingRate
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      isEnabled,
+      samplingRate,
+    ]
+  }
+  static func == (lhs: GeneratedSessionReplayModuleConfiguration, rhs: GeneratedSessionReplayModuleConfiguration) -> Bool {
+    return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedAgentConfiguration: Hashable {
-  var endpoint: GeneratedEndpointConfiguration
   var appName: String
   var deploymentEnvironment: String
+  var endpoint: GeneratedEndpointConfiguration? = nil
   var appVersion: String? = nil
   var enableDebugLogging: Bool? = nil
   var globalAttributes: GeneratedMutableAttributes? = nil
@@ -494,9 +519,9 @@ struct GeneratedAgentConfiguration: Hashable {
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedAgentConfiguration? {
-    let endpoint = pigeonVar_list[0] as! GeneratedEndpointConfiguration
-    let appName = pigeonVar_list[1] as! String
-    let deploymentEnvironment = pigeonVar_list[2] as! String
+    let appName = pigeonVar_list[0] as! String
+    let deploymentEnvironment = pigeonVar_list[1] as! String
+    let endpoint: GeneratedEndpointConfiguration? = nilOrValue(pigeonVar_list[2])
     let appVersion: String? = nilOrValue(pigeonVar_list[3])
     let enableDebugLogging: Bool? = nilOrValue(pigeonVar_list[4])
     let globalAttributes: GeneratedMutableAttributes? = nilOrValue(pigeonVar_list[5])
@@ -506,9 +531,9 @@ struct GeneratedAgentConfiguration: Hashable {
     let deferredUntilForeground: Bool? = nilOrValue(pigeonVar_list[9])
 
     return GeneratedAgentConfiguration(
-      endpoint: endpoint,
       appName: appName,
       deploymentEnvironment: deploymentEnvironment,
+      endpoint: endpoint,
       appVersion: appVersion,
       enableDebugLogging: enableDebugLogging,
       globalAttributes: globalAttributes,
@@ -520,9 +545,9 @@ struct GeneratedAgentConfiguration: Hashable {
   }
   func toList() -> [Any?] {
     return [
-      endpoint,
       appName,
       deploymentEnvironment,
+      endpoint,
       appVersion,
       enableDebugLogging,
       globalAttributes,
@@ -966,43 +991,39 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 132:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return GeneratedRenderingMode(rawValue: enumResultAsInt)
+        return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
       }
       return nil
     case 133:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return GeneratedRecordingMaskType(rawValue: enumResultAsInt)
-      }
-      return nil
-    case 134:
-      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
-      if let enumResultAsInt = enumResultAsInt {
         return GeneratedStatus(rawValue: enumResultAsInt)
       }
       return nil
-    case 135:
+    case 134:
       return GeneratedSlowRenderingModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 136:
+    case 135:
       return GeneratedNavigationModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 137:
+    case 136:
       return GeneratedCrashReportsModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 138:
+    case 137:
       return GeneratedInteractionsModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 139:
+    case 138:
       return GeneratedNetworkMonitorModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 140:
+    case 139:
       return GeneratedApplicationLifecycleModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 141:
+    case 140:
       return GeneratedAnrModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 142:
+    case 141:
       return GeneratedHttpUrlModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 143:
+    case 142:
       return GeneratedOkHttp3AutoModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 144:
+    case 143:
       return GeneratedNetworkInstrumentationModuleConfiguration.fromList(self.readValue() as! [Any?])
-    case 145:
+    case 144:
       return GeneratedRegularExpression.fromList(self.readValue() as! [Any?])
+    case 145:
+      return GeneratedSessionReplayModuleConfiguration.fromList(self.readValue() as! [Any?])
     case 146:
       return GeneratedAgentConfiguration.fromList(self.readValue() as! [Any?])
     case 147:
@@ -1052,46 +1073,46 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedSessionReplayStatus {
       super.writeByte(131)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRenderingMode {
+    } else if let value = value as? GeneratedRecordingMaskType {
       super.writeByte(132)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedRecordingMaskType {
+    } else if let value = value as? GeneratedStatus {
       super.writeByte(133)
       super.writeValue(value.rawValue)
-    } else if let value = value as? GeneratedStatus {
-      super.writeByte(134)
-      super.writeValue(value.rawValue)
     } else if let value = value as? GeneratedSlowRenderingModuleConfiguration {
-      super.writeByte(135)
+      super.writeByte(134)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNavigationModuleConfiguration {
-      super.writeByte(136)
+      super.writeByte(135)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedCrashReportsModuleConfiguration {
-      super.writeByte(137)
+      super.writeByte(136)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedInteractionsModuleConfiguration {
-      super.writeByte(138)
+      super.writeByte(137)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNetworkMonitorModuleConfiguration {
-      super.writeByte(139)
+      super.writeByte(138)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedApplicationLifecycleModuleConfiguration {
-      super.writeByte(140)
+      super.writeByte(139)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedAnrModuleConfiguration {
-      super.writeByte(141)
+      super.writeByte(140)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedHttpUrlModuleConfiguration {
-      super.writeByte(142)
+      super.writeByte(141)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedOkHttp3AutoModuleConfiguration {
-      super.writeByte(143)
+      super.writeByte(142)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedNetworkInstrumentationModuleConfiguration {
-      super.writeByte(144)
+      super.writeByte(143)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedRegularExpression {
+      super.writeByte(144)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedSessionReplayModuleConfiguration {
       super.writeByte(145)
       super.writeValue(value.toList())
     } else if let value = value as? GeneratedAgentConfiguration {
@@ -1165,16 +1186,17 @@ class SplunkOtelFlutterMessagesPigeonCodec: FlutterStandardMessageCodec, @unchec
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol SplunkOtelFlutterHostApi {
-  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
+  func install(agentConfiguration: GeneratedAgentConfiguration, navigationModuleConfiguration: GeneratedNavigationModuleConfiguration?, slowRenderingModuleConfiguration: GeneratedSlowRenderingModuleConfiguration?, crashReportsModuleConfiguration: GeneratedCrashReportsModuleConfiguration?, interactionsModuleConfiguration: GeneratedInteractionsModuleConfiguration?, networkMonitorModuleConfiguration: GeneratedNetworkMonitorModuleConfiguration?, applicationLifecycleModuleConfiguration: GeneratedApplicationLifecycleModuleConfiguration?, anrModuleConfiguration: GeneratedAnrModuleConfiguration?, httpUrlModuleConfiguration: GeneratedHttpUrlModuleConfiguration?, okHttp3AutoModuleConfiguration: GeneratedOkHttp3AutoModuleConfiguration?, networkInstrumentationModuleConfiguration: GeneratedNetworkInstrumentationModuleConfiguration?, sessionReplayModuleConfiguration: GeneratedSessionReplayModuleConfiguration?, completion: @escaping (Result<Void, Error>) -> Void)
   func stateGetAppName(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetAppVersion(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetStatus(completion: @escaping (Result<GeneratedStatus, Error>) -> Void)
-  func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration, Error>) -> Void)
+  func stateGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
   func stateGetDeploymentEnvironment(completion: @escaping (Result<String, Error>) -> Void)
   func stateGetIsDebugLoggingEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func stateGetInstrumentedProcessName(completion: @escaping (Result<String?, Error>) -> Void)
   func stateGetDeferredUntilForeground(completion: @escaping (Result<Bool, Error>) -> Void)
   func preferencesGetEndpointConfiguration(completion: @escaping (Result<GeneratedEndpointConfiguration?, Error>) -> Void)
+  func preferencesSetEndpointConfiguration(endpointConfiguration: GeneratedEndpointConfiguration, completion: @escaping (Result<Void, Error>) -> Void)
   func sessionStateGetId(completion: @escaping (Result<String, Error>) -> Void)
   func sessionStateGetSamplingRate(completion: @escaping (Result<Double, Error>) -> Void)
   func userStateGetUserTrackingMode(completion: @escaping (Result<GeneratedUserTrackingMode, Error>) -> Void)
@@ -1221,7 +1243,8 @@ class SplunkOtelFlutterHostApiSetup {
         let httpUrlModuleConfigurationArg: GeneratedHttpUrlModuleConfiguration? = nilOrValue(args[8])
         let okHttp3AutoModuleConfigurationArg: GeneratedOkHttp3AutoModuleConfiguration? = nilOrValue(args[9])
         let networkInstrumentationModuleConfigurationArg: GeneratedNetworkInstrumentationModuleConfiguration? = nilOrValue(args[10])
-        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg, crashReportsModuleConfiguration: crashReportsModuleConfigurationArg, interactionsModuleConfiguration: interactionsModuleConfigurationArg, networkMonitorModuleConfiguration: networkMonitorModuleConfigurationArg, applicationLifecycleModuleConfiguration: applicationLifecycleModuleConfigurationArg, anrModuleConfiguration: anrModuleConfigurationArg, httpUrlModuleConfiguration: httpUrlModuleConfigurationArg, okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfiguration: networkInstrumentationModuleConfigurationArg) { result in
+        let sessionReplayModuleConfigurationArg: GeneratedSessionReplayModuleConfiguration? = nilOrValue(args[11])
+        api.install(agentConfiguration: agentConfigurationArg, navigationModuleConfiguration: navigationModuleConfigurationArg, slowRenderingModuleConfiguration: slowRenderingModuleConfigurationArg, crashReportsModuleConfiguration: crashReportsModuleConfigurationArg, interactionsModuleConfiguration: interactionsModuleConfigurationArg, networkMonitorModuleConfiguration: networkMonitorModuleConfigurationArg, applicationLifecycleModuleConfiguration: applicationLifecycleModuleConfigurationArg, anrModuleConfiguration: anrModuleConfigurationArg, httpUrlModuleConfiguration: httpUrlModuleConfigurationArg, okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfigurationArg, networkInstrumentationModuleConfiguration: networkInstrumentationModuleConfigurationArg, sessionReplayModuleConfiguration: sessionReplayModuleConfigurationArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1367,6 +1390,23 @@ class SplunkOtelFlutterHostApiSetup {
       }
     } else {
       preferencesGetEndpointConfigurationChannel.setMessageHandler(nil)
+    }
+    let preferencesSetEndpointConfigurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.preferencesSetEndpointConfiguration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      preferencesSetEndpointConfigurationChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let endpointConfigurationArg = args[0] as! GeneratedEndpointConfiguration
+        api.preferencesSetEndpointConfiguration(endpointConfiguration: endpointConfigurationArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      preferencesSetEndpointConfigurationChannel.setMessageHandler(nil)
     }
     let sessionStateGetIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.sessionStateGetId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

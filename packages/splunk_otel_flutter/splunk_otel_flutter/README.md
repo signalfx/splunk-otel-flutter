@@ -1,8 +1,5 @@
 # Splunk Distribution of OpenTelemetry for Flutter
 
-> [!IMPORTANT]
-> Splunk Flutter instrumentation distribution is in alpha state and subject to the terms at https://www.splunk.com/en_us/legal/pre-release-agreement-for-hosted-services.html.
-
 ## Overview
 
 The Splunk Distribution of OpenTelemetry for Flutter provides automatic instrumentation for Flutter applications running on Android and iOS devices. This library captures telemetry data including:
@@ -114,7 +111,7 @@ void main() async {
 
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
-      endpointConfiguration: EndpointConfiguration.forRum(
+      endpoint: EndpointConfiguration.forRum(
         realm: 'us0',
         rumAccessToken: 'YOUR_RUM_ACCESS_TOKEN',
       ),
@@ -136,7 +133,7 @@ Control which features are enabled by passing module configurations:
 ```dart
 await SplunkRum.instance.install(
   agentConfiguration: AgentConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
+    endpoint: EndpointConfiguration.forRum(
       realm: 'us0',
       rumAccessToken: 'YOUR_RUM_ACCESS_TOKEN',
     ),
@@ -188,7 +185,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 
 // Set tracking mode
 await SplunkRum.instance.user.preferences.setTrackingMode(
-  userTrackingMode: UserTrackingMode.anonymousTracking,
+  trackingMode: UserTrackingMode.anonymousTracking,
 );
 ```
 

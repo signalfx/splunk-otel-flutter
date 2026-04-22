@@ -1,8 +1,8 @@
 name: splunk_otel_flutter_session_replay_platform_interface
 description: "Platform interface for Splunk session replay. Defines the API contract for session recording and playback functionality."
-version: 0.0.1
-publish_to: none # remove when session replay is ready
-#TODO add repository and homepage before release
+version: 1.0.0
+repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface
+homepage: https://github.com/signalfx/splunk-otel-flutter
 
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.0
+  splunk_otel_flutter_platform_interface: ^1.0.0
 
 dev_dependencies:
   flutter_test:

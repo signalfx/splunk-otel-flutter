@@ -27,10 +27,12 @@ void main() {
     });
 
     test('should create with attributes map', () {
-      final attributes = MutableAttributes(attributes: {
-        'key1': MutableAttributeString(value: 'value1'),
-        'key2': MutableAttributeInt(value: 42),
-      });
+      final attributes = MutableAttributes(
+        attributes: {
+          'key1': MutableAttributeString(value: 'value1'),
+          'key2': MutableAttributeInt(value: 42),
+        },
+      );
 
       expect(attributes.attributes.length, 2);
       expect(attributes.attributes['key1'], isA<MutableAttributeString>());
@@ -59,7 +61,9 @@ void main() {
     });
 
     test('should handle large values', () {
-      final attribute = MutableAttributeInt(value: 9223372036854775807); // max int64
+      final attribute = MutableAttributeInt(
+        value: 9223372036854775807,
+      ); // max int64
 
       expect(attribute.value, 9223372036854775807);
     });
@@ -121,7 +125,9 @@ void main() {
     });
 
     test('should handle special characters', () {
-      final attribute = MutableAttributeString(value: '!@#\$%^&*()_+-=[]{}|;:,.<>?/~`');
+      final attribute = MutableAttributeString(
+        value: '!@#\$%^&*()_+-=[]{}|;:,.<>?/~`',
+      );
 
       expect(attribute.value, '!@#\$%^&*()_+-=[]{}|;:,.<>?/~`');
     });
@@ -157,63 +163,95 @@ void main() {
     });
 
     test('should convert string attribute', () {
-      final attributes = MutableAttributes(attributes: {
-        'key': MutableAttributeString(value: 'test'),
-      });
+      final attributes = MutableAttributes(
+        attributes: {'key': MutableAttributeString(value: 'test')},
+      );
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes.length, 1);
-      expect(generated.attributes['key'], isA<GeneratedMutableAttributeString>());
-      expect((generated.attributes['key'] as GeneratedMutableAttributeString).value, 'test');
+      expect(
+        generated.attributes['key'],
+        isA<GeneratedMutableAttributeString>(),
+      );
+      expect(
+        (generated.attributes['key'] as GeneratedMutableAttributeString).value,
+        'test',
+      );
     });
 
     test('should convert int attribute', () {
-      final attributes = MutableAttributes(attributes: {
-        'key': MutableAttributeInt(value: 42),
-      });
+      final attributes = MutableAttributes(
+        attributes: {'key': MutableAttributeInt(value: 42)},
+      );
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes.length, 1);
       expect(generated.attributes['key'], isA<GeneratedMutableAttributeInt>());
-      expect((generated.attributes['key'] as GeneratedMutableAttributeInt).value, 42);
+      expect(
+        (generated.attributes['key'] as GeneratedMutableAttributeInt).value,
+        42,
+      );
     });
 
     test('should convert double attribute', () {
-      final attributes = MutableAttributes(attributes: {
-        'key': MutableAttributeDouble(value: 3.14),
-      });
+      final attributes = MutableAttributes(
+        attributes: {'key': MutableAttributeDouble(value: 3.14)},
+      );
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes.length, 1);
-      expect(generated.attributes['key'], isA<GeneratedMutableAttributeDouble>());
-      expect((generated.attributes['key'] as GeneratedMutableAttributeDouble).value, 3.14);
+      expect(
+        generated.attributes['key'],
+        isA<GeneratedMutableAttributeDouble>(),
+      );
+      expect(
+        (generated.attributes['key'] as GeneratedMutableAttributeDouble).value,
+        3.14,
+      );
     });
 
     test('should convert bool attribute', () {
-      final attributes = MutableAttributes(attributes: {
-        'key': MutableAttributeBool(value: true),
-      });
+      final attributes = MutableAttributes(
+        attributes: {'key': MutableAttributeBool(value: true)},
+      );
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes.length, 1);
       expect(generated.attributes['key'], isA<GeneratedMutableAttributeBool>());
-      expect((generated.attributes['key'] as GeneratedMutableAttributeBool).value, true);
+      expect(
+        (generated.attributes['key'] as GeneratedMutableAttributeBool).value,
+        true,
+      );
     });
 
     test('should convert mixed attributes', () {
-      final attributes = MutableAttributes(attributes: {
-        'string_key': MutableAttributeString(value: 'text'),
-        'int_key': MutableAttributeInt(value: 100),
-        'double_key': MutableAttributeDouble(value: 99.99),
-        'bool_key': MutableAttributeBool(value: false),
-      });
+      final attributes = MutableAttributes(
+        attributes: {
+          'string_key': MutableAttributeString(value: 'text'),
+          'int_key': MutableAttributeInt(value: 100),
+          'double_key': MutableAttributeDouble(value: 99.99),
+          'bool_key': MutableAttributeBool(value: false),
+        },
+      );
       final generated = attributes.toGeneratedMutableAttributes();
 
       expect(generated.attributes.length, 4);
-      expect(generated.attributes['string_key'], isA<GeneratedMutableAttributeString>());
-      expect(generated.attributes['int_key'], isA<GeneratedMutableAttributeInt>());
-      expect(generated.attributes['double_key'], isA<GeneratedMutableAttributeDouble>());
-      expect(generated.attributes['bool_key'], isA<GeneratedMutableAttributeBool>());
+      expect(
+        generated.attributes['string_key'],
+        isA<GeneratedMutableAttributeString>(),
+      );
+      expect(
+        generated.attributes['int_key'],
+        isA<GeneratedMutableAttributeInt>(),
+      );
+      expect(
+        generated.attributes['double_key'],
+        isA<GeneratedMutableAttributeDouble>(),
+      );
+      expect(
+        generated.attributes['bool_key'],
+        isA<GeneratedMutableAttributeBool>(),
+      );
     });
   });
 
@@ -226,20 +264,23 @@ void main() {
     });
 
     test('should convert string attribute', () {
-      final generated = GeneratedMutableAttributes(attributes: {
-        'key': GeneratedMutableAttributeString(value: 'test'),
-      });
+      final generated = GeneratedMutableAttributes(
+        attributes: {'key': GeneratedMutableAttributeString(value: 'test')},
+      );
       final attributes = generated.toMutableAttributes();
 
       expect(attributes.attributes.length, 1);
       expect(attributes.attributes['key'], isA<MutableAttributeString>());
-      expect((attributes.attributes['key'] as MutableAttributeString).value, 'test');
+      expect(
+        (attributes.attributes['key'] as MutableAttributeString).value,
+        'test',
+      );
     });
 
     test('should convert int attribute', () {
-      final generated = GeneratedMutableAttributes(attributes: {
-        'key': GeneratedMutableAttributeInt(value: 42),
-      });
+      final generated = GeneratedMutableAttributes(
+        attributes: {'key': GeneratedMutableAttributeInt(value: 42)},
+      );
       final attributes = generated.toMutableAttributes();
 
       expect(attributes.attributes.length, 1);
@@ -248,61 +289,86 @@ void main() {
     });
 
     test('should convert double attribute', () {
-      final generated = GeneratedMutableAttributes(attributes: {
-        'key': GeneratedMutableAttributeDouble(value: 3.14),
-      });
+      final generated = GeneratedMutableAttributes(
+        attributes: {'key': GeneratedMutableAttributeDouble(value: 3.14)},
+      );
       final attributes = generated.toMutableAttributes();
 
       expect(attributes.attributes.length, 1);
       expect(attributes.attributes['key'], isA<MutableAttributeDouble>());
-      expect((attributes.attributes['key'] as MutableAttributeDouble).value, 3.14);
+      expect(
+        (attributes.attributes['key'] as MutableAttributeDouble).value,
+        3.14,
+      );
     });
 
     test('should convert bool attribute', () {
-      final generated = GeneratedMutableAttributes(attributes: {
-        'key': GeneratedMutableAttributeBool(value: true),
-      });
+      final generated = GeneratedMutableAttributes(
+        attributes: {'key': GeneratedMutableAttributeBool(value: true)},
+      );
       final attributes = generated.toMutableAttributes();
 
       expect(attributes.attributes.length, 1);
       expect(attributes.attributes['key'], isA<MutableAttributeBool>());
-      expect((attributes.attributes['key'] as MutableAttributeBool).value, true);
+      expect(
+        (attributes.attributes['key'] as MutableAttributeBool).value,
+        true,
+      );
     });
 
     test('should convert mixed attributes', () {
-      final generated = GeneratedMutableAttributes(attributes: {
-        'string_key': GeneratedMutableAttributeString(value: 'text'),
-        'int_key': GeneratedMutableAttributeInt(value: 100),
-        'double_key': GeneratedMutableAttributeDouble(value: 99.99),
-        'bool_key': GeneratedMutableAttributeBool(value: false),
-      });
+      final generated = GeneratedMutableAttributes(
+        attributes: {
+          'string_key': GeneratedMutableAttributeString(value: 'text'),
+          'int_key': GeneratedMutableAttributeInt(value: 100),
+          'double_key': GeneratedMutableAttributeDouble(value: 99.99),
+          'bool_key': GeneratedMutableAttributeBool(value: false),
+        },
+      );
       final attributes = generated.toMutableAttributes();
 
       expect(attributes.attributes.length, 4);
-      expect(attributes.attributes['string_key'], isA<MutableAttributeString>());
+      expect(
+        attributes.attributes['string_key'],
+        isA<MutableAttributeString>(),
+      );
       expect(attributes.attributes['int_key'], isA<MutableAttributeInt>());
-      expect(attributes.attributes['double_key'], isA<MutableAttributeDouble>());
+      expect(
+        attributes.attributes['double_key'],
+        isA<MutableAttributeDouble>(),
+      );
       expect(attributes.attributes['bool_key'], isA<MutableAttributeBool>());
     });
   });
 
   group('Round-trip Conversion', () {
     test('should handle round-trip conversion for all types', () {
-      final original = MutableAttributes(attributes: {
-        'string': MutableAttributeString(value: 'test'),
-        'int': MutableAttributeInt(value: 42),
-        'double': MutableAttributeDouble(value: 3.14),
-        'bool': MutableAttributeBool(value: true),
-      });
+      final original = MutableAttributes(
+        attributes: {
+          'string': MutableAttributeString(value: 'test'),
+          'int': MutableAttributeInt(value: 42),
+          'double': MutableAttributeDouble(value: 3.14),
+          'bool': MutableAttributeBool(value: true),
+        },
+      );
 
       final generated = original.toGeneratedMutableAttributes();
       final converted = generated.toMutableAttributes();
 
       expect(converted.attributes.length, 4);
-      expect((converted.attributes['string'] as MutableAttributeString).value, 'test');
+      expect(
+        (converted.attributes['string'] as MutableAttributeString).value,
+        'test',
+      );
       expect((converted.attributes['int'] as MutableAttributeInt).value, 42);
-      expect((converted.attributes['double'] as MutableAttributeDouble).value, 3.14);
-      expect((converted.attributes['bool'] as MutableAttributeBool).value, true);
+      expect(
+        (converted.attributes['double'] as MutableAttributeDouble).value,
+        3.14,
+      );
+      expect(
+        (converted.attributes['bool'] as MutableAttributeBool).value,
+        true,
+      );
     });
 
     test('should handle empty attributes round-trip', () {
@@ -323,4 +389,3 @@ void main() {
     });
   });
 }
-

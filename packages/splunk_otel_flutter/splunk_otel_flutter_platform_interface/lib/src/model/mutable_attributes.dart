@@ -99,17 +99,21 @@ extension MutableAttributesConverter on MutableAttributes {
     final Map<String, Object?> generatedAttributes = {};
     attributes.forEach((key, value) {
       if (value is MutableAttributeInt) {
-        generatedAttributes[key] =
-            GeneratedMutableAttributeInt(value: value.value);
+        generatedAttributes[key] = GeneratedMutableAttributeInt(
+          value: value.value,
+        );
       } else if (value is MutableAttributeDouble) {
-        generatedAttributes[key] =
-            GeneratedMutableAttributeDouble(value: value.value);
+        generatedAttributes[key] = GeneratedMutableAttributeDouble(
+          value: value.value,
+        );
       } else if (value is MutableAttributeString) {
-        generatedAttributes[key] =
-            GeneratedMutableAttributeString(value: value.value);
+        generatedAttributes[key] = GeneratedMutableAttributeString(
+          value: value.value,
+        );
       } else if (value is MutableAttributeBool) {
-        generatedAttributes[key] =
-            GeneratedMutableAttributeBool(value: value.value);
+        generatedAttributes[key] = GeneratedMutableAttributeBool(
+          value: value.value,
+        );
       } /*else if (value is _MutableAttributeListInt) {
         generatedAttributes[key] =
             GeneratedMutableAttributeListInt(value: value.value);
@@ -158,16 +162,20 @@ extension DynamicToMutableAttributeValueConverter on dynamic {
   MutableAttributeValue toMutableAttributeValue() {
     if (this is GeneratedMutableAttributeInt) {
       return MutableAttributeInt(
-          value: (this as GeneratedMutableAttributeInt).value);
+        value: (this as GeneratedMutableAttributeInt).value,
+      );
     } else if (this is GeneratedMutableAttributeDouble) {
       return MutableAttributeDouble(
-          value: (this as GeneratedMutableAttributeDouble).value);
+        value: (this as GeneratedMutableAttributeDouble).value,
+      );
     } else if (this is GeneratedMutableAttributeString) {
       return MutableAttributeString(
-          value: (this as GeneratedMutableAttributeString).value);
+        value: (this as GeneratedMutableAttributeString).value,
+      );
     } else if (this is GeneratedMutableAttributeBool) {
       return MutableAttributeBool(
-          value: (this as GeneratedMutableAttributeBool).value);
+        value: (this as GeneratedMutableAttributeBool).value,
+      );
       /* TODO uncomment when Lists are supported
     } else if (this is GeneratedMutableAttributeListInt) {
       return MutableAttributeListInt(value: (this as GeneratedMutableAttributeListInt).value);

@@ -30,7 +30,7 @@
 /// void main() async {
 ///   await SplunkRum.instance.install(
 ///     agentConfiguration: AgentConfiguration(
-///       endpointConfiguration: EndpointConfiguration.forRum(
+///       endpoint: EndpointConfiguration.forRum(
 ///         realm: 'us0',
 ///         rumAccessToken: 'your-rum-access-token',
 ///       ),
@@ -83,7 +83,7 @@
 /// - **Cross-platform**: Supports Android and iOS
 ///
 /// For more information, see the [Splunk RUM documentation](https://docs.splunk.com/Observability/rum/intro-to-rum.html).
-library splunk_otel_flutter;
+library;
 
 export 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 export 'package:splunk_otel_flutter_platform_interface/src/model/status.dart';
@@ -91,4 +91,5 @@ export 'package:splunk_otel_flutter_platform_interface/src/model/module_configur
 export 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
 export 'package:splunk_otel_flutter/src/splunk_otel_flutter.dart';
 export 'package:splunk_otel_flutter/src/global_attributes.dart';
-export 'package:splunk_otel_flutter/src/custom_tracking.dart' show WorkflowHandle;
+export 'package:splunk_otel_flutter/src/custom_tracking.dart'
+    show WorkflowHandle;

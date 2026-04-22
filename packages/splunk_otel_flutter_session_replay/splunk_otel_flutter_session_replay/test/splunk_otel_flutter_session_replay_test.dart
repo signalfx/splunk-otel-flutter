@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,36 @@ import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_r
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplunkOtelFlutterSessionReplay', () {
-    test('should be instantiable', () {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
+  group('SplunkSessionReplay', () {
+    test('should be accessible via singleton', () {
+      final sessionReplay = SplunkSessionReplay.instance;
       expect(sessionReplay, isNotNull);
     });
 
-    test('install method should throw UnimplementedError', () async {
-      final sessionReplay = SplunkOtelFlutterSessionReplay();
-      
-      expect(
-        () => sessionReplay.install(),
-        throwsA(isA<UnimplementedError>()),
-      );
+    test('singleton should always return the same instance', () {
+      final first = SplunkSessionReplay.instance;
+      final second = SplunkSessionReplay.instance;
+      expect(identical(first, second), isTrue);
+    });
+
+    test('should expose start', () {
+      expect(SplunkSessionReplay.instance.start, isA<Function>());
+    });
+
+    test('should expose stop', () {
+      expect(SplunkSessionReplay.instance.stop, isA<Function>());
+    });
+
+    test('should expose getStatus', () {
+      expect(SplunkSessionReplay.instance.getStatus, isA<Function>());
+    });
+
+    test('should expose getRecordingMask', () {
+      expect(SplunkSessionReplay.instance.getRecordingMask, isA<Function>());
+    });
+
+    test('should expose setRecordingMask', () {
+      expect(SplunkSessionReplay.instance.setRecordingMask, isA<Function>());
     });
   });
 }
-

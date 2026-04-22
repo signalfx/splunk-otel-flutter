@@ -31,13 +31,13 @@ void main() {
         realm: 'us0',
         rumAccessToken: 'test-token',
       );
-      
+
       final config = AgentConfiguration(
-        endpointConfiguration: endpointConfig,
+        endpoint: endpointConfig,
         appName: 'TestApp',
         deploymentEnvironment: 'test',
       );
-      
+
       expect(config, isA<AgentConfiguration>());
     });
 
@@ -58,4 +58,3 @@ void main() {
     });
   });
 }
-

@@ -16,57 +16,71 @@
 
 // Mock implementation
 
-
 import 'package:splunk_otel_flutter_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'pigeon/test_api.dart';
 
-class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlutterHostApi {
+class MockSplunkOtelFlutterPlatformInterfaceHostApi
+    implements TestSplunkOtelFlutterHostApi {
   Future<void> Function(
-      GeneratedAgentConfiguration agentConfiguration,
+    GeneratedAgentConfiguration agentConfiguration,
 
-      // Core configurations
-      GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
-      GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
-      GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
-      GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
-      GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
-      GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration,
+    // Core configurations
+    GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
+    GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
+    GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
+    GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
+    GeneratedNetworkMonitorModuleConfiguration?
+    networkMonitorModuleConfiguration,
+    GeneratedApplicationLifecycleModuleConfiguration?
+    applicationLifecycleModuleConfiguration,
 
-      // Android-only configurations
-      GeneratedAnrModuleConfiguration? anrModuleConfiguration,
-      GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
-      GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+    // Android-only configurations
+    GeneratedAnrModuleConfiguration? anrModuleConfiguration,
+    GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
+    GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
 
-      // iOS-only configurations
-      GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
-      )? installHandler;
+    // iOS-only configurations
+    GeneratedNetworkInstrumentationModuleConfiguration?
+    networkInstrumentationModuleConfiguration,
+
+    // Session replay configuration
+    GeneratedSessionReplayModuleConfiguration? sessionReplayModuleConfiguration,
+  )?
+  installHandler;
 
   Future<void> Function()? sessionReplayStartHandler;
   Future<void> Function()? sessionReplayStopHandler;
-  Future<GeneratedSessionReplayStatus> Function()? sessionReplayStateGetStatusHandler;
-  Future<GeneratedRenderingMode> Function()? sessionReplayStateGetRenderingModeHandler;
-  Future<GeneratedRenderingMode?> Function()? sessionReplayPreferencesGetRenderingModeHandler;
-  Future<void> Function(GeneratedRenderingMode?)? sessionReplayPreferencesSetRenderingModeHandler;
-  Future<GeneratedRecordingMaskList?> Function()? sessionReplayGetRecordingMaskHandler;
-  Future<void> Function(GeneratedRecordingMaskList?)? sessionReplaySetRecordingMaskHandler;
+  Future<GeneratedSessionReplayStatus> Function()?
+  sessionReplayStateGetStatusHandler;
+  Future<GeneratedRecordingMaskList?> Function()?
+  sessionReplayGetRecordingMaskHandler;
+  Future<void> Function(GeneratedRecordingMaskList?)?
+  sessionReplaySetRecordingMaskHandler;
 
   Future<String> Function()? stateGetAppNameHandler;
   Future<String> Function()? stateGetAppVersionHandler;
   Future<GeneratedStatus> Function()? stateGetStatusHandler;
-  Future<GeneratedEndpointConfiguration> Function()? stateGetEndpointConfigurationHandler;
+  Future<GeneratedEndpointConfiguration?> Function()?
+  stateGetEndpointConfigurationHandler;
+  Future<void> Function(GeneratedEndpointConfiguration)?
+  preferencesSetEndpointConfigurationHandler;
   Future<String> Function()? stateGetDeploymentEnvironmentHandler;
   Future<bool> Function()? stateGetIsDebugLoggingEnabledHandler;
   Future<String?> Function()? stateGetInstrumentedProcessNameHandler;
   Future<bool> Function()? stateGetDeferredUntilForegroundHandler;
 
-  Future<GeneratedEndpointConfiguration?> Function()? preferencesGetEndpointConfigurationHandler;
+  Future<GeneratedEndpointConfiguration?> Function()?
+  preferencesGetEndpointConfigurationHandler;
 
   Future<String> Function()? sessionStateGetIdHandler;
   Future<double> Function()? sessionStateGetSamplingRateHandler;
 
-  Future<GeneratedUserTrackingMode> Function()? userStateGetUserTrackingModeHandler;
-  Future<GeneratedUserTrackingMode?> Function()? userPreferencesGetUserTrackingModeHandler;
-  Future<void> Function(GeneratedUserTrackingMode)? userPreferencesSetUserTrackingModeHandler;
+  Future<GeneratedUserTrackingMode> Function()?
+  userStateGetUserTrackingModeHandler;
+  Future<GeneratedUserTrackingMode?> Function()?
+  userPreferencesGetUserTrackingModeHandler;
+  Future<void> Function(GeneratedUserTrackingMode)?
+  userPreferencesSetUserTrackingModeHandler;
 
   Future<Object?> Function(String)? globalAttributesGetHandler;
   Future<GeneratedMutableAttributes?> Function()? globalAttributesGetAllHandler;
@@ -77,13 +91,17 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   Future<void> Function(String, int)? globalAttributesSetIntHandler;
   Future<void> Function(String, double)? globalAttributesSetDoubleHandler;
   Future<void> Function(String, bool)? globalAttributesSetBoolHandler;
-  Future<void> Function(String, List<String>)? globalAttributesSetStringListHandler;
+  Future<void> Function(String, List<String>)?
+  globalAttributesSetStringListHandler;
   Future<void> Function(String, List<int>)? globalAttributesSetIntListHandler;
-  Future<void> Function(String, List<double>)? globalAttributesSetDoubleListHandler;
+  Future<void> Function(String, List<double>)?
+  globalAttributesSetDoubleListHandler;
   Future<void> Function(String, List<bool>)? globalAttributesSetBoolListHandler;
-  Future<void> Function(GeneratedMutableAttributes)? globalAttributesSetAllHandler;
+  Future<void> Function(GeneratedMutableAttributes)?
+  globalAttributesSetAllHandler;
 
-  Future<void> Function(String, GeneratedMutableAttributes)? customTrackingTrackCustomEventHandler;
+  Future<void> Function(String, GeneratedMutableAttributes)?
+  customTrackingTrackCustomEventHandler;
   Future<int> Function(String)? customTrackingStartWorkflowHandler;
   Future<void> Function(int)? customTrackingEndWorkflowHandler;
 
@@ -93,20 +111,32 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   Future<void> install({
     required GeneratedAgentConfiguration agentConfiguration,
     // Core configurations
-    required GeneratedNavigationModuleConfiguration? navigationModuleConfiguration,
-    required GeneratedSlowRenderingModuleConfiguration? slowRenderingModuleConfiguration,
-    required GeneratedCrashReportsModuleConfiguration? crashReportsModuleConfiguration,
-    required GeneratedInteractionsModuleConfiguration? interactionsModuleConfiguration,
-    required GeneratedNetworkMonitorModuleConfiguration? networkMonitorModuleConfiguration,
-    required GeneratedApplicationLifecycleModuleConfiguration? applicationLifecycleModuleConfiguration,
+    required GeneratedNavigationModuleConfiguration?
+    navigationModuleConfiguration,
+    required GeneratedSlowRenderingModuleConfiguration?
+    slowRenderingModuleConfiguration,
+    required GeneratedCrashReportsModuleConfiguration?
+    crashReportsModuleConfiguration,
+    required GeneratedInteractionsModuleConfiguration?
+    interactionsModuleConfiguration,
+    required GeneratedNetworkMonitorModuleConfiguration?
+    networkMonitorModuleConfiguration,
+    required GeneratedApplicationLifecycleModuleConfiguration?
+    applicationLifecycleModuleConfiguration,
 
     // Android-only configurations
     required GeneratedAnrModuleConfiguration? anrModuleConfiguration,
     required GeneratedHttpUrlModuleConfiguration? httpUrlModuleConfiguration,
-    required GeneratedOkHttp3AutoModuleConfiguration? okHttp3AutoModuleConfiguration,
+    required GeneratedOkHttp3AutoModuleConfiguration?
+    okHttp3AutoModuleConfiguration,
 
     // iOS-only configurations
-    required GeneratedNetworkInstrumentationModuleConfiguration?  networkInstrumentationModuleConfiguration
+    required GeneratedNetworkInstrumentationModuleConfiguration?
+    networkInstrumentationModuleConfiguration,
+
+    // Session replay configuration
+    required GeneratedSessionReplayModuleConfiguration?
+    sessionReplayModuleConfiguration,
   }) async {
     if (installHandler != null) {
       return installHandler!(
@@ -121,6 +151,7 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
         httpUrlModuleConfiguration,
         okHttp3AutoModuleConfiguration,
         networkInstrumentationModuleConfiguration,
+        sessionReplayModuleConfiguration,
       );
     }
   }
@@ -150,11 +181,25 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<GeneratedEndpointConfiguration> stateGetEndpointConfiguration() async {
+  Future<GeneratedEndpointConfiguration?>
+  stateGetEndpointConfiguration() async {
     if (stateGetEndpointConfigurationHandler != null) {
       return stateGetEndpointConfigurationHandler!();
     }
-    return GeneratedEndpointConfiguration(realm: 'us0', rumAccessToken: 'token');
+
+    return GeneratedEndpointConfiguration(
+      realm: 'us0',
+      rumAccessToken: 'token',
+    );
+  }
+
+  @override
+  Future<void> preferencesSetEndpointConfiguration({
+    required GeneratedEndpointConfiguration endpointConfiguration,
+  }) async {
+    if (preferencesSetEndpointConfigurationHandler != null) {
+      return preferencesSetEndpointConfigurationHandler!(endpointConfiguration);
+    }
   }
 
   @override
@@ -214,7 +259,8 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<GeneratedUserTrackingMode?> userPreferencesGetUserTrackingMode() async {
+  Future<GeneratedUserTrackingMode?>
+  userPreferencesGetUserTrackingMode() async {
     if (userPreferencesGetUserTrackingModeHandler != null) {
       return userPreferencesGetUserTrackingModeHandler!();
     }
@@ -222,7 +268,9 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> userPreferencesSetUserTrackingMode({required GeneratedUserTrackingMode trackingMode}) async {
+  Future<void> userPreferencesSetUserTrackingMode({
+    required GeneratedUserTrackingMode trackingMode,
+  }) async {
     if (userPreferencesSetUserTrackingModeHandler != null) {
       return userPreferencesSetUserTrackingModeHandler!(trackingMode);
     }
@@ -267,77 +315,108 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<void> globalAttributesSetString({required String key, required String value}) async {
+  Future<void> globalAttributesSetString({
+    required String key,
+    required String value,
+  }) async {
     if (globalAttributesSetStringHandler != null) {
       return globalAttributesSetStringHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetInt({required String key, required int value}) async {
+  Future<void> globalAttributesSetInt({
+    required String key,
+    required int value,
+  }) async {
     if (globalAttributesSetIntHandler != null) {
       return globalAttributesSetIntHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetDouble({required String key, required double value}) async {
+  Future<void> globalAttributesSetDouble({
+    required String key,
+    required double value,
+  }) async {
     if (globalAttributesSetDoubleHandler != null) {
       return globalAttributesSetDoubleHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetBool({required String key, required bool value}) async {
+  Future<void> globalAttributesSetBool({
+    required String key,
+    required bool value,
+  }) async {
     if (globalAttributesSetBoolHandler != null) {
       return globalAttributesSetBoolHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetStringList({required String key, required List<String> value}) async {
+  Future<void> globalAttributesSetStringList({
+    required String key,
+    required List<String> value,
+  }) async {
     if (globalAttributesSetStringListHandler != null) {
       return globalAttributesSetStringListHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetIntList({required String key, required List<int> value}) async {
+  Future<void> globalAttributesSetIntList({
+    required String key,
+    required List<int> value,
+  }) async {
     if (globalAttributesSetIntListHandler != null) {
       return globalAttributesSetIntListHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetDoubleList({required String key, required List<double> value}) async {
+  Future<void> globalAttributesSetDoubleList({
+    required String key,
+    required List<double> value,
+  }) async {
     if (globalAttributesSetDoubleListHandler != null) {
       return globalAttributesSetDoubleListHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetBoolList({required String key, required List<bool> value}) async {
+  Future<void> globalAttributesSetBoolList({
+    required String key,
+    required List<bool> value,
+  }) async {
     if (globalAttributesSetBoolListHandler != null) {
       return globalAttributesSetBoolListHandler!(key, value);
     }
   }
 
   @override
-  Future<void> globalAttributesSetAll({required GeneratedMutableAttributes value}) async {
+  Future<void> globalAttributesSetAll({
+    required GeneratedMutableAttributes value,
+  }) async {
     if (globalAttributesSetAllHandler != null) {
       return globalAttributesSetAllHandler!(value);
     }
   }
 
   @override
-  Future<void> customTrackingTrackCustomEvent({required String name, required GeneratedMutableAttributes attributes}) async {
+  Future<void> customTrackingTrackCustomEvent({
+    required String name,
+    required GeneratedMutableAttributes attributes,
+  }) async {
     if (customTrackingTrackCustomEventHandler != null) {
       return customTrackingTrackCustomEventHandler!(name, attributes);
     }
   }
 
   @override
-  Future<int> customTrackingStartWorkflow({required String workflowName}) async {
+  Future<int> customTrackingStartWorkflow({
+    required String workflowName,
+  }) async {
     if (customTrackingStartWorkflowHandler != null) {
       return customTrackingStartWorkflowHandler!(workflowName);
     }
@@ -359,11 +438,11 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi implements TestSplunkOtelFlu
   }
 
   @override
-  Future<GeneratedEndpointConfiguration?> preferencesGetEndpointConfiguration() async {
+  Future<GeneratedEndpointConfiguration?>
+  preferencesGetEndpointConfiguration() async {
     if (preferencesGetEndpointConfigurationHandler != null) {
       return preferencesGetEndpointConfigurationHandler!();
     }
     return null;
   }
-
 }

@@ -22,14 +22,16 @@ import 'package:splunk_otel_flutter_session_replay_platform_interface/platform_i
 /// provided by platform-specific implementations.
 void main() async {
   // Get the platform interface instance
-  final interface = SplunkOtelFlutterSessionReplayPlatformInterface.instance;
+  final platformInterface =
+      SplunkOtelFlutterSessionReplayPlatformInterface.instance;
 
   // ignore: avoid_print
-  print('Session replay platform interface loaded: ${interface.runtimeType}');
-  
-  // Note: The actual API methods will be added as the session replay
-  // functionality is implemented.
-  
+  print(
+      'Session replay platform interface loaded: ${platformInterface.runtimeType}');
+
+  // Start session replay recording (requires core RUM agent to be initialized)
+  // await platformInterface.startSessionReplay();
+
   // ignore: avoid_print
   print('Session replay example completed!');
 }

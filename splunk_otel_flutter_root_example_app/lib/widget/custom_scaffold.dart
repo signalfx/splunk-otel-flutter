@@ -22,29 +22,31 @@ class CustomScaffold extends StatelessWidget {
     
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: () {
-          if (doUnFocus) {
-            FocusScope.of(context).unfocus();
-          }
-        },
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: paddingHorizontal ?? screenWidth * 0.1,
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            if (doUnFocus) {
+              FocusScope.of(context).unfocus();
+            }
+          },
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: paddingHorizontal ?? screenWidth * 0.1,
+              ),
+              child: child ??
+                  Column(
+                    crossAxisAlignment: alignment,
+                    children: [
+                      ...widgets!,
+                      SizedBox(
+                        height: screenHeight * 0.03,
+                        width: screenWidth,
+                      ),
+                    ],
+                  ),
             ),
-            child: child ??
-                Column(
-                  crossAxisAlignment: alignment,
-                  children: [
-                    ...widgets!,
-                    SizedBox(
-                      height: screenHeight * 0.03,
-                      width: screenWidth,
-                    ),
-                  ],
-                ),
           ),
         ),
       ),

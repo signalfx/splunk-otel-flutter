@@ -17,13 +17,13 @@
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
 
 /// Example demonstrating the Splunk OpenTelemetry platform interface API.
-/// 
+///
 /// This example shows how to configure the agent. Note that this is a platform
 /// interface package - actual functionality requires platform implementations.
 void main() {
   // Example 1: Create agent configuration with RUM endpoint
   final agentConfig = AgentConfiguration(
-    endpointConfiguration: EndpointConfiguration.forRum(
+    endpoint: EndpointConfiguration.forRum(
       realm: 'us0',
       rumAccessToken: 'your-rum-access-token',
     ),
@@ -40,9 +40,7 @@ void main() {
     user: const UserConfiguration(
       trackingMode: UserTrackingMode.anonymousTracking,
     ),
-    session: SessionConfiguration(
-      samplingRate: 1.0,
-    ),
+    session: SessionConfiguration(samplingRate: 1.0),
   );
 
   // Example 2: Create module configurations
@@ -62,7 +60,7 @@ void main() {
 
   // Example 3: Create custom endpoint configuration
   final customEndpointConfig = EndpointConfiguration.forTraces(
-    tracesEndpoint: Uri.parse('https://custom-endpoint.example.com/v1/traces'),
+    traceEndpoint: Uri.parse('https://custom-endpoint.example.com/v1/traces'),
   );
 
   // Example 4: Create mutable attributes for custom events
