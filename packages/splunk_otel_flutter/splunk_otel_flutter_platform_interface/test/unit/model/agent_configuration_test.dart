@@ -274,7 +274,10 @@ void main() {
       final generated = config.toGeneratedUserConfiguration();
 
       // Assert
-      expect(generated.trackingMode, GeneratedUserTrackingMode.anonymousTracking);
+      expect(
+        generated.trackingMode,
+        GeneratedUserTrackingMode.anonymousTracking,
+      );
     });
   });
 
