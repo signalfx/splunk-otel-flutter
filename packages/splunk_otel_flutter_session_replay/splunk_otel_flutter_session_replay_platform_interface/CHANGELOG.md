@@ -1,6 +1,7 @@
 ## 1.0.0
 
-* Platform interface for Splunk Flutter session replay
+**First stable release.**
+
+* Platform interface for the Splunk Flutter session replay module
 * Pigeon-based communication bridge between Flutter and native platforms
-* Core data models and configuration interfaces for session recording
-* Abstract platform implementation contracts
+* Data models and abstract platform implementation contracts for session recording

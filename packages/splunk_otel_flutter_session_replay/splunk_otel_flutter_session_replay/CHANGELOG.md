@@ -1,6 +1,7 @@
 ## 1.0.0
 
+**First stable release.**
+
 * Initial release of the session replay module for Splunk OpenTelemetry Flutter
 * Android and iOS platform support
-* Session recording and playback functionality
-* Integration with Splunk Flutter SDK core
+* Enabled via `SessionReplayModuleConfiguration` from `splunk_otel_flutter`, with a configurable sampling rate

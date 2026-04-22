@@ -1,8 +1,5 @@
 # Splunk Distribution of OpenTelemetry for Flutter
 
-> [!IMPORTANT]
-> Splunk Flutter instrumentation distribution is in alpha state and subject to the terms at https://www.splunk.com/en_us/legal/pre-release-agreement-for-hosted-services.html.
-
 ## Overview
 
 The Splunk Distribution of OpenTelemetry for Flutter provides automatic instrumentation for Flutter applications running on Android and iOS devices. This library captures telemetry data including:
