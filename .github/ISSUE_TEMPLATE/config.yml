@@ -1,1 +1,8 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Splunk RUM for Flutter — Installation & Configuration
+    url: https://help.splunk.com/en/splunk-observability-cloud/manage-data/new-splunk-rum-agents/splunk-rum-flutter-agent/install-the-splunk-rum-flutter-agent
+    about: Setup, configuration, and usage documentation for the SDK.
+  - name: Splunk RUM for Flutter — Troubleshooting
+    url: https://help.splunk.com/en/splunk-observability-cloud/manage-data/new-splunk-rum-agents/splunk-rum-flutter-agent/troubleshoot-flutter-instrumentation
+    about: Common issues and how to resolve them before filing a bug.
