@@ -1,0 +1,105 @@
+---
+name: Bug Report
+title: "Short descriptive title of the issue"
+description: "Report a bug or unexpected behavior encountered with the splunk-otel-flutter Agent."
+labels: bug
+body:
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: 1. Describe the Issue
+      description: A clear and concise description of what the bug is. What were you trying to achieve, and what went wrong?
+      placeholder: Describe the issue here...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected-packages
+    attributes:
+      label: 2. Affected Package(s)
+      description: Tick every package that is relevant to this bug.
+      options:
+        - label: "splunk_otel_flutter (main SDK)"
+        - label: "splunk_otel_flutter_session_replay (session replay module)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: main-sdk-version
+    attributes:
+      label: 3. splunk_otel_flutter Version
+      description: Select the exact version of the `splunk_otel_flutter` package you are using. Choose "Other" for pre-release or local builds.
+      options:
+        - 1.0.0
+        - Other (please specify in "Additional Context")
+    validations:
+      required: true
+
+  - type: dropdown
+    id: session-replay-version
+    attributes:
+      label: 4. splunk_otel_flutter_session_replay Version
+      description: Only applicable if session replay is enabled in your app. Leave as "Not using session replay" otherwise.
+      options:
+        - Not using session replay
+        - 1.0.0
+        - Other (please specify in "Additional Context")
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 5. Steps to Reproduce (Scenario)
+      description: |
+        Steps to reproduce the behavior:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+      placeholder: Provide detailed steps to reproduce the issue...
+    validations:
+      required: false
+
+  - type: textarea
+    id: affected-devices
+    attributes:
+      label: 6. Affected Devices / OS Versions
+      description: |
+        Please specify the device(s) and OS version(s) where you observed the issue.
+        Include Flutter and Dart versions if relevant.
+        Example:
+        - Device: Google Pixel 6, Android Version: 13 (API 33), Flutter: 3.16.0
+        - Device: iPhone 13, iOS Version: 15, Flutter: 3.16.0
+      placeholder: e.g., Google Pixel 6 (Android 13), iPhone 13 (iOS 15), Flutter 3.x
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs-stack-trace
+    attributes:
+      label: 7. Relevant Logs / Stack Trace
+      description: |
+        If applicable, include any relevant Flutter logs, Dart exceptions, native crash reports (Android/iOS), or stack traces.
+        Please format them using code blocks.
+      placeholder: Paste logs or stack trace here...
+    validations:
+      required: false
+
+  - type: textarea
+    id: code-snippet
+    attributes:
+      label: 8. Code Snippet / Minimal Reproducible Example
+      description: If possible, provide a small code snippet or a link to a minimal reproducible example that demonstrates the issue. This helps in quickly understanding and debugging the problem.
+      placeholder: Provide a code snippet or link to a reproducible example...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 9. Additional Context
+      description: Add any other context about the problem here. For example, if it only happens under specific network conditions, or after a certain period of time.
+      placeholder: Any other relevant information...
+    validations:
+      required: false
