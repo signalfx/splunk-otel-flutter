@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Splunk Inc.
+ * Copyright 2025 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-/// The Flutter agent layer version, used as the `rum.sdk.flutter.version`
-/// resource attribute.
-///
-/// Must be kept in sync with `pubspec.yaml` (`version:`).
-const String rumSdkFlutterVersion = '1.0.1';
+package com.splunk.rum.flutter.sessionreplay.splunk_otel_flutter_session_replay_example
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

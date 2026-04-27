@@ -26,7 +26,7 @@ Add this package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  splunk_otel_flutter: ^1.0.0-dev.1
+  splunk_otel_flutter: ^1.0.1
 ```
 
 Then run:
