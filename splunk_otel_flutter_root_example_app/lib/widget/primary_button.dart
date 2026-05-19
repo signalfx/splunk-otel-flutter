@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/color_palette.dart';
 
 class PrimaryButton extends StatelessWidget {
+  final Key? buttonKey;
   final String text;
   final VoidCallback onTap;
   const PrimaryButton({
+    this.buttonKey,
     required this.text,
     required this.onTap,
     super.key,
@@ -14,8 +16,9 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return ElevatedButton(
+      key: buttonKey,
       onPressed: onTap,
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all<Color>(

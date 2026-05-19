@@ -11,16 +11,30 @@ void main() async {
   /// --dart-define=RUM_ACCESS_TOKEN=your_token
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
+  final endpoint = realm.isEmpty || rumAccessToken.isEmpty
+      ? null
+      : EndpointConfiguration.forRum(
+          realm: realm,
+          rumAccessToken: rumAccessToken,
+        );
 
-  // Install without endpoint configuration (deferred credentials).
   final stopwatch = Stopwatch()..start();
 
   await SplunkRum.instance.install(
     agentConfiguration: AgentConfiguration(
+      endpoint: endpoint,
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
+      enableDebugLogging: true,
     ),
-    moduleConfigurations: [SessionReplayModuleConfiguration(samplingRate: 1.0)],
+    moduleConfigurations: [
+      AnrModuleConfiguration(),
+      CrashReportsModuleConfiguration(),
+      NetworkMonitorModuleConfiguration(),
+      HttpUrlModuleConfiguration(),
+      OkHttp3AutoModuleConfiguration(),
+      SessionReplayModuleConfiguration(samplingRate: 1.0),
+    ],
   );
 
   stopwatch.stop();
@@ -37,23 +51,18 @@ void main() async {
 
   final status = await sessionReplay.getStatus();
   debugPrint('Session replay status: $status');
+  debugPrint(
+    'Endpoint realm configured: ${realm.isEmpty ? '(missing)' : realm}',
+  );
+  debugPrint(
+    'RUM access token configured: ${rumAccessToken.isEmpty ? 'false' : 'true'}',
+  );
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
     final sessionId = await SplunkRum.instance.session.state.getId();
 
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');
-  });
-
-  Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
-    // Set endpoint configuration after install.
-    await SplunkRum.instance.preferences.setEndpointConfiguration(
-      endpoint: EndpointConfiguration.forRum(
-        realm: realm,
-        rumAccessToken: rumAccessToken,
-      ),
-    );
-    debugPrint('Endpoint configuration set after install.');
   });
 
   runApp(const DemoApp());
