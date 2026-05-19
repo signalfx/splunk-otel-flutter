@@ -4,6 +4,11 @@ Platform interface package for the Splunk session replay module for Flutter.
 
 This package defines the platform interface contract used for communication between Flutter and native platforms (Android/iOS) via Pigeon code generation for the session replay feature.
 
+## Documentation
+
+- [Install the Splunk RUM Flutter Agent](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/install-the-splunk-rum-flutter-agent)
+- [Record Flutter Sessions](https://help.splunk.com/en/splunk-observability-cloud/monitor-end-user-experience/real-user-monitoring/replay-user-sessions/record-flutter-sessions)
+
 ## Overview
 
 This package provides:
