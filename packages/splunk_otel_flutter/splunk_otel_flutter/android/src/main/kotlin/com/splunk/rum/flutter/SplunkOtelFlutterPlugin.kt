@@ -168,6 +168,8 @@ class SplunkOtelFlutterPlugin :
                 add(ApplicationLifecycleModuleConfiguration(isEnabled = it.isEnabled))
             }
 
+            add(StartupModuleConfiguration())
+
             // Android-only
             anrModuleConfiguration?.let {
                 add(AnrModuleConfiguration(isEnabled = it.isEnabled))
