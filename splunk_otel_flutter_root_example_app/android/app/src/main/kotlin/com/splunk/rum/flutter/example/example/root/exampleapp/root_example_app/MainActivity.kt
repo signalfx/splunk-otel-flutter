@@ -20,15 +20,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import com.splunk.rum.common.otel.SplunkOpenTelemetrySdk
+import com.splunk.rum.integration.agent.api.SplunkRum
+import com.splunk.rum.integration.customtracking.extension.customTracking
 import com.splunk.rum.integration.okhttp3.manual.OkHttpManualInstrumentation
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.opentelemetry.api.common.Attributes
+import io.opentelemetry.api.trace.Span
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class MainActivity : FlutterActivity() {
@@ -38,6 +44,11 @@ class MainActivity : FlutterActivity() {
         "com.splunk.rum.flutter.root.exampleapp.root_example_app.BAD_EMAIL_CRASH"
     private val networkRequestsAction =
         "com.splunk.rum.flutter.root.exampleapp.root_example_app.NETWORK_REQUESTS"
+    private val appErrorsAction =
+        "com.splunk.rum.flutter.root.exampleapp.root_example_app.APP_ERRORS"
+    private var hotStartupSpan: Span? = null
+    private var hotStartupStartElapsedMillis = 0L
+    private var hotStartupStartWallClockMillis = 0L
     private val okHttpClient = OkHttpClient.Builder()
         .callTimeout(networkTimeoutMillis.toLong(), TimeUnit.MILLISECONDS)
         .build()
@@ -78,6 +89,11 @@ class MainActivity : FlutterActivity() {
                         result.success(responses)
                     }
                 }
+                "appErrors" -> {
+                    val count = call.argument<Int>("count") ?: defaultAppErrorCount
+                    triggerAppErrors(count)
+                    result.success(count)
+                }
                 else -> result.notImplemented()
             }
         }
@@ -103,6 +119,18 @@ class MainActivity : FlutterActivity() {
         handleIntent(intent)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        startHotStartupWorkflow()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            finishHotStartupWorkflow()
+        }
+    }
+
     private fun handleIntent(intent: Intent?) {
         if (intent?.action == crashAction) {
             intent.action = null
@@ -115,6 +143,9 @@ class MainActivity : FlutterActivity() {
         } else if (intent?.action == networkRequestsAction) {
             intent.action = null
             triggerNetworkRequests(intent)
+        } else if (intent?.action == appErrorsAction) {
+            intent.action = null
+            triggerAppErrors(intent.getIntExtra("app_error_count", defaultAppErrorCount))
         }
     }
 
@@ -135,6 +166,30 @@ class MainActivity : FlutterActivity() {
         runNetworkRequests(urls) { responses ->
             Log.d(networkTag, "Network diagnostics completed responses=$responses")
         }
+    }
+
+    private fun triggerAppErrors(count: Int) {
+        Thread {
+            val boundedCount = count.coerceIn(1, maxAppErrorCount)
+            Log.d(appErrorTag, "Reporting $boundedCount handled app errors")
+
+            repeat(boundedCount) { index ->
+                val error = IllegalStateException(
+                    "Intentional handled app error ${index + 1} from telemetry test",
+                )
+                val attributes = Attributes.builder()
+                    .put("test.name", "app_errors")
+                    .put("app_error.sequence", (index + 1).toLong())
+                    .put("app_error.handled", true)
+                    .put("app_error.source", "android.intent")
+                    .build()
+
+                SplunkRum.instance.addRumException(error, attributes)
+                Log.d(appErrorTag, "Reported handled app error ${index + 1}")
+            }
+
+            forceFlushTelemetry("app errors")
+        }.start()
     }
 
     private fun runNetworkRequests(
@@ -218,6 +273,61 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    private fun startHotStartupWorkflow() {
+        if (hotStartupSpan != null) return
+
+        hotStartupStartElapsedMillis = SystemClock.elapsedRealtime()
+        hotStartupStartWallClockMillis = System.currentTimeMillis()
+        hotStartupSpan = try {
+            SplunkRum.instance.customTracking.trackWorkflow("HotStartup")
+        } catch (throwable: Throwable) {
+            Log.w(startupTag, "Failed to start custom hot-start workflow", throwable)
+            null
+        }
+
+        hotStartupSpan?.setAttribute("component", "appstart")
+        hotStartupSpan?.setAttribute("start.type", "hot")
+        hotStartupSpan?.setAttribute("workflow.name", "HotStartup")
+        hotStartupSpan?.setAttribute("startup.source", "android.onRestart")
+        Log.d(startupTag, "Custom hot-start workflow started")
+    }
+
+    private fun finishHotStartupWorkflow() {
+        val span = hotStartupSpan ?: return
+        hotStartupSpan = null
+
+        val durationMillis = SystemClock.elapsedRealtime() - hotStartupStartElapsedMillis
+        span.setAttribute("hot_startup.duration_ms", durationMillis)
+        span.setAttribute("startup.duration_ms", durationMillis)
+        span.setAttribute("startup.end_signal", "window_focus")
+        span.end()
+
+        Log.d(startupTag, "Custom hot-start workflow ended durationMs=$durationMillis")
+        reportHotStartupAppStartSpan(durationMillis)
+        forceFlushTelemetry("hot startup")
+    }
+
+    private fun reportHotStartupAppStartSpan(durationMillis: Long) {
+        try {
+            val tracerProvider = SplunkOpenTelemetrySdk.instance?.sdkTracerProvider ?: return
+            val endWallClockMillis = hotStartupStartWallClockMillis + durationMillis
+            val span = tracerProvider
+                .get("SplunkRum")
+                .spanBuilder("AppStart")
+                .setStartTimestamp(hotStartupStartWallClockMillis, TimeUnit.MILLISECONDS)
+                .startSpan()
+
+            span.setAttribute("component", "appstart")
+            span.setAttribute("screen.name", "unknown")
+            span.setAttribute("start.type", "hot")
+            span.end(Instant.ofEpochMilli(endWallClockMillis))
+
+            Log.d(startupTag, "Synthetic AppStart hot span ended durationMs=$durationMillis")
+        } catch (throwable: Throwable) {
+            Log.w(startupTag, "Failed to report synthetic AppStart hot span", throwable)
+        }
+    }
+
     private class CrashUploadDelayHandler(
         private val delegate: Thread.UncaughtExceptionHandler?,
     ) : Thread.UncaughtExceptionHandler {
@@ -253,9 +363,13 @@ class MainActivity : FlutterActivity() {
     companion object {
         private const val tag = "CrashUploadDelay"
         private const val networkTag = "NetworkDiagnostics"
+        private const val startupTag = "HotStartupDiagnostics"
+        private const val appErrorTag = "AppErrorDiagnostics"
         private const val forceFlushTimeoutSeconds = 5L
         private const val processShutdownDelayMillis = 5_000L
         private const val networkTimeoutMillis = 10_000
+        private const val defaultAppErrorCount = 3
+        private const val maxAppErrorCount = 20
         private const val defaultNetworkSuccessUrl = "https://example.com/"
         private const val defaultNetworkHttpErrorUrl = "https://httpbin.org/status/500"
         private const val defaultNetworkFailureUrl = "https://127.0.0.1:65534/"

@@ -1,0 +1,19 @@
+apiVersion: v1alpha
+kind: espresso
+
+sauce:
+  region: us-west-1
+  concurrency: 1
+
+espresso:
+  app: storage:filename=smart-cinema-anr.apk
+  testApp: storage:filename=root_example_app-anr-test.apk
+
+suites:
+  - name: "Flutter ANR test"
+    timeout: 15m
+    testOptions:
+      class:
+        - com.splunk.rum.flutter.root.exampleapp.root_example_app.MainActivityTest
+    devices:
+      - name: "Google Pixel.*"

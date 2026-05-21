@@ -40,6 +40,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -52,11 +53,17 @@ android {
 }
 
 dependencies {
+    implementation("com.splunk:rum-integration-agent-api:2.2.2")
+    implementation("com.splunk:rum-integration-customtracking:2.2.2")
     implementation("com.splunk:rum-common-otel:2.2.2")
     implementation("com.splunk:rum-integration-okhttp3-manual:2.2.2")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okio:okio:3.4.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test:rules:1.2.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }
 
 flutter {

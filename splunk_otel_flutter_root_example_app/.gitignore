@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+node_modules/
+__assets__/
 
 # Symbolication related
 app.*.symbols

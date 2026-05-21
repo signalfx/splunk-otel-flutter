@@ -1,0 +1,12 @@
+{
+  "name": "smart-cinema-sauce-crash-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:bad-email-crash": "node bad_email_crash_relaunch.mjs",
+    "test:hot-startup": "node hot_startup.mjs"
+  },
+  "dependencies": {
+    "webdriverio": "^9.19.2"
+  }
+}

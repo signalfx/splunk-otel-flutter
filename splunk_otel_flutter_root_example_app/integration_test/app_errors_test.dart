@@ -1,17 +1,16 @@
-import 'dart:async';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:splunk_otel_flutter_root_example_app/main.dart' as app;
 
-const int anrBlockSeconds = int.fromEnvironment(
-  'ANR_BLOCK_SECONDS',
-  defaultValue: 15,
-);
 const int telemetrySettleSeconds = int.fromEnvironment(
   'TELEMETRY_SETTLE_SECONDS',
-  defaultValue: 60,
+  defaultValue: 90,
+);
+const int appErrorCount = int.fromEnvironment(
+  'APP_ERROR_COUNT',
+  defaultValue: 3,
 );
 
 const MethodChannel _diagnosticsChannel = MethodChannel(
@@ -19,28 +18,22 @@ const MethodChannel _diagnosticsChannel = MethodChannel(
 );
 
 void main() {
-  final binding =
-      IntegrationTestWidgetsFlutterBinding.ensureInitialized()
-          as IntegrationTestWidgetsFlutterBinding;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  tearDownAll(() async {
-    binding.reportData = <String, dynamic>{'completed': true};
-  });
-
-  testWidgets('native Android ANR is generated', (tester) async {
+  testWidgets('handled app errors are reported', (tester) async {
     app.main();
 
     await pumpUntilVisible(tester, find.text('SmartCinema'));
 
-    unawaited(
-      _diagnosticsChannel.invokeMethod<void>('anr', <String, int>{
-        'blockMillis': anrBlockSeconds * 1000,
-      }),
+    final reportedCount = await _diagnosticsChannel.invokeMethod<int>(
+      'appErrors',
+      <String, int>{'count': appErrorCount},
     );
 
-    await Future<void>.delayed(
-      const Duration(seconds: anrBlockSeconds + telemetrySettleSeconds),
-    );
+    debugPrint('Reported app errors: $reportedCount');
+    expect(reportedCount, appErrorCount);
+
+    await Future<void>.delayed(const Duration(seconds: telemetrySettleSeconds));
 
     await tester.pump();
     expect(find.text('SmartCinema'), findsOneWidget);
