@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,6 +213,268 @@ void main() {
           moduleConfigurations: moduleConfigs,
         );
       });
+
+      test(
+        'should forward NetworkInstrumentation captured headers to native',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const ['Accept', 'X-Request-ID'],
+                capturedResponseHeaders: const ['Content-Type', 'Server'],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should sanitize NetworkInstrumentation header names (trim + drop empties)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                // Mix of valid, whitespace-padded, empty and blank entries.
+                capturedRequestHeaders: const [
+                  '  Accept  ',
+                  '',
+                  'X-Request-ID',
+                  '   ',
+                ],
+                capturedResponseHeaders: const [
+                  'Server',
+                  '\tContent-Type\n',
+                  '',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Server', 'Content-Type']);
+        },
+      );
+
+      test('should forward empty header lists when none configured', () async {
+        final agentConfig = AgentConfiguration(
+          appName: 'TestApp',
+          deploymentEnvironment: 'test',
+        );
+
+        GeneratedNetworkInstrumentationModuleConfiguration? received;
+        mockApi.installHandler =
+            (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+              received = genNetworkInst;
+            };
+
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [NetworkInstrumentationModuleConfiguration()],
+        );
+
+        expect(received, isNotNull);
+        expect(received!.capturedRequestHeaders, isEmpty);
+        expect(received!.capturedResponseHeaders, isEmpty);
+      });
+
+      test(
+        'should drop NetworkInstrumentation header names with invalid token characters',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const [
+                  'Accept',
+                  // space inside name -> not an RFC 7230 token
+                  'My Header',
+                  // colon -> not a token char
+                  'name:value',
+                  // valid (special token chars allowed)
+                  'X-Custom!#\$%&\'*+-.^_`|~Header',
+                ],
+                capturedResponseHeaders: const [
+                  // control character -> invalid
+                  'Bad\u0001Header',
+                  'Server',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, [
+            'Accept',
+            'X-Custom!#\$%&\'*+-.^_`|~Header',
+          ]);
+          expect(received!.capturedResponseHeaders, ['Server']);
+        },
+      );
+
+      test(
+        'should de-duplicate NetworkInstrumentation header names case-insensitively, preserving first casing',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const [
+                  'Accept',
+                  'accept',
+                  'ACCEPT',
+                  '  X-Request-ID  ',
+                  'x-request-id',
+                ],
+                capturedResponseHeaders: const [
+                  'Content-Type',
+                  'CONTENT-TYPE',
+                  'Server',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should sanitize HttpUrl captured headers (trim, drop empties, drop invalid tokens, dedup)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final httpUrlConfig = HttpUrlModuleConfiguration(
+            capturedRequestHeaders: const [
+              '  Accept  ',
+              'accept',
+              '',
+              'My Header',
+              'X-Request-ID',
+            ],
+            capturedResponseHeaders: const [
+              'Server',
+              '\tContent-Type\n',
+              'CONTENT-TYPE',
+              '   ',
+            ],
+          );
+
+          GeneratedHttpUrlModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, genHttpUrl, _, _, _) async {
+                received = genHttpUrl;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [httpUrlConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Server', 'Content-Type']);
+        },
+      );
+
+      test(
+        'should sanitize OkHttp3Auto captured headers (trim, drop empties, drop invalid tokens, dedup)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final okHttpConfig = OkHttp3AutoModuleConfiguration(
+            capturedRequestHeaders: const [
+              'Accept',
+              'name:value',
+              '  X-Request-ID  ',
+              'x-request-id',
+            ],
+            capturedResponseHeaders: const [
+              '',
+              'Content-Type',
+              'Bad\u0001Header',
+              'Server',
+            ],
+          );
+
+          GeneratedOkHttp3AutoModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, genOkHttp3, _, _) async {
+                received = genOkHttp3;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [okHttpConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
     });
 
     group('State Getters', () {

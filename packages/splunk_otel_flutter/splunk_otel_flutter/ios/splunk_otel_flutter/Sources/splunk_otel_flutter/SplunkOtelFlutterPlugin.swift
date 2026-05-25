@@ -171,9 +171,17 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                    },
                    networkInstrumentationModuleConfiguration.map {
                        let ignoredUrls = (try? $0.ignoreURLs.toIgnoreURLs()) ?? IgnoreURLs()
+                       // Empty lists from Dart map to `nil` on the native side,
+                       // which preserves the iOS agent's "no headers captured" default.
+                       let requestHeaders: [String]? =
+                           $0.capturedRequestHeaders.isEmpty ? nil : $0.capturedRequestHeaders
+                       let responseHeaders: [String]? =
+                           $0.capturedResponseHeaders.isEmpty ? nil : $0.capturedResponseHeaders
                        return NetworkInstrumentationConfiguration(
                            isEnabled: $0.isEnabled,
-                           ignoreURLs: ignoredUrls
+                           ignoreURLs: ignoredUrls,
+                           capturedRequestHeaders: requestHeaders,
+                           capturedResponseHeaders: responseHeaders
                        )
                    },
                    crashReportsModuleConfiguration.map {

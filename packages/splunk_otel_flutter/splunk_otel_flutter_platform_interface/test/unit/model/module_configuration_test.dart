@@ -207,6 +207,8 @@ void main() {
 
       expect(config.isEnabled, true);
       expect(config.ignoreURLs, isEmpty);
+      expect(config.capturedRequestHeaders, isEmpty);
+      expect(config.capturedResponseHeaders, isEmpty);
     });
 
     test('should create with custom values', () {
@@ -218,12 +220,25 @@ void main() {
       final config = NetworkInstrumentationModuleConfiguration(
         isEnabled: false,
         ignoreURLs: ignoreURLs,
+        capturedRequestHeaders: const ['Accept', 'X-Request-ID'],
+        capturedResponseHeaders: const ['Content-Type', 'Server'],
       );
 
       expect(config.isEnabled, false);
       expect(config.ignoreURLs.length, 2);
       expect(config.ignoreURLs[0].pattern, r'.*\.example\.com');
       expect(config.ignoreURLs[1].pattern, r'http://localhost.*');
+      expect(config.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+      expect(config.capturedResponseHeaders, ['Content-Type', 'Server']);
+    });
+
+    test('should default header lists when only ignoreURLs are set', () {
+      final config = NetworkInstrumentationModuleConfiguration(
+        ignoreURLs: [RegularExpression(pattern: r'.*\.example\.com')],
+      );
+
+      expect(config.capturedRequestHeaders, isEmpty);
+      expect(config.capturedResponseHeaders, isEmpty);
     });
   });
 

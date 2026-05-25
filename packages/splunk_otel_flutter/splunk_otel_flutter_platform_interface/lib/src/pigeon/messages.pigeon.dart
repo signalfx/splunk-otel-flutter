@@ -452,14 +452,25 @@ class GeneratedNetworkInstrumentationModuleConfiguration {
   GeneratedNetworkInstrumentationModuleConfiguration({
     required this.isEnabled,
     required this.ignoreURLs,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
   });
 
   bool isEnabled;
 
   List<GeneratedRegularExpression> ignoreURLs;
 
+  List<String> capturedRequestHeaders;
+
+  List<String> capturedResponseHeaders;
+
   List<Object?> _toList() {
-    return <Object?>[isEnabled, ignoreURLs];
+    return <Object?>[
+      isEnabled,
+      ignoreURLs,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
+    ];
   }
 
   Object encode() {
@@ -474,6 +485,8 @@ class GeneratedNetworkInstrumentationModuleConfiguration {
       isEnabled: result[0]! as bool,
       ignoreURLs: (result[1] as List<Object?>?)!
           .cast<GeneratedRegularExpression>(),
+      capturedRequestHeaders: (result[2] as List<Object?>?)!.cast<String>(),
+      capturedResponseHeaders: (result[3] as List<Object?>?)!.cast<String>(),
     );
   }
 

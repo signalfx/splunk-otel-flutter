@@ -56,6 +56,33 @@ void main() {
     ),
     InteractionsModuleConfiguration(isEnabled: true),
     NetworkMonitorModuleConfiguration(isEnabled: true),
+    // iOS only: instruments URLSession requests. Configure header capture and
+    // URL exclusions here. On Android, configure header capture via
+    // HttpUrlModuleConfiguration / OkHttp3AutoModuleConfiguration instead.
+    NetworkInstrumentationModuleConfiguration(
+      isEnabled: true,
+      ignoreURLs: [
+        RegularExpression(
+          pattern: r'.*\.example\.com',
+          options: const [RegexOption.caseInsensitive],
+        ),
+        RegularExpression(pattern: r'^https?://localhost(:\d+)?(/.*)?$'),
+      ],
+      capturedRequestHeaders: const ['Accept', 'Content-Type', 'X-Request-ID'],
+      capturedResponseHeaders: const ['Content-Type', 'X-Request-ID', 'Server'],
+    ),
+    // Android only: HttpURLConnection instrumentation.
+    HttpUrlModuleConfiguration(
+      isEnabled: true,
+      capturedRequestHeaders: const ['Accept', 'Content-Type', 'X-Request-ID'],
+      capturedResponseHeaders: const ['Content-Type', 'X-Request-ID', 'Server'],
+    ),
+    // Android only: automatic OkHttp3 instrumentation.
+    OkHttp3AutoModuleConfiguration(
+      isEnabled: true,
+      capturedRequestHeaders: const ['Accept', 'Content-Type', 'X-Request-ID'],
+      capturedResponseHeaders: const ['Content-Type', 'X-Request-ID', 'Server'],
+    ),
   ];
 
   // Example 3: Create custom endpoint configuration

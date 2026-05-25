@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/module_configuration.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attributes.dart';
@@ -160,19 +161,28 @@ class SplunkOtelFlutterPlatformImplementation
           ? null
           : GeneratedHttpUrlModuleConfiguration(
               isEnabled: httpUrlModuleConfiguration.isEnabled,
-              capturedRequestHeaders:
-                  httpUrlModuleConfiguration.capturedRequestHeaders,
-              capturedResponseHeaders:
-                  httpUrlModuleConfiguration.capturedResponseHeaders,
+              capturedRequestHeaders: _sanitizeHeaderNames(
+                httpUrlModuleConfiguration.capturedRequestHeaders,
+                source: 'HttpUrlModuleConfiguration.capturedRequestHeaders',
+              ),
+              capturedResponseHeaders: _sanitizeHeaderNames(
+                httpUrlModuleConfiguration.capturedResponseHeaders,
+                source: 'HttpUrlModuleConfiguration.capturedResponseHeaders',
+              ),
             ),
       okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfiguration == null
           ? null
           : GeneratedOkHttp3AutoModuleConfiguration(
               isEnabled: okHttp3AutoModuleConfiguration.isEnabled,
-              capturedRequestHeaders:
-                  okHttp3AutoModuleConfiguration.capturedRequestHeaders,
-              capturedResponseHeaders:
-                  okHttp3AutoModuleConfiguration.capturedResponseHeaders,
+              capturedRequestHeaders: _sanitizeHeaderNames(
+                okHttp3AutoModuleConfiguration.capturedRequestHeaders,
+                source: 'OkHttp3AutoModuleConfiguration.capturedRequestHeaders',
+              ),
+              capturedResponseHeaders: _sanitizeHeaderNames(
+                okHttp3AutoModuleConfiguration.capturedResponseHeaders,
+                source:
+                    'OkHttp3AutoModuleConfiguration.capturedResponseHeaders',
+              ),
             ),
       // iOS only modules
       networkInstrumentationModuleConfiguration:
@@ -182,6 +192,18 @@ class SplunkOtelFlutterPlatformImplementation
               isEnabled: networkInstrumentationModuleConfiguration.isEnabled,
               ignoreURLs: networkInstrumentationModuleConfiguration.ignoreURLs
                   .toGeneratedList(),
+              capturedRequestHeaders: _sanitizeHeaderNames(
+                networkInstrumentationModuleConfiguration
+                    .capturedRequestHeaders,
+                source:
+                    'NetworkInstrumentationModuleConfiguration.capturedRequestHeaders',
+              ),
+              capturedResponseHeaders: _sanitizeHeaderNames(
+                networkInstrumentationModuleConfiguration
+                    .capturedResponseHeaders,
+                source:
+                    'NetworkInstrumentationModuleConfiguration.capturedResponseHeaders',
+              ),
             ),
 
       // Session replay
@@ -435,5 +457,55 @@ class SplunkOtelFlutterPlatformImplementation
   @override
   Future<void> navigationTrack({required String screenName}) async {
     await _api.navigationTrack(screenName: screenName);
+  }
+
+  // Helpers
+
+  /// HTTP header field-name token characters per RFC 7230 section 3.2.6.
+  ///
+  /// `tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." /
+  ///         "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA`
+  static final RegExp _httpHeaderToken = RegExp(
+    r"^[A-Za-z0-9!#$%&'*+\-.^_`|~]+$",
+  );
+
+  /// Normalizes a list of HTTP header names provided by the SDK consumer
+  /// before it is forwarded to the native agent.
+  ///
+  /// - Trims surrounding whitespace.
+  /// - Drops empty / whitespace-only entries.
+  /// - Drops entries that are not valid HTTP header field-name tokens
+  ///   (RFC 7230). Such entries would silently fail to match anything on
+  ///   the native side, so we surface them via [debugPrint] in debug builds
+  ///   and skip them.
+  /// - De-duplicates case-insensitively (HTTP header names are
+  ///   case-insensitive). The first occurrence wins so that caller-provided
+  ///   casing is preserved for logs/attributes.
+  static List<String> _sanitizeHeaderNames(
+    List<String> names, {
+    required String source,
+  }) {
+    final sanitized = <String>[];
+    final seen = <String>{};
+    for (final name in names) {
+      final trimmed = name.trim();
+      if (trimmed.isEmpty) {
+        continue;
+      }
+      if (!_httpHeaderToken.hasMatch(trimmed)) {
+        debugPrint(
+          'SplunkRum: ignoring invalid HTTP header name "$name" in $source. '
+          'Header names must be RFC 7230 tokens.',
+        );
+        continue;
+      }
+      final key = trimmed.toLowerCase();
+      if (!seen.add(key)) {
+        continue;
+      }
+      sanitized.add(trimmed);
+    }
+
+    return sanitized;
   }
 }
