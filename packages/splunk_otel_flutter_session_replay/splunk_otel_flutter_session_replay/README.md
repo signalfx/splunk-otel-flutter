@@ -4,6 +4,11 @@ Session replay module for the [Splunk Distribution of OpenTelemetry for Flutter]
 
 This package captures your application's UI so that sessions can be reviewed as visual replays in Splunk Observability Cloud. It is an add-on to the core Splunk RUM SDK (`splunk_otel_flutter`) and cannot be used on its own.
 
+## Documentation
+
+- [Install the Splunk RUM Flutter Agent](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/install-the-splunk-rum-flutter-agent)
+- [Record Flutter Sessions](https://help.splunk.com/en/splunk-observability-cloud/monitor-end-user-experience/real-user-monitoring/replay-user-sessions/record-flutter-sessions)
+
 ## Requirements
 
 - Flutter SDK: `>=3.32.0`
