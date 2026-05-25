@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
@@ -473,6 +474,116 @@ void main() {
           expect(received, isNotNull);
           expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
           expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should warn via debugPrint for every drop reason when debug logging is enabled',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+            enableDebugLogging: true,
+          );
+
+          final config = NetworkInstrumentationModuleConfiguration(
+            capturedRequestHeaders: const [
+              'Accept',
+              '   ', // empty after trim
+              'My Header', // invalid RFC 7230 token (space)
+              'accept', // case-insensitive duplicate of 'Accept'
+            ],
+          );
+
+          final logged = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null) {
+              logged.add(message);
+            }
+          };
+
+          try {
+            await implementation.install(
+              agentConfiguration: agentConfig,
+              moduleConfigurations: [config],
+            );
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+
+          expect(
+            logged.any((m) => m.contains('ignoring empty HTTP header name')),
+            isTrue,
+            reason: 'Empty entry should be reported',
+          );
+          expect(
+            logged.any(
+              (m) =>
+                  m.contains('ignoring invalid HTTP header name') &&
+                  m.contains('"My Header"'),
+            ),
+            isTrue,
+            reason: 'Invalid token should be reported with the original value',
+          );
+          expect(
+            logged.any(
+              (m) =>
+                  m.contains('ignoring duplicate HTTP header name') &&
+                  m.contains('"accept"'),
+            ),
+            isTrue,
+            reason: 'Duplicate should be reported with the original value',
+          );
+          expect(
+            logged.every(
+              (m) => m.contains(
+                'NetworkInstrumentationModuleConfiguration.capturedRequestHeaders',
+              ),
+            ),
+            isTrue,
+            reason: 'Each warning should identify the source field',
+          );
+        },
+      );
+
+      test(
+        'should be silent about dropped header names when debug logging is disabled',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+            // enableDebugLogging defaults to false.
+          );
+
+          final config = NetworkInstrumentationModuleConfiguration(
+            capturedRequestHeaders: const ['Accept', '', 'My Header', 'accept'],
+          );
+
+          final logged = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null) {
+              logged.add(message);
+            }
+          };
+
+          try {
+            await implementation.install(
+              agentConfiguration: agentConfig,
+              moduleConfigurations: [config],
+            );
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+
+          expect(
+            logged.where((m) => m.startsWith('SplunkRum:')),
+            isEmpty,
+            reason:
+                'No SplunkRum warnings should be emitted when debug logging '
+                'is disabled.',
+          );
         },
       );
     });

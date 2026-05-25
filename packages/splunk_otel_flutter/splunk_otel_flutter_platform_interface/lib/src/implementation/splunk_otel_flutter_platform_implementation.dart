@@ -95,6 +95,10 @@ class SplunkOtelFlutterPlatformImplementation
         .cast<SessionReplayModuleConfiguration?>()
         .firstOrNull;
 
+    // Header-name sanitization warnings are only emitted when the consumer
+    // has opted into debug logging via AgentConfiguration.
+    final debugLoggingEnabled = agentConfiguration.enableDebugLogging;
+
     await _api.install(
       agentConfiguration: GeneratedAgentConfiguration(
         endpoint: agentConfiguration.endpoint
@@ -164,10 +168,12 @@ class SplunkOtelFlutterPlatformImplementation
               capturedRequestHeaders: _sanitizeHeaderNames(
                 httpUrlModuleConfiguration.capturedRequestHeaders,
                 source: 'HttpUrlModuleConfiguration.capturedRequestHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
               capturedResponseHeaders: _sanitizeHeaderNames(
                 httpUrlModuleConfiguration.capturedResponseHeaders,
                 source: 'HttpUrlModuleConfiguration.capturedResponseHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
             ),
       okHttp3AutoModuleConfiguration: okHttp3AutoModuleConfiguration == null
@@ -177,11 +183,13 @@ class SplunkOtelFlutterPlatformImplementation
               capturedRequestHeaders: _sanitizeHeaderNames(
                 okHttp3AutoModuleConfiguration.capturedRequestHeaders,
                 source: 'OkHttp3AutoModuleConfiguration.capturedRequestHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
               capturedResponseHeaders: _sanitizeHeaderNames(
                 okHttp3AutoModuleConfiguration.capturedResponseHeaders,
                 source:
                     'OkHttp3AutoModuleConfiguration.capturedResponseHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
             ),
       // iOS only modules
@@ -197,12 +205,14 @@ class SplunkOtelFlutterPlatformImplementation
                     .capturedRequestHeaders,
                 source:
                     'NetworkInstrumentationModuleConfiguration.capturedRequestHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
               capturedResponseHeaders: _sanitizeHeaderNames(
                 networkInstrumentationModuleConfiguration
                     .capturedResponseHeaders,
                 source:
                     'NetworkInstrumentationModuleConfiguration.capturedResponseHeaders',
+                debugLoggingEnabled: debugLoggingEnabled,
               ),
             ),
 
@@ -476,31 +486,47 @@ class SplunkOtelFlutterPlatformImplementation
   /// - Drops empty / whitespace-only entries.
   /// - Drops entries that are not valid HTTP header field-name tokens
   ///   (RFC 7230). Such entries would silently fail to match anything on
-  ///   the native side, so we surface them via [debugPrint] in debug builds
-  ///   and skip them.
+  ///   the native side.
   /// - De-duplicates case-insensitively (HTTP header names are
   ///   case-insensitive). The first occurrence wins so that caller-provided
   ///   casing is preserved for logs/attributes.
+  ///
+  /// When [debugLoggingEnabled] is `true`, dropped entries are reported via
+  /// [debugPrint] together with the reason and the [source] field name so
+  /// that misconfiguration is discoverable. Logging is otherwise silent so
+  /// release builds don't emit anything.
   static List<String> _sanitizeHeaderNames(
     List<String> names, {
     required String source,
+    required bool debugLoggingEnabled,
   }) {
     final sanitized = <String>[];
     final seen = <String>{};
     for (final name in names) {
       final trimmed = name.trim();
       if (trimmed.isEmpty) {
+        if (debugLoggingEnabled) {
+          debugPrint('SplunkRum: ignoring empty HTTP header name in $source.');
+        }
         continue;
       }
       if (!_httpHeaderToken.hasMatch(trimmed)) {
-        debugPrint(
-          'SplunkRum: ignoring invalid HTTP header name "$name" in $source. '
-          'Header names must be RFC 7230 tokens.',
-        );
+        if (debugLoggingEnabled) {
+          debugPrint(
+            'SplunkRum: ignoring invalid HTTP header name "$name" in '
+            '$source. Header names must be RFC 7230 tokens.',
+          );
+        }
         continue;
       }
       final key = trimmed.toLowerCase();
       if (!seen.add(key)) {
+        if (debugLoggingEnabled) {
+          debugPrint(
+            'SplunkRum: ignoring duplicate HTTP header name "$name" in '
+            '$source (case-insensitive match).',
+          );
+        }
         continue;
       }
       sanitized.add(trimmed);
