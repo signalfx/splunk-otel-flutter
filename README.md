@@ -4,6 +4,14 @@
 [![pub.dev: splunk_otel_flutter](https://img.shields.io/pub/v/splunk_otel_flutter.svg?label=splunk_otel_flutter)](https://pub.dev/packages/splunk_otel_flutter)
 [![pub.dev: splunk_otel_flutter_session_replay](https://img.shields.io/pub/v/splunk_otel_flutter_session_replay.svg?label=splunk_otel_flutter_session_replay)](https://pub.dev/packages/splunk_otel_flutter_session_replay)
 
+## Documentation
+
+- [Install the Splunk RUM Flutter Agent](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/install-the-splunk-rum-flutter-agent)
+- [Record Flutter Sessions](https://help.splunk.com/en/splunk-observability-cloud/monitor-end-user-experience/real-user-monitoring/replay-user-sessions/record-flutter-sessions)
+- [Troubleshoot Flutter Instrumentation](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/troubleshoot-flutter-instrumentation)
+
+## Overview
+
 The Splunk Distribution of OpenTelemetry for Flutter instruments Flutter
 applications for Real User Monitoring (RUM) and sends telemetry to
 [Splunk Observability Cloud](https://www.splunk.com/en_us/products/observability.html).
@@ -71,12 +79,6 @@ void main() async {
 For platform setup (iOS Swift Package Manager, Android desugaring and
 `minSdkVersion`), module configuration, global attributes, custom events,
 and session replay usage, see the package READMEs linked above.
-
-## Documentation
-
-- [Install the Splunk RUM Flutter Agent](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/install-the-splunk-rum-flutter-agent)
-- [Record Flutter Sessions](https://help.splunk.com/en/splunk-observability-cloud/monitor-end-user-experience/real-user-monitoring/replay-user-sessions/record-flutter-sessions)
-- [Troubleshoot Flutter Instrumentation](https://help.splunk.com/en/splunk-observability-cloud/manage-data/available-data-sources/supported-integrations-in-splunk-observability-cloud/rum-instrumentation/instrument-mobile-and-web-applications-for-splunk-real-user-monitoring-rum/instrument-flutter-applications-for-splunk-rum/troubleshoot-flutter-instrumentation)
 
 ## Examples
 
