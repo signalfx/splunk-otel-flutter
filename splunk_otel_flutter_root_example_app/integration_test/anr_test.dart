@@ -19,9 +19,7 @@ const MethodChannel _diagnosticsChannel = MethodChannel(
 );
 
 void main() {
-  final binding =
-      IntegrationTestWidgetsFlutterBinding.ensureInitialized()
-          as IntegrationTestWidgetsFlutterBinding;
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   tearDownAll(() async {
     binding.reportData = <String, dynamic>{'completed': true};

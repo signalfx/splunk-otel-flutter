@@ -32,12 +32,18 @@
 # Note: The version is read directly from pubspec.yaml files.
 # Make sure both packages have the same version before releasing.
 
+include:
+  - local: '.gitlab/ci/daily-telemetry.yml'
+
 default:
   image: 'cirrusci/flutter:stable'
 
 stages:
   - setup
   - build
+  - telemetry-build
+  - telemetry-test
+  - telemetry-crash
   - dry-run
   - release
 

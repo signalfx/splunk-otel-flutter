@@ -6,12 +6,11 @@ sauce:
   concurrency: 1
 
 espresso:
-  app: storage:filename=smart-cinema-anr.apk
-  testApp: storage:filename=root_example_app-anr-test.apk
+  app: storage:filename=smart-cinema-telemetry-suite-manual.apk
+  testApp: storage:filename=smart-cinema-telemetry-suite-test-manual.apk
 
 suites:
-  - name: "Flutter ANR test"
-    timeout: 15m
+  - name: SmartCinema telemetry suite
     testOptions:
       class:
         - com.splunk.rum.flutter.root.exampleapp.root_example_app.MainActivityTest
