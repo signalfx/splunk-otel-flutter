@@ -478,7 +478,7 @@ void main() {
       );
 
       test(
-        'should warn via debugPrint for every drop reason when debug logging is enabled',
+        'should warn via debugPrint for every drop reason when debug logging is enabled, without echoing user-provided values',
         () async {
           final agentConfig = AgentConfiguration(
             appName: 'TestApp',
@@ -486,12 +486,17 @@ void main() {
             enableDebugLogging: true,
           );
 
+          // Indices: 0=Accept, 1=empty, 2=invalid token, 3=duplicate of 0.
+          // The invalid entry intentionally looks like a copy-pasted full
+          // header line that may contain a secret to confirm the sanitizer
+          // never echoes such values into device logs.
+          const sensitiveInvalid = 'Authorization: Bearer SHOULD_NEVER_APPEAR';
           final config = NetworkInstrumentationModuleConfiguration(
             capturedRequestHeaders: const [
               'Accept',
-              '   ', // empty after trim
-              'My Header', // invalid RFC 7230 token (space)
-              'accept', // case-insensitive duplicate of 'Accept'
+              '   ',
+              sensitiveInvalid,
+              'accept',
             ],
           );
 
@@ -513,27 +518,31 @@ void main() {
           }
 
           expect(
-            logged.any((m) => m.contains('ignoring empty HTTP header name')),
+            logged.any(
+              (m) =>
+                  m.contains('ignoring empty HTTP header name') &&
+                  m.contains('index 1'),
+            ),
             isTrue,
-            reason: 'Empty entry should be reported',
+            reason: 'Empty entry should be reported with its list index',
           );
           expect(
             logged.any(
               (m) =>
                   m.contains('ignoring invalid HTTP header name') &&
-                  m.contains('"My Header"'),
+                  m.contains('index 2'),
             ),
             isTrue,
-            reason: 'Invalid token should be reported with the original value',
+            reason: 'Invalid token should be reported with its list index',
           );
           expect(
             logged.any(
               (m) =>
                   m.contains('ignoring duplicate HTTP header name') &&
-                  m.contains('"accept"'),
+                  m.contains('index 3'),
             ),
             isTrue,
-            reason: 'Duplicate should be reported with the original value',
+            reason: 'Duplicate should be reported with its list index',
           );
           expect(
             logged.every(
@@ -543,6 +552,20 @@ void main() {
             ),
             isTrue,
             reason: 'Each warning should identify the source field',
+          );
+          // The whole point of this change: never put caller-provided header
+          // content into device logs.
+          expect(
+            logged.any((m) => m.contains(sensitiveInvalid)),
+            isFalse,
+            reason:
+                'Warning must not echo the caller-provided value (potential '
+                'secret leak via device logs).',
+          );
+          expect(
+            logged.any((m) => m.contains('SHOULD_NEVER_APPEAR')),
+            isFalse,
+            reason: 'No fragment of the caller-provided value should leak.',
           );
         },
       );

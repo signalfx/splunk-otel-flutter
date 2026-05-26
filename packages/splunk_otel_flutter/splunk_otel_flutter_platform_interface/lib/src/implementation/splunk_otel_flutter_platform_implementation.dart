@@ -492,9 +492,13 @@ class SplunkOtelFlutterPlatformImplementation
   ///   casing is preserved for logs/attributes.
   ///
   /// When [debugLoggingEnabled] is `true`, dropped entries are reported via
-  /// [debugPrint] together with the reason and the [source] field name so
-  /// that misconfiguration is discoverable. Logging is otherwise silent so
-  /// release builds don't emit anything.
+  /// [debugPrint] together with the reason, the [source] field name and the
+  /// originating list index so misconfiguration is discoverable. The
+  /// caller-provided value is intentionally never included in the log
+  /// message: if a consumer mistakenly passes a full header line such as
+  /// `Authorization: Bearer <token>`, echoing it would leak the secret to
+  /// device logs even though the value never reaches telemetry. Logging is
+  /// otherwise silent so release builds don't emit anything.
   static List<String> _sanitizeHeaderNames(
     List<String> names, {
     required String source,
@@ -502,19 +506,25 @@ class SplunkOtelFlutterPlatformImplementation
   }) {
     final sanitized = <String>[];
     final seen = <String>{};
-    for (final name in names) {
+    for (var index = 0; index < names.length; index++) {
+      final name = names[index];
       final trimmed = name.trim();
       if (trimmed.isEmpty) {
         if (debugLoggingEnabled) {
-          debugPrint('SplunkRum: ignoring empty HTTP header name in $source.');
+          debugPrint(
+            'SplunkRum: ignoring empty HTTP header name at index $index in '
+            '$source.',
+          );
         }
         continue;
       }
       if (!_httpHeaderToken.hasMatch(trimmed)) {
         if (debugLoggingEnabled) {
           debugPrint(
-            'SplunkRum: ignoring invalid HTTP header name "$name" in '
-            '$source. Header names must be RFC 7230 tokens.',
+            'SplunkRum: ignoring invalid HTTP header name at index $index '
+            '(length ${trimmed.length}) in $source. Header names must be '
+            'RFC 7230 tokens. The provided value is not included to avoid '
+            'leaking potentially sensitive data; check your configuration.',
           );
         }
         continue;
@@ -523,8 +533,8 @@ class SplunkOtelFlutterPlatformImplementation
       if (!seen.add(key)) {
         if (debugLoggingEnabled) {
           debugPrint(
-            'SplunkRum: ignoring duplicate HTTP header name "$name" in '
-            '$source (case-insensitive match).',
+            'SplunkRum: ignoring duplicate HTTP header name at index $index '
+            'in $source (case-insensitive match).',
           );
         }
         continue;
