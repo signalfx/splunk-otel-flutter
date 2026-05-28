@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,55 @@ void main() async {
       AnrModuleConfiguration(isEnabled: true),
       CrashReportsModuleConfiguration(isEnabled: true),
       ApplicationLifecycleModuleConfiguration(isEnabled: false),
+      // Network header capture is configured per-platform: NetworkInstrumentation
+      // for iOS (URLSession) and HttpUrl/OkHttp3Auto for Android. Each platform
+      // ignores configurations that don't apply to it.
+      NetworkInstrumentationModuleConfiguration(
+        isEnabled: true,
+        ignoreURLs: [
+          RegularExpression(
+            pattern: r'.*\.example\.com',
+            options: const [RegexOption.caseInsensitive],
+          ),
+          RegularExpression(pattern: r'^https?://localhost(:\d+)?(/.*)?$'),
+        ],
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      HttpUrlModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      OkHttp3AutoModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
     ],
   );
 

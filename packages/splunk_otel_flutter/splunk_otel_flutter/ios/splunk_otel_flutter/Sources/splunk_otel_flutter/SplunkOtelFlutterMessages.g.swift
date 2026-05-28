@@ -420,22 +420,30 @@ struct GeneratedOkHttp3AutoModuleConfiguration: Hashable {
 struct GeneratedNetworkInstrumentationModuleConfiguration: Hashable {
   var isEnabled: Bool
   var ignoreURLs: [GeneratedRegularExpression]
+  var capturedRequestHeaders: [String]
+  var capturedResponseHeaders: [String]
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedNetworkInstrumentationModuleConfiguration? {
     let isEnabled = pigeonVar_list[0] as! Bool
     let ignoreURLs = pigeonVar_list[1] as! [GeneratedRegularExpression]
+    let capturedRequestHeaders = pigeonVar_list[2] as! [String]
+    let capturedResponseHeaders = pigeonVar_list[3] as! [String]
 
     return GeneratedNetworkInstrumentationModuleConfiguration(
       isEnabled: isEnabled,
-      ignoreURLs: ignoreURLs
+      ignoreURLs: ignoreURLs,
+      capturedRequestHeaders: capturedRequestHeaders,
+      capturedResponseHeaders: capturedResponseHeaders
     )
   }
   func toList() -> [Any?] {
     return [
       isEnabled,
       ignoreURLs,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
     ]
   }
   static func == (lhs: GeneratedNetworkInstrumentationModuleConfiguration, rhs: GeneratedNetworkInstrumentationModuleConfiguration) -> Bool {

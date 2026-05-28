@@ -276,10 +276,14 @@ class GeneratedOkHttp3AutoModuleConfiguration {
 class GeneratedNetworkInstrumentationModuleConfiguration {
   final bool isEnabled;
   final List<GeneratedRegularExpression> ignoreURLs;
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
 
   GeneratedNetworkInstrumentationModuleConfiguration({
     required this.isEnabled,
     required this.ignoreURLs,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
   });
 }
 

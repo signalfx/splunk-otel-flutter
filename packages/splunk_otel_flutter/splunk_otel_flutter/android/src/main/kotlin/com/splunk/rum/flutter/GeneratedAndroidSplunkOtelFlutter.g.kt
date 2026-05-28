@@ -420,20 +420,26 @@ data class GeneratedOkHttp3AutoModuleConfiguration (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedNetworkInstrumentationModuleConfiguration (
   val isEnabled: Boolean,
-  val ignoreURLs: List<GeneratedRegularExpression>
+  val ignoreURLs: List<GeneratedRegularExpression>,
+  val capturedRequestHeaders: List<String>,
+  val capturedResponseHeaders: List<String>
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): GeneratedNetworkInstrumentationModuleConfiguration {
       val isEnabled = pigeonVar_list[0] as Boolean
       val ignoreURLs = pigeonVar_list[1] as List<GeneratedRegularExpression>
-      return GeneratedNetworkInstrumentationModuleConfiguration(isEnabled, ignoreURLs)
+      val capturedRequestHeaders = pigeonVar_list[2] as List<String>
+      val capturedResponseHeaders = pigeonVar_list[3] as List<String>
+      return GeneratedNetworkInstrumentationModuleConfiguration(isEnabled, ignoreURLs, capturedRequestHeaders, capturedResponseHeaders)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       isEnabled,
       ignoreURLs,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
     )
   }
   override fun equals(other: Any?): Boolean {

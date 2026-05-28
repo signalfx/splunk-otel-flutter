@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/implementation/splunk_otel_flutter_platform_implementation.dart';
 import 'package:splunk_otel_flutter_platform_interface/src/model/agent_configuration.dart';
@@ -213,6 +214,401 @@ void main() {
           moduleConfigurations: moduleConfigs,
         );
       });
+
+      test(
+        'should forward NetworkInstrumentation captured headers to native',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const ['Accept', 'X-Request-ID'],
+                capturedResponseHeaders: const ['Content-Type', 'Server'],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should sanitize NetworkInstrumentation header names (trim + drop empties)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                // Mix of valid, whitespace-padded, empty and blank entries.
+                capturedRequestHeaders: const [
+                  '  Accept  ',
+                  '',
+                  'X-Request-ID',
+                  '   ',
+                ],
+                capturedResponseHeaders: const [
+                  'Server',
+                  '\tContent-Type\n',
+                  '',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Server', 'Content-Type']);
+        },
+      );
+
+      test('should forward empty header lists when none configured', () async {
+        final agentConfig = AgentConfiguration(
+          appName: 'TestApp',
+          deploymentEnvironment: 'test',
+        );
+
+        GeneratedNetworkInstrumentationModuleConfiguration? received;
+        mockApi.installHandler =
+            (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+              received = genNetworkInst;
+            };
+
+        await implementation.install(
+          agentConfiguration: agentConfig,
+          moduleConfigurations: [NetworkInstrumentationModuleConfiguration()],
+        );
+
+        expect(received, isNotNull);
+        expect(received!.capturedRequestHeaders, isEmpty);
+        expect(received!.capturedResponseHeaders, isEmpty);
+      });
+
+      test(
+        'should drop NetworkInstrumentation header names with invalid token characters',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const [
+                  'Accept',
+                  // space inside name -> not an RFC 7230 token
+                  'My Header',
+                  // colon -> not a token char
+                  'name:value',
+                  // valid (special token chars allowed)
+                  'X-Custom!#\$%&\'*+-.^_`|~Header',
+                ],
+                capturedResponseHeaders: const [
+                  // control character -> invalid
+                  'Bad\u0001Header',
+                  'Server',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, [
+            'Accept',
+            'X-Custom!#\$%&\'*+-.^_`|~Header',
+          ]);
+          expect(received!.capturedResponseHeaders, ['Server']);
+        },
+      );
+
+      test(
+        'should de-duplicate NetworkInstrumentation header names case-insensitively, preserving first casing',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final networkInstrumentationConfig =
+              NetworkInstrumentationModuleConfiguration(
+                capturedRequestHeaders: const [
+                  'Accept',
+                  'accept',
+                  'ACCEPT',
+                  '  X-Request-ID  ',
+                  'x-request-id',
+                ],
+                capturedResponseHeaders: const [
+                  'Content-Type',
+                  'CONTENT-TYPE',
+                  'Server',
+                ],
+              );
+
+          GeneratedNetworkInstrumentationModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, _, genNetworkInst, _) async {
+                received = genNetworkInst;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [networkInstrumentationConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should sanitize HttpUrl captured headers (trim, drop empties, drop invalid tokens, dedup)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final httpUrlConfig = HttpUrlModuleConfiguration(
+            capturedRequestHeaders: const [
+              '  Accept  ',
+              'accept',
+              '',
+              'My Header',
+              'X-Request-ID',
+            ],
+            capturedResponseHeaders: const [
+              'Server',
+              '\tContent-Type\n',
+              'CONTENT-TYPE',
+              '   ',
+            ],
+          );
+
+          GeneratedHttpUrlModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, genHttpUrl, _, _, _) async {
+                received = genHttpUrl;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [httpUrlConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Server', 'Content-Type']);
+        },
+      );
+
+      test(
+        'should sanitize OkHttp3Auto captured headers (trim, drop empties, drop invalid tokens, dedup)',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+          );
+
+          final okHttpConfig = OkHttp3AutoModuleConfiguration(
+            capturedRequestHeaders: const [
+              'Accept',
+              'name:value',
+              '  X-Request-ID  ',
+              'x-request-id',
+            ],
+            capturedResponseHeaders: const [
+              '',
+              'Content-Type',
+              'Bad\u0001Header',
+              'Server',
+            ],
+          );
+
+          GeneratedOkHttp3AutoModuleConfiguration? received;
+          mockApi.installHandler =
+              (_, _, _, _, _, _, _, _, _, genOkHttp3, _, _) async {
+                received = genOkHttp3;
+              };
+
+          await implementation.install(
+            agentConfiguration: agentConfig,
+            moduleConfigurations: [okHttpConfig],
+          );
+
+          expect(received, isNotNull);
+          expect(received!.capturedRequestHeaders, ['Accept', 'X-Request-ID']);
+          expect(received!.capturedResponseHeaders, ['Content-Type', 'Server']);
+        },
+      );
+
+      test(
+        'should warn via debugPrint for every drop reason when debug logging is enabled, without echoing user-provided values',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+            enableDebugLogging: true,
+          );
+
+          // Indices: 0=Accept, 1=empty, 2=invalid token, 3=duplicate of 0.
+          // The invalid entry intentionally looks like a copy-pasted full
+          // header line that may contain a secret to confirm the sanitizer
+          // never echoes such values into device logs.
+          const sensitiveInvalid = 'Authorization: Bearer SHOULD_NEVER_APPEAR';
+          final config = NetworkInstrumentationModuleConfiguration(
+            capturedRequestHeaders: const [
+              'Accept',
+              '   ',
+              sensitiveInvalid,
+              'accept',
+            ],
+          );
+
+          final logged = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null) {
+              logged.add(message);
+            }
+          };
+
+          try {
+            await implementation.install(
+              agentConfiguration: agentConfig,
+              moduleConfigurations: [config],
+            );
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+
+          expect(
+            logged.any(
+              (m) =>
+                  m.contains('ignoring empty HTTP header name') &&
+                  m.contains('index 1'),
+            ),
+            isTrue,
+            reason: 'Empty entry should be reported with its list index',
+          );
+          expect(
+            logged.any(
+              (m) =>
+                  m.contains('ignoring invalid HTTP header name') &&
+                  m.contains('index 2'),
+            ),
+            isTrue,
+            reason: 'Invalid token should be reported with its list index',
+          );
+          expect(
+            logged.any(
+              (m) =>
+                  m.contains('ignoring duplicate HTTP header name') &&
+                  m.contains('index 3'),
+            ),
+            isTrue,
+            reason: 'Duplicate should be reported with its list index',
+          );
+          expect(
+            logged.every(
+              (m) => m.contains(
+                'NetworkInstrumentationModuleConfiguration.capturedRequestHeaders',
+              ),
+            ),
+            isTrue,
+            reason: 'Each warning should identify the source field',
+          );
+          // The whole point of this change: never put caller-provided header
+          // content into device logs.
+          expect(
+            logged.any((m) => m.contains(sensitiveInvalid)),
+            isFalse,
+            reason:
+                'Warning must not echo the caller-provided value (potential '
+                'secret leak via device logs).',
+          );
+          expect(
+            logged.any((m) => m.contains('SHOULD_NEVER_APPEAR')),
+            isFalse,
+            reason: 'No fragment of the caller-provided value should leak.',
+          );
+        },
+      );
+
+      test(
+        'should be silent about dropped header names when debug logging is disabled',
+        () async {
+          final agentConfig = AgentConfiguration(
+            appName: 'TestApp',
+            deploymentEnvironment: 'test',
+            // enableDebugLogging defaults to false.
+          );
+
+          final config = NetworkInstrumentationModuleConfiguration(
+            capturedRequestHeaders: const ['Accept', '', 'My Header', 'accept'],
+          );
+
+          final logged = <String>[];
+          final originalDebugPrint = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {
+            if (message != null) {
+              logged.add(message);
+            }
+          };
+
+          try {
+            await implementation.install(
+              agentConfiguration: agentConfig,
+              moduleConfigurations: [config],
+            );
+          } finally {
+            debugPrint = originalDebugPrint;
+          }
+
+          expect(
+            logged.where((m) => m.startsWith('SplunkRum:')),
+            isEmpty,
+            reason:
+                'No SplunkRum warnings should be emitted when debug logging '
+                'is disabled.',
+          );
+        },
+      );
     });
 
     group('State Getters', () {

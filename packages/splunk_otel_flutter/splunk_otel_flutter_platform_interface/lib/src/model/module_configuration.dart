@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,10 +119,27 @@ class AnrModuleConfiguration extends ActivableModuleConfiguration {
 ///
 /// Instruments Java's `HttpURLConnection` for network tracing.
 class HttpUrlModuleConfiguration extends ActivableModuleConfiguration {
-  /// Request header names to capture in spans.
+  /// HTTP request header names to capture as span attributes.
+  ///
+  /// Names are trimmed; empty entries, entries that are not valid RFC 7230
+  /// header tokens, and case-insensitive duplicates are discarded before
+  /// being forwarded to the native agent.
+  ///
+  /// **Security:** do not capture headers that carry credentials or session
+  /// material (for example `Authorization`, `Proxy-Authorization`, `Cookie`).
+  /// Their values would be persisted verbatim in telemetry and could leak
+  /// secrets to the backend and anyone with access to it.
   final List<String> capturedRequestHeaders;
 
-  /// Response header names to capture in spans.
+  /// HTTP response header names to capture as span attributes.
+  ///
+  /// Names are trimmed; empty entries, entries that are not valid RFC 7230
+  /// header tokens, and case-insensitive duplicates are discarded before
+  /// being forwarded to the native agent.
+  ///
+  /// **Security:** avoid capturing headers that carry session material such
+  /// as `Set-Cookie` or `Set-Cookie2` to prevent leaking session identifiers
+  /// into telemetry.
   final List<String> capturedResponseHeaders;
 
   HttpUrlModuleConfiguration({
@@ -136,10 +153,27 @@ class HttpUrlModuleConfiguration extends ActivableModuleConfiguration {
 ///
 /// Automatically instruments all OkHttp3 clients for network tracing.
 class OkHttp3AutoModuleConfiguration extends ActivableModuleConfiguration {
-  /// Request header names to capture in spans.
+  /// HTTP request header names to capture as span attributes.
+  ///
+  /// Names are trimmed; empty entries, entries that are not valid RFC 7230
+  /// header tokens, and case-insensitive duplicates are discarded before
+  /// being forwarded to the native agent.
+  ///
+  /// **Security:** do not capture headers that carry credentials or session
+  /// material (for example `Authorization`, `Proxy-Authorization`, `Cookie`).
+  /// Their values would be persisted verbatim in telemetry and could leak
+  /// secrets to the backend and anyone with access to it.
   final List<String> capturedRequestHeaders;
 
-  /// Response header names to capture in spans.
+  /// HTTP response header names to capture as span attributes.
+  ///
+  /// Names are trimmed; empty entries, entries that are not valid RFC 7230
+  /// header tokens, and case-insensitive duplicates are discarded before
+  /// being forwarded to the native agent.
+  ///
+  /// **Security:** avoid capturing headers that carry session material such
+  /// as `Set-Cookie` or `Set-Cookie2` to prevent leaking session identifiers
+  /// into telemetry.
   final List<String> capturedResponseHeaders;
 
   OkHttp3AutoModuleConfiguration({
@@ -186,9 +220,43 @@ class NetworkInstrumentationModuleConfiguration
   /// Multiple patterns are combined with OR logic.
   final List<RegularExpression> ignoreURLs;
 
+  /// HTTP request header names to capture as span attributes.
+  ///
+  /// When non-empty, matching headers from outgoing requests are added to
+  /// the HTTP span as `http.request.header.<lowercased-name>`. Header
+  /// matching is case-insensitive. Names are trimmed; empty entries,
+  /// entries that are not valid RFC 7230 header tokens, and case-insensitive
+  /// duplicates are discarded before being forwarded to the native agent.
+  ///
+  /// **Security:** do not capture headers that carry credentials or session
+  /// material (for example `Authorization`, `Proxy-Authorization`, `Cookie`).
+  /// Their values would be persisted verbatim in telemetry and could leak
+  /// secrets to the backend and anyone with access to it.
+  final List<String> capturedRequestHeaders;
+
+  /// HTTP response header names to capture as span attributes.
+  ///
+  /// When non-empty, matching headers from incoming responses are added to
+  /// the HTTP span as `http.response.header.<lowercased-name>`. Header
+  /// matching is case-insensitive. Names are trimmed; empty entries,
+  /// entries that are not valid RFC 7230 header tokens, and case-insensitive
+  /// duplicates are discarded before being forwarded to the native agent.
+  ///
+  /// **Security:** avoid capturing headers that carry session material such
+  /// as `Set-Cookie` or `Set-Cookie2` to prevent leaking session identifiers
+  /// into telemetry.
+  ///
+  /// Note: multi-value headers are comma-joined by the native agent. Avoid
+  /// capturing headers whose values may contain commas (for example,
+  /// `Set-Cookie`) because their original structure cannot be reliably
+  /// reconstructed from the attribute value.
+  final List<String> capturedResponseHeaders;
+
   NetworkInstrumentationModuleConfiguration({
     super.isEnabled = true,
     this.ignoreURLs = const [],
+    this.capturedRequestHeaders = const [],
+    this.capturedResponseHeaders = const [],
   });
 }
 
