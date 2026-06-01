@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay` 1.0.3.
+
 ## 1.0.2
 
 * Version bump to align with `splunk_otel_flutter_session_replay` 1.0.2, which fixes an App Store validation failure (`Validation failed (409) CFBundleIdentifier Collision`) that prevented users from uploading their apps.

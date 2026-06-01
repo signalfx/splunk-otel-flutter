@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Added support for configuring captured network request headers on iOS via `NetworkMonitorModuleConfiguration`.
+
 ## 1.0.2
 
 * Bumped native iOS Splunk RUM SDK to 2.2.3, which fixes an App Store validation failure (`Validation failed (409) CFBundleIdentifier Collision`) that prevented users from uploading their apps.
