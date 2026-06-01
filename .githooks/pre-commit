@@ -54,6 +54,32 @@ log_debug "Melos executable: $(command -v melos)"
 MONOREPO_ROOT=$(git rev-parse --show-toplevel)
 log_info "Monorepo root detected: $MONOREPO_ROOT"
 
+# --- rumSdkFlutterVersion <-> pubspec.yaml sync check ---
+# Always run; pure shell, no Flutter/Melos dependency.
+log_info "Checking rumSdkFlutterVersion is in sync with pubspec.yaml..."
+RUM_SDK_PKG_DIR="packages/splunk_otel_flutter/splunk_otel_flutter"
+RUM_SDK_PUBSPEC="$MONOREPO_ROOT/$RUM_SDK_PKG_DIR/pubspec.yaml"
+RUM_SDK_CONST_FILE="$MONOREPO_ROOT/$RUM_SDK_PKG_DIR/lib/src/rum_sdk_version.dart"
+RUM_SDK_PUBSPEC_VERSION=$(grep -E '^version:[[:space:]]*' "$RUM_SDK_PUBSPEC" \
+  | sed -E 's/^version:[[:space:]]*([^[:space:]]+).*/\1/' || true)
+RUM_SDK_CONST_VERSION=$(grep -E "rumSdkFlutterVersion[[:space:]]*=" "$RUM_SDK_CONST_FILE" \
+  | sed -E "s/.*=[[:space:]]*'([^']+)'.*/\1/" || true)
+if [[ -z "$RUM_SDK_PUBSPEC_VERSION" || -z "$RUM_SDK_CONST_VERSION" ]]; then
+  log_error "Failed to extract version (pubspec='$RUM_SDK_PUBSPEC_VERSION', const='$RUM_SDK_CONST_VERSION')."
+  log_error "Checked files:"
+  log_error "  - $RUM_SDK_PUBSPEC"
+  log_error "  - $RUM_SDK_CONST_FILE"
+  exit 1
+fi
+if [[ "$RUM_SDK_PUBSPEC_VERSION" != "$RUM_SDK_CONST_VERSION" ]]; then
+  log_error "rumSdkFlutterVersion ($RUM_SDK_CONST_VERSION) does not match pubspec.yaml ($RUM_SDK_PUBSPEC_VERSION)."
+  log_error "Update both files to the same value before committing:"
+  log_error "  - $RUM_SDK_PKG_DIR/lib/src/rum_sdk_version.dart"
+  log_error "  - $RUM_SDK_PKG_DIR/pubspec.yaml"
+  exit 1
+fi
+log_info "rumSdkFlutterVersion in sync ($RUM_SDK_CONST_VERSION)."
+
 # --- Melos Bootstrap ---
 log_info "Running melos bootstrap to resolve monorepo dependencies (Melos 7.0.0+ auto-discovers packages)..."
 # Execute melos bootstrap from the monorepo root.
