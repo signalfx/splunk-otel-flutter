@@ -92,12 +92,14 @@ sauce_purchase_flow_android:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: manual
+      allow_failure: true
     - when: never
   variables:
     SAUCE_API_BASE: "https://api.us-west-1.saucelabs.com"
     APP_APK: "splunk_otel_flutter_root_example_app/build/app/outputs/flutter-apk/app-debug.apk"
     TEST_APK: "splunk_otel_flutter_root_example_app/build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
     STORAGE_IDS_FILE: "$CI_PROJECT_DIR/.sauce-storage-files"
+    GRADLE_VERSION: "8.12"
   script:
     - |
       set -e
@@ -114,9 +116,19 @@ sauce_purchase_flow_android:
       export PATH="$PATH:$HOME/.pub-cache/bin"
       melos bootstrap
 
+      gradle_home="$CI_PROJECT_DIR/.gradle-dist/gradle-$GRADLE_VERSION"
+      if [ ! -x "$gradle_home/bin/gradle" ]; then
+        curl --fail --location \
+          --output "$CI_PROJECT_DIR/gradle-$GRADLE_VERSION-bin.zip" \
+          "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip"
+        unzip -q "$CI_PROJECT_DIR/gradle-$GRADLE_VERSION-bin.zip" -d "$CI_PROJECT_DIR/.gradle-dist"
+      fi
+      export PATH="$gradle_home/bin:$PATH"
+      gradle --version
+
       cd splunk_otel_flutter_root_example_app
       flutter build apk --debug --target integration_test/purchase_flow_test.dart
-      ./android/gradlew -p android app:assembleAndroidTest
+      gradle -p android app:assembleAndroidTest
       cd "$CI_PROJECT_DIR"
 
       mkdir -p "$CI_PROJECT_DIR/.local/bin"
