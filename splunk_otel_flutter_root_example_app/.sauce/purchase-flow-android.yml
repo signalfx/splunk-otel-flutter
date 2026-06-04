@@ -1,0 +1,29 @@
+apiVersion: v1alpha
+kind: espresso
+showConsoleLog: false
+defaults:
+  timeout: 30m
+sauce:
+  region: us-west-1
+  concurrency: 1
+  metadata:
+    tags:
+      - daily
+      - purchase-flow
+      - android
+espresso:
+  app: $SAUCE_APP
+  testApp: $SAUCE_TEST_APP
+suites:
+  - name: purchase flow android
+    testOptions:
+      class:
+        - com.splunk.rum.flutter.root.exampleapp.root_example_app.MainActivityTest
+    devices:
+      - name: Google Pixel.*
+artifacts:
+  download:
+    when: always
+    match:
+      - '*'
+    directory: artifacts

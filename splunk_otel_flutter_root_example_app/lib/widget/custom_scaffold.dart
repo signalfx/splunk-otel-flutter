@@ -6,12 +6,14 @@ class CustomScaffold extends StatelessWidget {
   final CrossAxisAlignment alignment;
   final double? paddingHorizontal;
   final bool doUnFocus;
+  final bool scrollable;
   const CustomScaffold({
     this.widgets,
     this.child,
     this.alignment = CrossAxisAlignment.center,
     this.paddingHorizontal,
     this.doUnFocus = false,
+    this.scrollable = false,
     super.key,
   });
 
@@ -19,7 +21,17 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
+    final body =
+        child ??
+        Column(
+          crossAxisAlignment: alignment,
+          children: [
+            ...widgets!,
+            SizedBox(height: screenHeight * 0.03, width: screenWidth),
+          ],
+        );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -35,17 +47,7 @@ class CustomScaffold extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                 horizontal: paddingHorizontal ?? screenWidth * 0.1,
               ),
-              child: child ??
-                  Column(
-                    crossAxisAlignment: alignment,
-                    children: [
-                      ...widgets!,
-                      SizedBox(
-                        height: screenHeight * 0.03,
-                        width: screenWidth,
-                      ),
-                    ],
-                  ),
+              child: scrollable ? SingleChildScrollView(child: body) : body,
             ),
           ),
         ),

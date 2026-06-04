@@ -13,9 +13,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       paddingHorizontal: screenWidth * 0.07,
+      scrollable: true,
       widgets: [
         SizedBox(height: screenHeight * 0.07),
         MovieListView(title: "Trending", movies: MockMovies.trendingMovies),
@@ -35,7 +36,7 @@ class MovieListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return movies.isEmpty
         ? const SizedBox()
         : Column(
@@ -53,7 +54,9 @@ class MovieListView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.only(
-                        right: index == (movies.length - 1) ? 0 : screenWidth * 0.03,
+                        right: index == (movies.length - 1)
+                            ? 0
+                            : screenWidth * 0.03,
                       ),
                       child: MovieCoverWidget(movie: movies[index]),
                     );
@@ -74,7 +77,7 @@ class MovieCoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return InkWell(
       onTap: () {
         // Track movie detail view with Splunk RUM
@@ -90,10 +93,9 @@ class MovieCoverWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (builder) => MovieDetailScreen(
-                    movie: movie,
-                  ),
-              settings: const RouteSettings(name: "/detail")),
+            builder: (builder) => MovieDetailScreen(movie: movie),
+            settings: const RouteSettings(name: "/detail"),
+          ),
         );
       },
       child: SizedBox(

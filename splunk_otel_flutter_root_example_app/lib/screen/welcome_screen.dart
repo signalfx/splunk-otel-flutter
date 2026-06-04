@@ -6,13 +6,15 @@ import 'package:splunk_otel_flutter_root_example_app/widget/primary_text.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/secondary_text.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_button.dart';
 
+const Key welcomeGetStartedButtonKey = Key('welcome_get_started_button');
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     return CustomScaffold(
       widgets: [
         const Spacer(flex: 4),
@@ -22,18 +24,17 @@ class WelcomeScreen extends StatelessWidget {
         const SecondaryText(text: "Your mobile cinema"),
         const Spacer(flex: 3),
         PrimaryButton(
+          buttonKey: welcomeGetStartedButtonKey,
           text: "Get started",
           onTap: () {
             // Track navigation using Splunk RUM
             SplunkRum.instance.navigation.track(screenName: 'Login Screen');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (builder) => const LoginScreen(),
-              ),
+              MaterialPageRoute(builder: (builder) => const LoginScreen()),
             );
           },
-        )
+        ),
       ],
     );
   }
