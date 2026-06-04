@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Extended `NetworkMonitorModuleConfiguration` and Pigeon messages to bridge captured network request headers to iOS.
+
 ## 1.0.2
 
 * Version bump to align with `splunk_otel_flutter` 1.0.2, which fixes an App Store validation failure (`Validation failed (409) CFBundleIdentifier Collision`) that prevented users from uploading their apps.
