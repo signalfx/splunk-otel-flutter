@@ -56,10 +56,11 @@ To send us a pull request:
 2. Modify the source; a single change per PR is recommended.
 3. Ensure local tests pass and add new tests related to the contribution.
 4. Commit to your fork using clear, [conventional commit](#commit-message-guidelines) messages.
-5. Use `NO-TICKET:` as the prefix in your PR title if your contribution is not associated with an internal ticket.
-6. Send us a pull request, answering any default questions in the pull request
+5. Title your PR `DEMRUM-1234: Description` (use the `NO-TICKET:` prefix if it is not associated with an internal ticket).
+6. Complete the **Generative AI usage** section of the PR template by checking exactly one box.
+7. Send us a pull request, answering any default questions in the pull request
    interface.
-7. Pay attention to any automated CI failures reported in the pull request, and
+8. Pay attention to any automated CI failures reported in the pull request, and
    stay involved in the conversation.
 
 GitHub provides additional documentation on [forking a
@@ -77,6 +78,8 @@ must pass before a PR can be merged:
 | `flutter-analyze` | Static analysis, no warnings | `melos analyze` |
 | `flutter-test` | All package tests pass | `melos test` |
 | `rum-sdk-version-sync` | `rumSdkFlutterVersion` matches `pubspec.yaml` version | n/a |
+| `validate_pr_title` | PR title is `DEMRUM-1234: ...` or `NO-TICKET: ...` | n/a |
+| `validate_gai_usage_disclosure` | PR body discloses Generative AI usage (exactly one box checked) | n/a |
 | `CLA Assistant` | Signed Splunk CLA (see [Licensing](#licensing)) | n/a |
 
 Run this before pushing to catch issues early:
