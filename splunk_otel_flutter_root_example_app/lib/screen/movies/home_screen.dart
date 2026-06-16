@@ -13,9 +13,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       paddingHorizontal: screenWidth * 0.07,
+      scrollable: true,
       widgets: [
         SizedBox(height: screenHeight * 0.07),
         MovieListView(title: "Trending", movies: MockMovies.trendingMovies),
@@ -35,7 +36,7 @@ class MovieListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return movies.isEmpty
         ? const SizedBox()
         : Column(
@@ -53,7 +54,9 @@ class MovieListView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.only(
-                        right: index == (movies.length - 1) ? 0 : screenWidth * 0.03,
+                        right: index == (movies.length - 1)
+                            ? 0
+                            : screenWidth * 0.03,
                       ),
                       child: MovieCoverWidget(movie: movies[index]),
                     );
@@ -74,50 +77,55 @@ class MovieCoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
-    return InkWell(
-      onTap: () {
-        // Track movie detail view with Splunk RUM
-        SplunkRum.instance.navigation.track(screenName: 'Movie Detail Screen');
-        SplunkRum.instance.customTracking.trackCustomEvent(
-          name: 'movie_view',
-          attributes: MutableAttributes(
-            attributes: {
-              'movie_name': MutableAttributeString(value: movie.name),
-            },
-          ),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (builder) => MovieDetailScreen(
-                    movie: movie,
-                  ),
-              settings: const RouteSettings(name: "/detail")),
-        );
-      },
+
+    return Semantics(
+      label: 'Movie ${movie.name}',
+      button: true,
       child: SizedBox(
         width: screenWidth * 0.3667,
         height: screenHeight * 0.345,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: screenHeight * 0.2511,
-              child: Image.asset(
-                "res/movie_images/${movie.coverUrl}",
-                fit: BoxFit.fitHeight,
+        child: InkWell(
+          onTap: () {
+            // Track movie detail view with Splunk RUM
+            SplunkRum.instance.navigation.track(
+              screenName: 'Movie Detail Screen',
+            );
+            SplunkRum.instance.customTracking.trackCustomEvent(
+              name: 'movie_view',
+              attributes: MutableAttributes(
+                attributes: {
+                  'movie_name': MutableAttributeString(value: movie.name),
+                },
               ),
-            ),
-            SizedBox(height: screenHeight * 0.01),
-            Text(
-              movie.name,
-              style: const TextStyle(fontSize: 14.0, color: Colors.black),
-              maxLines: 2,
-            ),
-            SizedBox(height: screenHeight * 0.01),
-            ScoreWidget(score: movie.imdbRating),
-          ],
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => MovieDetailScreen(movie: movie),
+                settings: const RouteSettings(name: "/detail"),
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: screenHeight * 0.2511,
+                child: Image.asset(
+                  "res/movie_images/${movie.coverUrl}",
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.01),
+              Text(
+                movie.name,
+                style: const TextStyle(fontSize: 14.0, color: Colors.black),
+                maxLines: 2,
+              ),
+              SizedBox(height: screenHeight * 0.01),
+              ScoreWidget(score: movie.imdbRating),
+            ],
+          ),
         ),
       ),
     );

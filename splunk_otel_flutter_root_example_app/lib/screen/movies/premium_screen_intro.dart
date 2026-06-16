@@ -11,7 +11,7 @@ class PremiumScreenIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       paddingHorizontal: screenWidth * 0.06,
       widgets: [
@@ -21,17 +21,21 @@ class PremiumScreenIntro extends StatelessWidget {
         ),
         const Spacer(),
         PrimaryButton(
-            text: "CONTINUE",
-            onTap: () {
-              // Track navigation to month selection screen
-              SplunkRum.instance.navigation.track(screenName: 'Premium Account Screen - Month Selection');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (builder) => const PremiumScreenMonthSelection(),
-                ),
-              );
-            }),
+          text: "CONTINUE",
+          semanticsLabel: "Premium intro continue",
+          onTap: () {
+            // Track navigation to month selection screen
+            SplunkRum.instance.navigation.track(
+              screenName: 'Premium Account Screen - Month Selection',
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => const PremiumScreenMonthSelection(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }

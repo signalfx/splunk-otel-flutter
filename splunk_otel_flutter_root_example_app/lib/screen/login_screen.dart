@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
+import 'package:splunk_otel_flutter_root_example_app/native_crash.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/bottom_bar_screen.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/forgot_password.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_scaffold.dart';
@@ -11,6 +10,10 @@ import 'package:splunk_otel_flutter_root_example_app/widget/custom_textfield.dar
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_button.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_text.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/secondary_text.dart';
+
+const Key loginEmailFieldKey = Key('login_email_field');
+const Key loginPasswordFieldKey = Key('login_password_field');
+const Key loginButtonKey = Key('login_button');
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -63,12 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SplunkSessionReplay.instance.setRecordingMask(
       mask: RecordingMask(
-        elements: [
-          MaskElement(
-            rect: maskRect,
-            type: MaskType.covering,
-          ),
-        ],
+        elements: [MaskElement(rect: maskRect, type: MaskType.covering)],
       ),
     );
     debugPrint('[LoginScreen] Recording mask applied: $maskRect');
@@ -78,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       alignment: CrossAxisAlignment.start,
       doUnFocus: true,
@@ -87,14 +85,18 @@ class _LoginScreenState extends State<LoginScreen> {
         const PrimaryText(text: "Login"),
         SizedBox(height: screenHeight * 0.05),
         CustomTextField(
+          fieldKey: loginEmailFieldKey,
           controller: _loginController,
           labelText: "Email",
+          semanticsLabel: "Email field",
         ),
         SizedBox(height: screenHeight * 0.05),
         CustomTextField(
           key: _passwordFieldKey,
+          fieldKey: loginPasswordFieldKey,
           controller: _passwordController,
           labelText: "Password",
+          semanticsLabel: "Password field",
         ),
         SizedBox(height: screenHeight * 0.05),
         Align(
@@ -102,7 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: InkWell(
             onTap: () {
               // Track navigation using Splunk RUM
-              SplunkRum.instance.navigation.track(screenName: 'Forgot Password Screen');
+              SplunkRum.instance.navigation.track(
+                screenName: 'Forgot Password Screen',
+              );
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -119,73 +123,80 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const Spacer(),
         PrimaryButton(
-            text: "Login",
-            onTap: () async{
-              if (_loginController.text == "jan@smartlook.com" ||
-                  _loginController.text == "ondrej@smartlook.com" ||
-                  _loginController.text == "pavel@smartlook.com") {
-                // Track successful login
-                await SplunkRum.instance.navigation.track(screenName: 'Home Screen');
-                await SplunkRum.instance.customTracking.trackCustomEvent(
-                  name: 'login',
-                  attributes: MutableAttributes(
-                    attributes: {
-                      'status': MutableAttributeString(value: 'success'),
-                      'user_email': MutableAttributeString(value: _loginController.text),
-                    },
-                  ),
-                );
-
-                // Set user identifier for Splunk RUM
-                SplunkRum.instance.globalAttributes.setString(
-                  key: 'user.email',
-                  value: _loginController.text,
-                );
-                Navigator.pushReplacement(
-                  // ignore: use_build_context_synchronously
-                  context,
-                  MaterialPageRoute(
-                    builder: (builder) => BottomBarScreen(
-                      userEmail: _loginController.text,
+          buttonKey: loginButtonKey,
+          text: "Login",
+          onTap: () async {
+            if (_loginController.text == "jan@smartlook.com" ||
+                _loginController.text == "ondrej@smartlook.com" ||
+                _loginController.text == "pavel@smartlook.com") {
+              // Track successful login
+              await SplunkRum.instance.navigation.track(
+                screenName: 'Home Screen',
+              );
+              await SplunkRum.instance.customTracking.trackCustomEvent(
+                name: 'login',
+                attributes: MutableAttributes(
+                  attributes: {
+                    'status': MutableAttributeString(value: 'success'),
+                    'user_email': MutableAttributeString(
+                      value: _loginController.text,
                     ),
-                  ),
-                );
-              } else if (!_loginController.text.contains("@")) {
-                exit(0);
-              } else {
-                // Track failed login
-               await SplunkRum.instance.customTracking.trackCustomEvent(
-                  name: 'login',
-                  attributes: MutableAttributes(
-                    attributes: {
-                      'status': MutableAttributeString(value: 'failed'),
-                      'reason': MutableAttributeString(value: 'invalid_credentials'),
-                    },
-                  ),
-                );
+                  },
+                ),
+              );
 
-                final snackBar = SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.only(
-                    left: screenWidth * 0.06,
-                    right: screenWidth * 0.06,
-                    bottom: screenWidth * 0.084,
-                  ),
-                  content: const Text(
-                    'Login failed. Please try it again.',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  backgroundColor: const Color(0xFF202020),
-                );
-
+              // Set user identifier for Splunk RUM
+              SplunkRum.instance.globalAttributes.setString(
+                key: 'user.email',
+                value: _loginController.text,
+              );
+              Navigator.pushReplacement(
                 // ignore: use_build_context_synchronously
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
-            }),
+                context,
+                MaterialPageRoute(
+                  builder: (builder) =>
+                      BottomBarScreen(userEmail: _loginController.text),
+                ),
+              );
+            } else if (!_loginController.text.contains("@")) {
+              await simulateNativeCrash();
+            } else {
+              // Track failed login
+              await SplunkRum.instance.customTracking.trackCustomEvent(
+                name: 'login',
+                attributes: MutableAttributes(
+                  attributes: {
+                    'status': MutableAttributeString(value: 'failed'),
+                    'reason': MutableAttributeString(
+                      value: 'invalid_credentials',
+                    ),
+                  },
+                ),
+              );
+
+              final snackBar = SnackBar(
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.only(
+                  left: screenWidth * 0.06,
+                  right: screenWidth * 0.06,
+                  bottom: screenWidth * 0.084,
+                ),
+                content: const Text(
+                  'Login failed. Please try it again.',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                backgroundColor: const Color(0xFF202020),
+              );
+
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          },
+        ),
       ],
     );
   }

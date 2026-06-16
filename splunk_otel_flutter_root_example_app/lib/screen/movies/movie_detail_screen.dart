@@ -14,7 +14,7 @@ class MovieDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return Scaffold(
       body: Stack(
         children: [
@@ -41,8 +41,9 @@ class MovieDetailScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(screenWidth * 0.05),
-                    topLeft: Radius.circular(screenWidth * 0.05)),
+                  topRight: Radius.circular(screenWidth * 0.05),
+                  topLeft: Radius.circular(screenWidth * 0.05),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,12 +58,15 @@ class MovieDetailScreen extends StatelessWidget {
                           child: Text(
                             movie.name,
                             style: const TextStyle(
-                                fontSize: 22.0, color: Colors.black),
+                              fontSize: 22.0,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                         IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.bookmark_border_sharp))
+                          onPressed: () {},
+                          icon: const Icon(Icons.bookmark_border_sharp),
+                        ),
                       ],
                     ),
                   ),
@@ -102,20 +106,24 @@ class MovieDetailScreen extends StatelessWidget {
                   const Spacer(),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      onTap: () {
-                        _showMyDialog(context);
-                      },
-                      child: Container(
-                        width: screenWidth * 0.143,
-                        height: screenWidth * 0.143,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: ColorPalette.buttonBlue,
-                        ),
-                        child: const Icon(
-                          Icons.download,
-                          color: Colors.white,
+                    child: Semantics(
+                      label: 'Download movie',
+                      button: true,
+                      child: InkWell(
+                        onTap: () {
+                          _showMyDialog(context);
+                        },
+                        child: Container(
+                          width: screenWidth * 0.143,
+                          height: screenWidth * 0.143,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorPalette.buttonBlue,
+                          ),
+                          child: const Icon(
+                            Icons.download,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -124,7 +132,7 @@ class MovieDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -132,11 +140,12 @@ class MovieDetailScreen extends StatelessWidget {
 
   Future<void> _showMyDialog(BuildContext context) async {
     return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return const PremiumDialog();
-        });
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return const PremiumDialog();
+      },
+    );
   }
 }
 
@@ -147,10 +156,11 @@ class PremiumDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return AlertDialog(
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(6.0))),
+        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+      ),
       insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
       title: const Text(
         'Premium Account',
@@ -185,19 +195,8 @@ class PremiumDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('CANCEL',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: ColorPalette.buttonBlue,
-                fontWeight: FontWeight.w700,
-              )),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        TextButton(
           child: const Text(
-            'PURCHASE',
+            'CANCEL',
             style: TextStyle(
               fontSize: 18.0,
               color: ColorPalette.buttonBlue,
@@ -205,15 +204,34 @@ class PremiumDialog extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            // Track navigation to premium screen
-            SplunkRum.instance.navigation.track(screenName: 'Premium Account Screen - Intro');
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (builder) => const PremiumScreenIntro(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
+        ),
+        Semantics(
+          label: 'Premium dialog purchase',
+          button: true,
+          child: TextButton(
+            child: const Text(
+              'PURCHASE',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: ColorPalette.buttonBlue,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            onPressed: () {
+              // Track navigation to premium screen
+              SplunkRum.instance.navigation.track(
+                screenName: 'Premium Account Screen - Intro',
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (builder) => const PremiumScreenIntro(),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
@@ -234,23 +252,14 @@ class DescriptionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return Row(
       children: [
-        DescriptionWidget(
-          title: "Length",
-          value: length,
-        ),
+        DescriptionWidget(title: "Length", value: length),
         SizedBox(width: screenWidth * 0.1),
-        DescriptionWidget(
-          title: "Language",
-          value: language,
-        ),
+        DescriptionWidget(title: "Language", value: language),
         SizedBox(width: screenWidth * 0.1),
-        DescriptionWidget(
-          title: "Rating",
-          value: rating,
-        ),
+        DescriptionWidget(title: "Rating", value: rating),
       ],
     );
   }
@@ -269,7 +278,7 @@ class DescriptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

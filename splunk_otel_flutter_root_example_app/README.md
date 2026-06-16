@@ -28,12 +28,12 @@ On the **Login Screen**, tap **"Forgot Password?"**. Enter one of the valid emai
 
 ### Intentional Crashes
 
-The app has two places where it deliberately calls `exit(0)` to simulate a crash, useful for testing crash reporting:
+The app has two places where it deliberately triggers a native crash through a platform method channel, useful for testing crash reporting:
 
-- **Login Screen** - Enter text **without an `@` symbol** (e.g., `test`) and tap **"Login"**. The app terminates immediately.
+- **Login Screen** - Enter text **without an `@` symbol** (e.g., `test`) and tap **"Login"**. The app crashes immediately.
 - **Forgot Password Screen** - Enter text **without an `@` symbol** and tap **"Submit"**. Same behavior.
 
-These force-exit scenarios let you verify that the native crash reporting module captures the termination and that session replay records the user's actions leading up to the crash.
+These native crash scenarios let you verify that the crash reporting module captures the termination and that session replay records the user's actions leading up to the crash.
 
 ## SDK Integration Overview
 

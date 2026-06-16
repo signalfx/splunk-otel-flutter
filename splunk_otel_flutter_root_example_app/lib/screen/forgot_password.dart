@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 import 'package:splunk_otel_flutter_root_example_app/main.dart';
+import 'package:splunk_otel_flutter_root_example_app/native_crash.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_textfield.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_button.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_text.dart';
@@ -71,7 +70,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       alignment: CrossAxisAlignment.start,
       doUnFocus: true,
@@ -83,63 +82,63 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           text: "Don't worry. It happens.\nPlease enter email account.",
         ),
         SizedBox(height: screenHeight * 0.03),
-        CustomTextField(
-          controller: _controller,
-          labelText: "Email",
-        ),
+        CustomTextField(controller: _controller, labelText: "Email"),
         const Spacer(flex: 3),
         PrimaryButton(
-            text: "Submit",
-            onTap: () {
-              if (_controller.text == "jan@smartlook.com" ||
-                  _controller.text == "ondrej@smartlook.com" ||
-                  _controller.text == "pavel@smartlook.com") {
-                // Track successful password reset
-                SplunkRum.instance.customTracking.trackCustomEvent(
-                  name: 'password_reset',
-                  attributes: MutableAttributes(
-                    attributes: {
-                      'status': MutableAttributeString(value: 'success'),
-                    },
+          text: "Submit",
+          onTap: () async {
+            if (_controller.text == "jan@smartlook.com" ||
+                _controller.text == "ondrej@smartlook.com" ||
+                _controller.text == "pavel@smartlook.com") {
+              // Track successful password reset
+              SplunkRum.instance.customTracking.trackCustomEvent(
+                name: 'password_reset',
+                attributes: MutableAttributes(
+                  attributes: {
+                    'status': MutableAttributeString(value: 'success'),
+                  },
+                ),
+              );
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(screenWidth * 0.04),
+                    topLeft: Radius.circular(screenWidth * 0.04),
                   ),
-                );
-                showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(screenWidth * 0.04),
-                        topLeft: Radius.circular(screenWidth * 0.04),
-                      ),
-                    ),
-                    builder: (BuildContext context) {
-                      return const ModalBottomSheet();
-                    });
-              } else if (!_controller.text.contains("@")) {
-                exit(0);
-              } else {
-                // Track failed password reset
-                SplunkRum.instance.customTracking.trackCustomEvent(
-                  name: 'password_reset',
-                  attributes: MutableAttributes(
-                    attributes: {
-                      'status': MutableAttributeString(value: 'failed'),
-                      'reason': MutableAttributeString(value: 'invalid_email'),
-                    },
+                ),
+                builder: (BuildContext context) {
+                  return const ModalBottomSheet();
+                },
+              );
+            } else if (!_controller.text.contains("@")) {
+              await simulateNativeCrash();
+            } else {
+              // Track failed password reset
+              SplunkRum.instance.customTracking.trackCustomEvent(
+                name: 'password_reset',
+                attributes: MutableAttributes(
+                  attributes: {
+                    'status': MutableAttributeString(value: 'failed'),
+                    'reason': MutableAttributeString(value: 'invalid_email'),
+                  },
+                ),
+              );
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(screenWidth * 0.04),
+                    topLeft: Radius.circular(screenWidth * 0.04),
                   ),
-                );
-                showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(screenWidth * 0.04),
-                        topLeft: Radius.circular(screenWidth * 0.04),
-                      ),
-                    ),
-                    builder: (BuildContext context) {
-                      return const ModalBottomSheet(isSuccess: false);
-                    });
-              }
-            }),
+                ),
+                builder: (BuildContext context) {
+                  return const ModalBottomSheet(isSuccess: false);
+                },
+              );
+            }
+          },
+        ),
       ],
     );
   }
@@ -153,7 +152,7 @@ class ModalBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return Container(
       height: screenHeight * 0.33,
       decoration: BoxDecoration(
@@ -202,10 +201,11 @@ class ModalBottomSheet extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.82,
               child: PrimaryButton(
-                  text: "OK",
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
+                text: "OK",
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ],
         ),

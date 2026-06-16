@@ -24,6 +24,21 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+
+    let controller = window?.rootViewController as! FlutterViewController
+    let channel = FlutterMethodChannel(
+      name: "com.splunk.rum.flutter.root.exampleapp/native_crash",
+      binaryMessenger: controller.binaryMessenger
+    )
+    channel.setMethodCallHandler { call, result in
+      switch call.method {
+      case "simulateCrash":
+        fatalError("Test crash triggered from root example app")
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

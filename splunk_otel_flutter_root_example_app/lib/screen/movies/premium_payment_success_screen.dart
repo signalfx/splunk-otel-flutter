@@ -10,7 +10,7 @@ class PremiumPaymentSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       widgets: [
         const Spacer(flex: 3),
@@ -22,22 +22,25 @@ class PremiumPaymentSuccessScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: screenHeight * 0.03),
-        const Text(
-          "Payment successfully\ncompleted",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 24.0,
-            color: Color(0xFF1A1A1A),
-            fontWeight: FontWeight.w500,
+        Semantics(
+          label: 'Payment success',
+          child: const Text(
+            "Payment successfully\ncompleted",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24.0,
+              color: Color(0xFF1A1A1A),
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         SizedBox(height: screenHeight * 0.05),
-        TextButton(
+        Semantics(
+          label: 'Payment success done',
+          button: true,
+          child: TextButton(
             onPressed: () {
-              Navigator.popUntil(
-                context,
-                ModalRoute.withName('/detail'),
-              );
+              Navigator.popUntil(context, ModalRoute.withName('/detail'));
             },
             child: const Text(
               "DONE",
@@ -46,7 +49,9 @@ class PremiumPaymentSuccessScreen extends StatelessWidget {
                 color: ColorPalette.buttonBlue,
                 fontWeight: FontWeight.w700,
               ),
-            )),
+            ),
+          ),
+        ),
         const Spacer(flex: 2),
       ],
     );

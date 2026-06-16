@@ -4,6 +4,9 @@
 *.pyc
 *.swp
 .DS_Store
+.appium/
+.local-appium/
+artifacts-local*/
 .atom/
 .build/
 .buildlog/

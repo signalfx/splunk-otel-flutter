@@ -23,7 +23,7 @@ class _PremiumScreenMonthSelectionState
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     return CustomScaffold(
       paddingHorizontal: screenWidth * 0.08,
       widgets: [
@@ -35,9 +35,7 @@ class _PremiumScreenMonthSelectionState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("Months:"),
-            Text(
-              _currentSliderValue.toInt().toString(),
-            )
+            Text(_currentSliderValue.toInt().toString()),
           ],
         ),
         SizedBox(height: screenHeight * 0.03),
@@ -66,20 +64,25 @@ class _PremiumScreenMonthSelectionState
         const Spacer(),
         PrimaryButton(
           text: "PURCHASE",
+          semanticsLabel: "Premium confirm purchase",
           onTap: () {
             // Track purchase button click with Splunk RUM
             SplunkRum.instance.customTracking.trackCustomEvent(
               name: 'purchase_initiated',
               attributes: MutableAttributes(
                 attributes: {
-                  'months': MutableAttributeInt(value: _currentSliderValue.toInt()),
+                  'months': MutableAttributeInt(
+                    value: _currentSliderValue.toInt(),
+                  ),
                   'subscription_type': MutableAttributeString(value: 'premium'),
                 },
               ),
             );
             if (_currentSliderValue == 2) {
               // Track failed purchase
-              SplunkRum.instance.navigation.track(screenName: 'Purchase Failed Screen');
+              SplunkRum.instance.navigation.track(
+                screenName: 'Purchase Failed Screen',
+              );
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -88,7 +91,9 @@ class _PremiumScreenMonthSelectionState
               );
             } else {
               // Track successful purchase
-              SplunkRum.instance.navigation.track(screenName: 'Purchase Succeeded Screen');
+              SplunkRum.instance.navigation.track(
+                screenName: 'Purchase Succeeded Screen',
+              );
               Navigator.push(
                 context,
                 MaterialPageRoute(
