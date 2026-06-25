@@ -1,3 +1,14 @@
+spec:
+  inputs:
+    run_sauce_tests:
+      description: "Do you want to run Sauce tests?"
+      default: "no"
+      options:
+        - "no"
+        - "yes"
+
+---
+
 # GitLab CI/CD configuration for Splunk OpenTelemetry Flutter SDK
 # 
 # Setup Instructions:
@@ -34,14 +45,6 @@
 
 default:
   image: 'cirrusci/flutter:stable'
-
-variables:
-  RUN_SAUCE_TESTS:
-    value: "no"
-    options:
-      - "no"
-      - "yes"
-    description: "Do you want to run Sauce tests?"
 
 stages:
   - setup
@@ -96,7 +99,7 @@ build_artifacts:
 run_sauce_tests:
   stage: build
   rules:
-    - if: '$RUN_SAUCE_TESTS == "yes"'
+    - if: '$[[ inputs.run_sauce_tests ]] == "yes"'
       when: manual
     - when: never
   trigger:
