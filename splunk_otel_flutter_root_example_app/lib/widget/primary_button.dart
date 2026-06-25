@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/color_palette.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 
 class PrimaryButton extends StatelessWidget {
   final Key? buttonKey;
@@ -19,7 +20,7 @@ class PrimaryButton extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Semantics(
+    return appiumSemantics(
       label: semanticsLabel ?? text,
       button: true,
       child: ElevatedButton(

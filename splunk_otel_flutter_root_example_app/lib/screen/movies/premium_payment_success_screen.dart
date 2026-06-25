@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter_root_example_app/color_palette.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_scaffold.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/round_icon.dart';
 
@@ -22,7 +23,7 @@ class PremiumPaymentSuccessScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: screenHeight * 0.03),
-        Semantics(
+        appiumSemantics(
           label: 'Payment success',
           child: const Text(
             "Payment successfully\ncompleted",
@@ -35,7 +36,7 @@ class PremiumPaymentSuccessScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: screenHeight * 0.05),
-        Semantics(
+        appiumSemantics(
           label: 'Payment success done',
           button: true,
           child: TextButton(

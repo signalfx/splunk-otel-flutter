@@ -3,6 +3,7 @@ import 'package:flutter/semantics.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/native_crash.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
 
 SemanticsHandle? _appiumSemanticsHandle;
@@ -10,9 +11,6 @@ SemanticsHandle? _appiumSemanticsHandle;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const bool enableAppiumSemantics = bool.fromEnvironment(
-    'ENABLE_APPIUM_SEMANTICS',
-  );
   if (enableAppiumSemantics) {
     _appiumSemanticsHandle = SemanticsBinding.instance.ensureSemantics();
     debugPrint('Appium semantics enabled: ${_appiumSemanticsHandle != null}');
@@ -26,20 +24,23 @@ void main() async {
   const int crashUploadGraceSeconds = int.fromEnvironment(
     'CRASH_UPLOAD_GRACE_SECONDS',
   );
-  final endpoint = realm.isNotEmpty && rumAccessToken.isNotEmpty
+  final endpoint =
+      enableInstallTimeEndpointConfiguration &&
+          realm.isNotEmpty &&
+          rumAccessToken.isNotEmpty
       ? EndpointConfiguration.forRum(
           realm: realm,
           rumAccessToken: rumAccessToken,
         )
       : null;
 
-  if (endpoint == null) {
+  if (enableInstallTimeEndpointConfiguration && endpoint == null) {
     debugPrint(
       'Installing SplunkRum without endpoint: REALM or RUM_ACCESS_TOKEN is empty',
     );
   }
 
-  if (crashUploadGraceSeconds > 0) {
+  if (enableNativeCrashTestHelpers && crashUploadGraceSeconds > 0) {
     await installCrashUploadGrace(
       const Duration(seconds: crashUploadGraceSeconds),
     );
@@ -47,17 +48,25 @@ void main() async {
   }
 
   final stopwatch = Stopwatch()..start();
+  final agentConfiguration = endpoint != null || enableRumDebugLogging
+      ? AgentConfiguration(
+          endpoint: endpoint,
+          appName: "Flutter Splunk cinema demo",
+          deploymentEnvironment: 'test',
+          enableDebugLogging: enableRumDebugLogging,
+        )
+      : AgentConfiguration(
+          appName: "Flutter Splunk cinema demo",
+          deploymentEnvironment: 'test',
+        );
 
   await SplunkRum.instance.install(
-    agentConfiguration: AgentConfiguration(
-      endpoint: endpoint,
-      appName: "Flutter Splunk cinema demo",
-      deploymentEnvironment: 'test',
-      enableDebugLogging: true,
-    ),
+    agentConfiguration: agentConfiguration,
     moduleConfigurations: [
-      CrashReportsModuleConfiguration(isEnabled: true),
-      ApplicationLifecycleModuleConfiguration(isEnabled: true),
+      if (enableCrashLifecycleModules) ...[
+        CrashReportsModuleConfiguration(isEnabled: true),
+        ApplicationLifecycleModuleConfiguration(isEnabled: true),
+      ],
       SessionReplayModuleConfiguration(samplingRate: 1.0),
       // Network header capture is configured per-platform: NetworkInstrumentation
       // for iOS (URLSession) and HttpUrl/OkHttp3Auto for Android. Each platform
@@ -132,6 +141,19 @@ void main() async {
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');
   });
+
+  if (!enableInstallTimeEndpointConfiguration) {
+    Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
+      // Set endpoint configuration after install.
+      await SplunkRum.instance.preferences.setEndpointConfiguration(
+        endpoint: EndpointConfiguration.forRum(
+          realm: realm,
+          rumAccessToken: rumAccessToken,
+        ),
+      );
+      debugPrint('Endpoint configuration set after install.');
+    });
+  }
 
   runApp(const DemoApp());
 }

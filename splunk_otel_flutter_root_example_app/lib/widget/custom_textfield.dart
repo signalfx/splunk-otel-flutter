@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 
 class CustomTextField extends StatelessWidget {
   final Key? fieldKey;
@@ -15,7 +16,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
+    return appiumSemantics(
       label: semanticsLabel ?? labelText,
       textField: true,
       child: TextField(

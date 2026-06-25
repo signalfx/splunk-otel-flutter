@@ -3,6 +3,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/color_palette.dart';
 import 'package:splunk_otel_flutter_root_example_app/data/model/movie.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/premium_screen_intro.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/score_widget.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/tag_listview.dart';
 
@@ -106,7 +107,7 @@ class MovieDetailScreen extends StatelessWidget {
                   const Spacer(),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: Semantics(
+                    child: appiumSemantics(
                       label: 'Download movie',
                       button: true,
                       child: InkWell(
@@ -207,7 +208,7 @@ class PremiumDialog extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        Semantics(
+        appiumSemantics(
           label: 'Premium dialog purchase',
           button: true,
           child: TextButton(

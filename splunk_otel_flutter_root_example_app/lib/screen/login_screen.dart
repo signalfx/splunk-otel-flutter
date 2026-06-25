@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay.dart';
@@ -5,6 +7,7 @@ import 'package:splunk_otel_flutter_session_replay/splunk_otel_flutter_session_r
 import 'package:splunk_otel_flutter_root_example_app/native_crash.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/bottom_bar_screen.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/forgot_password.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_scaffold.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_textfield.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/primary_button.dart';
@@ -159,7 +162,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             } else if (!_loginController.text.contains("@")) {
-              await simulateNativeCrash();
+              if (enableNativeCrashTestHelpers) {
+                await simulateNativeCrash();
+              } else {
+                exit(0);
+              }
             } else {
               // Track failed login
               await SplunkRum.instance.customTracking.trackCustomEvent(

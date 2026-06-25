@@ -3,6 +3,7 @@ import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/data/mock/mock_movies.dart';
 import 'package:splunk_otel_flutter_root_example_app/data/model/movie.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/movies/movie_detail_screen.dart';
+import 'package:splunk_otel_flutter_root_example_app/test_flags.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/custom_scaffold.dart';
 import 'package:splunk_otel_flutter_root_example_app/widget/score_widget.dart';
 
@@ -16,7 +17,7 @@ class HomeScreen extends StatelessWidget {
 
     return CustomScaffold(
       paddingHorizontal: screenWidth * 0.07,
-      scrollable: true,
+      scrollable: enableAppiumSemantics,
       widgets: [
         SizedBox(height: screenHeight * 0.07),
         MovieListView(title: "Trending", movies: MockMovies.trendingMovies),
@@ -78,7 +79,7 @@ class MovieCoverWidget extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Semantics(
+    return appiumSemantics(
       label: 'Movie ${movie.name}',
       button: true,
       child: SizedBox(

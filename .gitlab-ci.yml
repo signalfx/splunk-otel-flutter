@@ -33,12 +33,19 @@
 # Make sure both packages have the same version before releasing.
 
 default:
-  image: 'ghcr.io/cirruslabs/flutter:3.32.8'
+  image: 'cirrusci/flutter:stable'
+
+variables:
+  RUN_SAUCE_TESTS:
+    value: "no"
+    options:
+      - "no"
+      - "yes"
+    description: "Do you want to run Sauce tests?"
 
 stages:
   - setup
   - build
-  - sauce-test
   - dry-run
   - release
 
@@ -86,199 +93,16 @@ build_artifacts:
       - packages/splunk_otel_flutter/splunk_otel_flutter/
     expire_in: 1 week
 
-sauce_appium_purchase_flow_android:
-  stage: sauce-test
+run_sauce_tests:
+  stage: build
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$RUN_SAUCE_TESTS == "yes"'
       when: manual
-      allow_failure: true
     - when: never
-  variables:
-    SAUCE_API_BASE: "https://api.us-west-1.saucelabs.com"
-    APP_APK: "splunk_otel_flutter_root_example_app/build/app/outputs/flutter-apk/app-debug.apk"
-    STORAGE_IDS_FILE: "$CI_PROJECT_DIR/.sauce-appium-purchase-storage-files"
-    REALM: "mon0"
-    RUM_ACCESS_TOKEN: ""
-    SAUCE_DEVICE_NAME: "Samsung Galaxy S26 Ultra"
-    SAUCE_PLATFORM_VERSION: "16"
-    SAUCE_APPIUM_VERSION: "appium2-20250901"
-    SAUCE_PRIVATE_DEVICES_ONLY: "true"
-    SAUCE_RESIGNING_ENABLED: "false"
-    APP_PACKAGE_ID: "com.splunk.rum.flutter.root.exampleapp.root_example_app"
-    INITIAL_WAIT_SECONDS: "10"
-    TELEMETRY_SETTLE_SECONDS: "120"
-  script:
-    - |
-      set -e
-
-      if [ -z "$SAUCE_USERNAME" ] || [ -z "$SAUCE_ACCESS_KEY" ]; then
-        echo "Set SAUCE_USERNAME and SAUCE_ACCESS_KEY GitLab CI/CD variables before running this job."
-        exit 1
-      fi
-
-      if [ -z "$REALM" ] || [ -z "$RUM_ACCESS_TOKEN" ]; then
-        echo "Set REALM and RUM_ACCESS_TOKEN GitLab CI/CD variables before running this job."
-        exit 1
-      fi
-
-      if ! command -v node >/dev/null 2>&1; then
-        if command -v apt-get >/dev/null 2>&1; then
-          apt-get update
-          apt-get install -y nodejs
-        else
-          echo "Node.js is required to run the Appium purchase-flow test."
-          exit 1
-        fi
-      fi
-      node --version
-
-      flutter --version
-      flutter precache --android
-
-      dart pub global activate melos
-      export PATH="$PATH:$HOME/.pub-cache/bin"
-      melos bootstrap
-
-      cd splunk_otel_flutter_root_example_app
-      flutter build apk --debug \
-        "--dart-define=ENABLE_APPIUM_SEMANTICS=true" \
-        "--dart-define=REALM=$REALM" \
-        "--dart-define=RUM_ACCESS_TOKEN=$RUM_ACCESS_TOKEN"
-      cd "$CI_PROJECT_DIR"
-
-      app_name="smart-cinema-purchase-flow-app-${CI_PIPELINE_ID}.apk"
-      app_response="$(curl --fail --silent --show-error --location \
-        --user "$SAUCE_USERNAME:$SAUCE_ACCESS_KEY" \
-        --request POST "$SAUCE_API_BASE/v1/storage/upload" \
-        --form "payload=@$APP_APK" \
-        --form "name=$app_name" \
-        --form "description=RUM positive purchase flow app for GitLab pipeline $CI_PIPELINE_ID")"
-      app_file_id="$(echo "$app_response" | grep -o '"id"[[:space:]]*:[[:space:]]*"[^"]*"' | head -n 1 | sed 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')"
-      if [ -z "$app_file_id" ]; then
-        echo "Sauce upload did not return an app file ID."
-        exit 1
-      fi
-      echo "APP_FILE_ID=$app_file_id" > "$STORAGE_IDS_FILE"
-
-      export SAUCE_APP="storage:$app_file_id"
-      cd splunk_otel_flutter_root_example_app
-      bash scripts/sauce_appium_purchase_flow_android.sh
-  after_script:
-    - |
-      if [ -f "$STORAGE_IDS_FILE" ]; then
-        . "$STORAGE_IDS_FILE"
-      fi
-
-      # Remove the uploaded APK from Sauce storage after the job finishes.
-      if [ -n "$APP_FILE_ID" ]; then
-        curl --fail --silent --show-error --location \
-          --user "$SAUCE_USERNAME:$SAUCE_ACCESS_KEY" \
-          --request DELETE "$SAUCE_API_BASE/v1/storage/files/$APP_FILE_ID" || true
-      fi
-  artifacts:
-    when: always
-    paths:
-      - splunk_otel_flutter_root_example_app/artifacts/
-    expire_in: 14 days
-
-sauce_appium_crash_android:
-  stage: sauce-test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-      when: manual
-      allow_failure: true
-    - when: never
-  variables:
-    SAUCE_API_BASE: "https://api.us-west-1.saucelabs.com"
-    APP_APK: "splunk_otel_flutter_root_example_app/build/app/outputs/flutter-apk/app-debug.apk"
-    STORAGE_IDS_FILE: "$CI_PROJECT_DIR/.sauce-appium-crash-storage-files"
-    REALM: "mon0"
-    RUM_ACCESS_TOKEN: ""
-    SAUCE_DEVICE_NAME: "Samsung Galaxy S26 Ultra"
-    SAUCE_PLATFORM_VERSION: "16"
-    SAUCE_APPIUM_VERSION: "appium2-20250901"
-    SAUCE_PRIVATE_DEVICES_ONLY: "true"
-    SAUCE_RESIGNING_ENABLED: "false"
-    APP_PACKAGE_ID: "com.splunk.rum.flutter.root.exampleapp.root_example_app"
-    INITIAL_WAIT_SECONDS: "10"
-    CRASH_WAIT_SECONDS: "30"
-    CRASH_UPLOAD_GRACE_SECONDS: "10"
-    TELEMETRY_SETTLE_SECONDS: "120"
-    CRASH_TEST_EMAIL: "invalid-email"
-  script:
-    - |
-      set -e
-
-      if [ -z "$SAUCE_USERNAME" ] || [ -z "$SAUCE_ACCESS_KEY" ]; then
-        echo "Set SAUCE_USERNAME and SAUCE_ACCESS_KEY GitLab CI/CD variables before running this job."
-        exit 1
-      fi
-
-      if [ -z "$REALM" ] || [ -z "$RUM_ACCESS_TOKEN" ]; then
-        echo "Set REALM and RUM_ACCESS_TOKEN GitLab CI/CD variables before running this job."
-        exit 1
-      fi
-
-      if ! command -v node >/dev/null 2>&1; then
-        if command -v apt-get >/dev/null 2>&1; then
-          apt-get update
-          apt-get install -y nodejs
-        else
-          echo "Node.js is required to run the Appium crash-flow test."
-          exit 1
-        fi
-      fi
-      node --version
-
-      flutter --version
-      flutter precache --android
-
-      dart pub global activate melos
-      export PATH="$PATH:$HOME/.pub-cache/bin"
-      melos bootstrap
-
-      cd splunk_otel_flutter_root_example_app
-      flutter build apk --debug \
-        "--dart-define=ENABLE_APPIUM_SEMANTICS=true" \
-        "--dart-define=REALM=$REALM" \
-        "--dart-define=RUM_ACCESS_TOKEN=$RUM_ACCESS_TOKEN" \
-        "--dart-define=CRASH_UPLOAD_GRACE_SECONDS=$CRASH_UPLOAD_GRACE_SECONDS"
-      cd "$CI_PROJECT_DIR"
-
-      app_name="smart-cinema-crash-flow-app-${CI_PIPELINE_ID}.apk"
-      app_response="$(curl --fail --silent --show-error --location \
-        --user "$SAUCE_USERNAME:$SAUCE_ACCESS_KEY" \
-        --request POST "$SAUCE_API_BASE/v1/storage/upload" \
-        --form "payload=@$APP_APK" \
-        --form "name=$app_name" \
-        --form "description=RUM crash flow app for GitLab pipeline $CI_PIPELINE_ID")"
-      app_file_id="$(echo "$app_response" | grep -o '"id"[[:space:]]*:[[:space:]]*"[^"]*"' | head -n 1 | sed 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')"
-      if [ -z "$app_file_id" ]; then
-        echo "Sauce upload did not return an app file ID."
-        exit 1
-      fi
-      echo "APP_FILE_ID=$app_file_id" > "$STORAGE_IDS_FILE"
-
-      export SAUCE_APP="storage:$app_file_id"
-      cd splunk_otel_flutter_root_example_app
-      bash scripts/sauce_appium_crash_android.sh
-  after_script:
-    - |
-      if [ -f "$STORAGE_IDS_FILE" ]; then
-        . "$STORAGE_IDS_FILE"
-      fi
-
-      # Remove the uploaded APK from Sauce storage after the job finishes.
-      if [ -n "$APP_FILE_ID" ]; then
-        curl --fail --silent --show-error --location \
-          --user "$SAUCE_USERNAME:$SAUCE_ACCESS_KEY" \
-          --request DELETE "$SAUCE_API_BASE/v1/storage/files/$APP_FILE_ID" || true
-      fi
-  artifacts:
-    when: always
-    paths:
-      - splunk_otel_flutter_root_example_app/artifacts/
-    expire_in: 14 days
+  trigger:
+    include:
+      - local: .gitlab/ci/sauce-tests.yml
+    strategy: depend
 
 # Dry run - test publishing without actually publishing
 dry_run:
