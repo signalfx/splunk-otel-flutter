@@ -44,7 +44,7 @@ spec:
 # Make sure both packages have the same version before releasing.
 
 default:
-  image: 'cirrusci/flutter:stable'
+  image: 'ghcr.io/cirruslabs/flutter:3.32.8'
 
 stages:
   - setup
@@ -145,7 +145,7 @@ dry_run:
         exit 1
       fi
       
-      # Cte credentials file from GitLab variable
+      # Create credentials file from GitLab variable
       # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
       # generated locally via: flutter pub login
       # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
