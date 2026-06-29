@@ -11,6 +11,7 @@ stages:
 
 .sauce_appium_android_template:
   stage: sauce-test
+  resource_group: sauce-android-real-device
   rules:
     - if: '$CI_PIPELINE_SOURCE == "parent_pipeline"'
       when: on_success
