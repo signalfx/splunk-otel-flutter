@@ -27,7 +27,7 @@ stages:
     SAUCE_PLATFORM_VERSION: "16"
     SAUCE_APPIUM_VERSION: "appium2-20250901"
     SAUCE_PRIVATE_DEVICES_ONLY: "true"
-    SAUCE_RESIGNING_ENABLED: "false"
+    SAUCE_RESIGNING_ENABLED: "true"
     APP_PACKAGE_ID: "com.splunk.rum.flutter.root.exampleapp.root_example_app"
     INITIAL_WAIT_SECONDS: "10"
     TELEMETRY_SETTLE_SECONDS: "120"

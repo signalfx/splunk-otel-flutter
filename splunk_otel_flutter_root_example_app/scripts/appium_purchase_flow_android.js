@@ -249,11 +249,17 @@ function elementIdFromResponse(json) {
   if (!value) {
     return '';
   }
+
+  if (Array.isArray(value)) {
+    const firstElement = value[0];
+    return firstElement ? firstElement[ELEMENT_KEY] || firstElement.ELEMENT || '' : '';
+  }
+
   return value[ELEMENT_KEY] || value.ELEMENT || '';
 }
 
 async function findElement(using, value) {
-  const response = await request('POST', sessionEndpoint('element'), {
+  const response = await request('POST', sessionEndpoint('elements'), {
     using,
     value,
   });
