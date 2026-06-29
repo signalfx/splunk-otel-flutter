@@ -99,7 +99,7 @@ build_artifacts:
 run_sauce_tests:
   stage: build
   rules:
-    - if: '$[[ inputs.run_sauce_tests ]] == "yes"'
+    - if: '"$[[ inputs.run_sauce_tests ]]" == "yes"'
       when: manual
     - when: never
   trigger:
@@ -145,7 +145,7 @@ dry_run:
         exit 1
       fi
       
-      # Create credentials file from GitLab variable
+      # Cte credentials file from GitLab variable
       # The PUB_CREDENTIALS should contain the full JSON from pub-credentials.json
       # generated locally via: flutter pub login
       # CI runs on Linux, so use Linux path: ~/.config/dart/pub-credentials.json
