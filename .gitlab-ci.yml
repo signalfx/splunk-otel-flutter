@@ -106,6 +106,8 @@ run_sauce_tests:
     include:
       - local: .gitlab/ci/sauce-tests.yml
     strategy: depend
+    forward:
+      pipeline_variables: true
 
 # Dry run - test publishing without actually publishing
 dry_run:
