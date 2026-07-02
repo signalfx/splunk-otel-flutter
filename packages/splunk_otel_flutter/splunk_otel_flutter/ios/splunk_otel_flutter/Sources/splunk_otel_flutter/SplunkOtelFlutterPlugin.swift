@@ -507,10 +507,54 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
     }
     
     // MARK: - Navigation
-    
-    func navigationTrack(screenName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.navigation.track(screen: screenName)
-        
+
+    func navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, any Error>) -> Void) {
+        // Preserve the null vs. empty distinction: a nil map uses the
+        // screen-name overload, while a provided map (even empty) is forwarded
+        // explicitly through the attributes overload.
+        if let attributes = attributes {
+            SplunkRum.shared.navigation.track(screen: screenName, attributes: navigationAttributes(from: attributes))
+        } else {
+            SplunkRum.shared.navigation.track(screen: screenName)
+        }
+
         completion(.success(()))
+    }
+
+    private func navigationAttributes(from attributes: GeneratedMutableAttributes) -> [String: Any] {
+        var result: [String: Any] = [:]
+
+        for (key, wrapped) in attributes.attributes {
+            switch wrapped {
+            case let v as GeneratedMutableAttributeInt:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeDouble:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeString:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeBool:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListInt:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListDouble:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListString:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListBool:
+                result[key] = v.value
+
+            default:
+                break
+            }
+        }
+
+        return result
     }
 }

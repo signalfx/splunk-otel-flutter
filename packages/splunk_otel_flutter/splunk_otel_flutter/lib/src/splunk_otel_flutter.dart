@@ -16,7 +16,7 @@
 
 import 'package:splunk_otel_flutter/src/custom_tracking.dart';
 import 'package:splunk_otel_flutter/src/global_attributes.dart';
-import 'package:splunk_otel_flutter/src/navigation.dart';
+import 'package:splunk_otel_flutter/src/navigation/navigation.dart';
 import 'package:splunk_otel_flutter/src/rum_telemetry_metadata.dart';
 import 'package:splunk_otel_flutter/src/preferences.dart';
 import 'package:splunk_otel_flutter/src/session.dart';

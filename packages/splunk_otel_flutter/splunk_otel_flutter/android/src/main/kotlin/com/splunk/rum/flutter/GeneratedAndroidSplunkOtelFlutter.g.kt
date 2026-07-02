@@ -1357,7 +1357,7 @@ interface SplunkOtelFlutterHostApi {
   fun customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
   fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit)
   fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit)
-  fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit)
+  fun navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by SplunkOtelFlutterHostApi. */
@@ -2008,7 +2008,8 @@ interface SplunkOtelFlutterHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val screenNameArg = args[0] as String
-            api.navigationTrack(screenNameArg) { result: Result<Unit> ->
+            val attributesArg = args[1] as GeneratedMutableAttributes?
+            api.navigationTrack(screenNameArg, attributesArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

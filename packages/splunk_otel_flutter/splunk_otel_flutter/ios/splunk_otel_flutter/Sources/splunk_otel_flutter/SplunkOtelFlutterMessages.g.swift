@@ -1227,7 +1227,7 @@ protocol SplunkOtelFlutterHostApi {
   func customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
   func customTrackingStartWorkflow(workflowName: String, completion: @escaping (Result<Int64, Error>) -> Void)
   func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func navigationTrack(screenName: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1792,7 +1792,8 @@ class SplunkOtelFlutterHostApiSetup {
       navigationTrackChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let screenNameArg = args[0] as! String
-        api.navigationTrack(screenName: screenNameArg) { result in
+        let attributesArg: GeneratedMutableAttributes? = nilOrValue(args[1])
+        api.navigationTrack(screenName: screenNameArg, attributes: attributesArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))

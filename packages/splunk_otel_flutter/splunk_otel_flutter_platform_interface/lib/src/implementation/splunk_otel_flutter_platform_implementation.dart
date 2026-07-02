@@ -465,8 +465,14 @@ class SplunkOtelFlutterPlatformImplementation
   // Navigation
 
   @override
-  Future<void> navigationTrack({required String screenName}) async {
-    await _api.navigationTrack(screenName: screenName);
+  Future<void> navigationTrack({
+    required String screenName,
+    MutableAttributes? attributes,
+  }) async {
+    await _api.navigationTrack(
+      screenName: screenName,
+      attributes: attributes?.toGeneratedMutableAttributes(),
+    );
   }
 
   // Helpers

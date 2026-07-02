@@ -63,10 +63,38 @@ class SlowRenderingModuleConfiguration extends ActivableModuleConfiguration {
 
 /// Screen navigation tracking configuration.
 ///
-/// Tracks screen transitions and provides current screen name context.
+/// Enables the navigation module that emits the `app.ui.navigation` signal and
+/// owns the shared `screen.name` propagated to all other telemetry. The module
+/// must be enabled (`isEnabled`, the default) for any navigation tracking to
+/// work — manual `SplunkRum.instance.navigation.track(...)` calls and the
+/// Flutter [SplunkNavigatorObserver] both depend on it.
+///
+/// ## Native vs. Flutter automatic tracking
+///
+/// These are two independent mechanisms; do not confuse them:
+///
+/// - [isAutomatedTrackingEnabled] toggles **native** automatic detection only
+///   (`Activity`/`Fragment` on Android, `UIViewController` on iOS). It does
+///   **not** control Flutter route tracking. On a Flutter app, native detection
+///   only sees the host `FlutterActivity` / `FlutterViewController` (plus any
+///   genuinely embedded native screens) — never your Dart routes.
+/// - To automatically track Flutter (Dart) routes, add a
+///   `SplunkNavigatorObserver` to your app's `Navigator` (for example,
+///   `MaterialApp.navigatorObservers`). That observer is configured on its own
+///   and is independent of [isAutomatedTrackingEnabled].
+///
+/// Recommended Flutter setup: keep [isAutomatedTrackingEnabled] `false` (the
+/// default) and install a `SplunkNavigatorObserver`.
 class NavigationModuleConfiguration extends ActivableModuleConfiguration {
-  /// Automatically detect navigation without manual calls.
-  /// Monitors native navigation components (Activity/Fragment on Android, UIViewController on iOS).
+  /// Enables **native** automatic navigation detection (`Activity`/`Fragment`
+  /// on Android, `UIViewController` on iOS).
+  ///
+  /// This is unrelated to Flutter route tracking: on Flutter it only observes
+  /// the native host (the `FlutterActivity` / `FlutterViewController` and any
+  /// embedded native screens), not Dart `Navigator` routes. For automatic
+  /// Flutter route tracking, install a `SplunkNavigatorObserver` instead.
+  ///
+  /// Defaults to `false`.
   final bool isAutomatedTrackingEnabled;
 
   NavigationModuleConfiguration({

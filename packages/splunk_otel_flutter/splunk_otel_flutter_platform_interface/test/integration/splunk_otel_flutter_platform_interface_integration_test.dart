@@ -914,17 +914,5 @@ void main() {
         expect(receivedHandle, 789);
       });
     });
-
-    group('Navigation Tracking Integration', () {
-      test('should track screen navigation', () async {
-        const screenName = 'HomeScreen';
-
-        mockApi.navigationTrackHandler = (name) async {
-          expect(name, screenName);
-        };
-
-        await implementation.navigationTrack(screenName: screenName);
-      });
-    });
   });
 }

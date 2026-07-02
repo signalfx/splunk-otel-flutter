@@ -144,5 +144,8 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
 
   // Navigation
 
-  Future<void> navigationTrack({required String screenName});
+  Future<void> navigationTrack({
+    required String screenName,
+    MutableAttributes? attributes,
+  });
 }

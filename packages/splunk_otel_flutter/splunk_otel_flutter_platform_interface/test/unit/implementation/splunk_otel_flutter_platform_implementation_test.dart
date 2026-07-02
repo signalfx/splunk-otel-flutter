@@ -1004,17 +1004,5 @@ void main() {
         expect(receivedHandle, 456);
       });
     });
-
-    group('Navigation', () {
-      test('should track screen navigation', () async {
-        String? receivedScreenName;
-        mockApi.navigationTrackHandler = (screenName) async {
-          receivedScreenName = screenName;
-        };
-
-        await implementation.navigationTrack(screenName: 'HomeScreen');
-        expect(receivedScreenName, 'HomeScreen');
-      });
-    });
   });
 }

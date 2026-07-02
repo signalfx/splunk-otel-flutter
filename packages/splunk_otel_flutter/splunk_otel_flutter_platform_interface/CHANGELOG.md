@@ -1,3 +1,7 @@
+## Unreleased
+
+* Extended the `navigationTrack` Pigeon message and platform interface with an optional `attributes` argument to support automatic navigation instrumentation.
+
 ## 1.0.3
 
 * Extended `NetworkMonitorModuleConfiguration` and Pigeon messages to bridge captured network request headers to iOS.
