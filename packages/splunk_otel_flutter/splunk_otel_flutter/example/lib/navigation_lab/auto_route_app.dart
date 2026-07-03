@@ -44,6 +44,8 @@ class HomePage extends StatelessWidget {
       onOpenDetails: (id) => context.router.push(DetailsRoute(id: id)),
       onOpenSettings: () => context.router.push(const SettingsRoute()),
       onOpenTabs: () => context.router.push(const TabsRoute()),
+      onReplaceWithSettings: () =>
+          context.router.replace(const SettingsRoute()),
     );
   }
 }

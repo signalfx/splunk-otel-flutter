@@ -55,6 +55,7 @@ class _GoRouterApp extends StatelessWidget {
           onOpenDetails: (id) => context.push('/details/$id'),
           onOpenSettings: () => context.push('/settings'),
           onOpenTabs: () => context.push('/tabs'),
+          onReplaceWithSettings: () => context.pushReplacement('/settings'),
         ),
       ),
       GoRoute(

@@ -98,6 +98,8 @@ class _NavigatorApp extends StatelessWidget {
                 Navigator.of(context).pushNamed('Details/$id'),
             onOpenSettings: () => Navigator.of(context).pushNamed('Settings'),
             onOpenTabs: () => Navigator.of(context).pushNamed('Tabs'),
+            onReplaceWithSettings: () =>
+                Navigator.of(context).pushReplacementNamed('Settings'),
           ),
         );
     }

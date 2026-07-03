@@ -30,6 +30,7 @@ class HomeView extends StatelessWidget {
     required this.onOpenDetails,
     required this.onOpenSettings,
     required this.onOpenTabs,
+    required this.onReplaceWithSettings,
   });
 
   /// Label identifying which routing library drives this run.
@@ -37,6 +38,7 @@ class HomeView extends StatelessWidget {
   final void Function(String id) onOpenDetails;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenTabs;
+  final VoidCallback onReplaceWithSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,12 @@ class HomeView extends StatelessWidget {
             title: 'Open Settings (push)',
             subtitle: 'Pushes Settings',
             onTap: onOpenSettings,
+          ),
+          _Tile(
+            title: 'Replace with Settings (pushReplacement)',
+            subtitle:
+                'Replaces the current route - should still track Settings',
+            onTap: onReplaceWithSettings,
           ),
           _Tile(
             title: 'Open Tabs (IndexedStack)',

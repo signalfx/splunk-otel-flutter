@@ -124,8 +124,13 @@ class SplunkNavigatorObserver extends NavigatorObserver {
       _initialRouteSeen = true;
       if (!trackInitialRoute) {
         // Record the name so a later return to it can still be deduplicated,
-        // but do not emit for the initial route.
-        _lastScreenName = _resolveName(route) ?? _lastScreenName;
+        // but do not emit for the initial route. Guard the predicate call so a
+        // throwing viewNamePredicate can never propagate into navigation.
+        try {
+          _lastScreenName = _resolveName(route) ?? _lastScreenName;
+        } catch (error) {
+          _logError(error);
+        }
 
         return;
       }
@@ -139,6 +144,14 @@ class SplunkNavigatorObserver extends NavigatorObserver {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
 
     _initialRouteSeen = true;
+
+    // Navigator.replace / replaceRouteBelow also fire when a route *below* the
+    // visible top is replaced. Only report the replacement when the new route
+    // is the one actually on screen, so screen.name never switches to a hidden
+    // route.
+    if (newRoute == null || !newRoute.isCurrent) {
+      return;
+    }
 
     _handle(newRoute);
   }

@@ -58,10 +58,25 @@ class _TrackSpy {
   }
 }
 
-Route<void> _page(String? name) => PageRouteBuilder<void>(
-  settings: RouteSettings(name: name),
-  pageBuilder: (_, _, _) => const SizedBox.shrink(),
-);
+// Routes in these unit tests are not attached to a real Navigator, so the
+// framework's `isCurrent` would always be false. This fake lets a test control
+// it (used to verify that replacements below the visible top are ignored).
+class _FakePageRoute extends PageRouteBuilder<void> {
+  _FakePageRoute({String? name, bool current = true})
+    : _current = current,
+      super(
+        settings: RouteSettings(name: name),
+        pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      );
+
+  final bool _current;
+
+  @override
+  bool get isCurrent => _current;
+}
+
+Route<void> _page(String? name, {bool current = true}) =>
+    _FakePageRoute(name: name, current: current);
 
 class _FakePopupRoute extends PopupRoute<void> {
   _FakePopupRoute({String? name}) : super(settings: RouteSettings(name: name));
@@ -127,6 +142,17 @@ void main() {
       await _settle();
 
       expect(spy.names, ['Details']);
+    });
+
+    test('ignores a replacement below the current route', () async {
+      // Navigator.replace / replaceRouteBelow can replace a hidden route.
+      SplunkNavigatorObserver().didReplace(
+        newRoute: _page('Background', current: false),
+        oldRoute: _page('Home'),
+      );
+      await _settle();
+
+      expect(spy.names, isEmpty);
     });
 
     test('tracks the revealed route on pop', () async {
@@ -237,6 +263,20 @@ void main() {
 
     test('never throws when a predicate throws', () async {
       final observer = SplunkNavigatorObserver(
+        viewNamePredicate: (route, defaultName) =>
+            throw StateError('predicate boom'),
+      );
+
+      expect(() => observer.didPush(_page('Home'), null), returnsNormally);
+      await _settle();
+
+      expect(spy.names, isEmpty);
+    });
+
+    test('never throws when a predicate throws while suppressing the '
+        'initial route', () async {
+      final observer = SplunkNavigatorObserver(
+        trackInitialRoute: false,
         viewNamePredicate: (route, defaultName) =>
             throw StateError('predicate boom'),
       );

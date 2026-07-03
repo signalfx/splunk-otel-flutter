@@ -44,6 +44,7 @@ observer into each library's observer slot.
 | Push Details again | New event (Navigator uses per-id names; go_router/auto_route use the static `Details` name, so a consecutive push is deduplicated by name). |
 | Back from a screen | Event for the revealed screen (pop path). |
 | Open Settings | `screen.name` = `Settings`. |
+| Replace with Settings (pushReplacement) | `screen.name` = `Settings` — confirms the common replace path still tracks (the new route is current). |
 | Open Tabs, switch tabs | Navigation event for `Tabs` on entry; switching tabs emits NOTHING (IndexedStack pushes no route). |
 | Show Dialog | No navigation event (popup routes are ignored by default). |
 | Manual track() | `screen.name` = `ManualScreen` with a custom `source` attribute. |
