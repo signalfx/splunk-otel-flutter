@@ -1,6 +1,6 @@
 ## 1.1.0
 
-* Sync version bump to align with the `splunk_otel_flutter` 1.1.0 release.
+* Aligned the native Splunk RUM SDK pins with `splunk_otel_flutter` (Android 2.3.2, iOS 2.3.1). This fixes a native dependency conflict on iOS where `splunk_otel_flutter` and `splunk_otel_flutter_session_replay` pinned different exact versions of `splunk-otel-ios`.
 
 ## 1.0.3
 
