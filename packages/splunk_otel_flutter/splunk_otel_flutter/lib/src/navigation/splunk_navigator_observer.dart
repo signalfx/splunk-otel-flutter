@@ -164,6 +164,20 @@ class SplunkNavigatorObserver extends NavigatorObserver {
     _handle(previousRoute);
   }
 
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didRemove(route, previousRoute);
+
+    // Navigator.removeRoute / removeRouteBelow can target a route *below* the
+    // visible top, which must not change screen.name. Only report when the
+    // removal reveals a new visible top, i.e. previousRoute becomes current.
+    if (previousRoute == null || !previousRoute.isCurrent) {
+      return;
+    }
+
+    _handle(previousRoute);
+  }
+
   void _handle(Route<dynamic>? route) {
     // Navigation callbacks must never throw or surface unhandled async errors.
     // Any failure here - including user-supplied predicate callbacks and the

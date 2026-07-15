@@ -162,6 +162,34 @@ void main() {
       expect(spy.names, ['Home']);
     });
 
+    test('tracks the revealed route when the top route is removed', () async {
+      // Navigator.removeRoute on the visible top reveals the route below, which
+      // reports itself as current.
+      SplunkNavigatorObserver().didRemove(_page('Details'), _page('Home'));
+      await _settle();
+
+      expect(spy.names, ['Home']);
+    });
+
+    test('ignores removal of a route below the current route', () async {
+      // Navigator.removeRouteBelow removes a hidden route; the visible top does
+      // not change, so previousRoute is not current.
+      SplunkNavigatorObserver().didRemove(
+        _page('Background'),
+        _page('Deeper', current: false),
+      );
+      await _settle();
+
+      expect(spy.names, isEmpty);
+    });
+
+    test('ignores removal with no revealed route', () async {
+      SplunkNavigatorObserver().didRemove(_page('Details'), null);
+      await _settle();
+
+      expect(spy.names, isEmpty);
+    });
+
     test('skips the initial route when trackInitialRoute is false', () async {
       final observer = SplunkNavigatorObserver(trackInitialRoute: false);
       observer.didPush(_page('Home'), null);
