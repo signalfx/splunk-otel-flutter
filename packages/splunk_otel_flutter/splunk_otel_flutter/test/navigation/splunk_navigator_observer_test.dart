@@ -145,49 +145,98 @@ void main() {
     });
 
     test('ignores a replacement below the current route', () async {
-      // Navigator.replace / replaceRouteBelow can replace a hidden route.
-      SplunkNavigatorObserver().didReplace(
+      // Navigator.replace / replaceRouteBelow can replace a hidden route; the
+      // visible top must stay the reported screen.
+      final home = _page('Home');
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(details, home);
+      observer.didReplace(
         newRoute: _page('Background', current: false),
-        oldRoute: _page('Home'),
+        oldRoute: home,
       );
       await _settle();
 
-      expect(spy.names, isEmpty);
+      expect(spy.names, ['Home', 'Details']);
     });
 
     test('tracks the revealed route on pop', () async {
-      SplunkNavigatorObserver().didPop(_page('Details'), _page('Home'));
+      final home = _page('Home');
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(details, home);
+      observer.didPop(details, home);
       await _settle();
 
-      expect(spy.names, ['Home']);
+      expect(spy.names, ['Home', 'Details', 'Home']);
     });
 
     test('tracks the revealed route when the top route is removed', () async {
-      // Navigator.removeRoute on the visible top reveals the route below, which
-      // reports itself as current.
-      SplunkNavigatorObserver().didRemove(_page('Details'), _page('Home'));
+      // Navigator.removeRoute on the visible top reveals the route below.
+      final home = _page('Home');
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(details, home);
+      observer.didRemove(details, home);
       await _settle();
 
-      expect(spy.names, ['Home']);
+      expect(spy.names, ['Home', 'Details', 'Home']);
     });
 
     test('ignores removal of a route below the current route', () async {
-      // Navigator.removeRouteBelow removes a hidden route; the visible top does
-      // not change, so previousRoute is not current.
-      SplunkNavigatorObserver().didRemove(
-        _page('Background'),
-        _page('Deeper', current: false),
-      );
+      // Removing a hidden route leaves the visible top unchanged.
+      final home = _page('Home');
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(details, home);
+      observer.didRemove(home, null);
       await _settle();
 
-      expect(spy.names, isEmpty);
+      expect(spy.names, ['Home', 'Details']);
     });
 
-    test('ignores removal with no revealed route', () async {
-      SplunkNavigatorObserver().didRemove(_page('Details'), null);
+    test('emits nothing when the last route is removed', () async {
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(details, null);
+      observer.didRemove(details, null);
       await _settle();
 
-      expect(spy.names, isEmpty);
+      expect(spy.names, ['Details']);
+    });
+
+    test('restores the nearest tracked screen when a skipped route '
+        'resurfaces on pop', () async {
+      // A tracked page pushed above a skipped (unnamed) route, then popped,
+      // must reveal the nearest tracked screen below - not stay on the page
+      // that was just removed.
+      final home = _page('Home');
+      final skipped = _page(null);
+      final details = _page('Details');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(skipped, home);
+      observer.didPush(details, skipped);
+      observer.didPop(details, skipped);
+      await _settle();
+
+      expect(spy.names, ['Home', 'Details', 'Home']);
+    });
+
+    test('keeps the tracked screen when a popup above it is popped', () async {
+      final home = _page('Home');
+      final dialog = _FakePopupRoute(name: 'Dialog');
+      final observer = SplunkNavigatorObserver();
+      observer.didPush(home, null);
+      observer.didPush(dialog, home);
+      observer.didPop(dialog, home);
+      await _settle();
+
+      expect(spy.names, ['Home']);
     });
 
     test('skips the initial route when trackInitialRoute is false', () async {
@@ -315,32 +364,36 @@ void main() {
       expect(spy.names, isEmpty);
     });
 
-    test('a throwing attributesFromRoute does not suppress later events '
-        'for the same screen', () async {
-      // Regression: the dedupe marker must only advance once we are about to
-      // emit. If attributesFromRoute throws, a subsequent navigation to the
-      // same screen name should still be reported after the extractor recovers.
-      var shouldThrow = true;
-      final observer = SplunkNavigatorObserver(
-        attributesFromRoute: (route) {
-          if (shouldThrow) {
-            shouldThrow = false;
-            throw StateError('attributes boom');
-          }
+    test(
+      'a throwing attributesFromRoute does not suppress later navigation',
+      () async {
+        // Regression: the dedupe marker (_emittedName) must only advance once we
+        // are about to emit. If attributesFromRoute throws for one screen,
+        // navigating onward must still report the next screen.
+        var shouldThrow = true;
+        final home = _page('Home');
+        final details = _page('Details');
+        final observer = SplunkNavigatorObserver(
+          attributesFromRoute: (route) {
+            if (shouldThrow) {
+              shouldThrow = false;
+              throw StateError('attributes boom');
+            }
 
-          return null;
-        },
-      );
+            return null;
+          },
+        );
 
-      observer.didPush(_page('Home'), null);
-      await _settle();
-      expect(spy.names, isEmpty);
+        observer.didPush(home, null);
+        await _settle();
+        expect(spy.names, isEmpty);
 
-      observer.didPush(_page('Home'), _page('Home'));
-      await _settle();
+        observer.didPush(details, home);
+        await _settle();
 
-      expect(spy.names, ['Home']);
-    });
+        expect(spy.names, ['Details']);
+      },
+    );
 
     test('strips reserved keys before bridging', () async {
       SplunkNavigatorObserver(

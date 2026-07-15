@@ -113,106 +113,174 @@ class SplunkNavigatorObserver extends NavigatorObserver {
   /// Whether to report popup routes (dialogs, modal bottom sheets, menus).
   final bool trackPopupRoutes;
 
-  String? _lastScreenName;
+  /// Tracked routes currently live in the observed navigator, in stack order.
+  ///
+  /// Only routes that resolve to a trackable screen name are recorded, so the
+  /// top entry is always the screen that should be reported. Skipped routes
+  /// (unnamed, popup, or [shouldTrackView]-filtered) are transparent: popping
+  /// back past one reveals the nearest tracked screen below it, rather than
+  /// leaving `screen.name` stuck on the route that was just removed.
+  final List<_TrackedRoute> _trackedStack = <_TrackedRoute>[];
+
+  /// The most recently emitted screen name. Deduplicates repeat reports of the
+  /// same screen; advanced only when an emission is actually dispatched.
+  String? _emittedName;
+
   bool _initialRouteSeen = false;
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
 
-    if (!_initialRouteSeen) {
+    _guard(() {
+      final suppressInitial = !_initialRouteSeen && !trackInitialRoute;
       _initialRouteSeen = true;
-      if (!trackInitialRoute) {
-        // Record the name so a later return to it can still be deduplicated,
-        // but do not emit for the initial route. Guard the predicate call so a
-        // throwing viewNamePredicate can never propagate into navigation.
-        try {
-          _lastScreenName = _resolveName(route) ?? _lastScreenName;
-        } catch (error) {
-          _logError(error);
+
+      _pushIfTracked(route);
+
+      if (suppressInitial) {
+        // Adopt the initial screen as already-reported so a later return to it
+        // is still deduplicated, but do not emit for the initial route.
+        final top = _currentTracked;
+        if (top != null) {
+          _emittedName = top.name;
         }
 
         return;
       }
-    }
 
-    _handle(route);
+      _emitCurrent();
+    });
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
 
-    _initialRouteSeen = true;
-
-    // Navigator.replace / replaceRouteBelow also fire when a route *below* the
-    // visible top is replaced. Only report the replacement when the new route
-    // is the one actually on screen, so screen.name never switches to a hidden
-    // route.
-    if (newRoute == null || !newRoute.isCurrent) {
-      return;
-    }
-
-    _handle(newRoute);
+    _guard(() {
+      _initialRouteSeen = true;
+      _replaceTracked(oldRoute: oldRoute, newRoute: newRoute);
+      _emitCurrent();
+    });
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
 
-    // Popping reveals the route underneath, which becomes the active screen.
-    _handle(previousRoute);
+    // Popping removes the top route; the nearest tracked route still on the
+    // stack becomes the active screen (skipped routes are transparent).
+    _guard(() {
+      _removeTracked(route);
+      _emitCurrent();
+    });
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didRemove(route, previousRoute);
 
-    // Navigator.removeRoute / removeRouteBelow can target a route *below* the
-    // visible top, which must not change screen.name. Only report when the
-    // removal reveals a new visible top, i.e. previousRoute becomes current.
-    if (previousRoute == null || !previousRoute.isCurrent) {
+    // Navigator.removeRoute / removeRouteBelow can target any route in the
+    // stack. Dropping its tracked entry keeps the stack accurate; screen.name
+    // changes only when the removed route was the current top.
+    _guard(() {
+      _removeTracked(route);
+      _emitCurrent();
+    });
+  }
+
+  _TrackedRoute? get _currentTracked =>
+      _trackedStack.isEmpty ? null : _trackedStack.last;
+
+  /// Records [route] as the new tracked top when it resolves to a screen name.
+  void _pushIfTracked(Route<dynamic> route) {
+    final name = _trackableName(route);
+    if (name == null) {
       return;
     }
 
-    _handle(previousRoute);
+    _trackedStack.add(_TrackedRoute(route, name));
   }
 
-  void _handle(Route<dynamic>? route) {
-    // Navigation callbacks must never throw or surface unhandled async errors.
-    // Any failure here - including user-supplied predicate callbacks and the
-    // bridged track call - is swallowed and only logged when the SDK has debug
-    // logging enabled.
-    try {
-      if (route == null) {
-        return;
-      }
+  /// Reflects a `replace` in the tracked stack, preserving stack order so a
+  /// replacement below the visible top does not disturb the current screen.
+  void _replaceTracked({
+    required Route<dynamic>? oldRoute,
+    required Route<dynamic>? newRoute,
+  }) {
+    final index = oldRoute == null
+        ? -1
+        : _trackedStack.indexWhere((entry) => identical(entry.route, oldRoute));
 
-      if (!trackPopupRoutes && route is PopupRoute) {
-        return;
-      }
+    final name = newRoute == null ? null : _trackableName(newRoute);
 
-      if (shouldTrackView != null && !shouldTrackView!(route)) {
-        return;
-      }
-
-      final name = _resolveName(route);
+    if (index >= 0) {
       if (name == null) {
-        return;
+        _trackedStack.removeAt(index);
+      } else {
+        _trackedStack[index] = _TrackedRoute(newRoute!, name);
       }
 
-      if (name == _lastScreenName) {
-        return;
-      }
+      return;
+    }
 
-      // Extract attributes before advancing _lastScreenName so a throwing
-      // attributesFromRoute does not suppress a later navigation to the same
-      // screen name (the dedupe marker only moves once we are about to emit).
-      final attributes = attributesFromRoute?.call(route);
+    // The replaced route was not tracked. Only record the new route when it is
+    // the one now on screen, mirroring how a fresh push is handled.
+    if (name != null && (newRoute?.isCurrent ?? false)) {
+      _trackedStack.add(_TrackedRoute(newRoute!, name));
+    }
+  }
 
-      _lastScreenName = name;
+  void _removeTracked(Route<dynamic>? route) {
+    if (route == null) {
+      return;
+    }
 
-      unawaited(_track(name, attributes));
+    _trackedStack.removeWhere((entry) => identical(entry.route, route));
+  }
+
+  /// Emits a navigation signal when the current tracked screen differs from the
+  /// last one reported.
+  void _emitCurrent() {
+    final top = _currentTracked;
+    final name = top?.name;
+
+    if (name == null || name == _emittedName) {
+      return;
+    }
+
+    // Extract attributes before advancing _emittedName so a throwing
+    // attributesFromRoute does not suppress a later navigation (the dedupe
+    // marker only moves once we are about to emit).
+    final attributes = attributesFromRoute?.call(top!.route);
+
+    _emittedName = name;
+
+    unawaited(_track(name, attributes));
+  }
+
+  /// Resolves the trackable screen name for [route], or `null` when it should
+  /// be skipped (popup while disabled, filtered out, or no usable name).
+  String? _trackableName(Route<dynamic> route) {
+    if (!trackPopupRoutes && route is PopupRoute) {
+      return null;
+    }
+
+    if (shouldTrackView != null && !shouldTrackView!(route)) {
+      return null;
+    }
+
+    return _resolveName(route);
+  }
+
+  /// Runs [action], swallowing and logging any error so navigation handling
+  /// never throws or surfaces an unhandled async error into the host app.
+  ///
+  /// This covers user-supplied predicate callbacks and the bridged track call;
+  /// failures are only logged when the SDK has debug logging enabled.
+  void _guard(void Function() action) {
+    try {
+      action();
     } catch (error) {
       _logError(error);
     }
@@ -263,4 +331,13 @@ class SplunkNavigatorObserver extends NavigatorObserver {
 
     return resolved;
   }
+}
+
+/// A route currently tracked on the observer's screen stack, paired with the
+/// screen name resolved for it.
+class _TrackedRoute {
+  _TrackedRoute(this.route, this.name);
+
+  final Route<dynamic> route;
+  final String name;
 }
