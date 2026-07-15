@@ -1,6 +1,7 @@
-## Unreleased
+## 1.1.0
 
-* Added automatic navigation instrumentation: a `SplunkNavigatorObserver` (with optional view-name, tracking-filter, and attribute predicates) that reports screen changes from Navigator 1.0/2.0, `go_router`, and `auto_route`, plus an optional `attributes` argument on `Navigation.track`. Requires the native Splunk RUM SDKs at 2.3.1.
+* Added automatic navigation instrumentation: a `SplunkNavigatorObserver` (with optional view-name, tracking-filter, and attribute predicates) that reports screen changes from Navigator 1.0/2.0, `go_router`, and `auto_route`, plus an optional `attributes` argument on `Navigation.track`.
+* Bumped the native Android Splunk RUM SDK to 2.3.2 (the iOS native SDK remains pinned at 2.3.1).
 
 ## 1.0.3
 
