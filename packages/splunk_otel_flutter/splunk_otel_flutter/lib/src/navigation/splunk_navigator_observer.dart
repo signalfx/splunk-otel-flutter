@@ -204,9 +204,13 @@ class SplunkNavigatorObserver extends NavigatorObserver {
       if (name == _lastScreenName) {
         return;
       }
-      _lastScreenName = name;
 
+      // Extract attributes before advancing _lastScreenName so a throwing
+      // attributesFromRoute does not suppress a later navigation to the same
+      // screen name (the dedupe marker only moves once we are about to emit).
       final attributes = attributesFromRoute?.call(route);
+
+      _lastScreenName = name;
 
       unawaited(_track(name, attributes));
     } catch (error) {

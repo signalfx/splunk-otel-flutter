@@ -20,7 +20,11 @@ dependencies:
   device_info_plus: ^11.0.0
   webview_flutter: ^4.10.0
   url_launcher: ^6.3.1
-  go_router: ^17.3.0
+  # Pinned to 17.0.0: it is the newest go_router that still supports the repo's
+  # lower bound (Dart 3.8 / Flutter 3.32). 17.0.1+ require Dart >=3.9 and 17.3.0
+  # requires Flutter 3.38, which would break `melos bootstrap` for contributors
+  # on the declared minimum SDK. The caret still lets newer SDKs resolve 17.3.0.
+  go_router: ^17.0.0
   auto_route: ^11.1.0
 
 dev_dependencies:

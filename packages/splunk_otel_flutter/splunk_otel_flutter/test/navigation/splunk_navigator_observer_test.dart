@@ -315,6 +315,33 @@ void main() {
       expect(spy.names, isEmpty);
     });
 
+    test('a throwing attributesFromRoute does not suppress later events '
+        'for the same screen', () async {
+      // Regression: the dedupe marker must only advance once we are about to
+      // emit. If attributesFromRoute throws, a subsequent navigation to the
+      // same screen name should still be reported after the extractor recovers.
+      var shouldThrow = true;
+      final observer = SplunkNavigatorObserver(
+        attributesFromRoute: (route) {
+          if (shouldThrow) {
+            shouldThrow = false;
+            throw StateError('attributes boom');
+          }
+
+          return null;
+        },
+      );
+
+      observer.didPush(_page('Home'), null);
+      await _settle();
+      expect(spy.names, isEmpty);
+
+      observer.didPush(_page('Home'), _page('Home'));
+      await _settle();
+
+      expect(spy.names, ['Home']);
+    });
+
     test('strips reserved keys before bridging', () async {
       SplunkNavigatorObserver(
         attributesFromRoute: (route) => MutableAttributes(

@@ -527,7 +527,10 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         for (key, wrapped) in attributes.attributes {
             switch wrapped {
             case let v as GeneratedMutableAttributeInt:
-                result[key] = v.value
+                // Pigeon delivers ints as Int64; convert to Int so the native
+                // navigation converter keeps the numeric type instead of
+                // falling back to a string (matches the global-attributes path).
+                result[key] = Int(v.value)
 
             case let v as GeneratedMutableAttributeDouble:
                 result[key] = v.value
@@ -539,7 +542,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                 result[key] = v.value
 
             case let v as GeneratedMutableAttributeListInt:
-                result[key] = v.value
+                result[key] = v.value.map { Int($0) }
 
             case let v as GeneratedMutableAttributeListDouble:
                 result[key] = v.value
