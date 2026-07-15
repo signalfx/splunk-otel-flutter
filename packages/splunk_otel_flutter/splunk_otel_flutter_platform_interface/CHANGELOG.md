@@ -1,4 +1,4 @@
-## Unreleased
+## 1.1.0
 
 * Extended the `navigationTrack` Pigeon message and platform interface with an optional `attributes` argument to support automatic navigation instrumentation.
 

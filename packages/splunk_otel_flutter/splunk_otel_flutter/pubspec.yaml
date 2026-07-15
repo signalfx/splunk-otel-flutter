@@ -13,7 +13,10 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  splunk_otel_flutter_platform_interface: ^1.0.0
+  # Floor raised to 1.1.0: this package calls navigationTrack(attributes:),
+  # which was introduced in platform-interface 1.1.0. Allowing older 1.0.x
+  # would compile against the {required String screenName}-only API and fail.
+  splunk_otel_flutter_platform_interface: ^1.1.0
 
 dev_dependencies:
   flutter_test:
