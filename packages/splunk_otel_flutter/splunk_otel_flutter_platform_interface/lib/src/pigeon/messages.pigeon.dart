@@ -2493,7 +2493,10 @@ class SplunkOtelFlutterHostApi {
     }
   }
 
-  Future<void> navigationTrack({required String screenName}) async {
+  Future<void> navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  }) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
@@ -2503,7 +2506,7 @@ class SplunkOtelFlutterHostApi {
           binaryMessenger: pigeonVar_binaryMessenger,
         );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
-      <Object?>[screenName],
+      <Object?>[screenName, attributes],
     );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;

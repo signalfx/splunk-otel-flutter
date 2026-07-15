@@ -362,7 +362,10 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> customTrackingEndWorkflow({required int handle});
 
-  Future<void> navigationTrack({required String screenName});
+  Future<void> navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  });
 
   static void setUp(
     TestSplunkOtelFlutterHostApi? api, {
@@ -1711,8 +1714,13 @@ abstract class TestSplunkOtelFlutterHostApi {
                 arg_screenName != null,
                 'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null, expected non-null String.',
               );
+              final GeneratedMutableAttributes? arg_attributes =
+                  (args[1] as GeneratedMutableAttributes?);
               try {
-                await api.navigationTrack(screenName: arg_screenName!);
+                await api.navigationTrack(
+                  screenName: arg_screenName!,
+                  attributes: arg_attributes,
+                );
                 return wrapResponse(empty: true);
               } on PlatformException catch (e) {
                 return wrapResponse(error: e);

@@ -55,9 +55,12 @@ void main() async {
       ),
     ),
     moduleConfigurations: [
+      // Keep native automatic tracking OFF and let the Dart-side
+      // SplunkNavigatorObserver report Flutter routes instead (native auto
+      // only sees the host FlutterActivity / FlutterViewController).
       NavigationModuleConfiguration(
         isEnabled: true,
-        isAutomatedTrackingEnabled: true,
+        isAutomatedTrackingEnabled: false,
       ),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
@@ -264,6 +267,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       theme: theme,
+      navigatorObservers: [SplunkNavigatorObserver()],
       home: Scaffold(
         appBar: AppBar(title: const Text('Splunk OTel SDK Test App')),
         body: TestActionsWidget(actions: _actions),
@@ -291,13 +295,17 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> openWebView(BuildContext context) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (context) => const WebViewScreen()),
+      MaterialPageRoute<void>(
+        settings: const RouteSettings(name: 'WebView'),
+        builder: (context) => const WebViewScreen(),
+      ),
     );
   }
 
   Future<void> openBrowserOptions(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
+        settings: const RouteSettings(name: 'BrowserOptions'),
         builder: (context) => const BrowserLauncherScreen(),
       ),
     );

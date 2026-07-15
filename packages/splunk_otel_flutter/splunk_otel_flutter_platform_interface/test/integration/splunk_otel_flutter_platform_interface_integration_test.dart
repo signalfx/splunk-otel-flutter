@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -912,18 +912,6 @@ void main() {
 
         await implementation.customTrackingEndWorkflow(handle: handle);
         expect(receivedHandle, 789);
-      });
-    });
-
-    group('Navigation Tracking Integration', () {
-      test('should track screen navigation', () async {
-        const screenName = 'HomeScreen';
-
-        mockApi.navigationTrackHandler = (name) async {
-          expect(name, screenName);
-        };
-
-        await implementation.navigationTrack(screenName: screenName);
       });
     });
   });

@@ -191,7 +191,10 @@ abstract class SplunkOtelFlutterHostApi {
   // Navigation
 
   @async
-  void navigationTrack({required String screenName});
+  void navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  });
 }
 
 // Configurations

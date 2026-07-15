@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,8 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi
   Future<int> Function(String)? customTrackingStartWorkflowHandler;
   Future<void> Function(int)? customTrackingEndWorkflowHandler;
 
-  Future<void> Function(String)? navigationTrackHandler;
+  Future<void> Function(String, GeneratedMutableAttributes?)?
+  navigationTrackHandler;
 
   @override
   Future<void> install({
@@ -431,9 +432,12 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi
   }
 
   @override
-  Future<void> navigationTrack({required String screenName}) async {
+  Future<void> navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  }) async {
     if (navigationTrackHandler != null) {
-      return navigationTrackHandler!(screenName);
+      return navigationTrackHandler!(screenName, attributes);
     }
   }
 
