@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Sync version bump to align with the `splunk_otel_flutter` 1.1.0 release.
+
 ## 1.0.3
 
 * Sync version bump to align with `splunk_otel_flutter` 1.0.3.
