@@ -13,8 +13,10 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  splunk_otel_flutter_platform_interface: ^1.0.0
-  splunk_otel_flutter_session_replay_platform_interface: ^1.0.0
+  # Locked to the 1.1.x line: the Pigeon codec is a wire contract, so these
+  # packages must move in lockstep. Bump all bounds together every release.
+  splunk_otel_flutter_platform_interface: '>=1.1.0 <1.2.0'
+  splunk_otel_flutter_session_replay_platform_interface: '>=1.1.0 <1.2.0'
 
 dev_dependencies:
   flutter_test:

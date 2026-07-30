@@ -511,7 +511,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         // attributes. The remaining fields are carried as span attributes:
         //   - source  -> "error.source"
         //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
-        // The timestamp is not forwarded; the native SDK stamps the span itself.
+        // The timestamp is not forwarded. The native SDK stamps the span itself.
         var attributes = error.attributes.map { navigationAttributes(from: $0) } ?? [:]
         attributes["error.source"] = error.source
         attributes["exception.escaped"] = !error.handled

@@ -1,6 +1,7 @@
 ## Unreleased
 
-* Sync version bump to align with `splunk_otel_flutter`, which adds the manual `customTracking.trackError()` API. Native Splunk RUM SDK pins stay aligned with `splunk_otel_flutter` (Android 2.3.2; iOS pin to be bumped alongside `splunk_otel_flutter` when the release exposing the explicit-stacktrace `trackError` API is published).
+* Sync version bump to align with `splunk_otel_flutter`, which adds the manual `customTracking.trackError()` API. Native Splunk RUM SDK pins stay aligned with `splunk_otel_flutter` (Android 2.3.2, iOS pin to be bumped alongside `splunk_otel_flutter` when the release exposing the explicit-stacktrace `trackError` API is published).
+* Pinned the platform-interface dependencies to the matching minor line (`>=1.1.0 <1.2.0`) so the shared Pigeon codec stays version-aligned across packages.
 
 ## 1.1.0
 

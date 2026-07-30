@@ -539,7 +539,7 @@ class SplunkOtelFlutterPlugin :
         // attributes. The remaining fields are carried as span attributes:
         //   - source  -> "error.source"
         //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
-        // The timestamp is not forwarded; the native SDK stamps the span itself.
+        // The timestamp is not forwarded. The native SDK stamps the span itself.
         val builder = error.attributes?.toOtelAttributes()?.toBuilder()
             ?: Attributes.builder()
         builder.put(AttributeKey.stringKey("error.source"), error.source)

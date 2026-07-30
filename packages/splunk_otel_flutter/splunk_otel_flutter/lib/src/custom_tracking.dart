@@ -20,7 +20,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 /// The origin of a manually reported error.
 ///
 /// The value is recorded verbatim as the `error.source` attribute on the span.
-/// [ErrorSource.custom] is the expected value for manual reporting; the other
+/// [ErrorSource.custom] is the expected value for manual reporting. The other
 /// values denote automatic capture sources that are not yet wired up.
 enum ErrorSource {
   /// An error reported explicitly by the application (the default).
@@ -153,8 +153,8 @@ class CustomTracking {
   /// site.
   /// [attributes] - Optional attributes to attach to the error span.
   /// [source] - The origin of the error. Defaults to [ErrorSource.custom].
-  /// [handled] - Whether the error was handled (non-fatal). Defaults to `true`;
-  /// reported as `exception.escaped` (the inverse) on the span.
+  /// [handled] - Whether the error was handled (non-fatal). Defaults to `true`.
+  /// Reported as `exception.escaped` (the inverse) on the span.
   ///
   /// This method never throws and always completes: if reporting itself fails
   /// (for example, the bridge is unavailable), the failure is logged and
