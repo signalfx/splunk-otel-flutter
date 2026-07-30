@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,27 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platform_interface.dart';
+
+/// The origin of a manually reported error.
+///
+/// The value is recorded verbatim as the `error.source` attribute on the span.
+/// [ErrorSource.custom] is the expected value for manual reporting; the other
+/// values denote automatic capture sources that are not yet wired up.
+enum ErrorSource {
+  /// An error reported explicitly by the application (the default).
+  custom,
+
+  /// An error captured from a source-level handler.
+  source,
+
+  /// An error captured from console output.
+  console,
+
+  /// An error captured from network instrumentation.
+  network,
+}
 
 /// Handle to an active workflow span.
 ///
@@ -116,5 +136,59 @@ class CustomTracking {
       workflowName: name,
     );
     return WorkflowHandle._(handle, _delegate);
+  }
+
+  /// Reports a caught error or exception as a RUM error span.
+  ///
+  /// Captures the error at the call site and emits it natively as a
+  /// `component=error` span with the supplied stacktrace preserved verbatim as
+  /// `exception.stacktrace`. This is intended for handled errors, e.g. inside a
+  /// `catch` block.
+  ///
+  /// [error] - The caught error. Any Dart object (including a `String`) is
+  /// accepted. `exception.type` is derived from the runtime type (or `String`)
+  /// and `exception.message` from `toString()`.
+  /// [stackTrace] - The stacktrace to report. Defaults to [StackTrace.current].
+  /// Pass the stacktrace from `catch (e, st)` to preserve the original throw
+  /// site.
+  /// [attributes] - Optional attributes to attach to the error span.
+  /// [source] - The origin of the error. Defaults to [ErrorSource.custom].
+  /// [handled] - Whether the error was handled (non-fatal). Defaults to `true`;
+  /// reported as `exception.escaped` (the inverse) on the span.
+  ///
+  /// This method never throws and always completes: if reporting itself fails
+  /// (for example, the bridge is unavailable), the failure is logged and
+  /// swallowed so it stays `await`-safe inside error handlers.
+  ///
+  /// Example:
+  /// ```dart
+  /// try {
+  ///   await riskyOperation();
+  /// } catch (e, st) {
+  ///   await SplunkRum.instance.customTracking.trackError(e, stackTrace: st);
+  /// }
+  /// ```
+  Future<void> trackError(
+    Object error, {
+    StackTrace? stackTrace,
+    MutableAttributes attributes = const MutableAttributes(),
+    ErrorSource source = ErrorSource.custom,
+    bool handled = true,
+  }) async {
+    try {
+      final type = error is String ? 'String' : error.runtimeType.toString();
+      final resolvedStackTrace = (stackTrace ?? StackTrace.current).toString();
+
+      await _delegate.customTrackingTrackError(
+        type: type,
+        message: error.toString(),
+        stacktrace: resolvedStackTrace,
+        attributes: attributes,
+        source: source.name,
+        handled: handled,
+      );
+    } catch (e) {
+      debugPrint('SplunkRum: trackError reporting failed ($e).');
+    }
   }
 }

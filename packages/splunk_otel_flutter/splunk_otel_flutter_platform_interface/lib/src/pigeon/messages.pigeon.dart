@@ -942,6 +942,65 @@ class GeneratedRect {
   int get hashCode => Object.hashAll(_toList());
 }
 
+class GeneratedError {
+  GeneratedError({
+    required this.type,
+    required this.message,
+    this.stacktrace,
+    this.attributes,
+    required this.source,
+    required this.handled,
+  });
+
+  String type;
+
+  String message;
+
+  String? stacktrace;
+
+  GeneratedMutableAttributes? attributes;
+
+  String source;
+
+  bool handled;
+
+  List<Object?> _toList() {
+    return <Object?>[type, message, stacktrace, attributes, source, handled];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static GeneratedError decode(Object result) {
+    result as List<Object?>;
+    return GeneratedError(
+      type: result[0]! as String,
+      message: result[1]! as String,
+      stacktrace: result[2] as String?,
+      attributes: result[3] as GeneratedMutableAttributes?,
+      source: result[4]! as String,
+      handled: result[5]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GeneratedError || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList());
+}
+
 class GeneratedMutableAttributes {
   GeneratedMutableAttributes({required this.attributes});
 
@@ -1356,32 +1415,35 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is GeneratedRect) {
       buffer.putUint8(152);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributes) {
+    } else if (value is GeneratedError) {
       buffer.putUint8(153);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeInt) {
+    } else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(154);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeDouble) {
+    } else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(155);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeString) {
+    } else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(156);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeBool) {
+    } else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(157);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListInt) {
+    } else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(158);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListDouble) {
+    } else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(159);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListString) {
+    } else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(160);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListBool) {
+    } else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(161);
+      writeValue(buffer, value.encode());
+    } else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(162);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1465,22 +1527,24 @@ class _PigeonCodec extends StandardMessageCodec {
       case 152:
         return GeneratedRect.decode(readValue(buffer)!);
       case 153:
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedError.decode(readValue(buffer)!);
       case 154:
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
       case 155:
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
       case 156:
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
       case 157:
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
       case 158:
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
       case 159:
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
       case 160:
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
       case 161:
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 162:
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -2477,6 +2541,33 @@ class SplunkOtelFlutterHostApi {
         );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
       <Object?>[handle],
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> customTrackingTrackError({required GeneratedError error}) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[error],
     );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;

@@ -505,7 +505,27 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         
         completion(.success(()))
     }
-    
+
+    func customTrackingTrackError(error: GeneratedError, completion: @escaping (Result<Void, any Error>) -> Void) {
+        // The native trackError API accepts only type, message, stacktrace, and
+        // attributes. The remaining fields are carried as span attributes:
+        //   - source  -> "error.source"
+        //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
+        // The timestamp is not forwarded; the native SDK stamps the span itself.
+        var attributes = error.attributes.map { navigationAttributes(from: $0) } ?? [:]
+        attributes["error.source"] = error.source
+        attributes["exception.escaped"] = !error.handled
+
+        SplunkRum.shared.customTracking.trackError(
+            typeName: error.type,
+            message: error.message,
+            stacktrace: error.stacktrace,
+            attributes: attributes
+        )
+
+        completion(.success(()))
+    }
+
     // MARK: - Navigation
 
     func navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, any Error>) -> Void) {

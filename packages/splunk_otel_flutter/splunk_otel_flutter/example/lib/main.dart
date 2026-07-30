@@ -205,11 +205,32 @@ class _MyAppState extends State<MyApp> {
       onTap: customTrackingTrackWorkflow,
     ),
     TestAction(
-      title: 'Track error',
-      description: 'track error',
+      title: 'Track caught error',
+      description: 'Handled StateError with original stacktrace + attributes',
       category: TestCategory.customTracking,
       platforms: {MobilePlatform.android, MobilePlatform.ios},
-      onTap: customTrackingTrackError,
+      onTap: trackCaughtError,
+    ),
+    TestAction(
+      title: 'Track unhandled error',
+      description: 'Reports handled: false (exception.escaped = true)',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackUnhandledError,
+    ),
+    TestAction(
+      title: 'Track string error',
+      description: 'Plain string error (stacktrace falls back to current)',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackStringError,
+    ),
+    TestAction(
+      title: 'Track error with attributes',
+      description: 'Custom error enriched with attributes',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackErrorWithAttributes,
     ),
     TestAction(
       title: 'Simulate Slow Render',
@@ -365,8 +386,64 @@ class _MyAppState extends State<MyApp> {
     await workflow.end();
   }
 
-  Future<void> customTrackingTrackError() async {
-    throw "TODO";
+  /// Reports a caught error, preserving the original stacktrace from
+  /// `catch (e, st)` and attaching contextual attributes. Handled by default.
+  Future<void> trackCaughtError() async {
+    try {
+      throw StateError('Example caught error');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        attributes: MutableAttributes(
+          attributes: {
+            "screen.name": MutableAttributeString(value: "ExampleScreen"),
+          },
+        ),
+      );
+    }
+  }
+
+  /// Reports an unhandled (fatal) error via `handled: false`, which is emitted
+  /// as `exception.escaped = true`.
+  Future<void> trackUnhandledError() async {
+    try {
+      throw Exception('Example unhandled error');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        handled: false,
+      );
+    }
+  }
+
+  /// Reports a plain string error. With no [stackTrace] provided, the SDK falls
+  /// back to `StackTrace.current`.
+  Future<void> trackStringError() async {
+    await SplunkRum.instance.customTracking.trackError(
+      "Example string error report",
+    );
+  }
+
+  /// Reports a custom error enriched with several attributes.
+  Future<void> trackErrorWithAttributes() async {
+    try {
+      throw const FormatException('Example error with attributes');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        attributes: MutableAttributes(
+          attributes: {
+            "screen.name": MutableAttributeString(value: "CheckoutScreen"),
+            "cart.item_count": MutableAttributeInt(value: 3),
+            "cart.total": MutableAttributeDouble(value: 42.5),
+            "user.is_premium": MutableAttributeBool(value: true),
+          },
+        ),
+      );
+    }
   }
 
   Future<void> simulateFrozenRender() async {

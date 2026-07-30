@@ -141,6 +141,14 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   });
   Future<int> customTrackingStartWorkflow({required String workflowName});
   Future<void> customTrackingEndWorkflow({required int handle});
+  Future<void> customTrackingTrackError({
+    required String type,
+    required String message,
+    String? stacktrace,
+    required MutableAttributes attributes,
+    required String source,
+    required bool handled,
+  });
 
   // Navigation
 

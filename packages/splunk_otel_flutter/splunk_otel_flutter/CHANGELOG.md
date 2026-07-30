@@ -1,3 +1,7 @@
+## Unreleased
+
+* Added a manual `customTracking.trackError()` API for reporting caught Dart errors as `component=error` RUM spans, with the supplied stacktrace preserved verbatim as `exception.stacktrace`. Includes a new `ErrorSource` enum, optional attributes, and a `handled` flag (reported as `exception.escaped`). The call never throws and always completes. Android is supported via the native SDK 2.3.2; iOS support activates once the native iOS SDK release exposing the explicit-stacktrace `trackError` API is published and pinned.
+
 ## 1.1.0
 
 * Added automatic navigation instrumentation: a `SplunkNavigatorObserver` (with optional view-name, tracking-filter, and attribute predicates) that reports screen changes from Navigator 1.0/2.0, `go_router`, and `auto_route`, plus an optional `attributes` argument on `Navigation.track`.

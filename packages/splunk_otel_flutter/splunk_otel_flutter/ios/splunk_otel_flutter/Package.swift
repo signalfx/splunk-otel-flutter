@@ -30,6 +30,14 @@ let package = Package(
         )
     ],
     dependencies: [
+        // TODO(iOS): bump to the splunk-otel-ios release that ships the explicit
+        // `trackError(typeName:message:stacktrace:attributes:)` API. That API is
+        // still unreleased upstream, so we stay on the last published pin and the
+        // native trackError bridge is only exercised on Android for now.
+        // For local verification, point this at a checkout of the SDK instead
+        // (absolute path required, because Flutter consumes this plugin via a
+        // symlink under ios/Flutter/ephemeral/Packages/.packages):
+        //   .package(path: "/absolute/path/to/splunk-otel-ios")
         .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.3.1")
     ],
     targets: [

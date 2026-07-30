@@ -462,6 +462,27 @@ class SplunkOtelFlutterPlatformImplementation
     await _api.customTrackingEndWorkflow(handle: handle);
   }
 
+  @override
+  Future<void> customTrackingTrackError({
+    required String type,
+    required String message,
+    String? stacktrace,
+    required MutableAttributes attributes,
+    required String source,
+    required bool handled,
+  }) async {
+    await _api.customTrackingTrackError(
+      error: GeneratedError(
+        type: type,
+        message: message,
+        stacktrace: stacktrace,
+        attributes: attributes.toGeneratedMutableAttributes(),
+        source: source,
+        handled: handled,
+      ),
+    );
+  }
+
   // Navigation
 
   @override

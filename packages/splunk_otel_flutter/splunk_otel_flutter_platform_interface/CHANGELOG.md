@@ -1,3 +1,7 @@
+## Unreleased
+
+* Added the `GeneratedError` Pigeon data class and the `customTrackingTrackError` host API message, and extended the platform interface to bridge manual error reports to the native agents.
+
 ## 1.1.0
 
 * Extended the `navigationTrack` Pigeon message and platform interface with an optional `attributes` argument to support automatic navigation instrumentation.

@@ -1,3 +1,7 @@
+## Unreleased
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay`.
+
 ## 1.1.0
 
 * Sync version bump to align with `splunk_otel_flutter_session_replay` 1.1.0.

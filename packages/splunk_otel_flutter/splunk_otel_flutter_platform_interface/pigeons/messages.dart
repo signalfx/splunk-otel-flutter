@@ -188,6 +188,9 @@ abstract class SplunkOtelFlutterHostApi {
   @async
   void customTrackingEndWorkflow({required int handle});
 
+  @async
+  void customTrackingTrackError({required GeneratedError error});
+
   // Navigation
 
   @async
@@ -435,6 +438,26 @@ enum GeneratedStatus {
   sampledOut,
   unsupportedPlatform,
   unsupportedOsVersion,
+}
+
+// Custom tracking
+
+class GeneratedError {
+  final String type;
+  final String message;
+  final String? stacktrace;
+  final GeneratedMutableAttributes? attributes;
+  final String source;
+  final bool handled;
+
+  GeneratedError({
+    required this.type,
+    required this.message,
+    this.stacktrace,
+    this.attributes,
+    required this.source,
+    required this.handled,
+  });
 }
 
 // Global attributes
