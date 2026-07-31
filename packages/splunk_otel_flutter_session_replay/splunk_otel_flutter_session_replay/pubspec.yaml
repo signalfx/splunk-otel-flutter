@@ -13,6 +13,11 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
+  # Locked to the core plugin's 1.1.x line so session replay and
+  # splunk_otel_flutter always resolve to matching minor versions. They are
+  # released together and share the same Pigeon wire contract, so a consumer
+  # must never mix, for example, core 1.1.x with session replay 1.2.x.
+  splunk_otel_flutter: '>=1.1.0 <1.2.0'
   # Locked to the 1.1.x line: the Pigeon codec is a wire contract, so these
   # packages must move in lockstep. Bump all bounds together every release.
   splunk_otel_flutter_platform_interface: '>=1.1.0 <1.2.0'
