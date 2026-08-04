@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
@@ -12,6 +14,28 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
+  // Simulation hook for the iOS background-launch cold-start issue.
+  //
+  // The native SplunkAgent anchors a cold start at the real (BSD) process-start
+  // time and ends it when the SDK observes activation at install. On a real iOS
+  // background launch the process starts long before the SDK installs, so the
+  // whole gap is reported as cold-start latency (see Confluence: "iOS App Start
+  // Measurement for React Native Background Launches", section 3.2).
+  //
+  // The Simulator does not cold-launch a terminated app from a silent push, so we
+  // reproduce the SAME anchoring problem deterministically by delaying install():
+  // the process starts at T0 but the SDK only installs T0 + INSTALL_DELAY_SECONDS.
+  //   flutter run --dart-define=INSTALL_DELAY_SECONDS=25 ...
+  const int installDelaySeconds = int.fromEnvironment('INSTALL_DELAY_SECONDS');
+  if (installDelaySeconds > 0) {
+    debugPrint(
+      '[BG-LAUNCH-PROBE] Delaying SplunkRum.install() by '
+      '$installDelaySeconds s to simulate a late SDK init after an early '
+      'process start.',
+    );
+    await Future<void>.delayed(Duration(seconds: installDelaySeconds));
+  }
+
   // Install without endpoint configuration (deferred credentials).
   final stopwatch = Stopwatch()..start();
 
@@ -19,6 +43,10 @@ void main() async {
     agentConfiguration: AgentConfiguration(
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
+      // Surfaces the native SDK's AppStart span (start.type + duration) in the
+      // device logs, which is used to observe the background-launch cold-start
+      // simulation. See tool/simulate_background_launch.sh.
+      enableDebugLogging: true,
     ),
     moduleConfigurations: [
       SessionReplayModuleConfiguration(samplingRate: 1.0),
@@ -94,6 +122,22 @@ void main() async {
 
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');
+
+    // Persist the session id to the app's temporary directory so it can be
+    // retrieved from a real (wireless) device without attaching a VM Service /
+    // debugger. Directory.systemTemp maps to <container>/tmp on iOS. Pull it
+    // off the device with:
+    //   xcrun devicectl device copy from --device <udid> \
+    //     --domain-type appDataContainer \
+    //     --domain-identifier com.splunk.rum.flutter.root.exampleapp.rootExampleApp \
+    //     --source tmp/session_id.txt --destination /tmp/session_id.txt
+    try {
+      final file = File('${Directory.systemTemp.path}/session_id.txt');
+      await file.writeAsString('Session id: $sessionId\n');
+      debugPrint('Wrote session id to ${file.path}');
+    } catch (error) {
+      debugPrint('Failed to persist session id: $error');
+    }
   });
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {

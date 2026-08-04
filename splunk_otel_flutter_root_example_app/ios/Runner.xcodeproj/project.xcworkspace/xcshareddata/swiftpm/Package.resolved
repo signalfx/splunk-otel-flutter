@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/signalfx/splunk-otel-ios",
       "state" : {
-        "revision" : "4484bb60195ac7d64313b87dc15712c9fc1b432c",
-        "version" : "2.2.3"
+        "revision" : "1192d7f4b1a9a7ee9604aeca5ed00043a8b90029",
+        "version" : "2.3.1"
       }
     },
     {
