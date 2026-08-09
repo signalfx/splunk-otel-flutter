@@ -512,9 +512,12 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         //   - source  -> "error.source"
         //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
         // The timestamp is not forwarded. The native SDK stamps the span itself.
+        // "splunk.rum.platform" tags the error as originating from the Flutter
+        // layer so the backend can route symbolication and UI accordingly.
         var attributes = error.attributes.map { navigationAttributes(from: $0) } ?? [:]
         attributes["error.source"] = error.source
         attributes["exception.escaped"] = !error.handled
+        attributes["splunk.rum.platform"] = "flutter"
 
         SplunkRum.shared.customTracking.trackError(
             typeName: error.type,
