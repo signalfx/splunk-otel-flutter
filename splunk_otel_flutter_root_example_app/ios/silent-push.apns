@@ -1,0 +1,6 @@
+{
+  "Simulator Target Bundle": "com.splunk.rum.flutter.root.exampleapp.rootExampleApp",
+  "aps": {
+    "content-available": 1
+  }
+}

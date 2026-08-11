@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Splunk Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
@@ -12,6 +28,27 @@ void main() async {
   const String realm = String.fromEnvironment('REALM');
   const String rumAccessToken = String.fromEnvironment('RUM_ACCESS_TOKEN');
 
+  // Simulation hook for the iOS background-launch cold-start issue.
+  //
+  // The native SplunkAgent anchors a cold start at the real (BSD) process-start
+  // time and ends it when the SDK observes activation at install. On a real iOS
+  // background launch the process starts long before the SDK installs, so the
+  // whole gap is reported as cold-start latency (see Confluence: "iOS App Start
+  // Measurement for React Native Background Launches", section 3.2).
+  //
+  // The Simulator does not cold-launch a terminated app from a silent push, so we
+  // reproduce the SAME anchoring problem deterministically by delaying install():
+  // the process starts at T0 but the SDK only installs T0 + INSTALL_DELAY_SECONDS.
+  //   flutter run --dart-define=INSTALL_DELAY_SECONDS=25 ...
+  const int installDelaySeconds = int.fromEnvironment('INSTALL_DELAY_SECONDS');
+  if (installDelaySeconds > 0) {
+    debugPrint(
+      '[AppStart] Delaying SplunkRum.install() by $installDelaySeconds s to '
+      'simulate a late SDK init after an early process start.',
+    );
+    await Future<void>.delayed(Duration(seconds: installDelaySeconds));
+  }
+
   // Install without endpoint configuration (deferred credentials).
   final stopwatch = Stopwatch()..start();
 
@@ -19,6 +56,10 @@ void main() async {
     agentConfiguration: AgentConfiguration(
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
+      // Surfaces the native SDK's AppStart span (start.type + duration) in the
+      // device logs, which is used to observe the background-launch cold-start
+      // simulation. See tool/simulate_background_launch.sh.
+      enableDebugLogging: true,
     ),
     moduleConfigurations: [
       SessionReplayModuleConfiguration(samplingRate: 1.0),
