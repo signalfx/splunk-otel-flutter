@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:splunk_otel_flutter/splunk_otel_flutter.dart';
 import 'package:splunk_otel_flutter_root_example_app/screen/welcome_screen.dart';
@@ -29,9 +27,8 @@ void main() async {
   const int installDelaySeconds = int.fromEnvironment('INSTALL_DELAY_SECONDS');
   if (installDelaySeconds > 0) {
     debugPrint(
-      '[BG-LAUNCH-PROBE] Delaying SplunkRum.install() by '
-      '$installDelaySeconds s to simulate a late SDK init after an early '
-      'process start.',
+      '[AppStart] Delaying SplunkRum.install() by $installDelaySeconds s to '
+      'simulate a late SDK init after an early process start.',
     );
     await Future<void>.delayed(Duration(seconds: installDelaySeconds));
   }
@@ -122,22 +119,6 @@ void main() async {
 
     debugPrint('-------------');
     debugPrint('Session id: $sessionId');
-
-    // Persist the session id to the app's temporary directory so it can be
-    // retrieved from a real (wireless) device without attaching a VM Service /
-    // debugger. Directory.systemTemp maps to <container>/tmp on iOS. Pull it
-    // off the device with:
-    //   xcrun devicectl device copy from --device <udid> \
-    //     --domain-type appDataContainer \
-    //     --domain-identifier com.splunk.rum.flutter.root.exampleapp.rootExampleApp \
-    //     --source tmp/session_id.txt --destination /tmp/session_id.txt
-    try {
-      final file = File('${Directory.systemTemp.path}/session_id.txt');
-      await file.writeAsString('Session id: $sessionId\n');
-      debugPrint('Wrote session id to ${file.path}');
-    } catch (error) {
-      debugPrint('Failed to persist session id: $error');
-    }
   });
 
   Future<void>.delayed(const Duration(seconds: 1)).then((_) async {
