@@ -30,15 +30,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        // TODO(iOS): bump to the splunk-otel-ios release that ships the explicit
-        // `trackError(typeName:message:stacktrace:attributes:)` API. That API is
-        // still unreleased upstream, so we stay on the last published pin and the
-        // native trackError bridge is only exercised on Android for now.
-        // For local verification, point this at a checkout of the SDK instead
-        // (absolute path required, because Flutter consumes this plugin via a
-        // symlink under ios/Flutter/ephemeral/Packages/.packages):
+        // Pinned in lockstep with the session replay plugin, which shares the
+        // splunk-otel-ios package identity, so both must resolve the same version.
+        // For local verification against an unreleased SDK, point this at a
+        // checkout instead (absolute path required, because Flutter consumes the
+        // plugin via a symlink under ios/Flutter/ephemeral/Packages/.packages):
         //   .package(path: "/absolute/path/to/splunk-otel-ios")
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.3.1")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.1")
     ],
     targets: [
         .target(

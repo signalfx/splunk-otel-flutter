@@ -28,13 +28,12 @@ let package = Package(
         .library(name: "splunk-otel-flutter-session-replay", targets: ["splunk_otel_flutter_session_replay"])
     ],
     dependencies: [
-        // TODO(iOS): bump to the splunk-otel-ios release that ships the explicit
-        // `trackError` API, in lockstep with the main splunk_otel_flutter plugin.
-        // Both plugins share the `splunk-otel-ios` package identity, so they must
-        // always resolve the same source (mixing a local path with a remote URL
-        // causes an SPM conflict). For local verification use an absolute path:
+        // Pinned in lockstep with the main splunk_otel_flutter plugin. Both share
+        // the splunk-otel-ios package identity, so they must always resolve the
+        // same source and version (mixing a local path with a remote URL causes an
+        // SPM conflict). For local verification use an absolute path:
         //   .package(path: "/absolute/path/to/splunk-otel-ios")
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.3.1")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.1")
     ],
     targets: [
         .target(
