@@ -1003,6 +1003,53 @@ void main() {
         await implementation.customTrackingEndWorkflow(handle: 456);
         expect(receivedHandle, 456);
       });
+
+      test('should track error with all fields', () async {
+        GeneratedError? receivedError;
+        mockApi.customTrackingTrackErrorHandler = (error) async {
+          receivedError = error;
+        };
+
+        final attributes = MutableAttributes(
+          attributes: {'screen.name': MutableAttributeString(value: 'Cart')},
+        );
+
+        await implementation.customTrackingTrackError(
+          type: 'StateError',
+          message: 'Bad state',
+          stacktrace: 'stack-frame-1\nstack-frame-2',
+          attributes: attributes,
+          source: 'custom',
+          handled: true,
+        );
+
+        expect(receivedError?.type, 'StateError');
+        expect(receivedError?.message, 'Bad state');
+        expect(receivedError?.stacktrace, 'stack-frame-1\nstack-frame-2');
+        expect(receivedError?.source, 'custom');
+        expect(receivedError?.handled, true);
+        expect(receivedError?.attributes?.attributes.length, 1);
+      });
+
+      test('should track error with null stacktrace', () async {
+        GeneratedError? receivedError;
+        mockApi.customTrackingTrackErrorHandler = (error) async {
+          receivedError = error;
+        };
+
+        await implementation.customTrackingTrackError(
+          type: 'String',
+          message: 'plain message',
+          stacktrace: null,
+          attributes: const MutableAttributes(),
+          source: 'custom',
+          handled: false,
+        );
+
+        expect(receivedError?.type, 'String');
+        expect(receivedError?.stacktrace, isNull);
+        expect(receivedError?.handled, false);
+      });
     });
   });
 }

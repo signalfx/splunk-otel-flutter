@@ -14,7 +14,9 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.0
-  splunk_otel_flutter_platform_interface: ^1.0.0
+  # Locked to the 1.1.x line so the shared Pigeon codec stays version-aligned.
+  # Bump together with the other packages every release.
+  splunk_otel_flutter_platform_interface: '>=1.1.0 <1.2.0'
 
 dev_dependencies:
   flutter_test:

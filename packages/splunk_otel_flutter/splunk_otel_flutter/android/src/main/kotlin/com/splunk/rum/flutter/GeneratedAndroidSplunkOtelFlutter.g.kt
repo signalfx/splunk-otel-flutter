@@ -761,6 +761,49 @@ data class GeneratedRect (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class GeneratedError (
+  val type: String,
+  val message: String,
+  val stacktrace: String? = null,
+  val attributes: GeneratedMutableAttributes? = null,
+  val source: String,
+  val handled: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GeneratedError {
+      val type = pigeonVar_list[0] as String
+      val message = pigeonVar_list[1] as String
+      val stacktrace = pigeonVar_list[2] as String?
+      val attributes = pigeonVar_list[3] as GeneratedMutableAttributes?
+      val source = pigeonVar_list[4] as String
+      val handled = pigeonVar_list[5] as Boolean
+      return GeneratedError(type, message, stacktrace, attributes, source, handled)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      type,
+      message,
+      stacktrace,
+      attributes,
+      source,
+      handled,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GeneratedError) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return GeneratedAndroidSplunkOtelFlutterPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class GeneratedMutableAttributes (
   val attributes: Map<String, Any?>
 )
@@ -1136,45 +1179,50 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
       }
       153.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributes.fromList(it)
+          GeneratedError.fromList(it)
         }
       }
       154.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeInt.fromList(it)
+          GeneratedMutableAttributes.fromList(it)
         }
       }
       155.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeDouble.fromList(it)
+          GeneratedMutableAttributeInt.fromList(it)
         }
       }
       156.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeString.fromList(it)
+          GeneratedMutableAttributeDouble.fromList(it)
         }
       }
       157.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeBool.fromList(it)
+          GeneratedMutableAttributeString.fromList(it)
         }
       }
       158.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListInt.fromList(it)
+          GeneratedMutableAttributeBool.fromList(it)
         }
       }
       159.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListDouble.fromList(it)
+          GeneratedMutableAttributeListInt.fromList(it)
         }
       }
       160.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GeneratedMutableAttributeListString.fromList(it)
+          GeneratedMutableAttributeListDouble.fromList(it)
         }
       }
       161.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GeneratedMutableAttributeListString.fromList(it)
+        }
+      }
+      162.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           GeneratedMutableAttributeListBool.fromList(it)
         }
@@ -1280,40 +1328,44 @@ private open class GeneratedAndroidSplunkOtelFlutterPigeonCodec : StandardMessag
         stream.write(152)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributes -> {
+      is GeneratedError -> {
         stream.write(153)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeInt -> {
+      is GeneratedMutableAttributes -> {
         stream.write(154)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeDouble -> {
+      is GeneratedMutableAttributeInt -> {
         stream.write(155)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeString -> {
+      is GeneratedMutableAttributeDouble -> {
         stream.write(156)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeBool -> {
+      is GeneratedMutableAttributeString -> {
         stream.write(157)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListInt -> {
+      is GeneratedMutableAttributeBool -> {
         stream.write(158)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListDouble -> {
+      is GeneratedMutableAttributeListInt -> {
         stream.write(159)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListString -> {
+      is GeneratedMutableAttributeListDouble -> {
         stream.write(160)
         writeValue(stream, value.toList())
       }
-      is GeneratedMutableAttributeListBool -> {
+      is GeneratedMutableAttributeListString -> {
         stream.write(161)
+        writeValue(stream, value.toList())
+      }
+      is GeneratedMutableAttributeListBool -> {
+        stream.write(162)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1357,6 +1409,7 @@ interface SplunkOtelFlutterHostApi {
   fun customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, callback: (Result<Unit>) -> Unit)
   fun customTrackingStartWorkflow(workflowName: String, callback: (Result<Long>) -> Unit)
   fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit)
+  fun customTrackingTrackError(error: GeneratedError, callback: (Result<Unit>) -> Unit)
   fun navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -1990,6 +2043,25 @@ interface SplunkOtelFlutterHostApi {
             val args = message as List<Any?>
             val handleArg = args[0] as Long
             api.customTrackingEndWorkflow(handleArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val errorArg = args[0] as GeneratedError
+            api.customTrackingTrackError(errorArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidSplunkOtelFlutterPigeonUtils.wrapError(error))

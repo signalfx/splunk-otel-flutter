@@ -913,6 +913,32 @@ void main() {
         await implementation.customTrackingEndWorkflow(handle: handle);
         expect(receivedHandle, 789);
       });
+
+      test('should track error end to end', () async {
+        GeneratedError? receivedError;
+
+        mockApi.customTrackingTrackErrorHandler = (error) async {
+          receivedError = error;
+        };
+
+        await implementation.customTrackingTrackError(
+          type: 'TypeError',
+          message: 'x is not a function',
+          stacktrace: 'at f (index.dart:1:2)',
+          attributes: MutableAttributes(
+            attributes: {'screen.name': MutableAttributeString(value: 'Cart')},
+          ),
+          source: 'custom',
+          handled: true,
+        );
+
+        expect(receivedError?.type, 'TypeError');
+        expect(receivedError?.message, 'x is not a function');
+        expect(receivedError?.stacktrace, 'at f (index.dart:1:2)');
+        expect(receivedError?.attributes?.attributes.length, 1);
+        expect(receivedError?.source, 'custom');
+        expect(receivedError?.handled, true);
+      });
     });
   });
 }

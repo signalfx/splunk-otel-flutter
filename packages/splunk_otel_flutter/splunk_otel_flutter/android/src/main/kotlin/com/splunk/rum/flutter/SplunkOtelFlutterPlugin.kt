@@ -531,6 +531,33 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(Unit))
     }
 
+    override fun customTrackingTrackError(
+        error: GeneratedError,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        // The native trackError API accepts only type, message, stacktrace, and
+        // attributes. The remaining fields are carried as span attributes:
+        //   - source  -> "error.source"
+        //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
+        // The timestamp is not forwarded. The native SDK stamps the span itself.
+        // "splunk.rum.platform" tags the error as originating from the Flutter
+        // layer so the backend can route symbolication and UI accordingly.
+        val builder = error.attributes?.toOtelAttributes()?.toBuilder()
+            ?: Attributes.builder()
+        builder.put(AttributeKey.stringKey("error.source"), error.source)
+        builder.put(AttributeKey.booleanKey("exception.escaped"), !error.handled)
+        builder.put(AttributeKey.stringKey("splunk.rum.platform"), "flutter")
+
+        SplunkRum.instance.customTracking.trackError(
+            error.type,
+            error.message,
+            error.stacktrace,
+            builder.build(),
+        )
+
+        callback(Result.success(Unit))
+    }
+
     // Navigation
 
     override fun navigationTrack(

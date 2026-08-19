@@ -1,3 +1,9 @@
+## Unreleased
+
+* Sync version bump to align with `splunk_otel_flutter`, which adds the manual `customTracking.trackError()` API. Native Splunk RUM SDK pins stay aligned with `splunk_otel_flutter` (Android 2.3.2, iOS 2.4.1).
+* Pinned a direct dependency on the core `splunk_otel_flutter` package to the matching minor line (`>=1.1.0 <1.2.0`) so session replay and core always resolve to compatible versions.
+* Pinned the platform-interface dependencies to the matching minor line (`>=1.1.0 <1.2.0`) so the shared Pigeon codec stays version-aligned across packages.
+
 ## 1.1.0
 
 * Aligned the native Splunk RUM SDK pins with `splunk_otel_flutter` (Android 2.3.2, iOS 2.3.1). This fixes a native dependency conflict on iOS where `splunk_otel_flutter` and `splunk_otel_flutter_session_replay` pinned different exact versions of `splunk-otel-ios`.
