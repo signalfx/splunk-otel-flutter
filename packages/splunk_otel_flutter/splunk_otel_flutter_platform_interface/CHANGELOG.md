@@ -1,4 +1,4 @@
-## Unreleased
+## 1.2.0
 
 * Added the `GeneratedError` Pigeon data class and the `customTrackingTrackError` host API message, and extended the platform interface to bridge manual error reports to the native agents.
 

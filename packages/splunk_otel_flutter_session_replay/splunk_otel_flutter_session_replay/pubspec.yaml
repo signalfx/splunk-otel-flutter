@@ -1,6 +1,6 @@
 name: splunk_otel_flutter_session_replay
 description: "Session replay module for Splunk OpenTelemetry Flutter. Captures and replays user sessions for debugging and analytics."
-version: 1.1.0
+version: 1.2.0
 repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay
 homepage: https://github.com/signalfx/splunk-otel-flutter
 
@@ -13,15 +13,13 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  # Locked to the core plugin's 1.1.x line so session replay and
-  # splunk_otel_flutter always resolve to matching minor versions. They are
-  # released together and share the same Pigeon wire contract, so a consumer
-  # must never mix, for example, core 1.1.x with session replay 1.2.x.
-  splunk_otel_flutter: '>=1.1.0 <1.2.0'
-  # Locked to the 1.1.x line: the Pigeon codec is a wire contract, so these
-  # packages must move in lockstep. Bump all bounds together every release.
-  splunk_otel_flutter_platform_interface: '>=1.1.0 <1.2.0'
-  splunk_otel_flutter_session_replay_platform_interface: '>=1.1.0 <1.2.0'
+  # Locked to the 1.2.x line: the Pigeon codec is a wire contract, so these
+  # packages must move in lockstep with splunk_otel_flutter. The core plugin and
+  # session replay both pin splunk_otel_flutter_platform_interface to the same
+  # minor line, so a consumer cannot mix mismatched minors (pub cannot resolve
+  # the disjoint interface ranges). Bump all bounds together every release.
+  splunk_otel_flutter_platform_interface: '>=1.2.0 <1.3.0'
+  splunk_otel_flutter_session_replay_platform_interface: '>=1.2.0 <1.3.0'
 
 dev_dependencies:
   flutter_test:
