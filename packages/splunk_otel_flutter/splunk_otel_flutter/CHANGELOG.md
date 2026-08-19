@@ -1,8 +1,8 @@
-## Unreleased
+## 1.2.0
 
 * Added a manual `customTracking.trackError()` API for reporting caught Dart errors as `component=error` RUM spans, with the supplied stacktrace preserved verbatim as `exception.stacktrace`. Includes a new `ErrorSource` enum, optional attributes, and a `handled` flag (reported as `exception.escaped`). Error spans are tagged with `splunk.rum.platform=flutter` for backend routing. The call never throws and always completes. Supported on Android via native SDK 2.3.2 and iOS via native SDK 2.4.1.
 * Bumped the native iOS Splunk RUM SDK to 2.4.1, which ships the explicit-stacktrace `trackError` API used by manual error tracking.
-* Pinned `splunk_otel_flutter_platform_interface` to the matching minor line (`>=1.1.0 <1.2.0`) so the shared Pigeon codec cannot drift between the plugin and its platform interface.
+* Pinned `splunk_otel_flutter_platform_interface` to the matching minor line (`>=1.2.0 <1.3.0`) so the shared Pigeon codec cannot drift between the plugin and its platform interface.
 
 ## 1.1.0
 
