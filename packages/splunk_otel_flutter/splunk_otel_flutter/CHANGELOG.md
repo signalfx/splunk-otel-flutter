@@ -11,7 +11,7 @@
 
 ## 1.0.3
 
-* Added support for configuring captured network request headers on iOS via `NetworkMonitorModuleConfiguration`.
+* Added support for configuring captured network request headers on iOS via `NetworkInstrumentationModuleConfiguration`.
 
 ## 1.0.2
 
