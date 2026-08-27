@@ -1,0 +1,11 @@
+include: ../../../analysis_options.yaml
+
+linter:
+  rules:
+    # This package is a debugger for the capture engine, so it reads the
+    # engine's internals on purpose. Exposing that surface publicly would freeze
+    # the engine's internal shape into a supported API, which is a far worse
+    # trade than the coupling. The version constraint on
+    # splunk_otel_flutter_session_replay is pinned to a single minor line to
+    # keep the two moving together.
+    implementation_imports: false

@@ -12,6 +12,7 @@ workspace:
   # Session Replay Plugin
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface
+  - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_devtools
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay/example
   - packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface/example
 

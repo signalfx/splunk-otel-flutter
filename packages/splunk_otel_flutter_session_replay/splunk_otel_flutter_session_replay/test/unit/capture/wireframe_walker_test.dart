@@ -17,6 +17,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/wireframe_walker.dart';
 
 /// Flattens a captured tree so tests can assert on individual nodes.
@@ -186,6 +187,48 @@ void main() {
 
       expect(boxes, hasLength(2));
       expect(boxes[0].id, isNot(boxes[1].id));
+    });
+
+    group('exclusion', () {
+      testWidgets('should omit an excluded subtree entirely', (tester) async {
+        await tester.pumpWidget(
+          const Column(
+            children: <Widget>[
+              SizedBox(width: 10, height: 10),
+              ExcludedFromCapture(
+                child: ColoredBox(
+                  color: Color(0xFF00FF00),
+                  child: SizedBox(width: 20, height: 20),
+                ),
+              ),
+            ],
+          ),
+        );
+
+        final root = walker.capture().single.root;
+
+        // The sibling proves the tree was walked at all, so an empty result
+        // cannot pass this test by accident.
+        expect(_nodesOfType(root, 'SizedBox'), hasLength(1));
+        expect(_nodesOfType(root, 'ColoredBox'), isEmpty);
+      });
+
+      testWidgets('should omit excluded content rather than mask it', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          const ExcludedFromCapture(
+            child: ColoredBox(color: Color(0xFF00FF00)),
+          ),
+        );
+
+        final nodes = _flatten(walker.capture().single.root);
+
+        // Masking would leave a node behind carrying bounds; exclusion leaves
+        // nothing, so nothing can be marked private either.
+        expect(nodes.where((node) => node.isSensitive), isEmpty);
+        expect(nodes.expand((node) => node.skeletons), isEmpty);
+      });
     });
   });
 }

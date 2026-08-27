@@ -23,6 +23,7 @@ import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_f
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/privacy/sensitivity_resolver.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/element_id_allocator.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 
 /// State inherited down the walk.
 ///
@@ -135,6 +136,12 @@ class WireframeWalker {
   }
 
   void _walk(Element element, WireframeNode parent, _WalkState state) {
+    // Tooling interface leaves no trace, unlike a masked subtree which still
+    // reports its bounds.
+    if (element.widget is ExcludedFromCapture) {
+      return;
+    }
+
     final renderObject = element is RenderObjectElement
         ? element.renderObject
         : null;

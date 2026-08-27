@@ -15,6 +15,9 @@ dependencies:
     sdk: flutter
   splunk_otel_flutter: ^1.1.0
   splunk_otel_flutter_session_replay: ^1.1.0
+  # Not published, so it is referenced by path rather than by version.
+  splunk_otel_flutter_session_replay_devtools:
+    path: ../packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_devtools
   cupertino_icons: ^1.0.8
 
 dev_dependencies:

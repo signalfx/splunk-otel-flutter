@@ -1,0 +1,27 @@
+name: splunk_otel_flutter_session_replay_devtools
+description: "Development-only debugging tools for Splunk session replay on Flutter. Renders captured wireframes over the running application."
+version: 1.2.0
+# Not published yet: the package reads the capture engine's internals, so it
+# cannot be versioned independently of splunk_otel_flutter_session_replay.
+publish_to: none
+repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_devtools
+homepage: https://github.com/signalfx/splunk-otel-flutter
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: '>=3.32.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Locked to the same minor line as the capture engine. This package imports
+  # the engine's src/ directory directly, so any change to those internals is
+  # breaking for it even when it is not breaking for the engine's own API.
+  splunk_otel_flutter_session_replay: '>=1.2.0 <1.3.0'
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
