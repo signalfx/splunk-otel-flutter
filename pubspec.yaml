@@ -25,7 +25,6 @@ dev_dependencies:
 melos:
   ignore:
     - "*example*"
-    - "*session_replay*"
   scripts:
     analyze:
       run: melos exec -- dart analyze --fatal-warnings .

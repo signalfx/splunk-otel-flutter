@@ -10,7 +10,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:splunk_otel_flutter_session_replay_platform_interface/src/pigeon/messages.pigeon.dart';
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -18,19 +17,19 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedSessionReplayStatus) {
+    } else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    } else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskList) {
+    } else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    } else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    } else if (value is GeneratedRect) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else {
@@ -41,17 +40,19 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedSessionReplayStatus.values[value];
-      case 130: 
+        return value == null
+            ? null
+            : GeneratedSessionReplayStatus.values[value];
+      case 130:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 131: 
+      case 131:
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 132: 
+      case 132:
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 133: 
+      case 133:
         return GeneratedRect.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

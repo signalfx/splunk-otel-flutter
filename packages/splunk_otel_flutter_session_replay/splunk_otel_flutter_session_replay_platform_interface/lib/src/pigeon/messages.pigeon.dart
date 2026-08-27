@@ -15,7 +15,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -24,20 +28,24 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   }
   return <Object?>[error.code, error.message, error.details];
 }
+
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-        .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
-    return a.length == b.length && a.entries.every((MapEntry<Object?, Object?> entry) =>
-        (b as Map<Object?, Object?>).containsKey(entry.key) &&
-        _deepEquals(entry.value, b[entry.key]));
+    return a.length == b.length &&
+        a.entries.every(
+          (MapEntry<Object?, Object?> entry) =>
+              (b as Map<Object?, Object?>).containsKey(entry.key) &&
+              _deepEquals(entry.value, b[entry.key]),
+        );
   }
   return a == b;
 }
-
 
 enum GeneratedSessionReplayStatus {
   isRecording,
@@ -49,38 +57,34 @@ enum GeneratedSessionReplayStatus {
   disabledBySampling,
 }
 
-enum GeneratedRecordingMaskType {
-  erasing,
-  covering,
-}
+enum GeneratedRecordingMaskType { erasing, covering }
 
 class GeneratedRecordingMaskList {
-  GeneratedRecordingMaskList({
-    this.recordingMaskList,
-  });
+  GeneratedRecordingMaskList({this.recordingMaskList});
 
   List<GeneratedRecordingMaskElement>? recordingMaskList;
 
   List<Object?> _toList() {
-    return <Object?>[
-      recordingMaskList,
-    ];
+    return <Object?>[recordingMaskList];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRecordingMaskList decode(Object result) {
     result as List<Object?>;
     return GeneratedRecordingMaskList(
-      recordingMaskList: (result[0] as List<Object?>?)?.cast<GeneratedRecordingMaskElement>(),
+      recordingMaskList: (result[0] as List<Object?>?)
+          ?.cast<GeneratedRecordingMaskElement>(),
     );
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRecordingMaskList || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRecordingMaskList ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -91,29 +95,23 @@ class GeneratedRecordingMaskList {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRecordingMaskElement {
-  GeneratedRecordingMaskElement({
-    required this.rect,
-    required this.type,
-  });
+  GeneratedRecordingMaskElement({required this.rect, required this.type});
 
   GeneratedRect rect;
 
   GeneratedRecordingMaskType type;
 
   List<Object?> _toList() {
-    return <Object?>[
-      rect,
-      type,
-    ];
+    return <Object?>[rect, type];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRecordingMaskElement decode(Object result) {
     result as List<Object?>;
@@ -126,7 +124,8 @@ class GeneratedRecordingMaskElement {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! GeneratedRecordingMaskElement || other.runtimeType != runtimeType) {
+    if (other is! GeneratedRecordingMaskElement ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -137,8 +136,7 @@ class GeneratedRecordingMaskElement {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
 
 class GeneratedRect {
@@ -158,16 +156,12 @@ class GeneratedRect {
   double height;
 
   List<Object?> _toList() {
-    return <Object?>[
-      left,
-      top,
-      width,
-      height,
-    ];
+    return <Object?>[left, top, width, height];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static GeneratedRect decode(Object result) {
     result as List<Object?>;
@@ -193,10 +187,8 @@ class GeneratedRect {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -205,19 +197,19 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is GeneratedSessionReplayStatus) {
+    } else if (value is GeneratedSessionReplayStatus) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskType) {
+    } else if (value is GeneratedRecordingMaskType) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is GeneratedRecordingMaskList) {
+    } else if (value is GeneratedRecordingMaskList) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRecordingMaskElement) {
+    } else if (value is GeneratedRecordingMaskElement) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is GeneratedRect) {
+    } else if (value is GeneratedRect) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else {
@@ -228,17 +220,19 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : GeneratedSessionReplayStatus.values[value];
-      case 130: 
+        return value == null
+            ? null
+            : GeneratedSessionReplayStatus.values[value];
+      case 130:
         final int? value = readValue(buffer) as int?;
         return value == null ? null : GeneratedRecordingMaskType.values[value];
-      case 131: 
+      case 131:
         return GeneratedRecordingMaskList.decode(readValue(buffer)!);
-      case 132: 
+      case 132:
         return GeneratedRecordingMaskElement.decode(readValue(buffer)!);
-      case 133: 
+      case 133:
         return GeneratedRect.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -250,9 +244,13 @@ class SplunkOtelFlutterSessionReplayHostApi {
   /// Constructor for [SplunkOtelFlutterSessionReplayHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  SplunkOtelFlutterSessionReplayHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  SplunkOtelFlutterSessionReplayHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -260,12 +258,14 @@ class SplunkOtelFlutterSessionReplayHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<void> sessionReplayStart() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStart$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStart$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -283,12 +283,14 @@ class SplunkOtelFlutterSessionReplayHostApi {
   }
 
   Future<void> sessionReplayStop() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStop$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStop$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -306,12 +308,14 @@ class SplunkOtelFlutterSessionReplayHostApi {
   }
 
   Future<GeneratedSessionReplayStatus> sessionReplayStateGetStatus() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetStatus$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayStateGetStatus$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -334,12 +338,14 @@ class SplunkOtelFlutterSessionReplayHostApi {
   }
 
   Future<GeneratedRecordingMaskList?> sessionReplayGetRecordingMask() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayGetRecordingMask$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplayGetRecordingMask$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
@@ -356,14 +362,20 @@ class SplunkOtelFlutterSessionReplayHostApi {
     }
   }
 
-  Future<void> sessionReplaySetRecordingMask({required GeneratedRecordingMaskList? recordingMask}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplaySetRecordingMask$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+  Future<void> sessionReplaySetRecordingMask({
+    required GeneratedRecordingMaskList? recordingMask,
+  }) async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.splunk_otel_flutter_session_replay_platform_interface.SplunkOtelFlutterSessionReplayHostApi.sessionReplaySetRecordingMask$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[recordingMask],
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[recordingMask]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

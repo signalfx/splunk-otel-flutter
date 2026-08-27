@@ -104,20 +104,24 @@ extension on GeneratedRecordingMaskList {
     final scale = _nativeCoordinateScale;
 
     return RecordingMask(
-        elements: recordingMaskList
-                ?.map((e) => MaskElement(
-                      rect: Rect.fromLTWH(
-                        e.rect.left / scale,
-                        e.rect.top / scale,
-                        e.rect.width / scale,
-                        e.rect.height / scale,
-                      ),
-                      type: e.type == GeneratedRecordingMaskType.erasing
-                          ? MaskType.erasing
-                          : MaskType.covering,
-                    ))
-                .toList() ??
-            []);
+      elements:
+          recordingMaskList
+              ?.map(
+                (e) => MaskElement(
+                  rect: Rect.fromLTWH(
+                    e.rect.left / scale,
+                    e.rect.top / scale,
+                    e.rect.width / scale,
+                    e.rect.height / scale,
+                  ),
+                  type: e.type == GeneratedRecordingMaskType.erasing
+                      ? MaskType.erasing
+                      : MaskType.covering,
+                ),
+              )
+              .toList() ??
+          [],
+    );
   }
 }
 
@@ -126,18 +130,21 @@ extension on RecordingMask {
     final scale = _nativeCoordinateScale;
 
     return GeneratedRecordingMaskList(
-        recordingMaskList: elements
-            .map((e) => GeneratedRecordingMaskElement(
-                  rect: GeneratedRect(
-                    left: e.rect.left * scale,
-                    top: e.rect.top * scale,
-                    width: e.rect.width * scale,
-                    height: e.rect.height * scale,
-                  ),
-                  type: e.type == MaskType.erasing
-                      ? GeneratedRecordingMaskType.erasing
-                      : GeneratedRecordingMaskType.covering,
-                ))
-            .toList());
+      recordingMaskList: elements
+          .map(
+            (e) => GeneratedRecordingMaskElement(
+              rect: GeneratedRect(
+                left: e.rect.left * scale,
+                top: e.rect.top * scale,
+                width: e.rect.width * scale,
+                height: e.rect.height * scale,
+              ),
+              type: e.type == MaskType.erasing
+                  ? GeneratedRecordingMaskType.erasing
+                  : GeneratedRecordingMaskType.covering,
+            ),
+          )
+          .toList(),
+    );
   }
 }

@@ -20,11 +20,7 @@ import 'package:splunk_otel_flutter_platform_interface/splunk_otel_flutter_platf
 import 'package:splunk_otel_flutter_session_replay_platform_interface/implementation/splunk_otel_flutter_session_replay_platform_implementation.dart';
 
 export 'package:splunk_otel_flutter_platform_interface/src/model/session_replay.dart'
-    show
-        SessionReplayStatus,
-        RecordingMask,
-        MaskElement,
-        MaskType;
+    show SessionReplayStatus, RecordingMask, MaskElement, MaskType;
 
 /// Splunk Session Replay SDK entry point.
 ///

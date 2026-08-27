@@ -63,19 +63,14 @@ enum GeneratedSessionReplayStatus {
 class GeneratedRecordingMaskList {
   final List<GeneratedRecordingMaskElement>? recordingMaskList;
 
-  GeneratedRecordingMaskList({
-    required this.recordingMaskList,
-  });
+  GeneratedRecordingMaskList({required this.recordingMaskList});
 }
 
 class GeneratedRecordingMaskElement {
   final GeneratedRect rect;
   final GeneratedRecordingMaskType type;
 
-  GeneratedRecordingMaskElement({
-    required this.rect,
-    required this.type,
-  });
+  GeneratedRecordingMaskElement({required this.rect, required this.type});
 }
 
 class GeneratedRect {
@@ -92,7 +87,4 @@ class GeneratedRect {
   });
 }
 
-enum GeneratedRecordingMaskType {
-  erasing,
-  covering,
-}
+enum GeneratedRecordingMaskType { erasing, covering }

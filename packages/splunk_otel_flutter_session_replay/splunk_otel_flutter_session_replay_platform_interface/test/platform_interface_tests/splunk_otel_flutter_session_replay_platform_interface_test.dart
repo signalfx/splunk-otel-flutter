@@ -22,7 +22,10 @@ void main() {
 
   group('SplunkOtelFlutterSessionReplayPlatformInterface', () {
     test('should have a default instance', () {
-      expect(SplunkOtelFlutterSessionReplayPlatformInterface.instance, isNotNull);
+      expect(
+        SplunkOtelFlutterSessionReplayPlatformInterface.instance,
+        isNotNull,
+      );
     });
 
     test('instance should be of correct type', () {

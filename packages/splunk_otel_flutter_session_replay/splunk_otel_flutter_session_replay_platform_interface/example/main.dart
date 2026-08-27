@@ -27,7 +27,8 @@ void main() async {
 
   // ignore: avoid_print
   print(
-      'Session replay platform interface loaded: ${platformInterface.runtimeType}');
+    'Session replay platform interface loaded: ${platformInterface.runtimeType}',
+  );
 
   // Start session replay recording (requires core RUM agent to be initialized)
   // await platformInterface.startSessionReplay();

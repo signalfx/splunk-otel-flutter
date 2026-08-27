@@ -37,17 +37,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: const Center(
-          child: Text('Running on:'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: const Center(child: Text('Running on:')),
       ),
     );
   }
