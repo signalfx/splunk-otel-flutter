@@ -21,7 +21,14 @@ import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descri
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_frame.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/privacy/sensitivity_resolver.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/element_id_allocator.dart';
+
+/// State inherited down the walk.
+///
+/// Carried as a single value so it can be shared unchanged by the common case
+/// where an element neither arms a learner nor changes masking.
+typedef _WalkState = ({AncestorLearner? learner, bool isSensitive});
 
 /// Walks the live Flutter element tree and produces wireframe snapshots.
 ///
@@ -42,6 +49,7 @@ class WireframeWalker {
   WireframeWalker({
     ElementIdAllocator? idAllocator,
     DescriptorRegistry? registry,
+    this.sensitivityResolver = const SensitivityResolver(),
   }) : idAllocator = idAllocator ?? ElementIdAllocator(),
        registry = registry ?? DescriptorRegistry();
 
@@ -53,6 +61,9 @@ class WireframeWalker {
   /// Shared across walks so that types learned in one frame stay resolved in
   /// every later frame.
   final DescriptorRegistry registry;
+
+  /// Decides which subtrees must not be captured.
+  final SensitivityResolver sensitivityResolver;
 
   /// Captures one snapshot per attached Flutter view.
   ///
@@ -110,7 +121,9 @@ class WireframeWalker {
       rect: Offset.zero & viewSize,
     );
 
-    viewElement.debugVisitOnstageChildren((child) => _walk(child, root, null));
+    viewElement.debugVisitOnstageChildren(
+      (child) => _walk(child, root, (learner: null, isSensitive: false)),
+    );
 
     return WireframeFrame(
       viewId: renderView.flutterView.viewId,
@@ -121,31 +134,47 @@ class WireframeWalker {
     );
   }
 
-  void _walk(
-    Element element,
-    WireframeNode parent,
-    AncestorLearner? pendingLearner,
-  ) {
+  void _walk(Element element, WireframeNode parent, _WalkState state) {
+    final renderObject = element is RenderObjectElement
+        ? element.renderObject
+        : null;
+
     // A nested view roots its own render tree and is captured as its own
     // frame; descending here would mix two coordinate spaces.
-    if (element is RenderObjectElement && element.renderObject is RenderView) {
+    if (renderObject is RenderView) {
       return;
     }
 
     // A learner armed higher up stays armed for the whole subtree; a nearer one
     // takes precedence.
-    final learner = registry.learnerFor(element.widget) ?? pendingLearner;
+    final learner = registry.learnerFor(element.widget) ?? state.learner;
+
+    final isSensitive = switch (sensitivityResolver.resolve(
+      element,
+      renderObject,
+    )) {
+      Sensitivity.sensitive => true,
+      Sensitivity.notSensitive => false,
+      Sensitivity.inherit => state.isSensitive,
+    };
+
+    final childState =
+        identical(learner, state.learner) && isSensitive == state.isSensitive
+        ? state
+        : (learner: learner, isSensitive: isSensitive);
 
     var target = parent;
     if (element is RenderObjectElement) {
-      final node = _describe(element, learner);
+      final node = _describe(element, childState);
       if (node != null) {
         parent.addChild(node);
         target = node;
       }
     }
 
-    element.debugVisitOnstageChildren((child) => _walk(child, target, learner));
+    element.debugVisitOnstageChildren(
+      (child) => _walk(child, target, childState),
+    );
   }
 
   /// Builds a node for [element], or returns `null` when it contributes no
@@ -154,10 +183,7 @@ class WireframeWalker {
   /// Non-box render objects such as slivers produce no node, but their children
   /// are still visited by the caller, since box descendants of a sliver are
   /// visible content.
-  WireframeNode? _describe(
-    RenderObjectElement element,
-    AncestorLearner? pendingLearner,
-  ) {
+  WireframeNode? _describe(RenderObjectElement element, _WalkState state) {
     final renderObject = element.renderObject;
     if (renderObject is! RenderBox) {
       return null;
@@ -188,7 +214,7 @@ class WireframeWalker {
     final descriptor = registry.resolve(
       element,
       renderObject,
-      pendingLearner: pendingLearner,
+      pendingLearner: state.learner,
     );
 
     List<WireframeSkeleton>? skeletons;
@@ -201,8 +227,15 @@ class WireframeWalker {
         transform: transform,
       );
 
-      skeletons = <WireframeSkeleton>[];
-      descriptor.describeSkeletons(context, skeletons);
+      // Skeletons are the only part of a node that carries content: colours,
+      // text line metrics, image blocks. They are withheld from a masked
+      // subtree, while opacity is still reported because it describes how the
+      // subtree is composited rather than what is inside it.
+      if (!state.isSensitive) {
+        skeletons = <WireframeSkeleton>[];
+        descriptor.describeSkeletons(context, skeletons);
+      }
+
       opacity = descriptor.describeOpacity(context);
     }
 
@@ -212,6 +245,7 @@ class WireframeWalker {
       type: element.widget.runtimeType.toString(),
       rect: rect,
       opacity: opacity,
+      isSensitive: state.isSensitive,
       skeletons: skeletons,
     );
   }
