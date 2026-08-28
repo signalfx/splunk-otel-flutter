@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -280,6 +282,52 @@ void main() {
       );
 
       expect(_sensitiveNodes(permissive.capture().single.root), isNotEmpty);
+    });
+  });
+
+  group('serialized output', () {
+    const secret = 'correct-horse-battery-staple';
+
+    testWidgets('should not leak masked text into the wire format', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: <Widget>[
+                TextField(controller: TextEditingController(text: secret)),
+                const SensitiveArea(child: Text(secret)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      // Asserted against the encoded bytes rather than the model, because the
+      // wire format is what actually leaves the device.
+      final encoded = jsonEncode(walker.capture().single.toJson());
+
+      expect(encoded, isNot(contains(secret)));
+    });
+
+    testWidgets('should not carry text content even when nothing is masked', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(const Text(secret, style: TextStyle(color: _red, fontSize: 14))),
+      );
+
+      final frame = walker.capture().single;
+      final encoded = jsonEncode(frame.toJson());
+
+      // The stronger property behind masking: skeletons carry geometry and
+      // colour only, so no capture path can put a character on the wire. If
+      // this ever fails, masking has become the only thing standing between
+      // user text and the network.
+      expect(_skeletons(frame.root), isNotEmpty);
+      expect(_sensitiveNodes(frame.root), isEmpty);
+      expect(encoded, isNot(contains(secret)));
     });
   });
 }

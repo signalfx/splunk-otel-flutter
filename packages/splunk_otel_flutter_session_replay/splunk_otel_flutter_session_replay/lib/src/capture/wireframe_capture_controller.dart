@@ -17,6 +17,7 @@
 import 'dart:async';
 import 'dart:developer' show Timeline;
 
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/widgets.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_frame.dart';
@@ -113,7 +114,25 @@ class WireframeCaptureController {
   List<WireframeFrame> captureNow() {
     Timeline.startSync('SplunkSessionReplay.capture');
     try {
-      return walker.capture();
+      final frames = walker.capture();
+
+      // A walk duration only means something next to the size of the tree that
+      // produced it. Counting nodes is itself proportional to the tree, so a
+      // release build, where nobody is reading a timeline, never pays for it.
+      if (!kReleaseMode) {
+        Timeline.instantSync(
+          'SplunkSessionReplay.captured',
+          arguments: <String, Object?>{
+            'views': frames.length,
+            'nodes': frames.fold<int>(
+              0,
+              (total, frame) => total + frame.nodeCount,
+            ),
+          },
+        );
+      }
+
+      return frames;
     } finally {
       Timeline.finishSync();
     }
