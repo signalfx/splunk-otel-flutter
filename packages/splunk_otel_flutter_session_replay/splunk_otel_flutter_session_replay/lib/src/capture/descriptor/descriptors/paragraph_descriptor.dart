@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:ui' as ui show TextHeightBehavior;
+
 import 'package:flutter/rendering.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
@@ -25,6 +27,85 @@ const String _iconFontFamily = 'MaterialIcons';
 /// Colour the engine paints text with when no colour is resolved anywhere in
 /// the span tree.
 const Color _defaultTextColor = Color(0xFF000000);
+
+/// Line boxes retained between captures, keyed weakly on the render object.
+///
+/// Querying line boxes is the most expensive single step of a capture, and text
+/// usually survives many frames unchanged. An [Expando] keeps this a pure cache:
+/// entries are collected together with the paragraph they describe, so nothing
+/// here extends the lifetime of the render tree.
+final Expando<_CachedParagraph> _cache = Expando<_CachedParagraph>(
+  'splunkParagraphSkeletons',
+);
+
+/// One line box in the paragraph's own coordinate space.
+///
+/// Stored unprojected so the cache survives the paragraph moving. Only the
+/// projection is redone when a cached entry is reused, which is arithmetic
+/// rather than a text query.
+class _CachedBox {
+  const _CachedBox({
+    required this.rect,
+    required this.color,
+    required this.isText,
+  });
+
+  final Rect rect;
+  final Color color;
+  final bool isText;
+}
+
+/// Cached line boxes plus every input that could change them.
+///
+/// The key is deliberately exhaustive over `RenderParagraph`'s layout inputs.
+/// Size alone is not enough: changing [textAlign] moves every box while leaving
+/// the paragraph exactly the same size, which would otherwise serve boxes at
+/// stale positions.
+class _CachedParagraph {
+  _CachedParagraph({required this.boxes, required RenderParagraph source})
+    : text = source.text,
+      size = source.size,
+      textAlign = source.textAlign,
+      textDirection = source.textDirection,
+      softWrap = source.softWrap,
+      overflow = source.overflow,
+      textScaler = source.textScaler,
+      maxLines = source.maxLines,
+      locale = source.locale,
+      strutStyle = source.strutStyle,
+      textWidthBasis = source.textWidthBasis,
+      textHeightBehavior = source.textHeightBehavior;
+
+  final List<_CachedBox> boxes;
+  final InlineSpan text;
+  final Size size;
+  final TextAlign textAlign;
+  final TextDirection textDirection;
+  final bool softWrap;
+  final TextOverflow overflow;
+  final TextScaler textScaler;
+  final int? maxLines;
+  final Locale? locale;
+  final StrutStyle? strutStyle;
+  final TextWidthBasis textWidthBasis;
+  final ui.TextHeightBehavior? textHeightBehavior;
+
+  /// Whether [source] would still produce these boxes.
+  bool matches(RenderParagraph source) =>
+      size == source.size &&
+      textAlign == source.textAlign &&
+      textDirection == source.textDirection &&
+      softWrap == source.softWrap &&
+      overflow == source.overflow &&
+      textScaler == source.textScaler &&
+      maxLines == source.maxLines &&
+      locale == source.locale &&
+      strutStyle == source.strutStyle &&
+      textWidthBasis == source.textWidthBasis &&
+      textHeightBehavior == source.textHeightBehavior &&
+      // Compared last: the only key that can recurse over a span tree.
+      text == source.text;
+}
 
 /// Describes `RenderParagraph`, the render object behind `Text` and `RichText`.
 ///
@@ -48,14 +129,29 @@ class ParagraphDescriptor extends ElementDescriptor {
       return;
     }
 
-    _describeSpan(
-      span: renderObject.text,
-      inherited: null,
-      offset: 0,
-      renderObject: renderObject,
-      context: context,
-      into: into,
-    );
+    var cached = _cache[renderObject];
+    if (cached == null || !cached.matches(renderObject)) {
+      final boxes = <_CachedBox>[];
+      _describeSpan(
+        span: renderObject.text,
+        inherited: null,
+        offset: 0,
+        renderObject: renderObject,
+        into: boxes,
+      );
+      cached = _CachedParagraph(boxes: boxes, source: renderObject);
+      _cache[renderObject] = cached;
+    }
+
+    for (final box in cached.boxes) {
+      into.add(
+        WireframeSkeleton(
+          rect: context.localToView(box.rect),
+          color: box.color,
+          isText: box.isText,
+        ),
+      );
+    }
   }
 
   /// Walks the span tree in document order, emitting one run of skeletons per
@@ -68,8 +164,7 @@ class ParagraphDescriptor extends ElementDescriptor {
     required TextStyle? inherited,
     required int offset,
     required RenderParagraph renderObject,
-    required DescriptorContext context,
-    required List<WireframeSkeleton> into,
+    required List<_CachedBox> into,
   }) {
     if (span is! TextSpan) {
       // Placeholders occupy a single object replacement character, and are
@@ -88,7 +183,6 @@ class ParagraphDescriptor extends ElementDescriptor {
         end: end,
         style: style,
         renderObject: renderObject,
-        context: context,
         into: into,
       );
     }
@@ -99,7 +193,6 @@ class ParagraphDescriptor extends ElementDescriptor {
         inherited: style,
         offset: end,
         renderObject: renderObject,
-        context: context,
         into: into,
       );
     }
@@ -107,14 +200,13 @@ class ParagraphDescriptor extends ElementDescriptor {
     return end;
   }
 
-  /// Emits one skeleton per line box covered by the text range [start], [end].
+  /// Emits one box per line covered by the text range [start], [end].
   void _emitRun({
     required int start,
     required int end,
     required TextStyle? style,
     required RenderParagraph renderObject,
-    required DescriptorContext context,
-    required List<WireframeSkeleton> into,
+    required List<_CachedBox> into,
   }) {
     final color = style?.color ?? _defaultTextColor;
     if (color.a == 0) {
@@ -135,13 +227,7 @@ class ParagraphDescriptor extends ElementDescriptor {
         continue;
       }
 
-      into.add(
-        WireframeSkeleton(
-          rect: context.localToView(local),
-          color: color,
-          isText: isText,
-        ),
-      );
+      into.add(_CachedBox(rect: local, color: color, isText: isText));
     }
   }
 }

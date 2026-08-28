@@ -111,6 +111,32 @@ void main() {
       expect((payload['tree']! as Map<String, Object?>)['id'], 'root');
     });
 
+    test('should supersede a frame still waiting to be encoded', () async {
+      // Encoding happens on a worker, so a burst of captures can arrive while
+      // one frame is still in flight. The newest must win: dropping the
+      // incoming frame instead would leave the viewer on a stale screen.
+      final socket = await connect();
+      addTearDown(socket.close);
+      final received = socket
+          .cast<String>()
+          .map((message) => jsonDecode(message)! as Map<String, Object?>)
+          .take(2)
+          .toList();
+
+      server
+        ..onFrame(_frame(rootId: 'first'))
+        ..onFrame(_frame(rootId: 'superseded'))
+        ..onFrame(_frame(rootId: 'newest'));
+
+      final ids = (await received)
+          .map((payload) => (payload['tree']! as Map<String, Object?>)['id'])
+          .toList();
+
+      // 'first' reached the worker immediately; 'superseded' never did.
+      expect(ids, <String>['first', 'newest']);
+      expect(server.droppedFrames, 1);
+    });
+
     test('should send the newest frame per view on connect', () async {
       // A client joining a still screen would otherwise see nothing until
       // something on that screen happened to change.

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_frame.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/sink/encoder/wireframe_encoder.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/sink/wireframe_sink.dart';
 
 import 'package:splunk_otel_flutter_session_replay_devtools/src/stream/web_player.dart';
@@ -92,7 +95,15 @@ class WireframeStreamServer implements WireframeSink {
   final Set<WebSocket> _clients = <WebSocket>{};
   final Map<int, String> _latestByView = <int, String>{};
 
+  final WireframeEncoder _encoder = WireframeEncoder();
+
+  /// Newest frame awaiting encoding, per view.
+  final Map<int, WireframeFrame> _waiting = <int, WireframeFrame>{};
+
   HttpServer? _server;
+
+  bool _draining = false;
+  int _droppedFrames = 0;
 
   /// Whether the server is currently bound.
   bool get isRunning => _server != null;
@@ -102,6 +113,12 @@ class WireframeStreamServer implements WireframeSink {
 
   /// Number of connected clients.
   int get clientCount => _clients.length;
+
+  /// Frames superseded before they could be encoded.
+  ///
+  /// A steadily climbing count means capture is outpacing serialisation, which
+  /// a slower capture interval addresses.
+  int get droppedFrames => _droppedFrames;
 
   /// Address a browser on this machine should open, or null when not running.
   Uri? get playerUri {
@@ -155,8 +172,52 @@ class WireframeStreamServer implements WireframeSink {
 
   @override
   void onFrame(WireframeFrame frame) {
-    final payload = jsonEncode(frame.toJson());
-    _latestByView[frame.viewId] = payload;
+    // Encoding costs several times more than capturing, so it happens on a
+    // worker rather than here on the UI thread. Capture can outrun the worker,
+    // so frames wait in a slot per view and a newer frame replaces the one
+    // waiting: a live viewer wants the current screen, not a backlog of stale
+    // ones. Superseding the pending frame rather than the incoming one is what
+    // keeps the newest state from being the one thrown away.
+    if (_waiting.remove(frame.viewId) != null) {
+      _droppedFrames++;
+    }
+    _waiting[frame.viewId] = frame;
+
+    unawaited(_drain());
+  }
+
+  Future<void> _drain() async {
+    if (_draining) {
+      return;
+    }
+    _draining = true;
+
+    try {
+      while (_waiting.isNotEmpty) {
+        final viewId = _waiting.keys.first;
+        final frame = _waiting.remove(viewId)!;
+
+        final Uint8List bytes;
+        try {
+          bytes = await _encoder.encode(frame);
+        } catch (error, stackTrace) {
+          // Disposal races a frame already in flight, which is expected.
+          if (isRunning) {
+            _reportError(error, stackTrace);
+          }
+
+          continue;
+        }
+
+        _broadcast(frame.viewId, utf8.decode(bytes));
+      }
+    } finally {
+      _draining = false;
+    }
+  }
+
+  void _broadcast(int viewId, String payload) {
+    _latestByView[viewId] = payload;
 
     for (final client in List<WebSocket>.of(_clients)) {
       try {
@@ -169,7 +230,10 @@ class WireframeStreamServer implements WireframeSink {
   }
 
   @override
-  Future<void> dispose() => stop();
+  Future<void> dispose() async {
+    await stop();
+    await _encoder.dispose();
+  }
 
   Future<void> _handleRequest(HttpRequest request) async {
     try {

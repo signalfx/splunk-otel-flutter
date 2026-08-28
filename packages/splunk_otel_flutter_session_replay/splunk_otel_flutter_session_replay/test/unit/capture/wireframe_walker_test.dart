@@ -230,5 +230,119 @@ void main() {
         expect(nodes.expand((node) => node.skeletons), isEmpty);
       });
     });
+
+    group('transforms', () {
+      /// Asserts every captured node sits where `getTransformTo` says it does.
+      ///
+      /// The walker composes each transform from its parent's as it descends
+      /// rather than asking every render object to climb to the root. That is
+      /// only sound if the two agree exactly, so this compares the whole frame
+      /// against the authoritative computation node by node.
+      void expectMatchesGetTransformTo(WidgetTester tester) {
+        final frame = walker.capture().single;
+        final byId = <String, WireframeNode>{
+          for (final node in _flatten(frame.root)) node.id: node,
+        };
+
+        var compared = 0;
+        void visit(Element element) {
+          if (element is RenderObjectElement) {
+            final renderObject = element.renderObject;
+            final node = byId[walker.idAllocator.idFor(element)];
+            if (node != null && renderObject is RenderBox) {
+              final expected = MatrixUtils.transformRect(
+                renderObject.getTransformTo(null),
+                Offset.zero & renderObject.size,
+              );
+
+              expect(
+                node.rect.left,
+                closeTo(expected.left, 1e-9),
+                reason: 'left of ${node.type}',
+              );
+              expect(
+                node.rect.top,
+                closeTo(expected.top, 1e-9),
+                reason: 'top of ${node.type}',
+              );
+              expect(
+                node.rect.width,
+                closeTo(expected.width, 1e-9),
+                reason: 'width of ${node.type}',
+              );
+              expect(
+                node.rect.height,
+                closeTo(expected.height, 1e-9),
+                reason: 'height of ${node.type}',
+              );
+              compared++;
+            }
+          }
+
+          element.visitChildren(visit);
+        }
+
+        visit(tester.binding.rootElement!);
+
+        // Guards against a vacuous pass if ids ever stop lining up.
+        expect(compared, greaterThan(3));
+      }
+
+      testWidgets('should match under rotation and scale', (tester) async {
+        await tester.pumpWidget(
+          Transform.rotate(
+            angle: 0.37,
+            child: Transform.scale(
+              scale: 1.4,
+              child: const Padding(
+                padding: EdgeInsets.only(left: 13, top: 7),
+                child: SizedBox(
+                  width: 120,
+                  height: 90,
+                  child: ColoredBox(color: Color(0xFF00FF00)),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expectMatchesGetTransformTo(tester);
+      });
+
+      testWidgets('should match across slivers and a scroll offset', (
+        tester,
+      ) async {
+        // Slivers are the interesting case: they sit in the render tree but
+        // produce no node, so composition has to keep threading through them.
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(
+              child: SizedBox(
+                width: 200,
+                height: 300,
+                child: ListView(
+                  children: <Widget>[
+                    for (var i = 0; i < 8; i++)
+                      Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: SizedBox(
+                          height: 50,
+                          child: ColoredBox(color: Color(0xFF000000 + i)),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.drag(find.byType(ListView), const Offset(0, -70));
+        await tester.pump();
+
+        expectMatchesGetTransformTo(tester);
+      });
+    });
   });
 }

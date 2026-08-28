@@ -29,7 +29,17 @@ import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_f
 ///
 /// Carried as a single value so it can be shared unchanged by the common case
 /// where an element neither arms a learner nor changes masking.
-typedef _WalkState = ({AncestorLearner? learner, bool isSensitive});
+///
+/// [ancestor] is the nearest enclosing render object of any kind, not just the
+/// ones that produced a node. Slivers and other non-box render objects emit no
+/// node but still sit in the render tree, so skipping them here would compose
+/// the wrong transform for everything beneath them.
+typedef _WalkState = ({
+  AncestorLearner? learner,
+  bool isSensitive,
+  RenderObject? ancestor,
+  Matrix4 ancestorTransform,
+});
 
 /// Walks the live Flutter element tree and produces wireframe snapshots.
 ///
@@ -123,7 +133,12 @@ class WireframeWalker {
     );
 
     viewElement.debugVisitOnstageChildren(
-      (child) => _walk(child, root, (learner: null, isSensitive: false)),
+      (child) => _walk(child, root, (
+        learner: null,
+        isSensitive: false,
+        ancestor: null,
+        ancestorTransform: Matrix4.identity(),
+      )),
     );
 
     return WireframeFrame(
@@ -165,23 +180,79 @@ class WireframeWalker {
       Sensitivity.inherit => state.isSensitive,
     };
 
-    final childState =
-        identical(learner, state.learner) && isSensitive == state.isSensitive
-        ? state
-        : (learner: learner, isSensitive: isSensitive);
+    // An element without a render object leaves the transform chain untouched,
+    // so the whole state can be shared when nothing else changed either.
+    if (renderObject == null) {
+      final childState =
+          identical(learner, state.learner) && isSensitive == state.isSensitive
+          ? state
+          : (
+              learner: learner,
+              isSensitive: isSensitive,
+              ancestor: state.ancestor,
+              ancestorTransform: state.ancestorTransform,
+            );
+
+      element.debugVisitOnstageChildren(
+        (child) => _walk(child, parent, childState),
+      );
+
+      return;
+    }
+
+    final transform = _transformFor(renderObject, state);
+    final childState = (
+      learner: learner,
+      isSensitive: isSensitive,
+      ancestor: renderObject,
+      ancestorTransform: transform,
+    );
 
     var target = parent;
-    if (element is RenderObjectElement) {
-      final node = _describe(element, childState);
-      if (node != null) {
-        parent.addChild(node);
-        target = node;
-      }
+    final node = _describe(element, renderObject, transform, childState);
+    if (node != null) {
+      parent.addChild(node);
+      target = node;
     }
 
     element.debugVisitOnstageChildren(
       (child) => _walk(child, target, childState),
     );
+  }
+
+  /// Transform from [renderObject]'s local coordinates into view coordinates.
+  ///
+  /// Composed as the walk descends rather than by asking each render object to
+  /// climb back to the root. `getTransformTo` rebuilds the whole ancestor path
+  /// on every call, which makes a full walk cost O(nodes x depth); composing
+  /// one step per node makes it O(nodes).
+  ///
+  /// The result is identical to `getTransformTo(null)`, including its deliberate
+  /// omission of the root's own `applyPaintTransform`. That omission is what
+  /// keeps coordinates in logical pixels, since `RenderView`'s transform is the
+  /// one that scales to physical pixels.
+  Matrix4 _transformFor(RenderObject renderObject, _WalkState state) {
+    final ancestor = state.ancestor;
+
+    // A direct child of the view starts at the identity, which is where
+    // getTransformTo(null) starts once the root is skipped.
+    if (ancestor == null) {
+      return Matrix4.identity();
+    }
+
+    if (identical(renderObject.parent, ancestor)) {
+      final transform = Matrix4.copy(state.ancestorTransform);
+      ancestor.applyPaintTransform(renderObject, transform);
+
+      return transform;
+    }
+
+    // Element parentage and render parentage disagree, which composition
+    // assumes they do not. Fall back to the authoritative computation rather
+    // than placing the node at a wrong position.
+    return renderObject.attached
+        ? renderObject.getTransformTo(null)
+        : Matrix4.identity();
   }
 
   /// Builds a node for [element], or returns `null` when it contributes no
@@ -190,8 +261,12 @@ class WireframeWalker {
   /// Non-box render objects such as slivers produce no node, but their children
   /// are still visited by the caller, since box descendants of a sliver are
   /// visible content.
-  WireframeNode? _describe(RenderObjectElement element, _WalkState state) {
-    final renderObject = element.renderObject;
+  WireframeNode? _describe(
+    Element element,
+    RenderObject renderObject,
+    Matrix4 transform,
+    _WalkState state,
+  ) {
     if (renderObject is! RenderBox) {
       return null;
     }
@@ -207,12 +282,6 @@ class WireframeWalker {
       return null;
     }
 
-    // Passing null rather than the RenderView is load-bearing. getTransformTo
-    // omits the root's own applyPaintTransform, and RenderView's is what
-    // applies the device pixel ratio. Passing the view explicitly would yield
-    // physical pixels, while the wire format and the native layer both expect
-    // logical pixels.
-    final transform = renderObject.getTransformTo(null);
     final rect = MatrixUtils.transformRect(transform, Offset.zero & size);
     if (rect.isEmpty) {
       return null;

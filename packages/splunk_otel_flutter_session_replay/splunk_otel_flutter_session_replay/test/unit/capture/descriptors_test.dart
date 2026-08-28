@@ -351,5 +351,105 @@ void main() {
 
       expect(_skeletons(walker.capture().single.root), isEmpty);
     });
+
+    group('line box cache', () {
+      testWidgets('should reuse boxes when nothing changed', (tester) async {
+        await tester.pumpWidget(
+          _host(
+            const Text('stable', style: TextStyle(color: _red, fontSize: 14)),
+          ),
+        );
+
+        final first = _skeletons(walker.capture().single.root);
+        final second = _skeletons(walker.capture().single.root);
+
+        expect(
+          second.map((skeleton) => skeleton.rect),
+          first.map((s) => s.rect),
+        );
+        expect(
+          second.map((skeleton) => skeleton.color),
+          first.map((s) => s.color),
+        );
+      });
+
+      testWidgets('should follow the paragraph when it moves', (tester) async {
+        // Boxes are cached unprojected, so a move must still be reflected even
+        // though the paragraph itself is untouched.
+        await tester.pumpWidget(
+          _host(
+            const Text('moving', style: TextStyle(color: _red, fontSize: 14)),
+          ),
+        );
+
+        final before = _skeletons(walker.capture().single.root).single.rect;
+
+        await tester.pumpWidget(
+          _host(
+            const Padding(
+              padding: EdgeInsets.only(left: 25, top: 10),
+              child: Text(
+                'moving',
+                style: TextStyle(color: _red, fontSize: 14),
+              ),
+            ),
+          ),
+        );
+
+        final after = _skeletons(walker.capture().single.root).single.rect;
+
+        expect(after.left, closeTo(before.left + 25, 0.01));
+        expect(after.top, closeTo(before.top + 10, 0.01));
+      });
+
+      testWidgets('should re-measure when the text changes', (tester) async {
+        await tester.pumpWidget(
+          _host(
+            const Text('short', style: TextStyle(color: _red, fontSize: 14)),
+          ),
+        );
+
+        final before = _skeletons(walker.capture().single.root).single;
+
+        await tester.pumpWidget(
+          _host(
+            const Text(
+              'considerably longer text',
+              style: TextStyle(color: _blue, fontSize: 14),
+            ),
+          ),
+        );
+
+        final after = _skeletons(walker.capture().single.root).single;
+
+        expect(after.color, _blue);
+        expect(after.rect.width, greaterThan(before.rect.width));
+      });
+
+      testWidgets('should re-measure when alignment shifts boxes in place', (
+        tester,
+      ) async {
+        // The case size alone cannot catch: the paragraph keeps its exact
+        // dimensions while every line box slides across it.
+        Widget aligned(TextAlign align) => _host(
+          SizedBox(
+            width: 300,
+            child: Text(
+              'aligned',
+              textAlign: align,
+              style: const TextStyle(color: _red, fontSize: 14),
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(aligned(TextAlign.left));
+        final left = _skeletons(walker.capture().single.root).single.rect;
+
+        await tester.pumpWidget(aligned(TextAlign.right));
+        final right = _skeletons(walker.capture().single.root).single.rect;
+
+        expect(right.left, greaterThan(left.left));
+      });
+    });
   });
 }
