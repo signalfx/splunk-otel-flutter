@@ -125,9 +125,12 @@ class DemoApp extends StatelessWidget {
       home: const WelcomeScreen(),
       navigatorObservers: [routeObserver],
       // Debug builds get an inspector for session replay capture, reachable
-      // from the floating button. It compiles out of release builds.
-      builder: (context, child) =>
-          SessionReplayDebugOverlay(child: child ?? const SizedBox.shrink()),
+      // from the floating button. It compiles out of release builds. The panel
+      // shows the address of the browser player served on the streaming port.
+      builder: (context, child) => SessionReplayDebugOverlay(
+        streamPort: 8090,
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

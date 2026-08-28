@@ -75,6 +75,41 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
 
+    testWidgets('should report the player address when streaming', (
+      tester,
+    ) async {
+      // Port zero avoids collisions with anything else on the machine.
+      await tester.pumpWidget(
+        MaterialApp(
+          debugShowCheckedModeBanner: false,
+          builder: (context, child) => SessionReplayDebugOverlay(
+            interval: const Duration(milliseconds: 20),
+            streamPort: 0,
+            child: child!,
+          ),
+          home: const Scaffold(body: SizedBox.shrink()),
+        ),
+      );
+
+      // Binding is real socket work, which the fake async of pump does not
+      // advance; only runAsync lets it actually complete.
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 200)),
+      );
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.layers_outlined));
+      await tester.pump(const Duration(milliseconds: 40));
+      await tester.pump();
+
+      expect(find.textContaining('http://127.0.0.1:'), findsOneWidget);
+
+      // Unbind before the next test, which would otherwise inherit the port.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 100)),
+      );
+    });
+
     testWidgets('should keep its own interface out of the capture', (
       tester,
     ) async {

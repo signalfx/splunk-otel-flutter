@@ -25,6 +25,7 @@ import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_f
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/wireframe_capture_controller.dart';
 
+import 'package:splunk_otel_flutter_session_replay_devtools/src/stream/wireframe_stream_server.dart';
 import 'package:splunk_otel_flutter_session_replay_devtools/src/wireframe_frame_sink.dart';
 import 'package:splunk_otel_flutter_session_replay_devtools/src/wireframe_overlay_painter.dart';
 import 'package:splunk_otel_flutter_session_replay_devtools/src/wireframe_stats.dart';
@@ -55,6 +56,7 @@ class SessionReplayDebugOverlay extends StatefulWidget {
     required this.child,
     this.enabled = kDebugMode,
     this.interval = const Duration(milliseconds: 100),
+    this.streamPort,
     super.key,
   });
 
@@ -69,6 +71,16 @@ class SessionReplayDebugOverlay extends StatefulWidget {
 
   /// Requested delay between captures.
   final Duration interval;
+
+  /// Port to serve the browser-based player on, or null to keep capture local.
+  ///
+  /// Binds to loopback, so reach it from an iOS simulator directly, or from
+  /// Android by forwarding the host's port to the device's with
+  /// `adb forward tcp:8090 tcp:8090`. The panel shows the resulting address.
+  ///
+  /// Streaming keeps capture running whether or not the panel is open, since
+  /// the browser is a consumer in its own right.
+  final int? streamPort;
 
   @override
   State<SessionReplayDebugOverlay> createState() =>
@@ -88,12 +100,45 @@ class _SessionReplayDebugOverlayState extends State<SessionReplayDebugOverlay> {
   Offset? _buttonOffset;
   Timer? _copyFeedbackTimer;
   bool _showCopyFeedback = false;
+  WireframeStreamServer? _server;
+  String? _streamStatus;
 
   @override
   void initState() {
     super.initState();
     _controller = WireframeCaptureController(interval: widget.interval)
       ..addSink(_sink);
+
+    if (widget.streamPort != null) {
+      unawaited(_startStreaming(widget.streamPort!));
+    }
+  }
+
+  Future<void> _startStreaming(int port) async {
+    final server = WireframeStreamServer(port: port);
+
+    try {
+      await server.start();
+    } catch (error) {
+      if (mounted) {
+        setState(() => _streamStatus = 'unavailable: $error');
+      }
+
+      return;
+    }
+
+    if (!mounted) {
+      await server.stop();
+
+      return;
+    }
+
+    _controller.addSink(server);
+    setState(() {
+      _server = server;
+      _streamStatus = server.playerUri?.toString();
+    });
+    _syncCapture();
   }
 
   @override
@@ -104,9 +149,10 @@ class _SessionReplayDebugOverlayState extends State<SessionReplayDebugOverlay> {
     super.dispose();
   }
 
-  /// Runs capture only while the overlay or the panel is there to show it.
+  /// Runs capture only while something is there to consume it.
   void _syncCapture() {
-    final isNeeded = _mode != WireframeOverlayMode.off || _panelOpen;
+    final isNeeded =
+        _mode != WireframeOverlayMode.off || _panelOpen || _server != null;
     if (isNeeded && !_controller.isRunning) {
       _controller.start();
 
@@ -345,6 +391,11 @@ class _SessionReplayDebugOverlayState extends State<SessionReplayDebugOverlay> {
             _Stat(
               label: 'interval',
               value: '${sincePrevious.inMilliseconds}ms',
+            ),
+          if (_streamStatus != null)
+            _Stat(
+              label: 'player',
+              value: '$_streamStatus (${_server?.clientCount ?? 0})',
             ),
           _Stat(
             label: 'view',

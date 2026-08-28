@@ -22,6 +22,8 @@ library;
 
 export 'package:splunk_otel_flutter_session_replay_devtools/src/session_replay_debug_overlay.dart'
     show SessionReplayDebugOverlay;
+export 'package:splunk_otel_flutter_session_replay_devtools/src/stream/wireframe_stream_server.dart'
+    show StreamServerErrorCallback, WireframeStreamServer;
 export 'package:splunk_otel_flutter_session_replay_devtools/src/wireframe_frame_sink.dart'
     show WireframeFrameSink;
 export 'package:splunk_otel_flutter_session_replay_devtools/src/wireframe_overlay_painter.dart'
