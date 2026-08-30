@@ -66,11 +66,120 @@ class ColoredBoxDescriptor extends ElementDescriptor {
   }
 }
 
-/// Describes a `DecoratedBox` carrying a `BoxDecoration`.
+/// Average colour of [gradient], or null when it has no colours.
 ///
-/// Only the solid fill is represented. Gradients, images, and borders would each
-/// need their own skeleton shape, which the wire format cannot express beyond a
-/// flat rectangle.
+/// The wire format carries one colour per rectangle, so a gradient has to
+/// collapse to a single value. Stops are ignored deliberately: weighting by
+/// them would be more faithful for a lopsided gradient, and wrong in a way that
+/// is harder to reason about for every other one, since a stop describes where
+/// a colour sits rather than how much area it covers.
+Color? _averageColor(Gradient gradient) {
+  final colors = gradient.colors;
+  if (colors.isEmpty) {
+    return null;
+  }
+
+  var alpha = 0.0;
+  var red = 0.0;
+  var green = 0.0;
+  var blue = 0.0;
+  for (final color in colors) {
+    alpha += color.a;
+    red += color.r;
+    green += color.g;
+    blue += color.b;
+  }
+
+  final count = colors.length;
+
+  return Color.from(
+    alpha: alpha / count,
+    red: red / count,
+    green: green / count,
+    blue: blue / count,
+  );
+}
+
+/// Appends [side] as a band along one edge of [rect].
+void _addSide(
+  BorderSide side,
+  Rect rect,
+  AxisDirection edge,
+  List<WireframeSkeleton> into,
+) {
+  if (side.style == BorderStyle.none || side.width <= 0 || side.color.a == 0) {
+    return;
+  }
+
+  // Clamped so a border wider than the box it surrounds stays inside it rather
+  // than reaching over whatever is next to it.
+  final width = side.width.clamp(0.0, rect.width);
+  final height = side.width.clamp(0.0, rect.height);
+
+  final band = switch (edge) {
+    AxisDirection.up => Rect.fromLTWH(rect.left, rect.top, rect.width, height),
+    AxisDirection.down => Rect.fromLTWH(
+      rect.left,
+      rect.bottom - height,
+      rect.width,
+      height,
+    ),
+    AxisDirection.left => Rect.fromLTWH(
+      rect.left,
+      rect.top,
+      width,
+      rect.height,
+    ),
+    AxisDirection.right => Rect.fromLTWH(
+      rect.right - width,
+      rect.top,
+      width,
+      rect.height,
+    ),
+  };
+
+  into.add(WireframeSkeleton(rect: band, color: side.color));
+}
+
+/// Appends the four edges of [border] as bands around [rect].
+void _addBorder(
+  BoxBorder border,
+  Rect rect,
+  TextDirection? textDirection,
+  List<WireframeSkeleton> into,
+) {
+  final BorderSide left;
+  final BorderSide right;
+  switch (border) {
+    case Border():
+      left = border.left;
+      right = border.right;
+    case BorderDirectional():
+      final isRightToLeft = textDirection == TextDirection.rtl;
+      left = isRightToLeft ? border.end : border.start;
+      right = isRightToLeft ? border.start : border.end;
+    default:
+      return;
+  }
+
+  _addSide(border.top, rect, AxisDirection.up, into);
+  _addSide(border.bottom, rect, AxisDirection.down, into);
+  _addSide(left, rect, AxisDirection.left, into);
+  _addSide(right, rect, AxisDirection.right, into);
+}
+
+/// Describes a `DecoratedBox`, the render object behind `Container(decoration:)`
+/// and the shape decorations Material uses for cards, chips and inputs.
+///
+/// Everything is reduced to flat rectangles, which is the only shape the wire
+/// format has. A gradient collapses to its average colour, so a gradient
+/// background reads as a plausible block rather than as nothing at all, and a
+/// border becomes one thin band per edge, which keeps an outlined container from
+/// being reported as an empty area.
+///
+/// Rounded corners, shadows and background images are still lost. Corners and
+/// shadows are not expressible as rectangles, and an image's colour is not
+/// knowable without decoding it.
 class DecoratedBoxDescriptor extends ElementDescriptor {
   /// Creates the descriptor.
   const DecoratedBoxDescriptor();
@@ -85,17 +194,45 @@ class DecoratedBoxDescriptor extends ElementDescriptor {
       return;
     }
 
-    final decoration = renderObject.decoration;
-    if (decoration is! BoxDecoration) {
+    final rect = context.rect;
+    // Taken from the render object rather than from an ancestor lookup, which
+    // would register a dependency on an inherited widget during a walk.
+    final textDirection = renderObject.configuration.textDirection;
+
+    switch (renderObject.decoration) {
+      case final BoxDecoration decoration:
+        _addFill(decoration.color, decoration.gradient, rect, into);
+        final border = decoration.border;
+        if (border != null) {
+          _addBorder(border, rect, textDirection, into);
+        }
+
+      case final ShapeDecoration decoration:
+        _addFill(decoration.color, decoration.gradient, rect, into);
+        final shape = decoration.shape;
+        if (shape is OutlinedBorder) {
+          _addBorder(
+            Border.fromBorderSide(shape.side),
+            rect,
+            textDirection,
+            into,
+          );
+        }
+    }
+  }
+
+  void _addFill(
+    Color? color,
+    Gradient? gradient,
+    Rect rect,
+    List<WireframeSkeleton> into,
+  ) {
+    final fill = color ?? (gradient == null ? null : _averageColor(gradient));
+    if (fill == null || fill.a == 0) {
       return;
     }
 
-    final color = decoration.color;
-    if (color == null || color.a == 0) {
-      return;
-    }
-
-    into.add(WireframeSkeleton(rect: context.rect, color: color));
+    into.add(WireframeSkeleton(rect: rect, color: fill));
   }
 }
 

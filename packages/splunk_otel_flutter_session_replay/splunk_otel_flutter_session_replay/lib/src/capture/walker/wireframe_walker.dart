@@ -18,10 +18,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptor_registry.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/platform_view_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_frame.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/privacy/sensitivity_resolver.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/walker/clip_resolver.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/element_id_allocator.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 
@@ -34,11 +36,15 @@ import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_f
 /// ones that produced a node. Slivers and other non-box render objects emit no
 /// node but still sit in the render tree, so skipping them here would compose
 /// the wrong transform for everything beneath them.
+///
+/// [clip] is the region, in view coordinates, that enclosing render objects
+/// confine this subtree to. A null clip means unbounded.
 typedef _WalkState = ({
   AncestorLearner? learner,
   bool isSensitive,
   RenderObject? ancestor,
   Matrix4 ancestorTransform,
+  Rect? clip,
 });
 
 /// Walks the live Flutter element tree and produces wireframe snapshots.
@@ -138,6 +144,9 @@ class WireframeWalker {
         isSensitive: false,
         ancestor: null,
         ancestorTransform: Matrix4.identity(),
+        // The view bounds the whole tree, so content positioned off screen is
+        // discarded at the root rather than travelling to the consumer.
+        clip: Offset.zero & viewSize,
       )),
     );
 
@@ -154,6 +163,14 @@ class WireframeWalker {
     // Tooling interface leaves no trace, unlike a masked subtree which still
     // reports its bounds.
     if (element.widget is ExcludedFromCapture) {
+      return;
+    }
+
+    // A clip only ever narrows on the way down, so once it closes nothing below
+    // can be visible. Skipping here is what makes clipping a saving rather than
+    // an additional cost.
+    final inheritedClip = state.clip;
+    if (inheritedClip != null && inheritedClip.isEmpty) {
       return;
     }
 
@@ -191,6 +208,7 @@ class WireframeWalker {
               isSensitive: isSensitive,
               ancestor: state.ancestor,
               ancestorTransform: state.ancestorTransform,
+              clip: inheritedClip,
             );
 
       element.debugVisitOnstageChildren(
@@ -201,15 +219,29 @@ class WireframeWalker {
     }
 
     final transform = _transformFor(renderObject, state);
+
+    // The node itself is bounded by what encloses it; its children are bounded
+    // by that and by whatever this render object clips them to.
+    final childClip = renderObject is RenderBox && renderObject.hasSize
+        ? _clipForChildren(renderObject, transform, inheritedClip)
+        : inheritedClip;
+
     final childState = (
       learner: learner,
       isSensitive: isSensitive,
       ancestor: renderObject,
       ancestorTransform: transform,
+      clip: childClip,
     );
 
     var target = parent;
-    final node = _describe(element, renderObject, transform, childState);
+    final node = _describe(
+      element,
+      renderObject,
+      transform,
+      inheritedClip,
+      childState,
+    );
     if (node != null) {
       parent.addChild(node);
       target = node;
@@ -261,10 +293,67 @@ class WireframeWalker {
   /// Non-box render objects such as slivers produce no node, but their children
   /// are still visited by the caller, since box descendants of a sliver are
   /// visible content.
+  /// Region this render object confines its children to, in view coordinates.
+  Rect? _clipForChildren(
+    RenderBox renderObject,
+    Matrix4 transform,
+    Rect? inherited,
+  ) {
+    if (!clipsChildren(renderObject)) {
+      return inherited;
+    }
+
+    return intersectClip(
+      inherited,
+      MatrixUtils.transformRect(transform, Offset.zero & renderObject.size),
+    );
+  }
+
+  /// Confines [skeletons] to [clip], dropping those left with no area.
+  ///
+  /// Returns the original list when nothing needed trimming, which is the
+  /// overwhelmingly common case and keeps the walk allocation-free for it.
+  List<WireframeSkeleton> _clipSkeletons(
+    List<WireframeSkeleton> skeletons,
+    Rect clip,
+  ) {
+    var needsTrim = false;
+    for (final skeleton in skeletons) {
+      if (!containsRect(clip, skeleton.rect)) {
+        needsTrim = true;
+        break;
+      }
+    }
+
+    if (!needsTrim) {
+      return skeletons;
+    }
+
+    final trimmed = <WireframeSkeleton>[];
+    for (final skeleton in skeletons) {
+      final rect = skeleton.rect.intersect(clip);
+      if (rect.isEmpty) {
+        continue;
+      }
+
+      trimmed.add(
+        WireframeSkeleton(
+          rect: rect,
+          color: skeleton.color,
+          opacity: skeleton.opacity,
+          isText: skeleton.isText,
+        ),
+      );
+    }
+
+    return trimmed;
+  }
+
   WireframeNode? _describe(
     Element element,
     RenderObject renderObject,
     Matrix4 transform,
+    Rect? clip,
     _WalkState state,
   ) {
     if (renderObject is! RenderBox) {
@@ -282,7 +371,11 @@ class WireframeWalker {
       return null;
     }
 
-    final rect = MatrixUtils.transformRect(transform, Offset.zero & size);
+    final fullRect = MatrixUtils.transformRect(transform, Offset.zero & size);
+
+    // Reporting the visible part rather than the laid-out part is what keeps a
+    // half-scrolled row from being painted over the header above it.
+    final rect = clip == null ? fullRect : fullRect.intersect(clip);
     if (rect.isEmpty) {
       return null;
     }
@@ -310,6 +403,13 @@ class WireframeWalker {
       if (!state.isSensitive) {
         skeletons = <WireframeSkeleton>[];
         descriptor.describeSkeletons(context, skeletons);
+
+        // A descriptor works in its own coordinates and cannot know what
+        // encloses it, so text lines and other derived geometry are confined
+        // here rather than in every descriptor.
+        if (clip != null) {
+          skeletons = _clipSkeletons(skeletons, clip);
+        }
       }
 
       opacity = descriptor.describeOpacity(context);
@@ -322,6 +422,10 @@ class WireframeWalker {
       rect: rect,
       opacity: opacity,
       isSensitive: state.isSensitive,
+      // Reported even for a masked subtree: it names the native view rather
+      // than describing anything inside it, and the native recorder needs it to
+      // apply the same masking to what it captures there.
+      nativeViewId: nativeViewIdOf(renderObject),
       skeletons: skeletons,
     );
   }

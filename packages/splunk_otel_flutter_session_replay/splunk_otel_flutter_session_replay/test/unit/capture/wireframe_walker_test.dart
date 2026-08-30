@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/walker/clip_resolver.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/wireframe_walker.dart';
 
@@ -244,16 +248,43 @@ void main() {
           for (final node in _flatten(frame.root)) node.id: node,
         };
 
+        /// Region [renderObject] is confined to, derived independently of the
+        /// walker by climbing to each clipping ancestor.
+        Rect clipFor(RenderBox renderObject) {
+          var clip = Offset.zero & frame.viewSize;
+          for (
+            RenderObject? ancestor = renderObject.parent;
+            ancestor != null;
+            ancestor = ancestor.parent
+          ) {
+            if (ancestor is RenderBox &&
+                ancestor.hasSize &&
+                clipsChildren(ancestor)) {
+              clip = clip.intersect(
+                MatrixUtils.transformRect(
+                  ancestor.getTransformTo(null),
+                  Offset.zero & ancestor.size,
+                ),
+              );
+            }
+          }
+
+          return clip;
+        }
+
         var compared = 0;
         void visit(Element element) {
           if (element is RenderObjectElement) {
             final renderObject = element.renderObject;
             final node = byId[walker.idAllocator.idFor(element)];
             if (node != null && renderObject is RenderBox) {
+              // Capture reports the visible part of a node, so the reference
+              // has to be narrowed the same way. The geometry itself still
+              // comes from getTransformTo rather than from the walker.
               final expected = MatrixUtils.transformRect(
                 renderObject.getTransformTo(null),
                 Offset.zero & renderObject.size,
-              );
+              ).intersect(clipFor(renderObject));
 
               expect(
                 node.rect.left,
@@ -342,6 +373,42 @@ void main() {
         await tester.pump();
 
         expectMatchesGetTransformTo(tester);
+      });
+
+      testWidgets('should report rotated content as the box it occupies', (
+        tester,
+      ) async {
+        // The wire format has no rotation: a node is a rectangle. Rotated
+        // content is therefore reported as the axis-aligned box it covers,
+        // which is the region a consumer must treat as occupied. A 45 degree
+        // square is the clearest case: a 100 wide square covers a box of
+        // 100 * sqrt(2) on both axes.
+        await tester.pumpWidget(
+          Center(
+            child: Transform.rotate(
+              angle: math.pi / 4,
+              child: const SizedBox(
+                width: 100,
+                height: 100,
+                child: ColoredBox(color: Color(0xFF00FF00)),
+              ),
+            ),
+          ),
+        );
+
+        final frame = walker.capture().single;
+        final rotated = _flatten(
+          frame.root,
+        ).firstWhere((node) => node.skeletons.isNotEmpty);
+        final diagonal = 100 * math.sqrt2;
+
+        expect(rotated.rect.width, closeTo(diagonal, 1e-6));
+        expect(rotated.rect.height, closeTo(diagonal, 1e-6));
+        expect(rotated.rect.center.dx, closeTo(frame.viewSize.width / 2, 1e-6));
+        expect(
+          rotated.rect.center.dy,
+          closeTo(frame.viewSize.height / 2, 1e-6),
+        );
       });
     });
   });

@@ -19,6 +19,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptor_registry.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/painted_leaf_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
 
 /// Stands in for an application render object that has no public type.
@@ -98,7 +99,7 @@ void main() {
     });
 
     group('tier three, learn on first sight', () {
-      test('should return null when nothing matches', () {
+      test('should fall through to tier four when nothing matches', () {
         final registry = DescriptorRegistry(
           renderObjectDescriptors: const <Type, ElementDescriptor>{},
           widgetDescriptors: const <Type, ElementDescriptor>{},
@@ -109,7 +110,7 @@ void main() {
           _PrivateRenderBox(),
         );
 
-        expect(resolved, isNull);
+        expect(resolved, isA<PaintedLeafDescriptor>());
       });
 
       test('should not learn when the learner does not recognise the '
@@ -130,7 +131,7 @@ void main() {
           pendingLearner: learner,
         );
 
-        expect(resolved, isNull);
+        expect(resolved, isNot(same(descriptor)));
       });
 
       test('should learn a render object type from an armed ancestor', () {
@@ -221,8 +222,41 @@ void main() {
 
         expect(
           other.resolve(_FakeElement(const SizedBox()), _MarkedRenderBox()),
-          isNull,
+          isNot(same(descriptor)),
         );
+      });
+    });
+
+    group('tier four, paint the leaf', () {
+      test('should not apply to a render object that has children', () {
+        final registry = DescriptorRegistry(
+          renderObjectDescriptors: const <Type, ElementDescriptor>{},
+          widgetDescriptors: const <Type, ElementDescriptor>{},
+        );
+        final parent = _PrivateRenderBox()..child = _PrivateRenderBox();
+
+        final resolved = registry.resolve(
+          _FakeElement(const SizedBox()),
+          parent,
+        );
+
+        expect(resolved, isNull);
+      });
+
+      test('should ask per instance rather than remember the type', () {
+        final registry = DescriptorRegistry(
+          renderObjectDescriptors: const <Type, ElementDescriptor>{},
+          widgetDescriptors: const <Type, ElementDescriptor>{},
+        );
+        final element = _FakeElement(const SizedBox());
+
+        registry.resolve(element, _PrivateRenderBox());
+        final asContainer = registry.resolve(
+          element,
+          _PrivateRenderBox()..child = _PrivateRenderBox(),
+        );
+
+        expect(asContainer, isNull);
       });
     });
   });

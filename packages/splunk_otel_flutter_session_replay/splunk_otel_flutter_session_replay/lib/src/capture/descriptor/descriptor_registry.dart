@@ -18,8 +18,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/box_descriptors.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/custom_paint_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/image_descriptor.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/painted_leaf_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/paragraph_descriptor.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/descriptors/platform_view_descriptor.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
 
 /// Teaches the registry about a render object type that cannot be named in
@@ -46,8 +49,10 @@ class AncestorLearner {
 ///
 /// Lookups are keyed on `Type` objects rather than type names because a `Type`
 /// survives release-mode obfuscation intact, while `runtimeType.toString()` is
-/// rewritten to a meaningless symbol. Resolution proceeds in three tiers, from
-/// most to least trustworthy source of truth.
+/// rewritten to a meaningless symbol. Resolution proceeds in four tiers, from
+/// most to least trustworthy source of truth: the render object's type, the
+/// widget's type, a learned pairing, and finally asking a childless render
+/// object to paint so its shapes can be observed.
 class DescriptorRegistry {
   /// Creates a registry, optionally replacing the built-in tables.
   DescriptorRegistry({
@@ -75,6 +80,11 @@ class DescriptorRegistry {
         RenderOpacity: OpacityDescriptor(),
         RenderAnimatedOpacity: AnimatedOpacityDescriptor(),
         RenderImage: ImageDescriptor(),
+        RenderCustomPaint: CustomPaintDescriptor(),
+        PlatformViewRenderBox: PlatformViewDescriptor(),
+        RenderAndroidView: PlatformViewDescriptor(),
+        RenderUiKitView: PlatformViewDescriptor(),
+        RenderAppKitView: PlatformViewDescriptor(),
       };
 
   /// Tier two: private render objects, dispatched on the public widget that
@@ -132,13 +142,21 @@ class DescriptorRegistry {
       return byWidget;
     }
 
-    if (pendingLearner == null || !pendingLearner.matches(renderObject)) {
-      return null;
+    if (pendingLearner != null && pendingLearner.matches(renderObject)) {
+      _renderObjectDescriptors[renderObject.runtimeType] =
+          pendingLearner.descriptor;
+
+      return pendingLearner.descriptor;
     }
 
-    _renderObjectDescriptors[renderObject.runtimeType] =
-        pendingLearner.descriptor;
-
-    return pendingLearner.descriptor;
+    // Tier four: nothing named this render object, so ask it to paint.
+    //
+    // Restricted to childless render objects, which either draw something
+    // themselves or are invisible. A container is excluded because its
+    // appearance is its own properties and its children are visited anyway.
+    //
+    // Deliberately not memoised by type. The same type is a leaf in one place
+    // and a container in another, so the question has to be asked per instance.
+    return isLeaf(renderObject) ? const PaintedLeafDescriptor() : null;
   }
 }
