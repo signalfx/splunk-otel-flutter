@@ -19,6 +19,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/image_sampler.dart';
+
 /// One rectangle a painter covered, in the painter's own coordinates.
 class RecordedFill {
   /// Creates a fill.
@@ -86,12 +88,33 @@ class RecordingCanvas implements Canvas {
   /// Whether recording stopped early because [maxFills] was reached.
   bool get isSaturated => fills.length >= maxFills;
 
-  void _add(Rect local, Paint paint, {bool isText = false}) {
+  bool _isProvisional = false;
+
+  /// Whether some of what was recorded stands in for content not yet known.
+  ///
+  /// A recording that drew an image before it had been sampled is only as good
+  /// as its placeholder, so callers that cache recordings should record again
+  /// rather than keep this one for the life of the painter.
+  bool get isProvisional => _isProvisional;
+
+  void _add(Rect local, Paint paint, {bool isText = false}) =>
+      _addColor(local, _colorOf(paint), isText: isText);
+
+  /// The colour a paint will produce, as far as it can be known.
+  ///
+  /// A paint carrying a shader — a gradient, or an image used as a fill —
+  /// leaves `color` at its default opaque black, which would report a gradient
+  /// chart as a black block. The shader itself is opaque to Dart, so what it
+  /// would produce cannot be recovered; a neutral colour at least keeps the
+  /// shape without asserting a colour that is certainly wrong.
+  Color _colorOf(Paint paint) =>
+      paint.shader == null ? paint.color : unknownContentColor;
+
+  void _addColor(Rect local, Color color, {bool isText = false}) {
     if (isSaturated) {
       return;
     }
 
-    final color = paint.color;
     if (color.a == 0 || local.isEmpty) {
       return;
     }
@@ -335,7 +358,8 @@ class RecordingCanvas implements Canvas {
   void drawPaint(Paint paint) => _add(_clip ?? (Offset.zero & size), paint);
 
   @override
-  void drawImage(ui.Image image, Offset offset, Paint paint) => _add(
+  void drawImage(ui.Image image, Offset offset, Paint paint) => _addImage(
+    image,
     Rect.fromLTWH(
       offset.dx,
       offset.dy,
@@ -347,11 +371,28 @@ class RecordingCanvas implements Canvas {
 
   @override
   void drawImageRect(ui.Image image, Rect src, Rect dst, Paint paint) =>
-      _add(dst, paint);
+      _addImage(image, dst, paint);
 
   @override
   void drawImageNine(ui.Image image, Rect center, Rect dst, Paint paint) =>
-      _add(dst, paint);
+      _addImage(image, dst, paint);
+
+  /// Records an image as the colour it averages out to.
+  ///
+  /// A paint used to draw an image carries no colour of its own, so taking
+  /// `paint.color` would report every picture as black. The sampler answers
+  /// with the average colour of images it has already looked at, and starts
+  /// looking at ones it has not; until then the image is a neutral block.
+  void _addImage(ui.Image image, Rect dst, Paint paint) {
+    final sample = sampleOf(image);
+    if (sample == null) {
+      _isProvisional = true;
+    }
+
+    final color = sample == null ? unknownContentColor : sample.fill;
+
+    _addColor(dst, color.withValues(alpha: color.a * paint.color.a));
+  }
 
   @override
   void drawParagraph(ui.Paragraph paragraph, Offset offset) {

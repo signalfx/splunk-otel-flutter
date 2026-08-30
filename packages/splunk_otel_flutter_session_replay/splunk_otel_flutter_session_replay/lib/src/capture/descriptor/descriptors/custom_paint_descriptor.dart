@@ -116,12 +116,16 @@ class CustomPaintDescriptor extends ElementDescriptor {
     _record(renderObject.painter, canvas, size);
     _record(renderObject.foregroundPainter, canvas, size);
 
-    _cache[renderObject] = _CachedPaint(
-      fills: canvas.fills,
-      painter: renderObject.painter,
-      foregroundPainter: renderObject.foregroundPainter,
-      size: size,
-    );
+    // A recording that stood in for an image it had not sampled yet is kept
+    // only for this frame, so the real colour is picked up once it arrives.
+    if (!canvas.isProvisional) {
+      _cache[renderObject] = _CachedPaint(
+        fills: canvas.fills,
+        painter: renderObject.painter,
+        foregroundPainter: renderObject.foregroundPainter,
+        size: size,
+      );
+    }
 
     _emit(canvas.fills, context, into);
   }

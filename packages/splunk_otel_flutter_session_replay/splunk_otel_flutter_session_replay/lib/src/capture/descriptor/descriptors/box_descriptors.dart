@@ -19,6 +19,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/dynamic_property.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/element_descriptor.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/descriptor/image_sampler.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_node.dart';
 
 /// Describes a `ColoredBox`, the widget behind `Container(color: ...)`.
@@ -175,11 +176,11 @@ void _addBorder(
 /// format has. A gradient collapses to its average colour, so a gradient
 /// background reads as a plausible block rather than as nothing at all, and a
 /// border becomes one thin band per edge, which keeps an outlined container from
-/// being reported as an empty area.
+/// being reported as an empty area. A background image is reported in the
+/// colour it averages out to, once it has been resolved and sampled.
 ///
-/// Rounded corners, shadows and background images are still lost. Corners and
-/// shadows are not expressible as rectangles, and an image's colour is not
-/// knowable without decoding it.
+/// Rounded corners and shadows are still lost, being shapes the wire format
+/// cannot express.
 class DecoratedBoxDescriptor extends ElementDescriptor {
   /// Creates the descriptor.
   const DecoratedBoxDescriptor();
@@ -202,6 +203,7 @@ class DecoratedBoxDescriptor extends ElementDescriptor {
     switch (renderObject.decoration) {
       case final BoxDecoration decoration:
         _addFill(decoration.color, decoration.gradient, rect, into);
+        _addImage(decoration.image, context, rect, into);
         final border = decoration.border;
         if (border != null) {
           _addBorder(border, rect, textDirection, into);
@@ -209,6 +211,7 @@ class DecoratedBoxDescriptor extends ElementDescriptor {
 
       case final ShapeDecoration decoration:
         _addFill(decoration.color, decoration.gradient, rect, into);
+        _addImage(decoration.image, context, rect, into);
         final shape = decoration.shape;
         if (shape is OutlinedBorder) {
           _addBorder(
@@ -219,6 +222,58 @@ class DecoratedBoxDescriptor extends ElementDescriptor {
           );
         }
     }
+  }
+
+  /// Adds the background image a decoration paints over its fill.
+  ///
+  /// A decoration names its image by provider rather than holding a decoded
+  /// one, so both the resolve and the sampling happen off the capture path.
+  /// Until they finish the image contributes nothing, which leaves the fill
+  /// beneath it showing rather than covering it with a guess.
+  void _addImage(
+    DecorationImage? image,
+    DescriptorContext context,
+    Rect rect,
+    List<WireframeSkeleton> into,
+  ) {
+    if (image == null) {
+      return;
+    }
+
+    final renderObject = context.renderObject;
+    final configuration = (renderObject as RenderDecoratedBox).configuration;
+    final sample = sampleOfProvider(image.image, configuration);
+    if (sample == null || sample.coverage <= 0) {
+      return;
+    }
+
+    final painted = context
+        .localToView(
+          fittedImageRect(
+            imageSize: sample.size,
+            box: Offset.zero & renderObject.size,
+            fit: image.fit,
+            alignment: image.alignment,
+            scale: image.scale,
+            repeat: image.repeat,
+            centerSlice: image.centerSlice,
+            matchTextDirection: image.matchTextDirection,
+            textDirection: configuration.textDirection,
+          ),
+        )
+        .intersect(rect);
+
+    if (painted.isEmpty) {
+      return;
+    }
+
+    into.add(
+      WireframeSkeleton(
+        rect: painted,
+        color: sample.fill,
+        opacity: image.opacity,
+      ),
+    );
   }
 
   void _addFill(

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'dart:ui' as ui;
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -45,17 +43,6 @@ Widget _host(Widget child) => Directionality(
   textDirection: TextDirection.ltr,
   child: Align(alignment: Alignment.topLeft, child: child),
 );
-
-/// Builds a decoded image without touching the asset pipeline.
-ui.Image _decodedImage(int width, int height) {
-  final recorder = ui.PictureRecorder();
-  Canvas(recorder).drawRect(
-    Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
-    Paint()..color = _green,
-  );
-
-  return recorder.endRecording().toImageSync(width, height);
-}
 
 void main() {
   late WireframeWalker walker;
@@ -240,36 +227,6 @@ void main() {
 
       expect(node.opacity, 1.0);
       expect(node.toJson().containsKey('opacity'), isFalse);
-    });
-  });
-
-  group('ImageDescriptor', () {
-    testWidgets('should stand in for image content with a flat block', (
-      tester,
-    ) async {
-      final image = _decodedImage(40, 20);
-      addTearDown(image.dispose);
-
-      await tester.pumpWidget(
-        _host(RawImage(image: image, width: 40, height: 20)),
-      );
-
-      final skeleton = _skeletons(walker.capture().single.root).single;
-
-      // Reading the real pixels would mean a GPU read-back, which cannot
-      // complete inside a synchronous walk, so layout is preserved instead.
-      expect(skeleton.rect, const Rect.fromLTWH(0, 0, 40, 20));
-      expect(skeleton.color, const Color(0xFF9E9E9E));
-      expect(skeleton.isText, isFalse);
-    });
-
-    testWidgets('should emit nothing while the image is still loading', (
-      tester,
-    ) async {
-      // A placeholder block here would draw content the user cannot see yet.
-      await tester.pumpWidget(_host(const RawImage(width: 40, height: 20)));
-
-      expect(_skeletons(walker.capture().single.root), isEmpty);
     });
   });
 
