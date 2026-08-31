@@ -41,6 +41,7 @@ class WireframeCaptureController {
     WireframeWalker? walker,
     this.interval = const Duration(milliseconds: 100),
     this.maxConsecutiveErrors = 3,
+    this.maximumSuspension = const Duration(seconds: 10),
     this.onError,
   }) : walker = walker ?? WireframeWalker(),
        assert(
@@ -60,6 +61,13 @@ class WireframeCaptureController {
   /// tick for the lifetime of the application.
   final int maxConsecutiveErrors;
 
+  /// How long a single suspension may hold capture off.
+  ///
+  /// A suspension whose holder never releases it would end the recording
+  /// without ending the session, which is worse than the frames it was meant
+  /// to withhold, so every one of them expires.
+  final Duration maximumSuspension;
+
   /// Invoked when a capture fails.
   final WireframeCaptureErrorCallback? onError;
 
@@ -69,9 +77,35 @@ class WireframeCaptureController {
   bool _frameBuiltSinceLastCapture = false;
   bool _captureInProgress = false;
   int _consecutiveErrors = 0;
+  int _suspensions = 0;
 
   /// Whether capture is currently running.
   bool get isRunning => _timer != null;
+
+  /// Whether capture is held off by at least one unreleased suspension.
+  bool get isSuspended => _suspensions > 0;
+
+  /// Holds capture off until the returned handle is released.
+  ///
+  /// A suspension is for moments when the tree on screen is not a screen: the
+  /// frames during a route transition show two of them at once, and content
+  /// that a `SensitiveArea` masks in its own screen can be drawn outside it
+  /// while moving, as a `Hero` does when it builds its flight in the overlay.
+  /// Nothing is captured meanwhile, so a replay holds the last settled frame
+  /// rather than showing something nobody can vouch for.
+  ///
+  /// Suspensions nest: capture resumes when the last one is released.
+  CaptureSuspension suspend() {
+    _suspensions += 1;
+
+    return CaptureSuspension._(this);
+  }
+
+  void _release() {
+    if (_suspensions > 0) {
+      _suspensions -= 1;
+    }
+  }
 
   /// Registered sinks.
   Iterable<WireframeSink> get sinks => List<WireframeSink>.unmodifiable(_sinks);
@@ -111,7 +145,16 @@ class WireframeCaptureController {
   ///
   /// Exists so that a pull-driven consumer, such as the native recorder asking
   /// for the current wireframe, can reuse the same pipeline as the timer.
+  ///
+  /// Returns nothing while capture is suspended. A suspension is a statement
+  /// that the current tree must not be reported, so it has to hold however the
+  /// capture was asked for; a caller that could opt out of it would make the
+  /// guarantee worthless.
   List<WireframeFrame> captureNow() {
+    if (isSuspended) {
+      return const <WireframeFrame>[];
+    }
+
     Timeline.startSync('SplunkSessionReplay.capture');
     try {
       final frames = walker.capture();
@@ -158,7 +201,7 @@ class WireframeCaptureController {
   }
 
   void _tick() {
-    if (!_frameBuiltSinceLastCapture || _captureInProgress) {
+    if (!_frameBuiltSinceLastCapture || _captureInProgress || isSuspended) {
       return;
     }
 
@@ -199,5 +242,57 @@ class WireframeCaptureController {
     if (_consecutiveErrors >= maxConsecutiveErrors) {
       stop();
     }
+  }
+}
+
+/// A hold on capture, taken from [WireframeCaptureController.suspend].
+///
+/// Releasing is idempotent, and happens by itself once
+/// [WireframeCaptureController.maximumSuspension] has passed, so a holder that
+/// never comes back cannot silently end a recording.
+class CaptureSuspension {
+  CaptureSuspension._(this._controller) {
+    _watchdog = Timer(_controller.maximumSuspension, _expire);
+  }
+
+  final WireframeCaptureController _controller;
+
+  late final Timer _watchdog;
+  bool _isReleased = false;
+
+  /// Whether this suspension has already been released.
+  bool get isReleased => _isReleased;
+
+  /// Lets capture resume, unless another suspension is still held.
+  void release() {
+    if (_isReleased) {
+      return;
+    }
+
+    _isReleased = true;
+    _watchdog.cancel();
+    _controller._release();
+  }
+
+  void _expire() {
+    if (_isReleased) {
+      return;
+    }
+
+    release();
+
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: StateError(
+          'A session replay capture suspension was held for longer than '
+          '${_controller.maximumSuspension.inSeconds}s and has been released '
+          'automatically. Capture has resumed; whatever took the suspension '
+          'never gave it back.',
+        ),
+        library: 'splunk_otel_flutter_session_replay',
+        context: ErrorDescription('while capturing session replay frames'),
+        silent: true,
+      ),
+    );
   }
 }

@@ -38,6 +38,31 @@ void main() {
       expect(find.byIcon(Icons.layers_outlined), findsOneWidget);
     });
 
+    testWidgets('should lend its controller to a navigator observer', (
+      tester,
+    ) async {
+      final observer = CaptureNavigatorObserver();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          navigatorObservers: <NavigatorObserver>[observer],
+          builder: (context, child) => SessionReplayDebugOverlay(
+            navigatorObserver: observer,
+            child: child!,
+          ),
+          home: const Scaffold(body: Text('application content')),
+        ),
+      );
+
+      // The observer belongs to the navigator and the controller belongs to
+      // the overlay above it, so the two can only meet by being introduced.
+      expect(observer.controller, isNotNull);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      expect(observer.controller, isNull);
+    });
+
     testWidgets('should add nothing to the tree when disabled', (tester) async {
       await tester.pumpWidget(_app(enabled: false));
 

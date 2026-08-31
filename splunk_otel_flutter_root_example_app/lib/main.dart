@@ -114,6 +114,9 @@ void main() async {
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
+/// Holds session replay capture off while a route is moving.
+final CaptureNavigatorObserver captureObserver = CaptureNavigatorObserver();
+
 class DemoApp extends StatelessWidget {
   const DemoApp({super.key});
 
@@ -123,12 +126,13 @@ class DemoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Splunk Flutter demo app - SmartCinema',
       home: const WelcomeScreen(),
-      navigatorObservers: [routeObserver],
+      navigatorObservers: [routeObserver, captureObserver],
       // Debug builds get an inspector for session replay capture, reachable
       // from the floating button. It compiles out of release builds. The panel
       // shows the address of the browser player served on the streaming port.
       builder: (context, child) => SessionReplayDebugOverlay(
         streamPort: 8090,
+        navigatorObserver: captureObserver,
         child: child ?? const SizedBox.shrink(),
       ),
     );

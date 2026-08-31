@@ -129,6 +129,101 @@ void main() {
         expect(frames, hasLength(1));
         expect(controller.isRunning, isFalse);
       });
+
+      testWidgets('should report nothing while suspended', (tester) async {
+        await tester.pumpWidget(const SizedBox.shrink());
+
+        final suspension = controller.suspend();
+
+        // A pull has to obey a suspension too, or a recorder asking for the
+        // current wireframe would be handed the frames it was meant to miss.
+        expect(controller.captureNow(), isEmpty);
+
+        suspension.release();
+
+        expect(controller.captureNow(), hasLength(1));
+      });
+    });
+
+    group('suspension', () {
+      testWidgets('should hold frames back until released', (tester) async {
+        await tester.pumpWidget(const SizedBox.shrink());
+
+        controller.start();
+        await _pumpFrameAndTick(tester);
+        final captured = sink.frames.length;
+
+        final suspension = controller.suspend();
+        await _pumpFrameAndTick(tester);
+        await _pumpFrameAndTick(tester);
+
+        expect(controller.isSuspended, isTrue);
+        expect(sink.frames, hasLength(captured));
+
+        suspension.release();
+        await _pumpFrameAndTick(tester);
+
+        expect(controller.isSuspended, isFalse);
+        expect(sink.frames.length, greaterThan(captured));
+        controller.stop();
+      });
+
+      testWidgets('should stay suspended until the last hold is released', (
+        tester,
+      ) async {
+        await tester.pumpWidget(const SizedBox.shrink());
+
+        final first = controller.suspend();
+        final second = controller.suspend();
+
+        first.release();
+
+        // Overlapping transitions are ordinary, so the count decides rather
+        // than whichever of them finishes first.
+        expect(controller.isSuspended, isTrue);
+
+        second.release();
+
+        expect(controller.isSuspended, isFalse);
+      });
+
+      testWidgets('should ignore a repeated release', (tester) async {
+        await tester.pumpWidget(const SizedBox.shrink());
+
+        final first = controller.suspend();
+        final second = controller.suspend();
+
+        first
+          ..release()
+          ..release();
+
+        expect(controller.isSuspended, isTrue);
+
+        second.release();
+
+        expect(controller.isSuspended, isFalse);
+      });
+
+      testWidgets('should release a suspension nobody gave back', (
+        tester,
+      ) async {
+        final controller = WireframeCaptureController(
+          interval: _interval,
+          maximumSuspension: const Duration(seconds: 2),
+        );
+        addTearDown(controller.dispose);
+
+        await tester.pumpWidget(const SizedBox.shrink());
+
+        final suspension = controller.suspend();
+        await tester.pump(const Duration(seconds: 3));
+
+        // Losing a recording outright is worse than the frames a suspension
+        // withholds, so one that outlives its welcome expires.
+        expect(suspension.isReleased, isTrue);
+        expect(controller.isSuspended, isFalse);
+        expect(tester.takeException(), isStateError);
+      });
     });
 
     group('periodic capture', () {

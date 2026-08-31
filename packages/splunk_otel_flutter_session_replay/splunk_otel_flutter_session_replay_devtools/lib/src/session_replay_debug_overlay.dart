@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:splunk_otel_flutter_session_replay/src/capture/model/wireframe_frame.dart';
+import 'package:splunk_otel_flutter_session_replay/src/capture/navigation/capture_navigator_observer.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/walker/excluded_from_capture.dart';
 import 'package:splunk_otel_flutter_session_replay/src/capture/wireframe_capture_controller.dart';
 
@@ -57,11 +58,30 @@ class SessionReplayDebugOverlay extends StatefulWidget {
     this.enabled = kDebugMode,
     this.interval = const Duration(milliseconds: 100),
     this.streamPort,
+    this.navigatorObserver,
     super.key,
   });
 
   /// Application to inspect.
   final Widget child;
+
+  /// Observer to hold capture off with while a route is moving.
+  ///
+  /// An observer belongs to the navigator, which is built below this widget, so
+  /// it is created by the application and handed here to be attached:
+  ///
+  /// ```dart
+  /// final observer = CaptureNavigatorObserver();
+  ///
+  /// MaterialApp(
+  ///   navigatorObservers: [observer],
+  ///   builder: (context, child) => SessionReplayDebugOverlay(
+  ///     navigatorObserver: observer,
+  ///     child: child!,
+  ///   ),
+  /// );
+  /// ```
+  final CaptureNavigatorObserver? navigatorObserver;
 
   /// Whether to install the inspector at all.
   ///
@@ -108,6 +128,7 @@ class _SessionReplayDebugOverlayState extends State<SessionReplayDebugOverlay> {
     super.initState();
     _controller = WireframeCaptureController(interval: widget.interval)
       ..addSink(_sink);
+    widget.navigatorObserver?.controller = _controller;
 
     if (widget.streamPort != null) {
       unawaited(_startStreaming(widget.streamPort!));
@@ -144,6 +165,9 @@ class _SessionReplayDebugOverlayState extends State<SessionReplayDebugOverlay> {
   @override
   void dispose() {
     _copyFeedbackTimer?.cancel();
+    if (identical(widget.navigatorObserver?.controller, _controller)) {
+      widget.navigatorObserver?.controller = null;
+    }
     // Disposing the controller also disposes the sink it owns.
     unawaited(_controller.dispose());
     super.dispose();

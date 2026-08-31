@@ -20,6 +20,8 @@
 /// engine produces, drawn back over the running interface.
 library;
 
+export 'package:splunk_otel_flutter_session_replay/src/capture/navigation/capture_navigator_observer.dart'
+    show CaptureNavigatorObserver;
 export 'package:splunk_otel_flutter_session_replay_devtools/src/session_replay_debug_overlay.dart'
     show SessionReplayDebugOverlay;
 export 'package:splunk_otel_flutter_session_replay_devtools/src/stream/wireframe_stream_server.dart'
