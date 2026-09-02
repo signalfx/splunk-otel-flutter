@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,8 +141,19 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
   });
   Future<int> customTrackingStartWorkflow({required String workflowName});
   Future<void> customTrackingEndWorkflow({required int handle});
+  Future<void> customTrackingTrackError({
+    required String type,
+    required String message,
+    String? stacktrace,
+    required MutableAttributes attributes,
+    required String source,
+    required bool handled,
+  });
 
   // Navigation
 
-  Future<void> navigationTrack({required String screenName});
+  Future<void> navigationTrack({
+    required String screenName,
+    MutableAttributes? attributes,
+  });
 }

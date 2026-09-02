@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,8 @@ import com.splunk.rum.integration.startup.StartupModuleConfiguration
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.opentelemetry.api.common.AttributeKey
+import io.opentelemetry.api.common.Attributes
 import io.opentelemetry.api.trace.Span
 import java.time.Duration
 
@@ -529,12 +531,76 @@ class SplunkOtelFlutterPlugin :
         callback(Result.success(Unit))
     }
 
-    // Navigation
+    override fun customTrackingTrackError(
+        error: GeneratedError,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        // The native trackError API accepts only type, message, stacktrace, and
+        // attributes. The remaining fields are carried as span attributes:
+        //   - source  -> "error.source"
+        //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
+        // The timestamp is not forwarded. The native SDK stamps the span itself.
+        // "splunk.rum.platform" tags the error as originating from the Flutter
+        // layer so the backend can route symbolication and UI accordingly.
+        val builder = error.attributes?.toOtelAttributes()?.toBuilder()
+            ?: Attributes.builder()
+        builder.put(AttributeKey.stringKey("error.source"), error.source)
+        builder.put(AttributeKey.booleanKey("exception.escaped"), !error.handled)
+        builder.put(AttributeKey.stringKey("splunk.rum.platform"), "flutter")
 
-    override fun navigationTrack(screenName: String, callback: (Result<Unit>) -> Unit) {
-        SplunkRum.instance.navigation.track(screenName)
+        SplunkRum.instance.customTracking.trackError(
+            error.type,
+            error.message,
+            error.stacktrace,
+            builder.build(),
+        )
 
         callback(Result.success(Unit))
+    }
+
+    // Navigation
+
+    override fun navigationTrack(
+        screenName: String,
+        attributes: GeneratedMutableAttributes?,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        // Preserve the null vs. empty distinction: a null map uses the native
+        // screen-name overload (its default attributes), while a provided map
+        // (even empty) is forwarded explicitly.
+        if (attributes == null) {
+            SplunkRum.instance.navigation.track(screenName)
+        } else {
+            SplunkRum.instance.navigation.track(screenName, attributes.toOtelAttributes())
+        }
+
+        callback(Result.success(Unit))
+    }
+
+    private fun GeneratedMutableAttributes.toOtelAttributes(): Attributes {
+        val builder = Attributes.builder()
+        attributes.forEach { (key, value) ->
+            when (value) {
+                is GeneratedMutableAttributeInt ->
+                    builder.put(AttributeKey.longKey(key), value.value)
+                is GeneratedMutableAttributeDouble ->
+                    builder.put(AttributeKey.doubleKey(key), value.value)
+                is GeneratedMutableAttributeString ->
+                    builder.put(AttributeKey.stringKey(key), value.value)
+                is GeneratedMutableAttributeBool ->
+                    builder.put(AttributeKey.booleanKey(key), value.value)
+                is GeneratedMutableAttributeListInt ->
+                    builder.put(AttributeKey.longArrayKey(key), value.value)
+                is GeneratedMutableAttributeListDouble ->
+                    builder.put(AttributeKey.doubleArrayKey(key), value.value)
+                is GeneratedMutableAttributeListString ->
+                    builder.put(AttributeKey.stringArrayKey(key), value.value)
+                is GeneratedMutableAttributeListBool ->
+                    builder.put(AttributeKey.booleanArrayKey(key), value.value)
+            }
+        }
+
+        return builder.build()
     }
 }
 

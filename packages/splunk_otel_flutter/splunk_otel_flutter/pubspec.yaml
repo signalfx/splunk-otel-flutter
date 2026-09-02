@@ -1,6 +1,6 @@
 name: splunk_otel_flutter
 description: "Splunk OpenTelemetry Flutter plugin for real user monitoring (RUM). Track app performance, crashes, network requests, and user interactions."
-version: 1.0.2
+version: 1.2.0
 repository: https://github.com/signalfx/splunk-otel-flutter/tree/main/packages/splunk_otel_flutter/splunk_otel_flutter
 homepage: https://github.com/signalfx/splunk-otel-flutter
 
@@ -13,7 +13,11 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  splunk_otel_flutter_platform_interface: ^1.0.0
+  # Locked to the 1.2.x line. The Pigeon codec is a wire contract shared with
+  # the platform interface, so the app-facing plugin and its interface must move
+  # together. An open caret could float the interface to a newer minor than the
+  # native codec was built against. Bump both bounds together every release.
+  splunk_otel_flutter_platform_interface: '>=1.2.0 <1.3.0'
 
 dev_dependencies:
   flutter_test:

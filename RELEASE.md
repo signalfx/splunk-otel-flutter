@@ -85,6 +85,22 @@ Examples:
 - **Alpha release**: Update both to `1.0.0-alpha.1`
 - **Stable release**: Update both to `1.0.0`
 
+**Also update the inter-package dependency constraints.** The app-facing and
+platform-interface packages are pinned to a single minor line so their shared
+Pigeon wire contract cannot drift. When bumping to a new minor line (for example
+`1.1.x` to `1.2.0`), move BOTH bounds of every sibling constraint to the new
+line, so the floor includes the release you are publishing and the ceiling still
+allows it. For example `>=1.1.0 <1.2.0` becomes `>=1.2.0 <1.3.0` in:
+
+- `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml`
+- `packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay/pubspec.yaml`
+- `packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface/pubspec.yaml`
+
+Leaving the floor at an older release lets a consumer upgrade one package while
+pub keeps a sibling at a version that predates a newly added Pigeon API, which
+breaks downstream compilation. Leaving the ceiling below the release you are
+publishing prevents the new interface from resolving at all.
+
 ### Step 2: Commit and Push
 
 Commit your version changes and push to GitLab (can be from GitHub mirror):

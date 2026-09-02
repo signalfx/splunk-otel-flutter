@@ -1,3 +1,15 @@
+## 1.2.0
+
+* Added the `GeneratedError` Pigeon data class and the `customTrackingTrackError` host API message, and extended the platform interface to bridge manual error reports to the native agents.
+
+## 1.1.0
+
+* Extended the `navigationTrack` Pigeon message and platform interface with an optional `attributes` argument to support automatic navigation instrumentation.
+
+## 1.0.3
+
+* Extended `NetworkMonitorModuleConfiguration` and Pigeon messages to bridge captured network request headers to iOS.
+
 ## 1.0.2
 
 * Version bump to align with `splunk_otel_flutter` 1.0.2, which fixes an App Store validation failure (`Validation failed (409) CFBundleIdentifier Collision`) that prevented users from uploading their apps.
