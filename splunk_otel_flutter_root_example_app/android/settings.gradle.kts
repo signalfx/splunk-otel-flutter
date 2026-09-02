@@ -17,9 +17,22 @@ pluginManagement {
     }
 }
 
+buildscript {
+    // Netty reaches this classpath only transitively, through the gRPC client used by AGP's
+    // test and device tooling. AGP 8.13.1 resolves 4.1.110.Final, which predates the fixes in
+    // 4.1.118.Final. Nothing here ends up in the application.
+    configurations.classpath {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "io.netty") {
+                useVersion("4.1.118.Final")
+            }
+        }
+    }
+}
+
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "8.9.1" apply false
+    id("com.android.application") version "8.13.1" apply false
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
 }
 

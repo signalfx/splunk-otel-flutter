@@ -12,8 +12,17 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.9.1")
+        classpath("com.android.tools.build:gradle:8.13.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}")
+    }
+
+    // Netty reaches this classpath only transitively, through the gRPC client used by AGP's
+    // test and device tooling. AGP 8.13.1 resolves 4.1.110.Final, which predates the fixes in
+    // 4.1.118.Final. Nothing here is packaged into the published AAR.
+    configurations.classpath.resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "io.netty") {
+            details.useVersion("4.1.118.Final")
+        }
     }
 }
 
