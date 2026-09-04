@@ -38,7 +38,14 @@ allprojects {
 }
 
 apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+
+// Apply KGP only when AGP has not already registered Kotlin (AGP 8, or AGP 9
+// with android.builtInKotlin=false). Applying it under AGP 9 built-in Kotlin fails.
+// pluginManager.apply is used instead of `apply plugin:` so Flutter's static scan
+// for unmigrated plugins does not flag this guarded call.
+if (project.extensions.findByName("kotlin") == null) {
+    project.pluginManager.apply("kotlin-android")
+}
 
 def splunkSdkVersion = getExtOrDefault("splunkSdkVersion")
 
@@ -51,10 +58,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         coreLibraryDesugaringEnabled(true)
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {
@@ -77,6 +80,12 @@ android {
                showStandardStreams = true
             }
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
 

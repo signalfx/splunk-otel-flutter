@@ -1,3 +1,7 @@
+## Unreleased
+
+* Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
+
 ## 1.2.0
 
 * Sync version bump to align with `splunk_otel_flutter`, which adds the manual `customTracking.trackError()` API. Native Splunk RUM SDK pins stay aligned with `splunk_otel_flutter` (Android 2.3.2, iOS 2.4.1).
