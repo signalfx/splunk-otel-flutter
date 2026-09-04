@@ -1,3 +1,7 @@
+## Unreleased
+
+* Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
+
 ## 1.2.0
 
 * Added a manual `customTracking.trackError()` API for reporting caught Dart errors as `component=error` RUM spans, with the supplied stacktrace preserved verbatim as `exception.stacktrace`. Includes a new `ErrorSource` enum, optional attributes, and a `handled` flag (reported as `exception.escaped`). Error spans are tagged with `splunk.rum.platform=flutter` for backend routing. The call never throws and always completes. Supported on Android via native SDK 2.3.2 and iOS via native SDK 2.4.1.
