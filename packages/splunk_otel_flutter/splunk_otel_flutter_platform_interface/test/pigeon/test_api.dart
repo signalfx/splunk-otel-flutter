@@ -365,7 +365,10 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<int> customTrackingStartWorkflow({required String workflowName});
 
-  Future<void> customTrackingEndWorkflow({required int handle});
+  Future<void> customTrackingEndWorkflow({
+    required int handle,
+    GeneratedMutableAttributes? attributes,
+  });
 
   Future<void> customTrackingTrackError({required GeneratedError error});
 
@@ -1680,8 +1683,13 @@ abstract class TestSplunkOtelFlutterHostApi {
                 arg_handle != null,
                 'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingEndWorkflow was null, expected non-null int.',
               );
+              final GeneratedMutableAttributes? arg_attributes =
+                  (args[1] as GeneratedMutableAttributes?);
               try {
-                await api.customTrackingEndWorkflow(handle: arg_handle!);
+                await api.customTrackingEndWorkflow(
+                  handle: arg_handle!,
+                  attributes: arg_attributes,
+                );
                 return wrapResponse(empty: true);
               } on PlatformException catch (e) {
                 return wrapResponse(error: e);

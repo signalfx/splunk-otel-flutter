@@ -1,3 +1,7 @@
+## Unreleased
+
+* Added an optional `attributes` argument to `WorkflowHandle.end()`, so a workflow span can carry attributes that are only known once the work has finished (an outcome, a status code, or an error). `startWorkflow()` is unchanged and existing `end()` calls keep working. SDK-reserved keys (`component`, `workflow.name`, `workflow.start.time`, `workflow.end.time`) are stripped from caller attributes so they cannot overwrite the SDK's own values.
+
 ## 1.2.0
 
 * Added a manual `customTracking.trackError()` API for reporting caught Dart errors as `component=error` RUM spans, with the supplied stacktrace preserved verbatim as `exception.stacktrace`. Includes a new `ErrorSource` enum, optional attributes, and a `handled` flag (reported as `exception.escaped`). Error spans are tagged with `splunk.rum.platform=flutter` for backend routing. The call never throws and always completes. Supported on Android via native SDK 2.3.2 and iOS via native SDK 2.4.1.

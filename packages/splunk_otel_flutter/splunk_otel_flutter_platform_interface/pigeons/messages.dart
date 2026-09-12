@@ -186,7 +186,10 @@ abstract class SplunkOtelFlutterHostApi {
   int customTrackingStartWorkflow({required String workflowName});
 
   @async
-  void customTrackingEndWorkflow({required int handle});
+  void customTrackingEndWorkflow({
+    required int handle,
+    GeneratedMutableAttributes? attributes,
+  });
 
   @async
   void customTrackingTrackError({required GeneratedError error});
