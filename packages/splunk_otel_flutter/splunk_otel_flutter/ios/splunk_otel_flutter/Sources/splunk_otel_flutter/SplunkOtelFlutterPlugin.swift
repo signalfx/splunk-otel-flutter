@@ -1,6 +1,6 @@
 //
 /*
- Copyright 2025 Splunk Inc.
+ Copyright 2026 Splunk Inc.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -171,9 +171,17 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
                    },
                    networkInstrumentationModuleConfiguration.map {
                        let ignoredUrls = (try? $0.ignoreURLs.toIgnoreURLs()) ?? IgnoreURLs()
+                       // Empty lists from Dart map to `nil` on the native side,
+                       // which preserves the iOS agent's "no headers captured" default.
+                       let requestHeaders: [String]? =
+                           $0.capturedRequestHeaders.isEmpty ? nil : $0.capturedRequestHeaders
+                       let responseHeaders: [String]? =
+                           $0.capturedResponseHeaders.isEmpty ? nil : $0.capturedResponseHeaders
                        return NetworkInstrumentationConfiguration(
                            isEnabled: $0.isEnabled,
-                           ignoreURLs: ignoredUrls
+                           ignoreURLs: ignoredUrls,
+                           capturedRequestHeaders: requestHeaders,
+                           capturedResponseHeaders: responseHeaders
                        )
                    },
                    crashReportsModuleConfiguration.map {
@@ -497,12 +505,82 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         
         completion(.success(()))
     }
-    
-    // MARK: - Navigation
-    
-    func navigationTrack(screenName: String, completion: @escaping (Result<Void, any Error>) -> Void) {
-        SplunkRum.shared.navigation.track(screen: screenName)
-        
+
+    func customTrackingTrackError(error: GeneratedError, completion: @escaping (Result<Void, any Error>) -> Void) {
+        // The native trackError API accepts only type, message, stacktrace, and
+        // attributes. The remaining fields are carried as span attributes:
+        //   - source  -> "error.source"
+        //   - handled -> "exception.escaped" (inverted: an unhandled error escaped)
+        // The timestamp is not forwarded. The native SDK stamps the span itself.
+        // "splunk.rum.platform" tags the error as originating from the Flutter
+        // layer so the backend can route symbolication and UI accordingly.
+        var attributes = error.attributes.map { navigationAttributes(from: $0) } ?? [:]
+        attributes["error.source"] = error.source
+        attributes["exception.escaped"] = !error.handled
+        attributes["splunk.rum.platform"] = "flutter"
+
+        SplunkRum.shared.customTracking.trackError(
+            typeName: error.type,
+            message: error.message,
+            stacktrace: error.stacktrace,
+            attributes: attributes
+        )
+
         completion(.success(()))
+    }
+
+    // MARK: - Navigation
+
+    func navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, any Error>) -> Void) {
+        // Preserve the null vs. empty distinction: a nil map uses the
+        // screen-name overload, while a provided map (even empty) is forwarded
+        // explicitly through the attributes overload.
+        if let attributes = attributes {
+            SplunkRum.shared.navigation.track(screen: screenName, attributes: navigationAttributes(from: attributes))
+        } else {
+            SplunkRum.shared.navigation.track(screen: screenName)
+        }
+
+        completion(.success(()))
+    }
+
+    private func navigationAttributes(from attributes: GeneratedMutableAttributes) -> [String: Any] {
+        var result: [String: Any] = [:]
+
+        for (key, wrapped) in attributes.attributes {
+            switch wrapped {
+            case let v as GeneratedMutableAttributeInt:
+                // Pigeon delivers ints as Int64; convert to Int so the native
+                // navigation converter keeps the numeric type instead of
+                // falling back to a string (matches the global-attributes path).
+                result[key] = Int(v.value)
+
+            case let v as GeneratedMutableAttributeDouble:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeString:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeBool:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListInt:
+                result[key] = v.value.map { Int($0) }
+
+            case let v as GeneratedMutableAttributeListDouble:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListString:
+                result[key] = v.value
+
+            case let v as GeneratedMutableAttributeListBool:
+                result[key] = v.value
+
+            default:
+                break
+            }
+        }
+
+        return result
     }
 }

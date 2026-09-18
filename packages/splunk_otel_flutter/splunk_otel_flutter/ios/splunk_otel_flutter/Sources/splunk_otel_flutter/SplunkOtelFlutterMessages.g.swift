@@ -420,22 +420,30 @@ struct GeneratedOkHttp3AutoModuleConfiguration: Hashable {
 struct GeneratedNetworkInstrumentationModuleConfiguration: Hashable {
   var isEnabled: Bool
   var ignoreURLs: [GeneratedRegularExpression]
+  var capturedRequestHeaders: [String]
+  var capturedResponseHeaders: [String]
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedNetworkInstrumentationModuleConfiguration? {
     let isEnabled = pigeonVar_list[0] as! Bool
     let ignoreURLs = pigeonVar_list[1] as! [GeneratedRegularExpression]
+    let capturedRequestHeaders = pigeonVar_list[2] as! [String]
+    let capturedResponseHeaders = pigeonVar_list[3] as! [String]
 
     return GeneratedNetworkInstrumentationModuleConfiguration(
       isEnabled: isEnabled,
-      ignoreURLs: ignoreURLs
+      ignoreURLs: ignoreURLs,
+      capturedRequestHeaders: capturedRequestHeaders,
+      capturedResponseHeaders: capturedResponseHeaders
     )
   }
   func toList() -> [Any?] {
     return [
       isEnabled,
       ignoreURLs,
+      capturedRequestHeaders,
+      capturedResponseHeaders,
     ]
   }
   static func == (lhs: GeneratedNetworkInstrumentationModuleConfiguration, rhs: GeneratedNetworkInstrumentationModuleConfiguration) -> Bool {
@@ -743,6 +751,51 @@ struct GeneratedRect: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GeneratedError: Hashable {
+  var type: String
+  var message: String
+  var stacktrace: String? = nil
+  var attributes: GeneratedMutableAttributes? = nil
+  var source: String
+  var handled: Bool
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GeneratedError? {
+    let type = pigeonVar_list[0] as! String
+    let message = pigeonVar_list[1] as! String
+    let stacktrace: String? = nilOrValue(pigeonVar_list[2])
+    let attributes: GeneratedMutableAttributes? = nilOrValue(pigeonVar_list[3])
+    let source = pigeonVar_list[4] as! String
+    let handled = pigeonVar_list[5] as! Bool
+
+    return GeneratedError(
+      type: type,
+      message: message,
+      stacktrace: stacktrace,
+      attributes: attributes,
+      source: source,
+      handled: handled
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      type,
+      message,
+      stacktrace,
+      attributes,
+      source,
+      handled,
+    ]
+  }
+  static func == (lhs: GeneratedError, rhs: GeneratedError) -> Bool {
+    return deepEqualsSplunkOtelFlutterMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashSplunkOtelFlutterMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct GeneratedMutableAttributes: Hashable {
   var attributes: [String: Any?]
 
@@ -1039,22 +1092,24 @@ private class SplunkOtelFlutterMessagesPigeonCodecReader: FlutterStandardReader 
     case 152:
       return GeneratedRect.fromList(self.readValue() as! [Any?])
     case 153:
-      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
+      return GeneratedError.fromList(self.readValue() as! [Any?])
     case 154:
-      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributes.fromList(self.readValue() as! [Any?])
     case 155:
-      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeInt.fromList(self.readValue() as! [Any?])
     case 156:
-      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeDouble.fromList(self.readValue() as! [Any?])
     case 157:
-      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeString.fromList(self.readValue() as! [Any?])
     case 158:
-      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeBool.fromList(self.readValue() as! [Any?])
     case 159:
-      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListInt.fromList(self.readValue() as! [Any?])
     case 160:
-      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+      return GeneratedMutableAttributeListDouble.fromList(self.readValue() as! [Any?])
     case 161:
+      return GeneratedMutableAttributeListString.fromList(self.readValue() as! [Any?])
+    case 162:
       return GeneratedMutableAttributeListBool.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -1136,32 +1191,35 @@ private class SplunkOtelFlutterMessagesPigeonCodecWriter: FlutterStandardWriter 
     } else if let value = value as? GeneratedRect {
       super.writeByte(152)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributes {
+    } else if let value = value as? GeneratedError {
       super.writeByte(153)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeInt {
+    } else if let value = value as? GeneratedMutableAttributes {
       super.writeByte(154)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeDouble {
+    } else if let value = value as? GeneratedMutableAttributeInt {
       super.writeByte(155)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeString {
+    } else if let value = value as? GeneratedMutableAttributeDouble {
       super.writeByte(156)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeBool {
+    } else if let value = value as? GeneratedMutableAttributeString {
       super.writeByte(157)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListInt {
+    } else if let value = value as? GeneratedMutableAttributeBool {
       super.writeByte(158)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListDouble {
+    } else if let value = value as? GeneratedMutableAttributeListInt {
       super.writeByte(159)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListString {
+    } else if let value = value as? GeneratedMutableAttributeListDouble {
       super.writeByte(160)
       super.writeValue(value.toList())
-    } else if let value = value as? GeneratedMutableAttributeListBool {
+    } else if let value = value as? GeneratedMutableAttributeListString {
       super.writeByte(161)
+      super.writeValue(value.toList())
+    } else if let value = value as? GeneratedMutableAttributeListBool {
+      super.writeByte(162)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1219,7 +1277,8 @@ protocol SplunkOtelFlutterHostApi {
   func customTrackingTrackCustomEvent(name: String, attributes: GeneratedMutableAttributes, completion: @escaping (Result<Void, Error>) -> Void)
   func customTrackingStartWorkflow(workflowName: String, completion: @escaping (Result<Int64, Error>) -> Void)
   func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func navigationTrack(screenName: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func customTrackingTrackError(error: GeneratedError, completion: @escaping (Result<Void, Error>) -> Void)
+  func navigationTrack(screenName: String, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1779,12 +1838,30 @@ class SplunkOtelFlutterHostApiSetup {
     } else {
       customTrackingEndWorkflowChannel.setMessageHandler(nil)
     }
+    let customTrackingTrackErrorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      customTrackingTrackErrorChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let errorArg = args[0] as! GeneratedError
+        api.customTrackingTrackError(error: errorArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      customTrackingTrackErrorChannel.setMessageHandler(nil)
+    }
     let navigationTrackChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       navigationTrackChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let screenNameArg = args[0] as! String
-        api.navigationTrack(screenName: screenNameArg) { result in
+        let attributesArg: GeneratedMutableAttributes? = nilOrValue(args[1])
+        api.navigationTrack(screenName: screenNameArg, attributes: attributesArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))

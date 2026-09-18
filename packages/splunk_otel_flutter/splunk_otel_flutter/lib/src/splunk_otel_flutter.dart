@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import 'package:splunk_otel_flutter/src/custom_tracking.dart';
 import 'package:splunk_otel_flutter/src/global_attributes.dart';
-import 'package:splunk_otel_flutter/src/navigation.dart';
+import 'package:splunk_otel_flutter/src/navigation/navigation.dart';
 import 'package:splunk_otel_flutter/src/rum_telemetry_metadata.dart';
 import 'package:splunk_otel_flutter/src/preferences.dart';
 import 'package:splunk_otel_flutter/src/session.dart';

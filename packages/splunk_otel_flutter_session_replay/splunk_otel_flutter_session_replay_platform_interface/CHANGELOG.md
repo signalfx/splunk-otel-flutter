@@ -1,3 +1,16 @@
+## 1.2.0
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay`.
+* Pinned `splunk_otel_flutter_platform_interface` to the matching minor line (`>=1.2.0 <1.3.0`) so the shared Pigeon codec stays version-aligned across packages.
+
+## 1.1.0
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay` 1.1.0.
+
+## 1.0.3
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay` 1.0.3.
+
 ## 1.0.2
 
 * Version bump to align with `splunk_otel_flutter_session_replay` 1.0.2, which fixes an App Store validation failure (`Validation failed (409) CFBundleIdentifier Collision`) that prevented users from uploading their apps.

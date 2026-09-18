@@ -2,7 +2,7 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 /*
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.2.3")
+        // Pinned in lockstep with the session replay plugin, which shares the
+        // splunk-otel-ios package identity, so both must resolve the same version.
+        // For local verification against an unreleased SDK, point this at a
+        // checkout instead (absolute path required, because Flutter consumes the
+        // plugin via a symlink under ios/Flutter/ephemeral/Packages/.packages):
+        //   .package(path: "/absolute/path/to/splunk-otel-ios")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.1")
     ],
     targets: [
         .target(

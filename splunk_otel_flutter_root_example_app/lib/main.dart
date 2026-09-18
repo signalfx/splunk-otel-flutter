@@ -20,7 +20,58 @@ void main() async {
       appName: "Flutter Splunk cinema demo",
       deploymentEnvironment: 'test',
     ),
-    moduleConfigurations: [SessionReplayModuleConfiguration(samplingRate: 1.0)],
+    moduleConfigurations: [
+      SessionReplayModuleConfiguration(samplingRate: 1.0),
+      // Network header capture is configured per-platform: NetworkInstrumentation
+      // for iOS (URLSession) and HttpUrl/OkHttp3Auto for Android. Each platform
+      // ignores configurations that don't apply to it.
+      NetworkInstrumentationModuleConfiguration(
+        isEnabled: true,
+        ignoreURLs: [
+          RegularExpression(
+            pattern: r'.*\.example\.com',
+            options: const [RegexOption.caseInsensitive],
+          ),
+          RegularExpression(pattern: r'^https?://localhost(:\d+)?(/.*)?$'),
+        ],
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      HttpUrlModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      OkHttp3AutoModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+    ],
   );
 
   stopwatch.stop();

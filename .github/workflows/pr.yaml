@@ -19,21 +19,46 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
       - name: Commitlint
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
         with:
           configFile: .commitlintrc.yml
           # Only lint the latest commit to avoid failing on historical messages
           # (e.g. develop→main PRs with pre-commitlint merge commits).
           commitDepth: 1
 
+  rum-sdk-version-sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Verify rumSdkFlutterVersion matches pubspec.yaml
+        shell: bash
+        run: |
+          set -euo pipefail
+          PKG_DIR=packages/splunk_otel_flutter/splunk_otel_flutter
+          PUBSPEC_VERSION=$(grep -E '^version:[[:space:]]*' "$PKG_DIR/pubspec.yaml" \
+            | sed -E 's/^version:[[:space:]]*([^[:space:]]+).*/\1/')
+          CONST_VERSION=$(grep -E "rumSdkFlutterVersion[[:space:]]*=" "$PKG_DIR/lib/src/rum_sdk_version.dart" \
+            | sed -E "s/.*=[[:space:]]*'([^']+)'.*/\1/")
+          if [ -z "$PUBSPEC_VERSION" ] || [ -z "$CONST_VERSION" ]; then
+            echo "Failed to extract version (pubspec='$PUBSPEC_VERSION', const='$CONST_VERSION')." >&2
+            exit 1
+          fi
+          if [ "$PUBSPEC_VERSION" != "$CONST_VERSION" ]; then
+            echo "Version mismatch: rumSdkFlutterVersion='$CONST_VERSION' but pubspec.yaml version='$PUBSPEC_VERSION'." >&2
+            echo "Update $PKG_DIR/lib/src/rum_sdk_version.dart and $PKG_DIR/pubspec.yaml together." >&2
+            exit 1
+          fi
+          echo "OK: rumSdkFlutterVersion and pubspec.yaml both at $CONST_VERSION"
+
   flutter-analyze:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Install Flutter (stable)
         shell: bash
@@ -46,7 +71,7 @@ jobs:
           flutter precache --universal
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
@@ -72,7 +97,7 @@ jobs:
   flutter-test:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Install Flutter (stable)
         shell: bash
@@ -85,7 +110,7 @@ jobs:
           flutter precache --universal
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}

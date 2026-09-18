@@ -104,32 +104,35 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is GeneratedRect) {
       buffer.putUint8(152);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributes) {
+    } else if (value is GeneratedError) {
       buffer.putUint8(153);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeInt) {
+    } else if (value is GeneratedMutableAttributes) {
       buffer.putUint8(154);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeDouble) {
+    } else if (value is GeneratedMutableAttributeInt) {
       buffer.putUint8(155);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeString) {
+    } else if (value is GeneratedMutableAttributeDouble) {
       buffer.putUint8(156);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeBool) {
+    } else if (value is GeneratedMutableAttributeString) {
       buffer.putUint8(157);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListInt) {
+    } else if (value is GeneratedMutableAttributeBool) {
       buffer.putUint8(158);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListDouble) {
+    } else if (value is GeneratedMutableAttributeListInt) {
       buffer.putUint8(159);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListString) {
+    } else if (value is GeneratedMutableAttributeListDouble) {
       buffer.putUint8(160);
       writeValue(buffer, value.encode());
-    } else if (value is GeneratedMutableAttributeListBool) {
+    } else if (value is GeneratedMutableAttributeListString) {
       buffer.putUint8(161);
+      writeValue(buffer, value.encode());
+    } else if (value is GeneratedMutableAttributeListBool) {
+      buffer.putUint8(162);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -213,22 +216,24 @@ class _PigeonCodec extends StandardMessageCodec {
       case 152:
         return GeneratedRect.decode(readValue(buffer)!);
       case 153:
-        return GeneratedMutableAttributes.decode(readValue(buffer)!);
+        return GeneratedError.decode(readValue(buffer)!);
       case 154:
-        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributes.decode(readValue(buffer)!);
       case 155:
-        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeInt.decode(readValue(buffer)!);
       case 156:
-        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeDouble.decode(readValue(buffer)!);
       case 157:
-        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeString.decode(readValue(buffer)!);
       case 158:
-        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeBool.decode(readValue(buffer)!);
       case 159:
-        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListInt.decode(readValue(buffer)!);
       case 160:
-        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+        return GeneratedMutableAttributeListDouble.decode(readValue(buffer)!);
       case 161:
+        return GeneratedMutableAttributeListString.decode(readValue(buffer)!);
+      case 162:
         return GeneratedMutableAttributeListBool.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -362,7 +367,12 @@ abstract class TestSplunkOtelFlutterHostApi {
 
   Future<void> customTrackingEndWorkflow({required int handle});
 
-  Future<void> navigationTrack({required String screenName});
+  Future<void> customTrackingTrackError({required GeneratedError error});
+
+  Future<void> navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  });
 
   static void setUp(
     TestSplunkOtelFlutterHostApi? api, {
@@ -1689,6 +1699,47 @@ abstract class TestSplunkOtelFlutterHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              assert(
+                message != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError was null.',
+              );
+              final List<Object?> args = (message as List<Object?>?)!;
+              final GeneratedError? arg_error = (args[0] as GeneratedError?);
+              assert(
+                arg_error != null,
+                'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.customTrackingTrackError was null, expected non-null GeneratedError.',
+              );
+              try {
+                await api.customTrackingTrackError(error: arg_error!);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
@@ -1711,8 +1762,13 @@ abstract class TestSplunkOtelFlutterHostApi {
                 arg_screenName != null,
                 'Argument for dev.flutter.pigeon.splunk_otel_flutter_platform_interface.SplunkOtelFlutterHostApi.navigationTrack was null, expected non-null String.',
               );
+              final GeneratedMutableAttributes? arg_attributes =
+                  (args[1] as GeneratedMutableAttributes?);
               try {
-                await api.navigationTrack(screenName: arg_screenName!);
+                await api.navigationTrack(
+                  screenName: arg_screenName!,
+                  attributes: arg_attributes,
+                );
                 return wrapResponse(empty: true);
               } on PlatformException catch (e) {
                 return wrapResponse(error: e);

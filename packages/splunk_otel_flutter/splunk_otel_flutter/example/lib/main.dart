@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,9 +55,12 @@ void main() async {
       ),
     ),
     moduleConfigurations: [
+      // Keep native automatic tracking OFF and let the Dart-side
+      // SplunkNavigatorObserver report Flutter routes instead (native auto
+      // only sees the host FlutterActivity / FlutterViewController).
       NavigationModuleConfiguration(
         isEnabled: true,
-        isAutomatedTrackingEnabled: true,
+        isAutomatedTrackingEnabled: false,
       ),
       SlowRenderingModuleConfiguration(isEnabled: true),
       AnrModuleConfiguration(isEnabled: true),
@@ -69,6 +72,55 @@ void main() async {
       AnrModuleConfiguration(isEnabled: true),
       CrashReportsModuleConfiguration(isEnabled: true),
       ApplicationLifecycleModuleConfiguration(isEnabled: false),
+      // Network header capture is configured per-platform: NetworkInstrumentation
+      // for iOS (URLSession) and HttpUrl/OkHttp3Auto for Android. Each platform
+      // ignores configurations that don't apply to it.
+      NetworkInstrumentationModuleConfiguration(
+        isEnabled: true,
+        ignoreURLs: [
+          RegularExpression(
+            pattern: r'.*\.example\.com',
+            options: const [RegexOption.caseInsensitive],
+          ),
+          RegularExpression(pattern: r'^https?://localhost(:\d+)?(/.*)?$'),
+        ],
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      HttpUrlModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
+      OkHttp3AutoModuleConfiguration(
+        isEnabled: true,
+        capturedRequestHeaders: const [
+          'Accept',
+          'Content-Type',
+          'X-Request-ID',
+        ],
+        capturedResponseHeaders: const [
+          'Content-Type',
+          'X-Request-ID',
+          'Server',
+        ],
+      ),
     ],
   );
 
@@ -153,11 +205,32 @@ class _MyAppState extends State<MyApp> {
       onTap: customTrackingTrackWorkflow,
     ),
     TestAction(
-      title: 'Track error',
-      description: 'track error',
+      title: 'Track caught error',
+      description: 'Handled StateError with original stacktrace + attributes',
       category: TestCategory.customTracking,
       platforms: {MobilePlatform.android, MobilePlatform.ios},
-      onTap: customTrackingTrackError,
+      onTap: trackCaughtError,
+    ),
+    TestAction(
+      title: 'Track unhandled error',
+      description: 'Reports handled: false (exception.escaped = true)',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackUnhandledError,
+    ),
+    TestAction(
+      title: 'Track string error',
+      description: 'Plain string error (stacktrace falls back to current)',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackStringError,
+    ),
+    TestAction(
+      title: 'Track error with attributes',
+      description: 'Custom error enriched with attributes',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: trackErrorWithAttributes,
     ),
     TestAction(
       title: 'Simulate Slow Render',
@@ -215,6 +288,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       theme: theme,
+      navigatorObservers: [SplunkNavigatorObserver()],
       home: Scaffold(
         appBar: AppBar(title: const Text('Splunk OTel SDK Test App')),
         body: TestActionsWidget(actions: _actions),
@@ -242,13 +316,17 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> openWebView(BuildContext context) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (context) => const WebViewScreen()),
+      MaterialPageRoute<void>(
+        settings: const RouteSettings(name: 'WebView'),
+        builder: (context) => const WebViewScreen(),
+      ),
     );
   }
 
   Future<void> openBrowserOptions(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
+        settings: const RouteSettings(name: 'BrowserOptions'),
         builder: (context) => const BrowserLauncherScreen(),
       ),
     );
@@ -308,8 +386,64 @@ class _MyAppState extends State<MyApp> {
     await workflow.end();
   }
 
-  Future<void> customTrackingTrackError() async {
-    throw "TODO";
+  /// Reports a caught error, preserving the original stacktrace from
+  /// `catch (e, st)` and attaching contextual attributes. Handled by default.
+  Future<void> trackCaughtError() async {
+    try {
+      throw StateError('Example caught error');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        attributes: MutableAttributes(
+          attributes: {
+            "screen.name": MutableAttributeString(value: "ExampleScreen"),
+          },
+        ),
+      );
+    }
+  }
+
+  /// Reports an unhandled (fatal) error via `handled: false`, which is emitted
+  /// as `exception.escaped = true`.
+  Future<void> trackUnhandledError() async {
+    try {
+      throw Exception('Example unhandled error');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        handled: false,
+      );
+    }
+  }
+
+  /// Reports a plain string error. With no [stackTrace] provided, the SDK falls
+  /// back to `StackTrace.current`.
+  Future<void> trackStringError() async {
+    await SplunkRum.instance.customTracking.trackError(
+      "Example string error report",
+    );
+  }
+
+  /// Reports a custom error enriched with several attributes.
+  Future<void> trackErrorWithAttributes() async {
+    try {
+      throw const FormatException('Example error with attributes');
+    } catch (e, stackTrace) {
+      await SplunkRum.instance.customTracking.trackError(
+        e,
+        stackTrace: stackTrace,
+        attributes: MutableAttributes(
+          attributes: {
+            "screen.name": MutableAttributeString(value: "CheckoutScreen"),
+            "cart.item_count": MutableAttributeInt(value: 3),
+            "cart.total": MutableAttributeDouble(value: 42.5),
+            "user.is_premium": MutableAttributeBool(value: true),
+          },
+        ),
+      );
+    }
   }
 
   Future<void> simulateFrozenRender() async {

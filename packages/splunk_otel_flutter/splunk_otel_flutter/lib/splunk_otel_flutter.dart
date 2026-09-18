@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Splunk Inc.
+ * Copyright 2026 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,4 +92,10 @@ export 'package:splunk_otel_flutter_platform_interface/src/model/mutable_attribu
 export 'package:splunk_otel_flutter/src/splunk_otel_flutter.dart';
 export 'package:splunk_otel_flutter/src/global_attributes.dart';
 export 'package:splunk_otel_flutter/src/custom_tracking.dart'
-    show WorkflowHandle;
+    show WorkflowHandle, ErrorSource;
+export 'package:splunk_otel_flutter/src/navigation/splunk_navigator_observer.dart'
+    show
+        SplunkNavigatorObserver,
+        SplunkViewNamePredicate,
+        SplunkShouldTrackView,
+        SplunkAttributesFromRoute;

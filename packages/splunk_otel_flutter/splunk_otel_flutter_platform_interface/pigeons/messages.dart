@@ -188,10 +188,16 @@ abstract class SplunkOtelFlutterHostApi {
   @async
   void customTrackingEndWorkflow({required int handle});
 
+  @async
+  void customTrackingTrackError({required GeneratedError error});
+
   // Navigation
 
   @async
-  void navigationTrack({required String screenName});
+  void navigationTrack({
+    required String screenName,
+    GeneratedMutableAttributes? attributes,
+  });
 }
 
 // Configurations
@@ -276,10 +282,14 @@ class GeneratedOkHttp3AutoModuleConfiguration {
 class GeneratedNetworkInstrumentationModuleConfiguration {
   final bool isEnabled;
   final List<GeneratedRegularExpression> ignoreURLs;
+  final List<String> capturedRequestHeaders;
+  final List<String> capturedResponseHeaders;
 
   GeneratedNetworkInstrumentationModuleConfiguration({
     required this.isEnabled,
     required this.ignoreURLs,
+    required this.capturedRequestHeaders,
+    required this.capturedResponseHeaders,
   });
 }
 
@@ -428,6 +438,26 @@ enum GeneratedStatus {
   sampledOut,
   unsupportedPlatform,
   unsupportedOsVersion,
+}
+
+// Custom tracking
+
+class GeneratedError {
+  final String type;
+  final String message;
+  final String? stacktrace;
+  final GeneratedMutableAttributes? attributes;
+  final String source;
+  final bool handled;
+
+  GeneratedError({
+    required this.type,
+    required this.message,
+    this.stacktrace,
+    this.attributes,
+    required this.source,
+    required this.handled,
+  });
 }
 
 // Global attributes
