@@ -18,6 +18,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
+    copyrightHeader: 'pigeons/copyright_header.txt',
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     dartPackageName: 'splunk_otel_flutter_platform_interface',
     kotlinOut:
