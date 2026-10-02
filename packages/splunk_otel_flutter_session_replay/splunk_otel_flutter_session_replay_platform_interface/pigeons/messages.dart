@@ -18,8 +18,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
+    copyrightHeader: 'pigeons/copyright_header.txt',
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'splunk_otel_flutter_session_replay_platform_interface',
     kotlinOut:
         '../splunk_otel_flutter_session_replay/android/src/main/kotlin/com/splunk/rum/flutter/sessionreplay/GeneratedAndroidSplunkOtelFlutterSessionReplay.g.kt',
