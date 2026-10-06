@@ -103,7 +103,8 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi
   Future<void> Function(String, GeneratedMutableAttributes)?
   customTrackingTrackCustomEventHandler;
   Future<int> Function(String)? customTrackingStartWorkflowHandler;
-  Future<void> Function(int)? customTrackingEndWorkflowHandler;
+  Future<void> Function(int, GeneratedMutableAttributes?)?
+  customTrackingEndWorkflowHandler;
   Future<void> Function(GeneratedError)? customTrackingTrackErrorHandler;
 
   Future<void> Function(String, GeneratedMutableAttributes?)?
@@ -426,9 +427,12 @@ class MockSplunkOtelFlutterPlatformInterfaceHostApi
   }
 
   @override
-  Future<void> customTrackingEndWorkflow({required int handle}) async {
+  Future<void> customTrackingEndWorkflow({
+    required int handle,
+    GeneratedMutableAttributes? attributes,
+  }) async {
     if (customTrackingEndWorkflowHandler != null) {
-      return customTrackingEndWorkflowHandler!(handle);
+      return customTrackingEndWorkflowHandler!(handle, attributes);
     }
   }
 

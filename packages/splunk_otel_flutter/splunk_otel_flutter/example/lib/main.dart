@@ -205,6 +205,13 @@ class _MyAppState extends State<MyApp> {
       onTap: customTrackingTrackWorkflow,
     ),
     TestAction(
+      title: 'Track workflow with attributes',
+      description: 'Workflow span carrying custom attributes set on end()',
+      category: TestCategory.customTracking,
+      platforms: {MobilePlatform.android, MobilePlatform.ios},
+      onTap: customTrackingTrackWorkflowWithAttributes,
+    ),
+    TestAction(
       title: 'Track caught error',
       description: 'Handled StateError with original stacktrace + attributes',
       category: TestCategory.customTracking,
@@ -384,6 +391,33 @@ class _MyAppState extends State<MyApp> {
     // Simulate some work
     await Future<void>.delayed(const Duration(milliseconds: 100));
     await workflow.end();
+  }
+
+  /// Times an operation and records attributes that are only known once it has
+  /// finished, such as its outcome or how much work it covered.
+  ///
+  /// The attributes here are deliberately generic. Naming the workflow after an
+  /// HTTP request and tagging it with `http.*` semantic conventions makes the
+  /// span render as a real network call on the session timeline, complete with
+  /// a status code, which is indistinguishable from captured instrumentation
+  /// and misleads anyone reading the session.
+  Future<void> customTrackingTrackWorkflowWithAttributes() async {
+    final workflow = await SplunkRum.instance.customTracking.startWorkflow(
+      name: "Workflow with attributes",
+    );
+
+    // Simulate some work
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+
+    await workflow.end(
+      attributes: MutableAttributes(
+        attributes: {
+          "demo.outcome": MutableAttributeString(value: "success"),
+          "demo.items": MutableAttributeInt(value: 3),
+          "demo.retried": MutableAttributeBool(value: false),
+        },
+      ),
+    );
   }
 
   /// Reports a caught error, preserving the original stacktrace from
