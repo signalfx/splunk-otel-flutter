@@ -20,11 +20,11 @@ pluginManagement {
 buildscript {
     // Netty reaches this classpath only transitively, through the gRPC client used by AGP's
     // test and device tooling. AGP 8.13.1 resolves 4.1.110.Final, which predates the fixes in
-    // 4.1.118.Final. Nothing here ends up in the application.
+    // 4.1.138.Final. Nothing here ends up in the application.
     configurations.classpath {
         resolutionStrategy.eachDependency {
             if (requested.group == "io.netty") {
-                useVersion("4.1.118.Final")
+                useVersion("4.1.138.Final")
             }
         }
     }
