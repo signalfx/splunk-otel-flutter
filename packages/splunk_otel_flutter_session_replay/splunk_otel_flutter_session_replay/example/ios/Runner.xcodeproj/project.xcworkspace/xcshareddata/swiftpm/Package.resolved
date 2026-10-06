@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/microsoft/plcrashreporter",
       "state" : {
-        "revision" : "0254f941c646b1ed17b243654723d0f071e990d0",
-        "version" : "1.12.2"
+        "revision" : "8c61e5e38e9f737dd68512ed1ea5ab081244ad65",
+        "version" : "1.12.0"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/signalfx/splunk-otel-ios",
       "state" : {
-        "revision" : "23e3bed3d301037087db3e5b3797a6757b8d177a",
-        "version" : "2.4.1"
+        "revision" : "47a2ed12bdbf60a689aab37762a455f0f5365cfb",
+        "version" : "2.2.2"
       }
     },
     {
