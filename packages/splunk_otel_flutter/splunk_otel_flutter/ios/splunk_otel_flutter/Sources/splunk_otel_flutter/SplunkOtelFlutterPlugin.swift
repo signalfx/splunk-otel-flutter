@@ -488,7 +488,7 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         completion(.success(handle))
     }
     
-    func customTrackingEndWorkflow(handle: Int64, completion: @escaping (Result<Void, any Error>) -> Void) {
+    func customTrackingEndWorkflow(handle: Int64, attributes: GeneratedMutableAttributes?, completion: @escaping (Result<Void, any Error>) -> Void) {
         guard let workflow = workflowSpans[handle] else {
             completion(.failure(NSError(domain: "SplunkOtelFlutter", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid workflow handle"])))
             return
@@ -497,6 +497,12 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         // End the workflow
         let endTime = Int64(Date().timeIntervalSince1970 * 1000)
         
+        // Caller attributes are written before the SDK-owned timestamps so the
+        // SDK always wins, independent of the Dart-side key sanitizing.
+        if let attributes = attributes {
+            workflow.span.setAttributes(spanAttributes(from: attributes))
+        }
+        
         workflow.span.setAttribute(key: "workflow.start.time", value: AttributeValue.int(Int(workflow.startTime)))
         workflow.span.setAttribute(key: "workflow.end.time", value: AttributeValue.int(Int(endTime)))
         workflow.span.end()
@@ -504,6 +510,48 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         workflowSpans.removeValue(forKey: handle)
         
         completion(.success(()))
+    }
+
+    /// Converts bridged attributes into the typed `AttributeValue` map that
+    /// `Span.setAttributes` expects. Unlike `navigationAttributes(from:)`, which
+    /// hands untyped values to the native navigation converter, a span has to be
+    /// given already-typed OpenTelemetry values.
+    private func spanAttributes(from attributes: GeneratedMutableAttributes) -> [String: AttributeValue] {
+        var result: [String: AttributeValue] = [:]
+
+        for (key, wrapped) in attributes.attributes {
+            switch wrapped {
+            case let v as GeneratedMutableAttributeInt:
+                // Pigeon delivers ints as Int64; AttributeValue.int takes Int.
+                result[key] = .int(Int(v.value))
+
+            case let v as GeneratedMutableAttributeDouble:
+                result[key] = .double(v.value)
+
+            case let v as GeneratedMutableAttributeString:
+                result[key] = .string(v.value)
+
+            case let v as GeneratedMutableAttributeBool:
+                result[key] = .bool(v.value)
+
+            case let v as GeneratedMutableAttributeListInt:
+                result[key] = .array(AttributeArray(values: v.value.map { .int(Int($0)) }))
+
+            case let v as GeneratedMutableAttributeListDouble:
+                result[key] = .array(AttributeArray(values: v.value.map { .double($0) }))
+
+            case let v as GeneratedMutableAttributeListString:
+                result[key] = .array(AttributeArray(values: v.value.map { .string($0) }))
+
+            case let v as GeneratedMutableAttributeListBool:
+                result[key] = .array(AttributeArray(values: v.value.map { .bool($0) }))
+
+            default:
+                break
+            }
+        }
+
+        return result
     }
 
     func customTrackingTrackError(error: GeneratedError, completion: @escaping (Result<Void, any Error>) -> Void) {

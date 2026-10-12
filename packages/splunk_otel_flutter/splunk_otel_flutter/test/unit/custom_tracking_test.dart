@@ -24,6 +24,14 @@ const _channelName =
     'dev.flutter.pigeon.splunk_otel_flutter_platform_interface'
     '.SplunkOtelFlutterHostApi.customTrackingTrackError';
 
+const _startWorkflowChannelName =
+    'dev.flutter.pigeon.splunk_otel_flutter_platform_interface'
+    '.SplunkOtelFlutterHostApi.customTrackingStartWorkflow';
+
+const _endWorkflowChannelName =
+    'dev.flutter.pigeon.splunk_otel_flutter_platform_interface'
+    '.SplunkOtelFlutterHostApi.customTrackingEndWorkflow';
+
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -139,6 +147,118 @@ void main() {
         SplunkRum.instance.customTracking.trackError('boom'),
         completes,
       );
+    });
+  });
+
+  group('WorkflowHandle.end', () {
+    const startChannel = BasicMessageChannel<Object?>(
+      _startWorkflowChannelName,
+      SplunkOtelFlutterHostApi.pigeonChannelCodec,
+    );
+    const endChannel = BasicMessageChannel<Object?>(
+      _endWorkflowChannelName,
+      SplunkOtelFlutterHostApi.pigeonChannelCodec,
+    );
+
+    List<Object?>? endArguments;
+
+    setUp(() {
+      endArguments = null;
+
+      binding.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(
+        startChannel,
+        (message) async => <Object?>[42],
+      );
+      binding.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(
+        endChannel,
+        (message) async {
+          endArguments = message! as List<Object?>;
+
+          return <Object?>[null];
+        },
+      );
+    });
+
+    tearDown(() {
+      binding.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(
+        startChannel,
+        null,
+      );
+      binding.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(
+        endChannel,
+        null,
+      );
+    });
+
+    Future<WorkflowHandle> startWorkflow() =>
+        SplunkRum.instance.customTracking.startWorkflow(name: 'checkout');
+
+    GeneratedMutableAttributes? sentAttributes() =>
+        endArguments?[1] as GeneratedMutableAttributes?;
+
+    test('sends the handle and no attributes when called bare', () async {
+      final workflow = await startWorkflow();
+
+      await workflow.end();
+
+      expect(endArguments?[0], 42);
+      expect(sentAttributes(), isNull);
+    });
+
+    test('forwards caller attributes', () async {
+      final workflow = await startWorkflow();
+
+      await workflow.end(
+        attributes: MutableAttributes(
+          attributes: {
+            'http.request.method': MutableAttributeString(value: 'GET'),
+            'http.response.status_code': MutableAttributeInt(value: 200),
+          },
+        ),
+      );
+
+      final attributes = sentAttributes();
+      expect(
+        (attributes?.attributes['http.request.method']
+                as GeneratedMutableAttributeString)
+            .value,
+        'GET',
+      );
+      expect(
+        (attributes?.attributes['http.response.status_code']
+                as GeneratedMutableAttributeInt)
+            .value,
+        200,
+      );
+    });
+
+    test('strips SDK-reserved keys and keeps the rest', () async {
+      final workflow = await startWorkflow();
+
+      await workflow.end(
+        attributes: MutableAttributes(
+          attributes: {
+            'component': MutableAttributeString(value: 'spoofed'),
+            'workflow.name': MutableAttributeString(value: 'spoofed'),
+            'workflow.start.time': MutableAttributeInt(value: 1),
+            'workflow.end.time': MutableAttributeInt(value: 2),
+            'url.full': MutableAttributeString(
+              value: 'https://api.example.com/orders',
+            ),
+          },
+        ),
+      );
+
+      expect(sentAttributes()?.attributes.keys, ['url.full']);
+    });
+
+    test('preserves an explicit empty attribute set', () async {
+      final workflow = await startWorkflow();
+
+      await workflow.end(attributes: const MutableAttributes());
+
+      expect(sentAttributes(), isNotNull);
+      expect(sentAttributes()?.attributes, isEmpty);
     });
   });
 }

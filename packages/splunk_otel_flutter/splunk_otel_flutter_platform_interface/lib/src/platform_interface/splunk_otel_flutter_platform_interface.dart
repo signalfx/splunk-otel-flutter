@@ -140,7 +140,10 @@ abstract class SplunkOtelFlutterPlatformInterface extends PlatformInterface {
     required MutableAttributes attributes,
   });
   Future<int> customTrackingStartWorkflow({required String workflowName});
-  Future<void> customTrackingEndWorkflow({required int handle});
+  Future<void> customTrackingEndWorkflow({
+    required int handle,
+    MutableAttributes? attributes,
+  });
   Future<void> customTrackingTrackError({
     required String type,
     required String message,

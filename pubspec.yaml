@@ -46,6 +46,9 @@ melos:
       run: |
         melos exec --scope="splunk_otel_flutter_platform_interface" -- flutter pub run pigeon --input pigeons/messages.dart
         melos exec --scope="splunk_otel_flutter_session_replay_platform_interface" -- flutter pub run pigeon --input pigeons/messages.dart
+        # Pigeon >=26.2.2 always imports package:meta, which the generated code never uses and which
+        # is not a dependency of these packages, so `pub publish` would reject it.
+        melos exec --scope="*_platform_interface" -- "sed -i.bak \"/^import 'package:meta\/meta.dart'/d\" lib/src/pigeon/messages.pigeon.dart && rm lib/src/pigeon/messages.pigeon.dart.bak"
       description: Generates Pigeon code for all packages.
     
     run_example:

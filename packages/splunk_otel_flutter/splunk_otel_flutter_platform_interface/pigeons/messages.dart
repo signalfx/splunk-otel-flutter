@@ -18,6 +18,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
+    copyrightHeader: 'pigeons/copyright_header.txt',
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     dartPackageName: 'splunk_otel_flutter_platform_interface',
     kotlinOut:
@@ -186,7 +187,10 @@ abstract class SplunkOtelFlutterHostApi {
   int customTrackingStartWorkflow({required String workflowName});
 
   @async
-  void customTrackingEndWorkflow({required int handle});
+  void customTrackingEndWorkflow({
+    required int handle,
+    GeneratedMutableAttributes? attributes,
+  });
 
   @async
   void customTrackingTrackError({required GeneratedError error});
