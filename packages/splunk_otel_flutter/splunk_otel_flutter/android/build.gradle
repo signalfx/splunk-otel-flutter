@@ -47,6 +47,20 @@ if (project.extensions.findByName("kotlin") == null) {
     project.pluginManager.apply("kotlin-android")
 }
 
+// AGP adds these configurations to every module for its Unified Test Platform, which only runs
+// instrumented tests. They resolve gRPC with Netty 4.1.93/4.1.110.Final and protobuf 3.24.4,
+// which carry known CVEs. Nothing here is packaged into the published AAR.
+configurations.matching { it.name.startsWith("_internal-unified-test-platform") }.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "io.netty") {
+            details.useVersion("4.1.138.Final")
+        }
+        if (details.requested.group == "com.google.protobuf") {
+            details.useVersion("3.25.5")
+        }
+    }
+}
+
 def splunkSdkVersion = getExtOrDefault("splunkSdkVersion")
 
 android {
