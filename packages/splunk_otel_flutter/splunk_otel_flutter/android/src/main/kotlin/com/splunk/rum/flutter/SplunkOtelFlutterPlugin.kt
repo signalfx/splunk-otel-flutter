@@ -508,7 +508,11 @@ class SplunkOtelFlutterPlugin :
         }
     }
 
-    override fun customTrackingEndWorkflow(handle: Long, callback: (Result<Unit>) -> Unit) {
+    override fun customTrackingEndWorkflow(
+        handle: Long,
+        attributes: GeneratedMutableAttributes?,
+        callback: (Result<Unit>) -> Unit
+    ) {
         val workflow = workflowSpans[handle]
 
         if (workflow == null) {
@@ -519,7 +523,12 @@ class SplunkOtelFlutterPlugin :
         // End the workflow
         val (span, startTime) = workflow
         val endTime = System.currentTimeMillis()
-        
+
+        // Caller attributes are written before the SDK-owned timestamps, so the
+        // timestamps always win. Keys the SDK set at span start are protected
+        // only by the Dart-side key sanitizing.
+        attributes?.let { span.setAllAttributes(it.toOtelAttributes()) }
+
         span.setAttribute("workflow.start.time", startTime)
         span.setAttribute("workflow.end.time", endTime)
         span.end()

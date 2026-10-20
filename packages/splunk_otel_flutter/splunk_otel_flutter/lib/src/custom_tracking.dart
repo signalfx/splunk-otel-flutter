@@ -36,6 +36,27 @@ enum ErrorSource {
   network,
 }
 
+/// Attribute keys owned by the SDK on workflow telemetry.
+///
+/// The native SDKs write `component` and `workflow.name` when the workflow
+/// starts, and their span processors add the session, user, installation, and
+/// screen keys at the same time. `workflow.start.time` and `workflow.end.time`
+/// are stamped when it ends. Attributes passed to [WorkflowHandle.end] are
+/// written after the start-time keys, so they would overwrite them; stripping
+/// the keys here is the only thing that protects them.
+const Set<String> _reservedWorkflowAttributeKeys = {
+  'component',
+  'workflow.name',
+  'workflow.start.time',
+  'workflow.end.time',
+  'session.id',
+  'session.previous_id',
+  'user.anonymous_id',
+  'app.installation.id',
+  'screen.name',
+  'last.screen.name',
+};
+
 /// Handle to an active workflow span.
 ///
 /// Returned by [CustomTracking.startWorkflow] to track a workflow's duration.
@@ -50,8 +71,55 @@ class WorkflowHandle {
   ///
   /// Records the workflow duration from when [CustomTracking.startWorkflow] was called
   /// to this call. The duration is measured automatically.
-  Future<void> end() async {
-    await _delegate.customTrackingEndWorkflow(handle: _handle);
+  ///
+  /// [attributes] - Optional attributes attached to the workflow span just
+  /// before it ends. They are supplied here rather than at start because the
+  /// interesting values for a timed operation (its outcome, status, or error)
+  /// are only known once it finishes; anything known at the start is still
+  /// known at the end. When `null`, no attributes are sent (distinct from an
+  /// empty [MutableAttributes], which sends an explicit empty set).
+  /// SDK-reserved keys (`component`, `workflow.name`, `workflow.start.time`,
+  /// `workflow.end.time`, `session.id`, `session.previous_id`,
+  /// `user.anonymous_id`, `app.installation.id`, `screen.name`,
+  /// `last.screen.name`) are removed before sending.
+  ///
+  /// Example:
+  /// ```dart
+  /// await workflow.end(
+  ///   attributes: MutableAttributes(
+  ///     attributes: {
+  ///       'http.response.status_code': MutableAttributeInt(value: 200),
+  ///     },
+  ///   ),
+  /// );
+  /// ```
+  Future<void> end({MutableAttributes? attributes}) async {
+    await _delegate.customTrackingEndWorkflow(
+      handle: _handle,
+      attributes: _sanitize(attributes),
+    );
+  }
+
+  /// Removes SDK-reserved keys from caller-supplied attributes.
+  ///
+  /// Preserves the `null` vs. empty distinction: a `null` input stays `null`
+  /// (no attributes sent), while a provided collection is returned with the
+  /// reserved keys stripped (possibly empty).
+  static MutableAttributes? _sanitize(MutableAttributes? attributes) {
+    if (attributes == null) {
+      return null;
+    }
+
+    final sanitized = <String, MutableAttributeValue>{};
+    attributes.attributes.forEach((key, value) {
+      if (_reservedWorkflowAttributeKeys.contains(key)) {
+        return;
+      }
+
+      sanitized[key] = value;
+    });
+
+    return MutableAttributes(attributes: sanitized);
   }
 }
 
@@ -79,8 +147,13 @@ class WorkflowHandle {
 ///
 /// // ... perform workflow operations ...
 ///
-/// // End the workflow to record its duration
-/// await workflow.end();
+/// // End the workflow to record its duration, optionally attaching
+/// // attributes known only once the work has finished.
+/// await workflow.end(
+///   attributes: MutableAttributes(
+///     attributes: {'login.outcome': MutableAttributeString(value: 'success')},
+///   ),
+/// );
 /// ```
 class CustomTracking {
   final _delegate = SplunkOtelFlutterPlatformImplementation.instance;
@@ -117,7 +190,9 @@ class CustomTracking {
   ///
   /// [name] - Workflow name (becomes span name and `workflow.name` attribute).
   ///
-  /// Returns a [WorkflowHandle] that can be used to end the workflow.
+  /// Returns a [WorkflowHandle] that can be used to end the workflow. Pass
+  /// attributes to [WorkflowHandle.end] to record values that are only known
+  /// once the workflow has finished.
   ///
   /// Example:
   /// ```dart

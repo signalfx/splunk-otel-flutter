@@ -901,7 +901,7 @@ void main() {
           return 789; // Return a mock handle
         };
 
-        mockApi.customTrackingEndWorkflowHandler = (handle) async {
+        mockApi.customTrackingEndWorkflowHandler = (handle, attributes) async {
           receivedHandle = handle;
         };
 

@@ -996,13 +996,71 @@ void main() {
 
       test('should end workflow', () async {
         int? receivedHandle;
-        mockApi.customTrackingEndWorkflowHandler = (handle) async {
+        GeneratedMutableAttributes? receivedAttributes;
+        mockApi.customTrackingEndWorkflowHandler = (handle, attributes) async {
           receivedHandle = handle;
+          receivedAttributes = attributes;
         };
 
         await implementation.customTrackingEndWorkflow(handle: 456);
         expect(receivedHandle, 456);
+        expect(receivedAttributes, isNull);
       });
+
+      test('should end workflow with attributes', () async {
+        int? receivedHandle;
+        GeneratedMutableAttributes? receivedAttributes;
+        mockApi.customTrackingEndWorkflowHandler = (handle, attributes) async {
+          receivedHandle = handle;
+          receivedAttributes = attributes;
+        };
+
+        await implementation.customTrackingEndWorkflow(
+          handle: 456,
+          attributes: MutableAttributes(
+            attributes: {
+              'http.response.status_code': MutableAttributeInt(value: 200),
+              'url.full': MutableAttributeString(
+                value: 'https://api.example.com/orders',
+              ),
+            },
+          ),
+        );
+
+        expect(receivedHandle, 456);
+        expect(receivedAttributes, isNotNull);
+        expect(
+          (receivedAttributes!.attributes['http.response.status_code']
+                  as GeneratedMutableAttributeInt)
+              .value,
+          200,
+        );
+        expect(
+          (receivedAttributes!.attributes['url.full']
+                  as GeneratedMutableAttributeString)
+              .value,
+          'https://api.example.com/orders',
+        );
+      });
+
+      test(
+        'should end workflow with an explicit empty attribute set',
+        () async {
+          GeneratedMutableAttributes? receivedAttributes;
+          mockApi.customTrackingEndWorkflowHandler =
+              (handle, attributes) async {
+                receivedAttributes = attributes;
+              };
+
+          await implementation.customTrackingEndWorkflow(
+            handle: 456,
+            attributes: const MutableAttributes(),
+          );
+
+          expect(receivedAttributes, isNotNull);
+          expect(receivedAttributes!.attributes, isEmpty);
+        },
+      );
 
       test('should track error with all fields', () async {
         GeneratedError? receivedError;
