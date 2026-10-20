@@ -1,6 +1,6 @@
 ## Unreleased
 
-* Added an optional `attributes` argument to `WorkflowHandle.end()`, so a workflow span can carry attributes that are only known once the work has finished (an outcome, a status code, or an error). `startWorkflow()` is unchanged and existing `end()` calls keep working. SDK-reserved keys (`component`, `workflow.name`, `workflow.start.time`, `workflow.end.time`) are stripped from caller attributes so they cannot overwrite the SDK's own values.
+* Added an optional `attributes` argument to `WorkflowHandle.end()`, so a workflow span can carry attributes that are only known once the work has finished (an outcome, a status code, or an error). `startWorkflow()` is unchanged and existing `end()` calls keep working. SDK-reserved keys are stripped from caller attributes so they cannot overwrite the SDK's own values: `component`, `workflow.name`, `workflow.start.time`, `workflow.end.time`, `session.id`, `session.previous_id`, `user.anonymous_id`, `app.installation.id`, `screen.name` and `last.screen.name`.
 * Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
 
 ## 1.2.0

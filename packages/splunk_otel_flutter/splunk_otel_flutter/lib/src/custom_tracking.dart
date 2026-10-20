@@ -38,17 +38,23 @@ enum ErrorSource {
 
 /// Attribute keys owned by the SDK on workflow telemetry.
 ///
-/// `workflow.name` is populated natively when the workflow starts, while
-/// `workflow.start.time` and `workflow.end.time` are stamped when it ends.
-/// `component` identifies the instrumentation that produced the span and is
-/// owned by the SDK on every signal. They are stripped from caller-supplied
-/// attributes so a caller cannot overwrite the SDK's own values, matching how
-/// `Navigation.track` treats its reserved keys.
+/// The native SDKs write `component` and `workflow.name` when the workflow
+/// starts, and their span processors add the session, user, installation, and
+/// screen keys at the same time. `workflow.start.time` and `workflow.end.time`
+/// are stamped when it ends. Attributes passed to [WorkflowHandle.end] are
+/// written after the start-time keys, so they would overwrite them; stripping
+/// the keys here is the only thing that protects them.
 const Set<String> _reservedWorkflowAttributeKeys = {
   'component',
   'workflow.name',
   'workflow.start.time',
   'workflow.end.time',
+  'session.id',
+  'session.previous_id',
+  'user.anonymous_id',
+  'app.installation.id',
+  'screen.name',
+  'last.screen.name',
 };
 
 /// Handle to an active workflow span.
@@ -73,7 +79,9 @@ class WorkflowHandle {
   /// known at the end. When `null`, no attributes are sent (distinct from an
   /// empty [MutableAttributes], which sends an explicit empty set).
   /// SDK-reserved keys (`component`, `workflow.name`, `workflow.start.time`,
-  /// `workflow.end.time`) are removed before sending.
+  /// `workflow.end.time`, `session.id`, `session.previous_id`,
+  /// `user.anonymous_id`, `app.installation.id`, `screen.name`,
+  /// `last.screen.name`) are removed before sending.
   ///
   /// Example:
   /// ```dart

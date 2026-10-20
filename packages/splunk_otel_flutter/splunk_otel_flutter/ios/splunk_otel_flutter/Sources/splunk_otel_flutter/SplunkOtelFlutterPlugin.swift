@@ -497,8 +497,9 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
         // End the workflow
         let endTime = Int64(Date().timeIntervalSince1970 * 1000)
         
-        // Caller attributes are written before the SDK-owned timestamps so the
-        // SDK always wins, independent of the Dart-side key sanitizing.
+        // Caller attributes are written before the SDK-owned timestamps, so the
+        // timestamps always win. Keys the SDK set at span start are protected
+        // only by the Dart-side key sanitizing.
         if let attributes = attributes {
             workflow.span.setAttributes(spanAttributes(from: attributes))
         }

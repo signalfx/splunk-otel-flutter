@@ -524,8 +524,9 @@ class SplunkOtelFlutterPlugin :
         val (span, startTime) = workflow
         val endTime = System.currentTimeMillis()
 
-        // Caller attributes are written before the SDK-owned timestamps so the
-        // SDK always wins, independent of the Dart-side key sanitizing.
+        // Caller attributes are written before the SDK-owned timestamps, so the
+        // timestamps always win. Keys the SDK set at span start are protected
+        // only by the Dart-side key sanitizing.
         attributes?.let { span.setAllAttributes(it.toOtelAttributes()) }
 
         span.setAttribute("workflow.start.time", startTime)

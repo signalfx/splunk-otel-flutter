@@ -242,6 +242,12 @@ void main() {
             'workflow.name': MutableAttributeString(value: 'spoofed'),
             'workflow.start.time': MutableAttributeInt(value: 1),
             'workflow.end.time': MutableAttributeInt(value: 2),
+            'session.id': MutableAttributeString(value: 'spoofed'),
+            'session.previous_id': MutableAttributeString(value: 'spoofed'),
+            'user.anonymous_id': MutableAttributeString(value: 'spoofed'),
+            'app.installation.id': MutableAttributeString(value: 'spoofed'),
+            'screen.name': MutableAttributeString(value: 'spoofed'),
+            'last.screen.name': MutableAttributeString(value: 'spoofed'),
             'url.full': MutableAttributeString(
               value: 'https://api.example.com/orders',
             ),
