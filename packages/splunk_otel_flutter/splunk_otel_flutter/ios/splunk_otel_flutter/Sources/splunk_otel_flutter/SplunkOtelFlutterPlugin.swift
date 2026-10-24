@@ -29,91 +29,21 @@ import SplunkCrashReports
 #if canImport(SplunkSessionReplayProxy)
 import SplunkSessionReplayProxy
 #endif
+#if canImport(splunk_otel_flutter_app_start)
+import splunk_otel_flutter_app_start
+#endif
 
 extension FlutterError: Error {}
 
 public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutterHostApi {
     
-    private var didFinishLaunchingAt: Date?
-    private var willEnterForegroundAt: Date?
     private var workflowSpans: [Int64: (span: Span, startTime: Int64)] = [:]
     private var workflowHandleCounter: Int64 = 0
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SplunkOtelFlutterPlugin()
         
-        // Observe lifecycle notifications
-           NotificationCenter.default.addObserver(
-               instance,
-               selector: #selector(onDidBecomeActive),
-               name: UIApplication.didBecomeActiveNotification,
-               object: nil
-           )
-
-           NotificationCenter.default.addObserver(
-               instance,
-               selector: #selector(onDidFinishLaunchingNotification),
-               name: UIApplication.didFinishLaunchingNotification,
-               object: nil
-           )
-
-           NotificationCenter.default.addObserver(
-               instance,
-               selector: #selector(onWillEnterForeground),
-               name: UIApplication.willEnterForegroundNotification,
-               object: nil
-           )
-        
         SplunkOtelFlutterHostApiSetup.setUp(binaryMessenger: registrar.messenger(), api: instance)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    // MARK: - Notification handlers
-    @objc private func onDidFinishLaunchingNotification(_ note: Notification) {
-        let launchOptions = note.userInfo as? [UIApplication.LaunchOptionsKey: Any]
-        handleDidFinishLaunching(launchOptions: launchOptions)
-    }
-    
-    @objc private func onDidBecomeActive(_ note: Notification) {
-        handleDidBecomeActive()
-    }
-    
-    @objc private func onWillEnterForeground(_ note: Notification) {
-          handleWillEnterForeground()
-      }
-    
-    // MARK: - Internals
-    private func handleDidFinishLaunching(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        didFinishLaunchingAt = Date()
-    }
-
-    private func handleWillEnterForeground() {
-        // Mark the moment the app transitions toward foreground (warm start path)
-        willEnterForegroundAt = Date()
-    }
-    
- 
-
-    private func handleDidBecomeActive() {
-        // The "active" moment (common for both cold and warm starts)
-        let becameActiveAt = Date()
-
-        // Send app start timing to Splunk RUM.
-        // - didFinishLaunchingAt: non-nil indicates a cold start path
-        // - willEnterForegroundAt: non-nil indicates a warm start path
-        // Splunk RUM will infer the correct variant based on which timestamps are provided.
-        SplunkRum.shared.appStart.track(
-            didBecomeActive: becameActiveAt,
-            didFinishLaunching: didFinishLaunchingAt,
-            willEnterForeground: willEnterForegroundAt
-        )
-
-
-        // Clear foreground marker so a later activation (e.g., another background->foreground) is measured correctly.
-        willEnterForegroundAt = nil
     }
     
     func install(agentConfiguration: GeneratedAgentConfiguration,
@@ -212,8 +142,11 @@ public class SplunkOtelFlutterPlugin: NSObject, FlutterPlugin, SplunkOtelFlutter
             #endif
             
             let agent = try SplunkRum.install(with: agentConfig, moduleConfigurations: moduleConfigurations)
-          
-            handleDidBecomeActive()
+
+            // The native AppStart module accepts exactly one handoff, right after install.
+            if let snapshot = AppStartCapture.shared.consumeSnapshot() {
+                _ = agent.appStart.track(initialLifecycle: snapshot.toAppStartLifecycleSnapshot())
+            }
             
             completion(.success(()))
         } catch {

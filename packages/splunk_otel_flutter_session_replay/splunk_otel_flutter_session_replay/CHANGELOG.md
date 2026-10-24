@@ -1,6 +1,7 @@
 ## Unreleased
 
 * Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
+* Bumped the native iOS Splunk RUM SDK pin to 2.4.3 to stay aligned with `splunk_otel_flutter`.
 
 ## 1.2.0
 

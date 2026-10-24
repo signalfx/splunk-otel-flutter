@@ -33,7 +33,7 @@ let package = Package(
         // same source and version (mixing a local path with a remote URL causes an
         // SPM conflict). For local verification use an absolute path:
         //   .package(path: "/absolute/path/to/splunk-otel-ios")
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.1")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.3")
     ],
     targets: [
         .target(
