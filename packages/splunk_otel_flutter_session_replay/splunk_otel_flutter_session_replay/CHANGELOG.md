@@ -1,5 +1,6 @@
 ## Unreleased
 
+* Bumped the native Android Splunk RUM SDK to 2.4.0, keeping the session replay dependency aligned with `splunk_otel_flutter`.
 * Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
 
 ## 1.2.0
