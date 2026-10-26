@@ -49,6 +49,7 @@ limitations under the License.
     NSDate *_didFinishLaunching;
     NSDate *_willEnterForeground;
     NSDate *_didBecomeActive;
+    BOOL _hasConflictingForegroundBoundary;
     BOOL _isObserving;
     BOOL _isConsumed;
 }
@@ -163,6 +164,13 @@ limitations under the License.
             return;
         }
 
+        // Two foreground boundaries without a background transition cannot be
+        // paired reliably with the first activation. Preserve that ambiguity
+        // through handoff, as the React Native lifecycle recorder does.
+        if (_willEnterForeground != nil) {
+            _hasConflictingForegroundBoundary = YES;
+        }
+
         _willEnterForeground = timestamp;
     }
 }
@@ -202,7 +210,11 @@ limitations under the License.
         _isConsumed = YES;
         [self stopObserving];
 
-        return [[SplunkOtelFlutterAppStartSnapshot alloc] initWithLaunchOrigin:_launchOrigin
+        SplunkOtelFlutterLaunchOrigin launchOrigin = _hasConflictingForegroundBoundary
+            ? SplunkOtelFlutterLaunchOriginUnknown
+            : _launchOrigin;
+
+        return [[SplunkOtelFlutterAppStartSnapshot alloc] initWithLaunchOrigin:launchOrigin
                                                             didFinishLaunching:_didFinishLaunching
                                                            willEnterForeground:_willEnterForeground
                                                                didBecomeActive:_didBecomeActive];

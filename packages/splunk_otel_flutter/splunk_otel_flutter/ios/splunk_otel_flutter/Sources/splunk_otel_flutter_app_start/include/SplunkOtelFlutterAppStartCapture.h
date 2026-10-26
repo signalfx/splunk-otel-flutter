@@ -62,6 +62,7 @@ NS_SWIFT_NAME(AppStartCapture)
 - (void)start;
 
 /// Returns the captured evidence once and stops observing. Later calls return `nil`.
+/// Conflicting foreground boundaries are reported with an unknown launch origin.
 - (nullable SplunkOtelFlutterAppStartSnapshot *)consumeSnapshot;
 
 - (void)recordDidFinishLaunchingAt:(NSDate *)timestamp launchOrigin:(SplunkOtelFlutterLaunchOrigin)launchOrigin;

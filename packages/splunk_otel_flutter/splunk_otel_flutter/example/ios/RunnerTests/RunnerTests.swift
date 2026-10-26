@@ -79,6 +79,48 @@ class AppStartCaptureTests: XCTestCase {
     XCTAssertEqual(snapshot?.didBecomeActive, active)
   }
 
+  func testDuplicateForegroundBoundariesReportUnknownLaunchOrigin() {
+    capture.recordDidFinishLaunching(at: launch, launchOrigin: .background)
+    capture.recordWillEnterForeground(at: firstForeground)
+    capture.recordWillEnterForeground(at: foreground)
+    capture.recordDidBecomeActive(at: active)
+
+    let snapshot = capture.consumeSnapshot()?.toAppStartLifecycleSnapshot()
+
+    XCTAssertEqual(snapshot?.launchOrigin, .unknown)
+    XCTAssertEqual(snapshot?.didFinishLaunching, launch)
+    XCTAssertEqual(snapshot?.willEnterForeground, foreground)
+    XCTAssertEqual(snapshot?.didBecomeActive, active)
+  }
+
+  func testDuplicateForegroundBoundariesRemainUnknownBeforeActivation() {
+    capture.recordDidFinishLaunching(at: launch, launchOrigin: .background)
+    capture.recordWillEnterForeground(at: firstForeground)
+    capture.recordWillEnterForeground(at: foreground)
+
+    let snapshot = capture.consumeSnapshot()
+
+    XCTAssertEqual(snapshot?.launchOrigin, .unknown)
+    XCTAssertEqual(snapshot?.willEnterForeground, foreground)
+    XCTAssertNil(snapshot?.didBecomeActive)
+  }
+
+  func testBackgroundTransitionDoesNotEraseConflictingForegroundEvidence() {
+    capture.recordDidFinishLaunching(at: launch, launchOrigin: .foreground)
+    capture.recordWillEnterForeground(at: firstForeground)
+    capture.recordWillEnterForeground(at: foreground)
+    capture.recordDidEnterBackground()
+    capture.recordWillEnterForeground(at: active)
+    capture.recordDidBecomeActive(at: laterActive)
+
+    let snapshot = capture.consumeSnapshot()
+
+    XCTAssertEqual(snapshot?.launchOrigin, .unknown)
+    XCTAssertEqual(snapshot?.didFinishLaunching, launch)
+    XCTAssertEqual(snapshot?.willEnterForeground, active)
+    XCTAssertEqual(snapshot?.didBecomeActive, laterActive)
+  }
+
   func testBackgroundLaunchStaysBackgroundAfterEnteringBackground() {
     capture.recordDidFinishLaunching(at: launch, launchOrigin: .background)
     capture.recordDidEnterBackground()
@@ -148,6 +190,17 @@ class AppStartCaptureTests: XCTestCase {
 
     XCTAssertEqual(snapshot?.launchOrigin, .foreground)
     XCTAssertEqual(snapshot?.didFinishLaunching, launch)
+  }
+
+  func testLaunchAfterFirstActivationDoesNotChangeFrozenEvidence() {
+    capture.recordDidBecomeActive(at: active)
+    capture.recordDidFinishLaunching(at: laterActive, launchOrigin: .foreground)
+
+    let snapshot = capture.consumeSnapshot()
+
+    XCTAssertEqual(snapshot?.launchOrigin, .unknown)
+    XCTAssertNil(snapshot?.didFinishLaunching)
+    XCTAssertEqual(snapshot?.didBecomeActive, active)
   }
 
   func testEvidenceIsFrozenAtFirstActivation() {
