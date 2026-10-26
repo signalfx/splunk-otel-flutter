@@ -36,15 +36,21 @@ let package = Package(
         // checkout instead (absolute path required, because Flutter consumes the
         // plugin via a symlink under ios/Flutter/ephemeral/Packages/.packages):
         //   .package(path: "/absolute/path/to/splunk-otel-ios")
-        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.1")
+        .package(url: "https://github.com/signalfx/splunk-otel-ios", exact: "2.4.3")
     ],
     targets: [
         .target(
             name: "splunk_otel_flutter",
             dependencies: [
+                "splunk_otel_flutter_app_start",
                 .product(name: "SplunkAgent", package: "splunk-otel-ios")
             ],
             resources: []
+        ),
+        // Objective-C because the AppStart capture needs a load-time constructor,
+        // which Swift lacks, and SwiftPM targets cannot mix languages.
+        .target(
+            name: "splunk_otel_flutter_app_start"
         )
     ]
 )

@@ -13,7 +13,9 @@ Splunk Flutter agent
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'splunk_otel_flutter/Sources/splunk_otel_flutter/**/*'
+  s.source_files = 'splunk_otel_flutter/Sources/splunk_otel_flutter/**/*',
+                   'splunk_otel_flutter/Sources/splunk_otel_flutter_app_start/**/*.{h,m}'
+  s.public_header_files = 'splunk_otel_flutter/Sources/splunk_otel_flutter_app_start/include/**/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 

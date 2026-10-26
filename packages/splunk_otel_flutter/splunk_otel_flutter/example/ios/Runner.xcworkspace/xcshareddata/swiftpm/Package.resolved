@@ -10,21 +10,12 @@
       }
     },
     {
-      "identity" : "plcrashreporter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/plcrashreporter",
-      "state" : {
-        "revision" : "0254f941c646b1ed17b243654723d0f071e990d0",
-        "version" : "1.12.2"
-      }
-    },
-    {
       "identity" : "splunk-otel-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/signalfx/splunk-otel-ios",
       "state" : {
-        "revision" : "23e3bed3d301037087db3e5b3797a6757b8d177a",
-        "version" : "2.4.1"
+        "revision" : "99e4b0549b3460bf4f4f570fea5e02b34d56d4c8",
+        "version" : "2.4.3"
       }
     },
     {
