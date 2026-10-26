@@ -1,4 +1,4 @@
-## Unreleased
+## 1.3.0
 
 * Extended the `customTrackingEndWorkflow` Pigeon message and platform interface with an optional `attributes` argument, so attributes can be attached to a workflow span before it ends.
 * Regenerated the Pigeon bindings with Pigeon 26.3.4. The 26.0.1 generator that produced the previous bindings can no longer be resolved in this workspace, because it requires `analyzer >=6 <8` while the example app's `auto_route_generator` requires `analyzer >=9`.

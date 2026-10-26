@@ -1,3 +1,9 @@
+## 1.3.0
+
+* Sync version bump to align with `splunk_otel_flutter_session_replay`.
+* Regenerated the Pigeon bindings with Pigeon 26.3.4.
+* Pinned `splunk_otel_flutter_platform_interface` to the matching minor line (`>=1.3.0 <1.4.0`) so the shared Pigeon codec stays version-aligned across packages.
+
 ## 1.2.0
 
 * Sync version bump to align with `splunk_otel_flutter_session_replay`.

@@ -18,4 +18,4 @@
 /// resource attribute.
 ///
 /// Must be kept in sync with `pubspec.yaml` (`version:`).
-const String rumSdkFlutterVersion = '1.2.0';
+const String rumSdkFlutterVersion = '1.3.0';

@@ -1,8 +1,10 @@
-## Unreleased
+## 1.3.0
 
 * Bumped the native Android Splunk RUM SDK to 2.4.0, keeping the session replay dependency aligned with `splunk_otel_flutter`.
 * Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
+* Updated Android build tooling to AGP 8.13.1 and pinned its transitive Netty dependencies to 4.1.138.Final and Unified Test Platform protobuf dependencies to 3.25.5 to address known vulnerabilities.
 * Bumped the native iOS Splunk RUM SDK pin to 2.4.3 to stay aligned with `splunk_otel_flutter`.
+* Pinned the platform-interface dependencies to the matching minor line (`>=1.3.0 <1.4.0`) so the shared Pigeon codec stays version-aligned across packages.
 
 ## 1.2.0
 
