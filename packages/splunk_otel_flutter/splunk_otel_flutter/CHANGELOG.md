@@ -1,10 +1,12 @@
-## Unreleased
+## 1.3.0
 
 * Bumped the native Android Splunk RUM SDK to 2.4.0.
 * Added an optional `attributes` argument to `WorkflowHandle.end()`, so a workflow span can carry attributes that are only known once the work has finished (an outcome, a status code, or an error). `startWorkflow()` is unchanged and existing `end()` calls keep working. SDK-reserved keys are stripped from caller attributes so they cannot overwrite the SDK's own values: `component`, `workflow.name`, `workflow.start.time`, `workflow.end.time`, `session.id`, `session.previous_id`, `user.anonymous_id`, `app.installation.id`, `screen.name` and `last.screen.name`.
 * Android: apply the Kotlin Gradle Plugin only when AGP has not already registered Kotlin, so apps can build on AGP 9 without raising the minimum Flutter version.
+* Updated Android build tooling to AGP 8.13.1 and pinned its transitive Netty dependencies to 4.1.138.Final and Unified Test Platform protobuf dependencies to 3.25.5 to address known vulnerabilities.
 * Bumped the native iOS Splunk RUM SDK to 2.4.3.
 * iOS: fixed AppStart for background-launched, interrupted, and late-installed apps. The plugin now records the launch lifecycle from process load and hands it to the native SDK once, right after `install()`. The native SDK classifies the cold, warm, or hot start, measures a cold start to the real first activation instead of the install time, and suppresses unreliable measurements, including any AppStart longer than ten seconds. `install()` no longer emits an extra AppStart, and later warm and hot starts are detected natively.
+* Pinned `splunk_otel_flutter_platform_interface` to the matching minor line (`>=1.3.0 <1.4.0`) so the shared Pigeon codec stays version-aligned.
 
 ## 1.2.0
 
