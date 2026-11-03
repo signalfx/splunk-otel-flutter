@@ -94,7 +94,7 @@ Contributions are welcome. See:
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — contribution workflow and conventions
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - [SECURITY.md](./SECURITY.md) — reporting vulnerabilities
-- [RELEASE.md](./RELEASE.md) — maintainer release process
+- [RELEASE.md](./RELEASE.md) — release tags and GitHub Releases
 
 ## Support
 

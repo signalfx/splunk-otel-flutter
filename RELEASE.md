@@ -1,281 +1,78 @@
-# Release Process
+# Release Tags and GitHub Releases
 
-This document describes how to release packages to pub.dev using GitLab CI/CD with support for dev, alpha, and stable releases.
+## Tag convention
 
-## Prerequisites
+Each SDK version has one repository tag covering all four packages:
 
-1. **pub.dev Account**: You need a pub.dev account with publish permissions for the packages
-2. **GitLab CI/CD Variables**: Configure the `PUB_CREDENTIALS` variable in GitLab
+- Stable: `vX.Y.Z`, for example `v1.3.0`.
+- Preview: `vX.Y.Z-alpha.N` or `vX.Y.Z-dev.N`.
 
-## Setting Up GitLab CI/CD Variables
+Use an annotated tag whose version matches the package manifests, changelogs,
+and `rumSdkFlutterVersion` constant at the tagged commit.
 
-1. Go to your GitLab project: **Settings > CI/CD > Variables**
-2. Click **Add variable**
-3. Set the following:
-   - **Key**: `PUB_CREDENTIALS`
-   - **Value**: Your pub.dev credentials JSON (see below for how to get this)
-   - **Type**: Variable
-   - **Environment scope**: `*` (or specific environments)
-   - **Protect variable**: ✅ (recommended - only available on protected branches/tags)
-   - **Mask variable**: ✅ (recommended - hides value in logs)
-   - **Expand variable reference**: ✅
+## Choosing the commit
 
-### Getting Your pub.dev Credentials
+Create the tag after the release changes have been merged into `develop` and
+the corresponding versions of all four packages are available on pub.dev.
+Normally, the tag points to the release pull request's merge commit on `develop`.
+Confirm that its package contents match the published versions.
 
-To get your `PUB_CREDENTIALS` value:
+Use the specific release commit even if `develop` has advanced. A later merge
+into `main` does not require another tag or a change to the existing tag.
 
-1. **Option 1: Using Flutter CLI** (Recommended)
-   ```bash
-   flutter pub token add https://pub.dev
-   ```
-   This will prompt you to authenticate and save the token locally.
+For historical releases, identify the source commit from release history and
+compare it with the published package archives before creating a missing tag.
+Do not select a commit solely because its manifest has the right version.
+Only packages that existed at the time need to be checked.
 
-2. **Option 2: Manual Token**
-   - Go to https://pub.dev/account/tokens
-   - Create a new token
-   - Copy the token value
+## Creating and pushing a tag
 
-3. **Get the credentials JSON**:
-   The credentials file is typically located at `~/.pub-cache/credentials.json` and contains:
-   ```json
-   {
-     "accessToken": "your-token-here",
-     "refreshToken": "your-refresh-token-here",
-     "tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
-     "scopes": ["https://www.googleapis.com/auth/userinfo.email", "openid"],
-     "expiration": 1234567890
-   }
-   ```
-   
-   Copy the entire JSON content and paste it as the `PUB_CREDENTIALS` variable value in GitLab.
-
-## Release Types
-
-The CI/CD pipeline supports three release types:
-
-1. **Dev Releases**: Pre-release versions for development/testing
-   - Format: `X.Y.Z-dev.N` (e.g., `1.0.0-dev.1`, `1.0.0-dev.2`)
-   - Tag format: `vX.Y.Z-dev.N` (e.g., `v1.0.0-dev.1`)
-
-2. **Alpha Releases**: Early pre-release versions
-   - Format: `X.Y.Z-alpha.N` (e.g., `1.0.0-alpha.1`, `1.0.0-alpha.2`)
-   - Tag format: `vX.Y.Z-alpha.N` (e.g., `v1.0.0-alpha.1`)
-
-3. **Stable Releases**: Production-ready versions
-   - Format: `X.Y.Z` (e.g., `1.0.0`, `1.0.1`, `1.1.0`)
-   - Tag format: `vX.Y.Z` (e.g., `v1.0.0`)
-
-## Release Process
-
-### Step 1: Update Version Numbers
-
-Before releasing, update the version numbers in **both** package `pubspec.yaml` files to the version you want to release:
-
-- `packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml`
-- `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml`
-
-Also keep the `rum.sdk.flutter.version` telemetry value in sync with the package version:
-
-- `rumSdkFlutterVersion` constant in `packages/splunk_otel_flutter/splunk_otel_flutter/lib/src/rum_sdk_version.dart`
-
-**Important**: Both packages must have the same version number!
-
-Examples:
-- **Dev release**: Update both to `1.0.0-dev.1`
-- **Alpha release**: Update both to `1.0.0-alpha.1`
-- **Stable release**: Update both to `1.0.0`
-
-**Also update the inter-package dependency constraints.** The app-facing and
-platform-interface packages are pinned to a single minor line so their shared
-Pigeon wire contract cannot drift. When bumping to a new minor line (for example
-`1.1.x` to `1.2.0`), move BOTH bounds of every sibling constraint to the new
-line, so the floor includes the release you are publishing and the ceiling still
-allows it. For example `>=1.1.0 <1.2.0` becomes `>=1.2.0 <1.3.0` in:
-
-- `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml`
-- `packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay/pubspec.yaml`
-- `packages/splunk_otel_flutter_session_replay/splunk_otel_flutter_session_replay_platform_interface/pubspec.yaml`
-
-Leaving the floor at an older release lets a consumer upgrade one package while
-pub keeps a sibling at a version that predates a newly added Pigeon API, which
-breaks downstream compilation. Leaving the ceiling below the release you are
-publishing prevents the new interface from resolving at all.
-
-### Step 2: Commit and Push
-
-Commit your version changes and push to GitLab (can be from GitHub mirror):
+Fetch the current branch and tags, then inspect the release commit:
 
 ```bash
-git add packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml
-git add packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml
-git commit -m "chore: bump version to 1.0.0-dev.1"
-git push origin main  # or push to GitHub and let it mirror to GitLab
+git fetch origin develop --tags
+git log origin/develop --first-parent --oneline
 ```
 
-**Note**: No tags needed! The version is read directly from `pubspec.yaml` files.
+Set the version and full commit SHA explicitly. Replace the SHA placeholder
+below with the verified release commit:
 
-### Step 3: Trigger Pipeline
-
-1. Go to **CI/CD > Pipelines** in GitLab
-2. Click **Run pipeline** button
-3. Select the branch/commit you want to release from (e.g., `main`, `release/1.0.0`, or a specific commit SHA)
-4. Click **Run pipeline**
-
-The pipeline will automatically:
-1. **Setup**: Install Flutter dependencies
-2. **Build**: Validate packages (analyze and test)
-
-### Step 4: Run Dry Run
-
-After the pipeline starts:
-
-1. Find the **dry_run** job
-2. Click **Play** button to run it manually
-
-This will validate that:
-- Versions match between both packages
-- Packages can be published
-- Dependencies are correct
-- No publishing errors occur
-
-**Important**: Always run the dry run first before the actual release!
-
-### Step 5: Publish to pub.dev
-
-If the dry run succeeds:
-
-1. Find the **release** job
-2. Click **Play** button to run it manually
-
-This will:
-1. Validate versions match between packages
-2. Publish `splunk_otel_flutter_platform_interface` first (since it's a dependency)
-3. Wait 15 seconds for pub.dev to process it
-4. Publish `splunk_otel_flutter`
-
-**Warning**: This will actually publish to pub.dev!
-
-## CI/CD Job Details
-
-### `setup_dependencies`
-- Installs Flutter dependencies
-- Caches dependencies for faster builds
-- Runs automatically when pipeline is triggered
-
-### `build_artifacts`
-- Validates packages with `flutter analyze`
-- Runs tests with `flutter test`
-- Runs automatically when pipeline is triggered
-- Creates artifacts for subsequent jobs
-- Can be run from any branch/commit
-
-### Dry Run Job
-
-#### `dry_run`
-- Tests publishing without actually publishing
-- Can be run from any branch/commit
-- Reads version from `pubspec.yaml` files
-- Validates that both packages have the same version
-- Validates that packages can be published
-- Manual trigger only
-- Safe to run multiple times
-
-### Release Job
-
-#### `release`
-- Actually publishes packages to pub.dev
-- Can be run from any branch/commit
-- Reads version from `pubspec.yaml` files
-- Validates that both packages have the same version
-- Publishes in dependency order (platform interface first, then main package)
-- Manual trigger only
-- **Warning**: This will publish to pub.dev!
-
-## Version Naming Examples
-
-Simply update the version in both `pubspec.yaml` files to the version you want to release:
-
-### Dev Releases
-```
-Version in pubspec.yaml: 1.0.0-dev.1
-Branch/Commit: Any branch or commit
-Job to run: dry_run → release
-
-Version in pubspec.yaml: 1.0.0-dev.2
-Job to run: dry_run → release
+```bash
+release_version=1.3.0
+release_commit=REPLACE_WITH_VERIFIED_FULL_COMMIT_SHA
 ```
 
-### Alpha Releases
-```
-Version in pubspec.yaml: 1.0.0-alpha.1
-Branch/Commit: Any branch or commit
-Job to run: dry_run → release
+Confirm that the commit belongs to `develop`, then create and push only that tag:
 
-Version in pubspec.yaml: 1.0.0-alpha.2
-Job to run: dry_run → release
+```bash
+git merge-base --is-ancestor "$release_commit" origin/develop &&
+  git tag -a "v${release_version}" "$release_commit" -m "Release ${release_version}" &&
+  git push origin "refs/tags/v${release_version}"
 ```
 
-### Stable Releases
-```
-Version in pubspec.yaml: 1.0.0
-Branch/Commit: Any branch or commit
-Job to run: dry_run → release
+If the tag already exists, verify its target and reuse it. Published version tags
+must not be moved, replaced, or force-pushed. Avoid `git push --tags`, which can
+publish unrelated local tags.
 
-Version in pubspec.yaml: 1.0.1  (patch release)
-Job to run: dry_run → release
+## Adding a GitHub Release
 
-Version in pubspec.yaml: 1.1.0  (minor release)
-Job to run: dry_run → release
+Create one GitHub Release per version, using the existing tag:
 
-Version in pubspec.yaml: 2.0.0  (major release)
-Job to run: dry_run → release
-```
+1. Open the repository's **Releases** page and select **Draft a new release**.
+2. Select the existing `vX.Y.Z` tag and use `vX.Y.Z` as the release title.
+3. Summarize that version's entries from all four package changelogs at the tag.
+   Include links to the published package versions. If generating notes from
+   pull requests, choose the previous version tag explicitly and review the result.
+4. Mark preview versions as **pre-release**. Set the newest stable version as
+   **latest**.
+5. Review the draft and publish it.
 
-**Note**: 
-- No tags needed! Just update `pubspec.yaml` and run the pipeline from any branch/commit.
-- Always use the same two jobs: `dry_run` and `release`
-- For stable releases, use semantic versioning:
-  - **Patch** (1.0.0 → 1.0.1): Bug fixes
-  - **Minor** (1.0.0 → 1.1.0): New features, backward compatible
-  - **Major** (1.0.0 → 2.0.0): Breaking changes
+For missing historical Releases, reuse the existing tags and create entries
+from oldest to newest. Include the original pub.dev publication date in each
+description, and select the newest stable version as latest after backfilling.
+Creating these records does not require another package publication or a CI job.
 
-## Troubleshooting
-
-### Error: PUB_CREDENTIALS not set
-- Ensure the `PUB_CREDENTIALS` variable is configured in GitLab CI/CD settings
-- Check that the variable is not protected if you're testing on unprotected branches
-
-### Error: Version mismatch between packages
-- Ensure both `pubspec.yaml` files have the exact same version
-- Check `packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml`
-- Check `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml`
-- Both must have identical version strings
-
-### Error: Package already exists
-- Check if the version already exists on pub.dev
-- Update the version number in `pubspec.yaml` files
-- For dev/alpha, increment the number (e.g., `-dev.1` → `-dev.2`)
-
-### Error: Dependency not found
-- Ensure `splunk_otel_flutter_platform_interface` is published before `splunk_otel_flutter`
-- The CI pipeline handles this automatically, but manual publishing requires correct order
-
-### Dry run passes but release fails
-- Check pub.dev status page
-- Verify credentials are still valid
-- Check package names and versions match pub.dev requirements
-- Ensure both packages have the same version number
-
-## Security Notes
-
-- **Never commit credentials** to the repository
-- Always use GitLab CI/CD variables for sensitive data
-- Mark `PUB_CREDENTIALS` as protected and masked
-- Rotate credentials periodically
-- Use separate credentials for different environments if needed
-
-## Related Files
-
-- `.gitlab-ci.yml` - GitLab CI/CD configuration
-- `packages/splunk_otel_flutter/splunk_otel_flutter/pubspec.yaml` - Main package configuration
-- `packages/splunk_otel_flutter/splunk_otel_flutter_platform_interface/pubspec.yaml` - Platform interface configuration
+See GitHub's documentation for
+[managing releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+and
+[generating release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes).

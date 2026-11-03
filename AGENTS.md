@@ -374,6 +374,16 @@ Build the affected package or example app to ensure no compilation errors.
 
 ## Common Tasks
 
+### Release Tags and GitHub Releases
+
+- Before release work, read `RELEASE.md` and, if present, `RELEASE.local.md`.
+- Keep `RELEASE.local.md` local. Do not copy its operational details into tracked files, commit messages, pull requests, tag annotations, or release notes.
+- Use one annotated `vX.Y.Z` tag for all four packages; preserve preview suffixes.
+- Tag the verified release commit in `origin/develop` history after the release changes are merged and the corresponding package versions are available on pub.dev. Check that its package contents match the published versions.
+- Use the exact commit SHA. If `develop` has advanced, tag the historical release commit. A merge into `main` does not change the tag.
+- Verify and reuse existing version tags. Never move or overwrite a published tag, and push only the requested tag refs.
+- Create GitHub Releases from existing tags, with notes for that version from all four changelogs. Only the newest stable version should be marked latest.
+
 ### Adding a New Feature to the SDK
 
 1. Add implementation in `packages/splunk_otel_flutter/splunk_otel_flutter/lib/src/`
@@ -408,14 +418,6 @@ Triggered on pull requests to `main` and `develop`:
 2. **Flutter Analyze** - `melos bootstrap` + `melos analyze`
 3. **Flutter Test** - `melos test`
 
-### GitLab CI (Publishing)
-
-Used for publishing to pub.dev:
-
-1. **Build** - Analyze and test the main SDK packages
-2. **Dry-run** - Manual `flutter pub publish --dry-run`
-3. **Release** - Manual publish to pub.dev
-
 ### Commit Message Format
 
 Conventional commits are enforced: `<type>(<scope>)?: <subject>`
@@ -441,7 +443,7 @@ Types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `rever
 | `.commitlintrc.yml` | Commit message lint rules |
 | `CONTRIBUTING.md` | Contribution guidelines |
 | `SETUP.md` | Development environment setup |
-| `RELEASE.md` | Release process for pub.dev |
+| `RELEASE.md` | Git tag convention and GitHub Release records |
 
 ---
 
