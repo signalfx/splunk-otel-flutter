@@ -449,6 +449,8 @@ Types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `rever
 
 Apache License 2.0. All source files must include the Splunk copyright header.
 
+Gradle build and configuration files are exempt. Do not add copyright headers to `*.gradle`, `*.gradle.kts`, or Gradle properties files.
+
 When creating a new file or modifying an existing file, the copyright year must be the **current year**:
 
 ```dart
