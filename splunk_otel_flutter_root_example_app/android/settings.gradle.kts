@@ -21,10 +21,15 @@ buildscript {
     // Netty reaches this classpath only transitively, through the gRPC client used by AGP's
     // test and device tooling. AGP 8.13.1 resolves 4.1.110.Final, which predates the fixes in
     // 4.1.138.Final. Nothing here ends up in the application.
+    // Patch Guava here as well because example builds load AGP from the settings classpath.
     configurations.classpath {
         resolutionStrategy.eachDependency {
             if (requested.group == "io.netty") {
                 useVersion("4.1.138.Final")
+            }
+            if (requested.group == "com.google.guava" && requested.name == "guava") {
+                useVersion("33.7.2-jre")
+                because("CVE-2026-102554")
             }
         }
     }

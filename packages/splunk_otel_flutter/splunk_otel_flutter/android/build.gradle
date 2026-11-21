@@ -18,10 +18,15 @@ buildscript {
 
     // Netty reaches this classpath only transitively, through the gRPC client used by AGP's
     // test and device tooling. AGP 8.13.1 resolves 4.1.110.Final, which predates the fixes in
-    // 4.1.138.Final. Nothing here is packaged into the published AAR.
+    // 4.1.138.Final. Guava also reaches this classpath through AGP's build tooling; keep the
+    // JRE variant for the host JVM. Nothing here is packaged into the published AAR.
     configurations.classpath.resolutionStrategy.eachDependency { details ->
         if (details.requested.group == "io.netty") {
             details.useVersion("4.1.138.Final")
+        }
+        if (details.requested.group == "com.google.guava" && details.requested.name == "guava") {
+            details.useVersion("33.7.2-jre")
+            details.because("CVE-2026-102554")
         }
     }
 }
@@ -48,8 +53,8 @@ if (project.extensions.findByName("kotlin") == null) {
 }
 
 // AGP adds these configurations to every module for its Unified Test Platform, which only runs
-// instrumented tests. They resolve gRPC with Netty 4.1.93/4.1.110.Final and protobuf 3.24.4,
-// which carry known CVEs. Nothing here is packaged into the published AAR.
+// instrumented tests. It resolves Netty, protobuf, and Guava on the host JVM.
+// These dependencies are not packaged into the published AAR.
 configurations.matching { it.name.startsWith("_internal-unified-test-platform") }.configureEach {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == "io.netty") {
@@ -57,6 +62,10 @@ configurations.matching { it.name.startsWith("_internal-unified-test-platform") 
         }
         if (details.requested.group == "com.google.protobuf") {
             details.useVersion("3.25.5")
+        }
+        if (details.requested.group == "com.google.guava" && details.requested.name == "guava") {
+            details.useVersion("33.7.2-jre")
+            details.because("CVE-2026-102554")
         }
     }
 }
